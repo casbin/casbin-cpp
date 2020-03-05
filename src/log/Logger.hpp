@@ -1,7 +1,11 @@
 #include <string>
 
 class Logger{
+    protected:
+        bool enable;
+
     public:
+    
         //EnableLog controls whether print the message.
         void EnableLog(bool enable);
 

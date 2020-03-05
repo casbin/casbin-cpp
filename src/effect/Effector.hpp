@@ -1,6 +1,6 @@
 #include <string>
 
-#include "Effect.h"
+#include "Effect.hpp"
 
 /**
  * Effector is the abstract class for Casbin effectors.

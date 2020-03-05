@@ -1,8 +1,6 @@
-#include <string>
-
-#include "Effect.h"
-#include "Effector.h"
-#include "exception/UnsupportedOperationException.h"
+#include "Effect.hpp"
+#include "Effector.hpp"
+#include "exception/UnsupportedOperationException.hpp"
 
 /**
  * DefaultEffector is default effector for Casbin.
@@ -20,7 +18,7 @@ class DefaultEffector : public Effector{
             if (!expr.compare("some(where (p_eft == allow))")) {
                 result = false;
                 for(unsigned int index = 0 ; index < number_of_effects ; index++){
-                    if (effects[index] == Allow) {
+                    if (effects[index] == Effect::Allow) {
                         result = true;
                         break;
                     }
@@ -28,7 +26,7 @@ class DefaultEffector : public Effector{
             } else if (!expr.compare("!some(where (p_eft == deny))")) {
                 result = true;
                 for(unsigned int index = 0 ; index < number_of_effects ; index++){
-                    if (effects[index] == Deny) {
+                    if (effects[index] == Effect::Deny) {
                         result = false;
                         break;
                     }
@@ -36,9 +34,9 @@ class DefaultEffector : public Effector{
             } else if (!expr.compare("some(where (p_eft == allow)) && !some(where (p_eft == deny))")) {
                 result = false;
                 for(unsigned int index = 0 ; index < number_of_effects ; index++){
-                    if (effects[index] == Allow) {
+                    if (effects[index] == Effect::Allow) {
                         result = true;
-                    } else if (effects[index] == Deny) {
+                    } else if (effects[index] == Effect::Deny) {
                         result = false;
                         break;
                     }
@@ -46,8 +44,8 @@ class DefaultEffector : public Effector{
             } else if (!expr.compare("priority(p_eft) || deny")) {
                 result = false;
                 for(unsigned int index = 0 ; index < number_of_effects ; index++){
-                    if (effects[index] != Indeterminate) {
-                        if (effects[index] == Allow) {
+                    if (effects[index] != Effect::Indeterminate) {
+                        if (effects[index] == Effect::Allow) {
                             result = true;
                         } else {
                             result = false;

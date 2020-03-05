@@ -1,7 +1,4 @@
-#include <string>
-
-#include "DefaultLogger.h"
-#include "Logger.h"
+#include "DefaultLogger.hpp"
 
 class LogUtil{
 	private:

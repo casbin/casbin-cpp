@@ -1,13 +1,9 @@
-#include <string>
-
-#include "Logger.h"
-#include "Log.h"
+#include "Logger.hpp"
+#include "Log.hpp"
 
 class DefaultLogger : public Logger{
-    private:
-        bool enable;
-    
     public:
+
         void EnableLog(bool enable) {
             this->enable = enable;
         }
