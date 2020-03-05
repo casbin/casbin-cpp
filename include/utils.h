@@ -54,3 +54,20 @@ std::vector<std::string> split(const std::string &p_pcstStr, char delim)
 
     return tokens;
 }
+
+std::string join(std::vector<std::string> arr, char delim)
+{
+    std::string temp = "";
+    for (std::string ele : arr)
+    {
+        if (temp.size() != 0)
+        {
+            temp += delim;
+            temp += ele;
+        }
+        else
+            temp += ele;
+    }
+
+    return temp;
+}

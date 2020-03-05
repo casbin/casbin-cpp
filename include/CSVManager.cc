@@ -1,15 +1,15 @@
 #include <iostream>
 #include <fstream>
-#include "CSVReader.h"
+#include "CSVManager.h"
 #include <string>
 #include "utils.h"
 
-std::vector<std::string> CSVReader::readLine(std::string line)
+std::vector<std::string> CSVManager::readLine(std::string line)
 {
     return split(line, ',');
 }
 
-void CSVReader::readFile(std::string fileName)
+void CSVManager::readFile(std::string fileName)
 {
     std::ifstream file(fileName, std::ios::out);
     if (!file.is_open())
@@ -27,7 +27,26 @@ void CSVReader::readFile(std::string fileName)
     file.close();
 }
 
-void CSVReader::display()
+void CSVManager::writeFile(std::string fileName)
+{
+    std::ofstream fout;
+    fout.open(fileName);
+
+    std::string line = "";
+    while (fout)
+    {
+        for (std::vector<std::string> vec : data)
+        {
+            line = join(vec, ',');
+            fout << line << std::endl;    
+        }
+    }
+
+    // Close the File
+    fout.close();
+}
+
+void CSVManager::display()
 {
     for (std::vector<std::string> vec : data)
     {
@@ -39,7 +58,7 @@ void CSVReader::display()
     }
 }
 
-std::vector<std::vector<std::string>> CSVReader::getData()
+std::vector<std::vector<std::string>> CSVManager::getData()
 {
     return data;
 }
