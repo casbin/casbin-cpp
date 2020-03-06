@@ -102,3 +102,20 @@ bool Enforcer::hasNamedPolicy(std::string p, std::string sub, std::string obj, s
     return false;
 }
 
+bool Enforcer::enforce(std::string sub, std::string obj, std::string act)
+{
+    CSVManager manager;
+    manager.readFile(policy);
+    std::vector<std::vector<std::string>> temp = manager.getData();
+    std::vector<std::string> tempArr;
+
+    tempArr.push_back(sub);
+    tempArr.push_back(obj);
+    tempArr.push_back(act);
+
+    for (std::vector<std::string> ele : temp)
+        if (std::equal(tempArr.begin(), tempArr.end(), ele.begin() + 1, ele.end()))
+            return true;
+
+    return false;
+}

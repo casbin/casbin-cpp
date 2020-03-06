@@ -19,6 +19,8 @@ std::string ConfReader::returnContext(std::string line)
         return pe;
     if (line == m)
         return m;
+    if (line == rld)
+        return rld;
     return "";
 }
 
@@ -43,7 +45,11 @@ void ConfReader::readFile(std::string fileName)
         else
         {
             std::vector<std::string> arr;
-            if (context != m && context != pe)
+            if (context == rld)
+            {
+                
+            }
+            else if (context != m && context != pe)
             {
                 arr = split(line, '=');
                 data.insert(std::pair<std::string, std::string>(context, arr[1]));

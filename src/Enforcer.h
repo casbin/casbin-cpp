@@ -19,4 +19,5 @@ public:
     std::vector<std::vector<std::string>> getFilteredNamedPolicy(std::string, int, std::string);
     bool hasPolicy(std::string, std::string, std::string);
     bool hasNamedPolicy(std::string, std::string, std::string, std::string);
+    bool enforce(std::string, std::string, std::string);
 };
