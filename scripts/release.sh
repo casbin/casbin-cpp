@@ -22,7 +22,7 @@ ginst \
 	LICENSE \
 	README.md \
 	scripts \
-	src \
+	lib \
 	include \
 
 # packaging
