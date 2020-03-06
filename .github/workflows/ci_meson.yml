@@ -1,0 +1,66 @@
+name: ci_meson
+
+on:
+  push:
+    paths:
+      - "**.cc"
+      - "**.h"
+      - "**.build"
+      - ".github/workflows/ci_meson.yml"
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - run: |
+          pip install meson
+          sudo apt -yq update
+          sudo apt install -yq --no-install-recommends ninja-build
+      - run: meson setup build
+      - run: meson test -C build -v
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: Linux_Meson_Testlog
+          path: build/meson-logs/testlog.txt
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - run: |
+          brew install gcc ninja
+          pip install meson
+      - run: meson setup build
+      - run: meson test -C build -v
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: MacOS_Meson_Testlog
+          path: build/meson-logs/testlog.txt
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+
+      - run: |
+          cinst -y ninja
+          pip install meson
+      - run: meson setup build
+      - run: meson test -C build -v
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: Windows_Meson_Testlog
+          path: build/meson-logs/testlog.txt
