@@ -12,7 +12,7 @@ configure_file(
 )
 add_project_arguments([
   '-I' + meson.build_root(),
-], language: 'c')
+], language: ['cpp', 'c'])
 
 include_dirs = include_directories('include', 'lib', '.')
 
