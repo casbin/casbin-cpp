@@ -62,10 +62,3 @@ void ExpressionParser::display()
         operands.pop();
     }
 }
-
-main()
-{
-    ExpressionParser parser;
-    parser.parseString("m = r.sub == p.sub && r.obj == p.obj && r.act == p.act");
-    parser.display();
-}
