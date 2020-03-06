@@ -1,4 +1,4 @@
-#include "DefaultRoleManager.hpp"
+#include "DefaultRoleManager.h"
 
 using namespace std;
 
@@ -30,7 +30,7 @@ class GroupRoleManager : public DefaultRoleManager {
          * hasLink determines whether role: name1 inherits role: name2.
          * domain is a prefix to the roles.
          */
-        bool hasLink(string name1, string name2, string domain[]) {
+        bool hasLink(string name1, string name2, vector <string> domain) {
             if(DefaultRoleManager :: hasLink(name1, name2, domain)) {
                 return true;
             }
@@ -38,7 +38,7 @@ class GroupRoleManager : public DefaultRoleManager {
             // check name1's groups
             if (domain_length == 1) {
                 try {
-                    string domain1[] = {};
+                    vector <string> domain1;
                     vector <string> groups = DefaultRoleManager :: getRoles(name1, domain1);
                     for(vector <string> :: iterator group = groups.begin() ; group < groups.end() ; group++) {
                         if(hasLink(*group, name2, domain)) {

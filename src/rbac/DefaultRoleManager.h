@@ -1,8 +1,8 @@
 #include <unordered_map>
 
-#include "RoleManager.hpp"
-#include "exception/IllegalArgumentException.hpp"
-#include "log/LogUtil.hpp"
+#include "RoleManager.h"
+#include "exception/IllegalArgumentException.h"
+#include "log/LogUtil.h"
 
 /**
  * Role represents the data structure for a role in RBAC.
@@ -130,8 +130,8 @@ class DefaultRoleManager : public RoleManager {
          * aka role: name1 inherits role: name2.
          * domain is a prefix to the roles.
          */
-        void addLink(string name1, string name2, string domain[]) {
-            unsigned int domain_length = sizeof(domain)/sizeof(domain[0]);
+        void addLink(string name1, string name2, vector <string> domain) {
+            unsigned int domain_length = domain.size();
             if (domain_length == 1) {
                 name1 = domain[0] + "::" + name1;
                 name2 = domain[0] + "::" + name2;
@@ -149,8 +149,8 @@ class DefaultRoleManager : public RoleManager {
          * aka role: name1 does not inherit role: name2 any more.
          * domain is a prefix to the roles.
          */
-        void deleteLink(string name1, string name2, string domain[]) {
-            unsigned int domain_length = sizeof(domain)/sizeof(domain[0]);
+        void deleteLink(string name1, string name2, vector <string> domain) {
+            unsigned int domain_length = domain.size();
             if (domain_length == 1) {
                 name1 = domain[0] + "::" + name1;
                 name2 = domain[0] + "::" + name2;
@@ -171,8 +171,8 @@ class DefaultRoleManager : public RoleManager {
          * hasLink determines whether role: name1 inherits role: name2.
          * domain is a prefix to the roles.
          */
-        bool hasLink(string name1, string name2, string domain[]) {
-            unsigned int domain_length = sizeof(domain)/sizeof(domain[0]);
+        bool hasLink(string name1, string name2, vector <string> domain) {
+            unsigned int domain_length = domain.size();
             if (domain_length == 1) {
                 name1 = domain[0] + "::" + name1;
                 name2 = domain[0] + "::" + name2;
@@ -196,8 +196,8 @@ class DefaultRoleManager : public RoleManager {
          * getRoles gets the roles that a subject inherits.
          * domain is a prefix to the roles.
          */
-        vector <string> getRoles(string name, string domain[]) {
-            unsigned int domain_length = sizeof(domain)/sizeof(domain[0]);
+        vector <string> getRoles(string name, vector <string> domain) {
+            unsigned int domain_length = domain.size();
             if (domain_length == 1) {
                 name = domain[0] + "::" + name;
             } else if (domain_length > 1) {

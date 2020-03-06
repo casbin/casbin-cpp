@@ -18,7 +18,7 @@ class RoleManager {
          * @param name2 the second role.
          * @param domain the domain the roles belong to.
          */
-        virtual void addLink(string name1, string name2, string domain[]) = 0;
+        virtual void addLink(string name1, string name2, vector <string> domain) = 0;
 
         /**
          * deleteLink deletes the inheritance link between two roles. role: name1 and role: name2.
@@ -28,7 +28,7 @@ class RoleManager {
          * @param name2 the second role.
          * @param domain the domain the roles belong to.
          */
-        virtual void deleteLink(string name1, string name2, string domain[]) = 0;
+        virtual void deleteLink(string name1, string name2, vector <string> domain) = 0;
 
         /**
          * hasLink determines whether a link exists between two roles. role: name1 inherits role: name2.
@@ -39,7 +39,7 @@ class RoleManager {
          * @param domain the domain the roles belong to.
          * @return whether name1 inherits name2 (name1 has role name2).
          */
-        virtual bool hasLink(string name1, string name2, string domain[]) = 0;
+        virtual bool hasLink(string name1, string name2, vector <string> domain) = 0;
 
         /**
          * getRoles gets the roles that a user inherits.
@@ -49,7 +49,7 @@ class RoleManager {
          * @param domain the domain the roles belong to.
          * @return the roles.
          */
-        virtual vector<string> getRoles(string name, string domain[]) = 0;
+        virtual vector<string> getRoles(string name, vector <string> domain) = 0;
 
         /**
          * getUsers gets the users that inherits a role.

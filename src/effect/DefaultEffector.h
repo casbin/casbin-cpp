@@ -1,6 +1,6 @@
-#include "Effect.hpp"
-#include "Effector.hpp"
-#include "exception/UnsupportedOperationException.hpp"
+#include "Effect.h"
+#include "Effector.h"
+#include "exception/UnsupportedOperationException.h"
 
 /**
  * DefaultEffector is default effector for Casbin.
@@ -10,7 +10,7 @@ class DefaultEffector : public Effector{
         /**
          * mergeEffects merges all matching results collected by the enforcer into a single decision.
          */
-        bool mergeEffects(std::string expr, Effect effects[], float results[]) {
+        bool mergeEffects(string expr, Effect effects[], float results[]) {
             bool result;
 
             unsigned int number_of_effects = sizeof(effects)/sizeof(effects[0]);

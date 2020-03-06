@@ -1,10 +1,12 @@
 #include <string>
 
+using namespace std;
+
 // Exception class for unsupported operations.
 class UnsupportedOperationException{
-    std::string error_message;
+    string error_message;
     public:
-        UnsupportedOperationException(std::string error_message){
+        UnsupportedOperationException(string error_message){
             this->error_message = error_message;
         }
 };

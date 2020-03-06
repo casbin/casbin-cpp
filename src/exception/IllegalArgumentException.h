@@ -1,10 +1,12 @@
 #include <string>
 
+using namespace std;
+
 // Exception class for unsupported operations.
 class IllegalArgumentException{
-    std::string error_message;
+    string error_message;
     public:
-        IllegalArgumentException(std::string error_message){
+        IllegalArgumentException(string error_message){
             this->error_message = error_message;
         }
 };

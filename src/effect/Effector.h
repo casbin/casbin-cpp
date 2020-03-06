@@ -1,6 +1,6 @@
 #include <string>
 
-#include "Effect.hpp"
+#include "Effect.h"
 
 /**
  * Effector is the abstract class for Casbin effectors.
@@ -15,5 +15,5 @@ class Effector{
          * @param results the matcher results of all matched rules.
          * @return the final effect.
          */
-        virtual bool mergeEffects(std::string expr, Effect effects[], float results[]) = 0;
+        virtual bool mergeEffects(string expr, Effect effects[], float results[]) = 0;
 };
