@@ -6,57 +6,40 @@
 #include <iostream>
 #include "utils.h"
 
-std::string ConfReader::returnContext(std::string line)
-{
-    line.erase(0, 1);
-    line.erase(line.size() - 1, 1);
-    // std::cout<<line;
-    if (line == rd)
-        return rd;
-    if (line == pd)
-        return pd;
-    if (line == pe)
-        return pe;
-    if (line == m)
-        return m;
-    if (line == rld)
-        return rld;
-    return "";
-}
-
 void ConfReader::readFile(std::string fileName)
 {
     std::ifstream file(fileName, std::ios::out);
     if (!file.is_open())
     {
-        std::cerr << "Error: Unable to open CSV file " << fileName << " for reading!" << std::endl;
+        std::cerr << "Error: Unable to open INI file " << fileName << " for reading!" << std::endl;
         return;
     }
 
     std::string line;
-    std::string context;
+    std::string key;
     while (std::getline(file, line))
     {
         line = trim(line);
-        if (line.size() == 0)
+        if (line.length() == 0)
             continue;
-        if (returnContext(line).size() != 0)
-            context = returnContext(line);
+        if (line.at(0) == '[' && line.at(line.length() - 1) == ']')
+        {
+            key.clear();
+            key = line;
+            key.erase(0, 1);
+            key.erase(key.length()-1, 1);
+        }
         else
         {
-            std::vector<std::string> arr;
-            if (context == rld)
+            if (data.find(key) == data.end())
             {
-                
-            }
-            else if (context != m && context != pe)
-            {
-                arr = split(line, '=');
-                data.insert(std::pair<std::string, std::string>(context, arr[1]));
+                std::vector<std::string> temp;
+                temp.push_back(line);
+                data.insert(std::pair<std::string, std::vector<std::string>>(key, temp));
             }
             else
             {
-                data.insert(std::pair<std::string, std::string>(context, line));
+                data.find(key)->second.push_back(line);
             }
         }
     }
@@ -66,10 +49,27 @@ void ConfReader::readFile(std::string fileName)
 
 void ConfReader::display()
 {
-    std::map<std::string, std::string>::iterator itr;
+    std::map<std::string, std::vector<std::string>>::iterator itr;
     for (itr = data.begin(); itr != data.end(); itr++)
     {
-        std::cout << '\t' << itr->first
-                  << '\t' << itr->second << '\n';
+        std::cout << itr->first << std::endl;
+        for (std::string ele : itr->second)
+        {
+            std::cout << ele << " ";
+        }
+        std::cout << std::endl;
     }
+}
+
+std::vector<std::string> ConfReader::getSections() {
+    std::vector<std::string> v;
+    v.reserve(data.size());
+    for(auto const& i: data)
+    v.push_back(i.first);
+
+    return v;
+}
+
+std::vector<std::string> ConfReader::getSectionData(std::string key) {
+    return data.find(key)->second;
 }

@@ -2,30 +2,14 @@
 #include <string>
 #include <stack>
 #include <iostream>
+#include "ExpressionParser.h"
 #include "utils.h"
-
-class ExpressionParser
-{
-    std::stack<std::string> operands;
-    std::stack<std::string> operators;
-    std::vector<std::string> knownOperators;
-
-public:
-    ExpressionParser()
-    {
-        knownOperators.push_back("==");
-        knownOperators.push_back("&&");
-    }
-
-    void parseString(std::string line);
-    void display();
-};
 
 void ExpressionParser::parseString(std::string line)
 {
     int start = 0;
     int operatorsNotFound = 0;
-    line = line.substr(line.find_first_of('=')+1, line.size());
+    line = line.substr(line.find_first_of('=') + 1, line.size());
 
     while (start < line.size())
     {
@@ -47,6 +31,13 @@ void ExpressionParser::parseString(std::string line)
             break;
     }
 }
+
+// void ExpressionParser::parseString(std::string line) {
+//     for(std::string op: knownOperators) {
+//         size_t operatorIndex = line.find(op, 0);
+//         parseString(line.substr(0, ))
+//     }
+// }
 
 void ExpressionParser::display()
 {

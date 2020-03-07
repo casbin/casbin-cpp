@@ -351,3 +351,5 @@ MigrationBackup/
 
 *exe
 .vscode/
+*.conf
+*.csv
