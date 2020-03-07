@@ -1,8 +1,13 @@
+#ifndef CASBIN_CPP_RBAC_DEFAULT_ROLE_MANAGER
+#define CASBIN_CPP_RBAC_DEFAULT_ROLE_MANAGER
+
 #include <unordered_map>
 
 #include "RoleManager.h"
 #include "../exception/IllegalArgumentException.h"
 #include "../log/LogUtil.h"
+
+#endif
 
 /**
  * Role represents the data structure for a role in RBAC.

@@ -1,8 +1,13 @@
+#ifndef CASBIN_CPP_MODEL_ASSERTION
+#define CASBIN_CPP_MODEL_ASSERTION
+
 #include <algorithm>
 
 #include "../rbac/RoleManager.h"
 #include "../log/LogUtil.h"
 #include "../exception/IllegalArgumentException.h"
+
+#endif
 
 using namespace std;
 

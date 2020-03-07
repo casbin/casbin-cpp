@@ -1,5 +1,10 @@
+#ifndef CASBIN_CPP_RBAC_ROLE_MANAGER
+#define CASBIN_CPP_RBAC_ROLE_MANAGER
+
 #include <string>
 #include <vector>
+
+#endif
 
 using namespace std;
 

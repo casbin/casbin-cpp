@@ -1,4 +1,9 @@
+#ifndef CASBIN_CPP_EXCEPTION_UNSUPPORTED_OPERATION_EXCEPTION
+#define CASBIN_CPP_EXCEPTION_UNSUPPORTED_OPERATION_EXCEPTION
+
 #include <string>
+
+#endif
 
 using namespace std;
 

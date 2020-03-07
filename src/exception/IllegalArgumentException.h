@@ -1,4 +1,9 @@
+#ifndef CASBIN_CPP_EXCEPTION_ILLEGAL_ARGUMENT_EXCEPTION
+#define CASBIN_CPP_EXCEPTION_ILLEGAL_ARGUMENT_EXCEPTION
+
 #include <string>
+
+#endif
 
 using namespace std;
 

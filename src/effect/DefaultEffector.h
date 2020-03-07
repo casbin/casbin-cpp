@@ -1,5 +1,10 @@
+#ifndef CASBIN_CPP_EFFECT_DEFAULT_EFFECTOR
+#define CASBIN_CPP_EFFECT_DEFAULT_EFFECTOR
+
 #include "Effector.h"
 #include "../exception/UnsupportedOperationException.h"
+
+#endif
 
 /**
  * DefaultEffector is default effector for Casbin.

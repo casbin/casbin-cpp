@@ -1,4 +1,9 @@
+#ifndef CASBIN_CPP_RBAC_GROUP_ROLE_MANAGER
+#define CASBIN_CPP_RBAC_GROUP_ROLE_MANAGER
+
 #include "DefaultRoleManager.h"
+
+#endif
 
 using namespace std;
 

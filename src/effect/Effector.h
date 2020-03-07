@@ -1,6 +1,11 @@
+#ifndef CASBIN_CPP_EFFECT_EFFECTOR
+#define CASBIN_CPP_EFFECT_EFFECTOR
+
 #include <string>
 
 #include "Effect.h"
+
+#endif
 
 using namespace std;
 

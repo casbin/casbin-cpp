@@ -1,4 +1,9 @@
+#ifndef CASBIN_CPP_ERROR_ERROR
+#define CASBIN_CPP_ERROR_ERROR
+
 #include <string>
+
+#endif
 
 using namespace std;
 
