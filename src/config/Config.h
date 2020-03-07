@@ -1,0 +1,203 @@
+// Copyright 2017 The casbin Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// package org.casbin.jcasbin.config;
+
+// import org.casbin.jcasbin.exception.CasbinConfigException;
+
+// import java.io.*;
+// import java.util.HashMap;
+// import java.util.Map;
+// import java.util.concurrent.locks.ReentrantLock;
+
+#include <string>
+#include <unordered_map>
+
+using namespace std;
+
+class Config {
+    private: 
+        static const string DEFAULT_SECTION = "default";
+        static const string DEFAULT_COMMENT = "#";
+        static const string DEFAULT_COMMENT_SEM = ";";
+    // private ReentrantLock lock = new ReentrantLock();
+
+    // Section:key=value
+        unordered_map < string, unordered_map <string, string> > data;
+
+    /**
+     * Config represents the configuration parser.
+     */
+    private Config() {
+        data = new HashMap<>();
+    }
+
+    /**
+     * newConfig create an empty configuration representation from file.
+     *
+     * @param confName the path of the model file.
+     * @return the constructor of Config.
+     */
+    public static Config newConfig(String confName) {
+        Config c = new Config();
+        c.parse(confName);
+        return c;
+    }
+
+    /**
+     * newConfigFromText create an empty configuration representation from text.
+     *
+     * @param text the model text.
+     * @return the constructor of Config.
+     */
+    public static Config newConfigFromText(String text) {
+        Config c = new Config();
+        try {
+            c.parseBuffer(new BufferedReader(new StringReader(text)));
+        } catch (IOException e) {
+            throw new CasbinConfigException(e.getMessage(), e.getCause());
+        }
+        return c;
+    }
+
+    /**
+     * addConfig adds a new section->key:value to the configuration.
+     */
+    private boolean addConfig(String section, String option, String value) {
+        if (section.equals("")) {
+            section = DEFAULT_SECTION;
+        }
+
+        if (!data.containsKey(section)) {
+            data.put(section, new HashMap<>());
+        }
+
+        boolean ok = data.get(section).containsKey(option);
+        data.get(section).put(option, value);
+        return !ok;
+    }
+
+    private void parse(String fname) {
+        lock.lock();
+        try (FileInputStream fis = new FileInputStream(fname)) {
+            BufferedReader buf = new BufferedReader(new InputStreamReader(fis));
+            parseBuffer(buf);
+        } catch (IOException e) {
+            throw new CasbinConfigException(e.getMessage(), e.getCause());
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void parseBuffer(BufferedReader buf) throws IOException {
+        String section = "";
+        int lineNum = 0;
+        String line;
+
+        while (true) {
+            lineNum++;
+
+            if ((line = buf.readLine()) != null) {
+                if ("".equals(line)) {
+                    continue;
+                }
+            } else {
+                break;
+            }
+
+
+            line = line.trim();
+            if (line.startsWith(DEFAULT_COMMENT)) {
+                continue;
+            } else if (line.startsWith(DEFAULT_COMMENT_SEM)) {
+                continue;
+            } else if (line.startsWith("[") && line.endsWith("]")) {
+                section = line.substring(1, line.length() - 1);
+            } else {
+                String[] optionVal = line.split("=", 2);
+                if (optionVal.length != 2) {
+                    throw new IllegalArgumentException(String.format("parse the content error : line %d , %s = ? ", lineNum, optionVal[0]));
+                }
+                String option = optionVal[0].trim();
+                String value = optionVal[1].trim();
+                addConfig(section, option, value);
+            }
+        }
+    }
+
+    public boolean getBool(String key) {
+        return Boolean.parseBoolean(get(key));
+    }
+
+    public int getInt(String key) {
+        return Integer.parseInt(get(key));
+    }
+
+    public float getFloat(String key) {
+        return Float.parseFloat(get(key));
+    }
+
+    public String getString(String key) {
+        return get(key);
+    }
+
+    public String[] getStrings(String key) {
+        String v = get(key);
+        if (v.equals("")) {
+            return null;
+        }
+        return v.split(",");
+    }
+
+    public void set(String key, String value) {
+        lock.lock();
+        if (key.length() == 0) {
+            throw new IllegalArgumentException("key is empty");
+        }
+
+        String section = "";
+        String option;
+
+        String[] keys = key.toLowerCase().split("::");
+        if (keys.length >= 2) {
+            section = keys[0];
+            option = keys[1];
+        } else {
+            option = keys[0];
+        }
+
+        addConfig(section, option, value);
+    }
+
+    public String get(String key) {
+        String section;
+        String option;
+
+        String[] keys = key.toLowerCase().split("::");
+        if (keys.length >= 2) {
+            section = keys[0];
+            option = keys[1];
+        } else {
+            section = DEFAULT_SECTION;
+            option = keys[0];
+        }
+
+        boolean ok = data.containsKey(section) && data.get(section).containsKey(option);
+        if (ok) {
+            return data.get(section).get(option);
+        } else {
+            return "";
+        }
+    }
+}

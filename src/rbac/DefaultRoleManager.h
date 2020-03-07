@@ -1,8 +1,8 @@
 #include <unordered_map>
 
 #include "RoleManager.h"
-#include "exception/IllegalArgumentException.h"
-#include "log/LogUtil.h"
+#include "../exception/IllegalArgumentException.h"
+#include "../log/LogUtil.h"
 
 /**
  * Role represents the data structure for a role in RBAC.

@@ -1,10 +1,8 @@
 #include <algorithm>
 
-#include "rbac/RoleManager.h"
-
-#include "log/LogUtil.h"
-
-#include "exception/IllegalArgumentException.h"
+#include "../rbac/RoleManager.h"
+#include "../log/LogUtil.h"
+#include "../exception/IllegalArgumentException.h"
 
 using namespace std;
 

@@ -2,6 +2,8 @@
 
 #include "Effect.h"
 
+using namespace std;
+
 /**
  * Effector is the abstract class for Casbin effectors.
  */

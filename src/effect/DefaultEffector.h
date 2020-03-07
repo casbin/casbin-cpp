@@ -1,6 +1,5 @@
-#include "Effect.h"
 #include "Effector.h"
-#include "exception/UnsupportedOperationException.h"
+#include "../exception/UnsupportedOperationException.h"
 
 /**
  * DefaultEffector is default effector for Casbin.
