@@ -4,6 +4,8 @@
 #include <string>
 #include "utils.h"
 
+namespace casbin
+{
 std::vector<std::string> CSVManager::readLine(std::string line)
 {
     return split(line, ',');
@@ -38,7 +40,7 @@ void CSVManager::writeFile(std::string fileName)
         for (std::vector<std::string> vec : data)
         {
             line = join(vec, ',');
-            fout << line << std::endl;    
+            fout << line << std::endl;
         }
     }
 
@@ -62,3 +64,4 @@ std::vector<std::vector<std::string>> CSVManager::getData()
 {
     return data;
 }
+} // namespace casbin

@@ -3,6 +3,8 @@
 #include <string>
 
 using namespace std;
+namespace casbin
+{
 class ConfReader
 {
 protected:
@@ -14,3 +16,4 @@ public:
     vector<string> getSections();
     vector<string> getSectionData(string);
 };
+} // namespace casbin

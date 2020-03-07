@@ -5,6 +5,8 @@
 #include "ExpressionParser.h"
 #include "utils.h"
 
+namespace casbin
+{
 void ExpressionParser::parseString(std::string line)
 {
     int start = 0;
@@ -53,3 +55,4 @@ void ExpressionParser::display()
         operands.pop();
     }
 }
+} // namespace casbin

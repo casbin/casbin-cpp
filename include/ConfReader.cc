@@ -6,6 +6,9 @@
 #include <iostream>
 #include "utils.h"
 
+namespace casbin
+{
+
 void ConfReader::readFile(std::string fileName)
 {
     std::ifstream file(fileName, std::ios::out);
@@ -27,7 +30,7 @@ void ConfReader::readFile(std::string fileName)
             key.clear();
             key = line;
             key.erase(0, 1);
-            key.erase(key.length()-1, 1);
+            key.erase(key.length() - 1, 1);
         }
         else
         {
@@ -61,15 +64,19 @@ void ConfReader::display()
     }
 }
 
-std::vector<std::string> ConfReader::getSections() {
+std::vector<std::string> ConfReader::getSections()
+{
     std::vector<std::string> v;
     v.reserve(data.size());
-    for(auto const& i: data)
-    v.push_back(i.first);
+    for (auto const &i : data)
+        v.push_back(i.first);
 
     return v;
 }
 
-std::vector<std::string> ConfReader::getSectionData(std::string key) {
+std::vector<std::string> ConfReader::getSectionData(std::string key)
+{
     return data.find(key)->second;
 }
+
+} // namespace casbin
