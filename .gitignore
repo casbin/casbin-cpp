@@ -353,3 +353,4 @@ MigrationBackup/
 .vscode/
 *.conf
 *.csv
+build/
