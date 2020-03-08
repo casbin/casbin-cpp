@@ -82,7 +82,7 @@ class Config {
                     vector <string> optionVal = split(line, string("="));
                     if (optionVal.size() != 2) {
                         char * error;
-                        sprintf(error,"parse the content error : line %d , %s = ? ", lineNum, optionVal[0]);
+                        sprintf(error,"parse the content error : line %d , %s = ? ", lineNum, optionVal[0].c_str());
                         throw IllegalArgumentException(string(error));
                     }
                     string option = trim(optionVal[0]);
@@ -138,7 +138,8 @@ class Config {
         vector <string> getStrings(string key) {
             string v = get(key);
             if (!v.compare("")) {
-                return (vector<string>)NULL;
+                vector <string> empty;
+                return empty;
             }
             return split(v,string(","));
         }
