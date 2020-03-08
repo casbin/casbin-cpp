@@ -114,12 +114,8 @@ class Config {
          */
         static Config newConfigFromText(string text) {
             Config c;
-            // try {
             stringstream stream(text);
             c.parseBuffer(&stream);
-            // } catch (IOException e) {
-                // throw new CasbinConfigException(e.getMessage(), e.getCause());
-            // }
             return c;
         }
 
@@ -150,6 +146,7 @@ class Config {
         void set(string key, string value) {
             mtx_lock.lock();
             if (key.length() == 0) {
+                mtx_lock.unlock();
                 throw IllegalArgumentException("key is empty");
             }
 
@@ -164,8 +161,8 @@ class Config {
             } else {
                 option = keys[0];
             }
-
             addConfig(section, option, value);
+            mtx_lock.unlock();
         }
 
         string get(string key) {
