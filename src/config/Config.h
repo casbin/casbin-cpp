@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <algorithm>
 
+#include "./ConfigInterface.h"
 #include "../exception/IOException.h"
 #include "../exception/IllegalArgumentException.h"
 #include "../util/trim.h"
@@ -21,7 +22,7 @@ using namespace std;
 
 mutex mtx_lock;
 
-class Config {
+class Config : public ConfigInterface {
     private: 
         static const string DEFAULT_SECTION;
         static const string DEFAULT_COMMENT;
