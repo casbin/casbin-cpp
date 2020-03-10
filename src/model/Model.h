@@ -153,6 +153,28 @@ class Model{
 			m.LoadModelFromText(text);
 			return m;
 		}
+
+		void BuildRoleLinks(RoleManager* rm);
+
+		void PrintPolicy();
+
+		void ClearPolicy();
+
+		vector < vector < string > > GetPolicy(string sec, string ptype);
+
+		vector < vector < string > > GetFilteredPolicy(string sec, string ptype, int fieldIndex, vector <string> fieldValues);
+
+		bool HasPolicy(string sec, string ptype, vector <string> rule);
+
+		bool AddPolicy(string sec, string ptype,  vector <string> rule);
+
+		bool RemovePolicy(string sec, string ptype, vector <string> rule);
+
+		bool RemoveFilteredPolicy(string sec, string ptype, int fieldIndex, vector <string> fieldValues);
+
+		vector <string> GetValuesForFieldInPolicy(string sec, string ptype, int fieldIndex);
+
+		vector <string> GetValuesForFieldInPolicyAllTypes(string sec, int fieldIndex);
 };
 
 #endif
