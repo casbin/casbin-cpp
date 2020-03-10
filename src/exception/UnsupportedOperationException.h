@@ -3,8 +3,6 @@
 
 #include <string>
 
-#endif
-
 using namespace std;
 
 // Exception class for unsupported operations.
@@ -15,3 +13,5 @@ class UnsupportedOperationException{
             this->error_message = error_message;
         }
 };
+
+#endif

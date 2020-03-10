@@ -16,8 +16,6 @@
 #include "../util/ends_with.h"
 #include "../util/split.h"
 
-#endif
-
 using namespace std;
 
 mutex mtx_lock;
@@ -193,3 +191,5 @@ class Config : public ConfigInterface {
 const string Config::DEFAULT_SECTION = "default";
 const string Config::DEFAULT_COMMENT = "#";
 const string Config::DEFAULT_COMMENT_SEM = ";";
+
+#endif

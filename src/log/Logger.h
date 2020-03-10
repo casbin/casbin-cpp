@@ -3,8 +3,6 @@
 
 #include <string>
 
-#endif
-
 using namespace std;
 
 class Logger{
@@ -27,3 +25,5 @@ class Logger{
         template <typename... Object>
         void Printf(string, Object... objects);
 };
+
+#endif

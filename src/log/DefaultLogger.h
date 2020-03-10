@@ -4,8 +4,6 @@
 #include "Logger.h"
 #include "Log.h"
 
-#endif
-
 using namespace std;
 
 class DefaultLogger : public Logger{
@@ -33,3 +31,5 @@ class DefaultLogger : public Logger{
             }
         }
 };
+
+#endif

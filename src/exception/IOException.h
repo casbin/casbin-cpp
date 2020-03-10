@@ -1,13 +1,11 @@
-#ifndef CASBIN_CPP_EXCEPTION_ILLEGAL_ARGUMENT_EXCEPTION
-#define CASBIN_CPP_EXCEPTION_ILLEGAL_ARGUMENT_EXCEPTION
+#ifndef CASBIN_CPP_EXCEPTION_IO_EXCEPTION
+#define CASBIN_CPP_EXCEPTION_IO_EXCEPTION
 
 #include <string>
 
-#endif
-
 using namespace std;
 
-// Exception class for unsupported operations.
+// Exception class for I/O operations.
 class IOException{
     string error_message;
     public:
@@ -15,3 +13,5 @@ class IOException{
             this->error_message = error_message;
         }
 };
+
+#endif

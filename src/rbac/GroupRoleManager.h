@@ -3,8 +3,6 @@
 
 #include "DefaultRoleManager.h"
 
-#endif
-
 using namespace std;
 
 /**
@@ -57,3 +55,5 @@ class GroupRoleManager : public DefaultRoleManager {
             return false;
         }
 };
+
+#endif

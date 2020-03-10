@@ -3,11 +3,9 @@
 
 #include <string>
 
-#endif
-
 using namespace std;
 
-// Exception class for unsupported operations.
+// Exception class for illegal arguments.
 class IllegalArgumentException{
     string error_message;
     public:
@@ -15,3 +13,5 @@ class IllegalArgumentException{
             this->error_message = error_message;
         }
 };
+
+#endif

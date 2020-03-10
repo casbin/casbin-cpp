@@ -3,8 +3,6 @@
 
 #include "DefaultLogger.h"
 
-#endif
-
 using namespace std;
 
 class LogUtil{
@@ -34,3 +32,5 @@ class LogUtil{
 			logger.Printf(format, objects...);
 		}
 };
+
+#endif

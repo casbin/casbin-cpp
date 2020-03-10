@@ -7,8 +7,6 @@
 #include "../exception/IllegalArgumentException.h"
 #include "../log/LogUtil.h"
 
-#endif
-
 /**
  * Role represents the data structure for a role in RBAC.
  */
@@ -255,4 +253,4 @@ class DefaultRoleManager : public RoleManager {
         }
 };
 
-
+#endif

@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-#endif
-
 using namespace std;
 
 vector <string> split(string str, string del){
@@ -22,3 +20,5 @@ vector <string> split(string str, string del){
     }
     return tokens;
 }
+
+#endif

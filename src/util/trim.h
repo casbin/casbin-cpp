@@ -3,8 +3,6 @@
 
 #include <string>
 
-#endif
-
 using namespace std;
 
 string& ltrim(string& str, const string& chars = "\t\n\v\f\r ")
@@ -19,7 +17,9 @@ string& rtrim(string& str, const string& chars = "\t\n\v\f\r ")
     return str;
 }
  
-string& trim(string& str, const string& chars = "\t\n\v\f\r ")
+string trim(string& str, const string& chars = "\t\n\v\f\r ")
 {
     return ltrim(rtrim(str, chars), chars);
 }
+
+#endif

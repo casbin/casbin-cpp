@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#endif
-
 using namespace std;
 
 class RoleManager {
@@ -68,3 +66,5 @@ class RoleManager {
          */
         virtual void printRoles() = 0;
 };
+
+#endif

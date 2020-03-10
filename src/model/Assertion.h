@@ -7,8 +7,6 @@
 #include "../log/LogUtil.h"
 #include "../exception/IllegalArgumentException.h"
 
-#endif
-
 using namespace std;
 
 // Assertion represents an expression in a section of the model.
@@ -59,3 +57,5 @@ class Assertion {
 		}
 
 };
+
+#endif

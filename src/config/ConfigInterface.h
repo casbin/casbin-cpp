@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#endif
-
 using namespace std;
 
 class ConfigInterface {
@@ -20,3 +18,5 @@ class ConfigInterface {
         virtual void set(string key,string value) = 0;
 
 };
+
+#endif

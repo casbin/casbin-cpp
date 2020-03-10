@@ -3,8 +3,6 @@
 
 #include <string>
 
-#endif
-
 using namespace std;
 
 class Error{
@@ -22,3 +20,5 @@ class Error{
 };
 
 Error Error::NIL = Error("nil");
+
+#endif
