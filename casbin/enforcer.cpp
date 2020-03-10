@@ -18,5 +18,23 @@
 #include "enforcer.h"
 
 bool Enforcer::enforce(string sub, string obj, string act) {
-	return false;
+	string request = sub + "," + obj + "," + act;
+	vector<string> policyeffects;
+	for (vector<string> ele : pmanager.getFilteredPolicy("p")) {
+		string response = m.injectValue(mmanager.getRPStructure(), request, join(ele, ','), m.matcherString);
+		response = m.parseString(response);
+		policyeffects.push_back(response);
+	}
+
+	return m.mergeDecisions(policyeffects);
+}
+
+vector<string> Enforcer::getPolicy() {
+	vector<vector<string>> temp = pmanager.getPolicy();
+	vector<string> result;
+	for (vector<string> ele : temp) {
+		result.push_back(join(ele, ','));
+	}
+
+	return result;
 }
