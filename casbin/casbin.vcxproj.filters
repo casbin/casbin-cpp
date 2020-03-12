@@ -30,17 +30,14 @@
     <ClInclude Include="enforcer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Matcher.h">
+    <ClInclude Include="matcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Operator.h">
+    <ClInclude Include="operator.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="conf_adapter.h">
-      <Filter>Header Files\adapters</Filter>
     </ClInclude>
     <ClInclude Include="csv_adapter.h">
       <Filter>Header Files\adapters</Filter>
@@ -57,6 +54,18 @@
     <ClInclude Include="logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="file_adapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="effector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Header Files\adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac_errors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -68,17 +77,14 @@
     <ClCompile Include="enforcer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Matcher.cpp">
+    <ClCompile Include="matcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Operator.cpp">
+    <ClCompile Include="operator.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="conf_adapter.cpp">
-      <Filter>Source Files\adapters</Filter>
     </ClCompile>
     <ClCompile Include="csv_adapter.cpp">
       <Filter>Source Files\adapters</Filter>
@@ -94,6 +100,15 @@
     </ClCompile>
     <ClCompile Include="logger.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="file_adapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="effector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>Source Files\adapters</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -40,3 +40,4 @@ string Model::getPolicyEffect() {
 string Model::getMatcherString() {
 	return model.find("matchers")->second;
 }
+

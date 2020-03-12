@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "conf_adapter.h"
+#include "config.h"
 
-void ConfAdapter::readFile(string fileName)
+void Config::readFile(string fileName)
 {
     ifstream file(fileName, ios::out);
     if (!file.is_open())
@@ -42,7 +42,7 @@ void ConfAdapter::readFile(string fileName)
     file.close();
 }
 
-void ConfAdapter::display()
+void Config::display()
 {
     map<string, vector<string>>::iterator itr;
     for (itr = data.begin(); itr != data.end(); itr++)
@@ -56,7 +56,7 @@ void ConfAdapter::display()
     }
 }
 
-vector<string> ConfAdapter::getSections()
+vector<string> Config::getSections()
 {
     vector<string> v;
     v.reserve(data.size());
@@ -66,7 +66,7 @@ vector<string> ConfAdapter::getSections()
     return v;
 }
 
-vector<string> ConfAdapter::getSectionData(string key)
+vector<string> Config::getSectionData(string key)
 {
     return data.find(key)->second;
 }

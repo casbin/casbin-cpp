@@ -23,4 +23,5 @@ public:
 	bool createRole(string);
 	bool addLink(string, string, string);
 	bool deleteLink(string, string, string);
+	vector<string> getRoles(string, string);
 };

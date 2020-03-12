@@ -151,28 +151,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="conf_adapter.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="csv_adapter.h" />
+    <ClInclude Include="effector.h" />
     <ClInclude Include="enforcer.h" />
+    <ClInclude Include="file_adapter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="logger.h" />
-    <ClInclude Include="Matcher.h" />
+    <ClInclude Include="matcher.h" />
     <ClInclude Include="model.h" />
-    <ClInclude Include="Operator.h" />
+    <ClInclude Include="operator.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="policy_manager.h" />
+    <ClInclude Include="rbac_errors.h" />
     <ClInclude Include="role_manager.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="conf_adapter.cpp" />
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="csv_adapter.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="effector.cpp" />
     <ClCompile Include="enforcer.cpp" />
+    <ClCompile Include="file_adapter.cpp" />
     <ClCompile Include="logger.cpp" />
-    <ClCompile Include="Matcher.cpp" />
+    <ClCompile Include="matcher.cpp" />
     <ClCompile Include="model.cpp" />
-    <ClCompile Include="Operator.cpp" />
+    <ClCompile Include="operator.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

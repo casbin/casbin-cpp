@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Matcher.h"
+#include "matcher.h"
 
 bool Matcher::mergeDecisions(vector<string> policyeffects) {
 	if (policyeffect == "some(where (p.eft == allow))") {

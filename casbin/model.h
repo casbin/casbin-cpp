@@ -7,12 +7,12 @@
 #endif
 
 #include <string>
-#include "conf_adapter.h"
+#include "config.h"
 
 using namespace std;
 
 class MODEL_API Model {
-	ConfAdapter adapter;
+	Config adapter;
 	map<string, string> model;
 public:
 	Model() {

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "../casbin/csv_adapter.h"
-#include "../casbin/conf_adapter.h"
+#include "../casbin/config.h"
 #include "../casbin/model.h"
 #include "../casbin/logger.h"
 
@@ -12,7 +12,7 @@ TEST(CSVAdapterTest, FileReadTest) {
 }
 
 TEST(ConfAdapterTest, FileReadTest) {
-	ConfAdapter e;
+	Config e;
 	e.readFile("../../examples/model.conf");
 	vector<string> data = e.getSections();
 	EXPECT_EQ(4, data.size()) << "The resulting size is " << data.size();

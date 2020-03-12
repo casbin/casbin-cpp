@@ -16,11 +16,18 @@
 
 using namespace std;
 
-class CONFADAPTER_API ConfAdapter {
+class CONFADAPTER_API Config {
 protected:
     map<string, vector<string>> data;
 
 public:
+    Config() {
+
+    }
+    Config(string fileName) {
+
+    }
+
     void readFile(string);
     void display();
     vector<string> getSections();

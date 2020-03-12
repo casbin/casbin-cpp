@@ -76,3 +76,19 @@ bool RoleManager::deleteLink(string name1, string name2, string domain) {
 	}
 	else return false;
 }
+
+vector<string> RoleManager::getRoles(string name, string domain) {
+	name = domain + "::" + name;
+	
+	if (!hasRole(name)) return vector<string>();
+
+	vector<string> temp = allRoles.find(name)->second.roles;
+
+	for (vector<string>::iterator itr = temp.begin(); itr != temp.end(); itr++) {
+		string tempstr = *itr;
+		*itr = tempstr.substr(domain.length() + 2);
+	}
+
+	return temp;
+}
+
