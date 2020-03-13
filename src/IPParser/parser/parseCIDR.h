@@ -15,8 +15,11 @@
 
 CIDR parseCIDR(string s) {
 	size_t pos = s.find("/");
+	CIDR cidr_addr;
 	if(pos == string :: npos) {
-		throw ParserException("Illegal CIDR address.");
+		// throw ParserException("Illegal CIDR address.");
+		cidr_addr.ip.isLegal = false;
+		return cidr_addr;
 	}
 	string addr = s.substr(0, pos);
 	string mask = s.substr(pos+1, s.length()-pos-1);
@@ -29,10 +32,11 @@ CIDR parseCIDR(string s) {
 	}
 	pair<int, int> p = dtoi(mask);
 	if(ip.isLegal == false || (p.first >= big || p.second==0) ||  p.second != mask.length() || p.first < 0 || p.first > 8*iplen) {
-		throw ParserException("Illegal CIDR address.");
+		// throw ParserException("Illegal CIDR address.");
+		cidr_addr.ip.isLegal = false;
+		return cidr_addr;
 	}
 	IPMask m = CIDRMask(p.first, 8*iplen);
-	CIDR cidr_addr;
 	cidr_addr.ip = ip;
 	cidr_addr.net.net_ip = ip.Mask(m);
 	cidr_addr.net.mask = m;
