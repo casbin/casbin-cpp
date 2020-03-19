@@ -60,10 +60,16 @@
     <ClInclude Include="effector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="config.h">
-      <Filter>Header Files\adapters</Filter>
-    </ClInclude>
     <ClInclude Include="rbac_errors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="assertion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="policy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -108,7 +114,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="config.cpp">
-      <Filter>Source Files\adapters</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="assertion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="policy.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

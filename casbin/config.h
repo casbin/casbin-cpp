@@ -8,7 +8,7 @@
 
 #include <map>
 #include <string>
-#include <vector>
+#include <sstream>
 #include <fstream>
 #include <iostream>
 #include <regex>
@@ -17,19 +17,20 @@
 using namespace std;
 
 class CONFADAPTER_API Config {
-protected:
-    map<string, vector<string>> data;
-
+	map<string, map<string, string>> data;
 public:
-    Config() {
+	Config() {
+	}
 
-    }
-    Config(string fileName) {
+	Config(string confName) {
+		readFromFile(confName);
+	}
 
-    }
-
-    void readFile(string);
-    void display();
-    vector<string> getSections();
-    vector<string> getSectionData(string);
+	void parseStream(stringstream&);
+	void readFromFile(string);
+	void readFromText(string);
+	bool addConfig(string, string, string);
+	string get(string);
+	void set(string, string);
+	vector<string> strings(string);
 };

@@ -39,9 +39,9 @@ class ENFORCER_API Enforcer {
 public:
 	Enforcer(string model, string p) {
 		pmanager.readPolicy(p);
-		mmanager.readModel(model);
+		/*mmanager.readModel(model);
 		m.addPolicyEffect(mmanager.getPolicyEffect());
-		m.matcherString = mmanager.getMatcherString();
+		m.matcherString = mmanager.getMatcherString();*/
 	}
 	bool enforce(string sub, string obj, string act);
 	vector<string> getAllSubjects();

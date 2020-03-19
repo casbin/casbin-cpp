@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="assertion.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="csv_adapter.h" />
     <ClInclude Include="effector.h" />
@@ -162,12 +163,14 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="operator.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="policy.h" />
     <ClInclude Include="policy_manager.h" />
     <ClInclude Include="rbac_errors.h" />
     <ClInclude Include="role_manager.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="assertion.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="csv_adapter.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -184,6 +187,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="policy.cpp" />
     <ClCompile Include="policy_manager.cpp" />
     <ClCompile Include="role_manager.cpp" />
     <ClCompile Include="utils.cpp" />

@@ -7,24 +7,32 @@
 #endif
 
 #include <string>
+#include <array>
 #include "config.h"
+#include "assertion.h"
+#include "utils.h"
 
 using namespace std;
 
+class AssertionMap {
+public:
+	map<string, Assertion*> data;
+	AssertionMap(string s, Assertion* a) {
+		data.insert({ s, a });
+	}
+};
+
 class MODEL_API Model {
 	Config adapter;
-	map<string, string> model;
-public:
-	Model() {
+	map<string, AssertionMap*> model;
+	const map<string, string> sectionNameMap = { {"r", "request_definition"},
+	{"p", "policy_definition"},
+	{"g", "role_definition"},
+	{"e", "policy_effect"},
+	{"m", "matchers"} };
+	const array<string, 4> requiredSections = { "r", "p", "e", "m" };
 
-	}
-	Model(string fileName) {
-		adapter.readFile(fileName);
-		injectIntoModel();
-	}
-	void injectIntoModel();
-	void readModel(string fileName);
-	map<string, vector<string>> getRPStructure();
-	string getPolicyEffect();
-	string getMatcherString();
+public:
+	friend bool loadAssertion(Model, Config, string, string);
+	bool addDef(string, string, string);
 };

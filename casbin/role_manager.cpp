@@ -57,9 +57,17 @@ bool RoleManager::createRole(string name) {
 	return true;
 }
 
-bool RoleManager::addLink(string name1, string name2, string domain) {
-	name1.insert(0, domain + "::");
-	name2.insert(0, domain + "::");
+bool RoleManager::addLink(string name1, string name2, vector<string> domain) {
+	name1.insert(0, domain[0] + "::");
+	name2.insert(0, domain[0] + "::");
+	createRole(name1);
+	createRole(name2);
+	allRoles.find(name1)->second.roles.push_back(name2);
+
+	return true;
+}
+
+bool RoleManager::addLink(string name1, string name2) {
 	createRole(name1);
 	createRole(name2);
 	allRoles.find(name1)->second.roles.push_back(name2);

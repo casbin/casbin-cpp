@@ -1,72 +1,122 @@
 #include "pch.h"
 #include "config.h"
 
-void Config::readFile(string fileName)
-{
-    ifstream file(fileName, ios::out);
-    if (!file.is_open())
-    {
-        cerr << "Error: Unable to open INI file " << fileName << " for reading!" << endl;
-        return;
-    }
+const string DEFAULT_SECTION = "default";
 
-    string line;
-    string key;
-    smatch m;
-    while (getline(file, line))
-    {
-        line = regex_replace(line, std::regex("[#;].*"), ""); // Remove comments from config
-        line = trim(line);
-        if (line.length() == 0)
-            continue;
-        if (regex_search(line, m, regex("\\[.*\\]"))) // Check for section
-        {
-            key.clear();
-            key = m.str().substr(1, m.str().length() - 2);
-        }
-        else
-        {
-            if (data.find(key) == data.end())
-            {
-                vector<string> temp;
-                temp.push_back(line);
-                data.insert(pair<string, vector<string>>(key, temp));
-            }
-            else
-            {
-                data.find(key)->second.push_back(line);
-            }
-        }
-    }
-
-    file.close();
+void Config::parseStream(stringstream& stream) {
+	string line;
+	string key;
+	string section;
+	bool canWrite = false;
+	smatch m;
+	while (getline(stream, line))
+	{
+		line = regex_replace(line, std::regex("[#;].*"), ""); // Remove comments from config
+		line = trim(line);
+		if (line.length() == 0)
+			continue;
+		if (regex_search(line, m, regex("\\[.*\\]"))) // Check for section
+		{
+			section.clear();
+			section = m.str().substr(1, m.str().length() - 2);
+		}
+		else
+		{
+			smatch mat;
+			regex_search(line, mat, regex("="));
+			addConfig(section, mat.prefix(), mat.suffix());
+		}
+	}
 }
 
-void Config::display()
-{
-    map<string, vector<string>>::iterator itr;
-    for (itr = data.begin(); itr != data.end(); itr++)
-    {
-        printf("%s \n", itr->first.c_str());
-        for (string ele : itr->second)
-        {
-            printf("%s ", ele.c_str());
-        }
-        printf("\n");
-    }
+bool Config::addConfig(string section, string option, string value) {
+	section = trim(section);
+	option = trim(option);
+	value = trim(value);
+
+	if (section == "")  section = DEFAULT_SECTION;
+	if (data.find(section) == data.end()) {
+		map<string, string> temp = { { option, value } };
+		data.insert({ section, temp });
+
+		return true;
+	}
+	else {
+		if(data.find(section)->second.find(option) != data.find(section)->second.end())
+			data.find(section)->second.find(option)->second = value;
+		else
+			data.find(section)->second.insert({ option, value });
+	}
+	return false;
 }
 
-vector<string> Config::getSections()
-{
-    vector<string> v;
-    v.reserve(data.size());
-    for (auto const& i : data)
-        v.push_back(i.first);
+void Config::readFromFile(string fileName) {
+	ifstream file(fileName, ios::out);
+	if (!file.is_open())
+	{
+		cerr << "Error: Unable to open INI file " << fileName << " for reading!" << endl;
+		return;
+	}
+	stringstream str;
+	str << file.rdbuf();
 
-    return v;
+	parseStream(str);
 }
 
-vector<string> Config::getSectionData(string key)
-{
-    return data.find(key)->second;
+void Config::readFromText(string text) {
+	stringstream str;
+	str << text;
+
+	parseStream(str);
+}
+
+string Config::get(string key) {
+	string section;
+	string option;
+
+	vector<string> temp = split(key, "::");
+	if (temp.size() >= 2) {
+		section = temp[0];
+		option = temp[1];
+	}
+	else {
+		section = DEFAULT_SECTION;
+		option = temp[0];
+	}
+
+	if (data.find(section) != data.end())
+		if (data.find(section)->second.find(option) != data.find(section)->second.end())
+			return data.find(section)->second.find(option)->second;
+		else
+			return "";
+	else
+		return "";
+}
+
+vector<string> Config::strings(string key) {
+	string temp = get(key);
+	vector<string> arr = split(temp, ',');
+
+	for (auto itr = arr.begin(); itr != arr.end(); itr++) { // Trim all the whitepaces
+		*itr = trim(*itr);
+	}
+
+	return arr;
+}
+
+void Config::set(string key, string value) {
+	string section;
+	string option;
+
+	vector<string> temp = split(key, "::");
+	if (temp.size() >= 2) {
+		section = temp[0];
+		option = temp[1];
+	}
+	else {
+		section = DEFAULT_SECTION;
+		option = temp[0];
+	}
+
+	addConfig(section, option, value);
 }
