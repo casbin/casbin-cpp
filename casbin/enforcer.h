@@ -21,6 +21,7 @@ using namespace std;
 
 class Enforcer {
 	string modelPath;
+	bool   enabled;
 
 	bool enforce(string sub, string obj, string act);
 };

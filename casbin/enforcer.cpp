@@ -18,5 +18,8 @@
 #include "enforcer.h"
 
 bool Enforcer::enforce(string sub, string obj, string act) {
+	if(!e.enabled) {
+		return true;
+	}
 	return false;
 }
