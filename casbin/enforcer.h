@@ -24,4 +24,5 @@ class Enforcer {
 	bool   enabled;
 
 	bool enforce(string sub, string obj, string act);
+	void enableEnforce(bool enable);
 };

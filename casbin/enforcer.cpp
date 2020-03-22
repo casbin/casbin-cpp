@@ -18,7 +18,7 @@
 #include "enforcer.h"
 
 bool Enforcer::enforce(string sub, string obj, string act) {
-	if(!this.enabled) {
+	if(!this->enabled) {
 		return true;
 	}
 	return false;
@@ -26,5 +26,5 @@ bool Enforcer::enforce(string sub, string obj, string act) {
 
 // EnableEnforce changes the enforcing state of Casbin, when Casbin is disabled, all access will be allowed by the Enforce() function.
 void Enforcer::enableEnforce(bool enable) {
-	this.enabled = enable;
+	this->enabled = enable;
 }
