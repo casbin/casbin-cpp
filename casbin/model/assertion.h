@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
-#include "role_manager.h"
+#include "../rbac/role_manager.h"
 
 using namespace std;
 

@@ -13,11 +13,50 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\adapters">
-      <UniqueIdentifier>{9676d637-1eae-444f-a000-340c86182cd5}</UniqueIdentifier>
+    <Filter Include="Header Files\config">
+      <UniqueIdentifier>{cc42cefa-95b2-47ce-9edf-6f6e06cd5530}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\adapters">
-      <UniqueIdentifier>{f712466a-fdba-4d4f-aeaa-a061a3df2760}</UniqueIdentifier>
+    <Filter Include="Header Files\effect">
+      <UniqueIdentifier>{ab9a4d39-5462-4d96-af6f-bda1847c4ebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\errors">
+      <UniqueIdentifier>{2f85fd50-e12e-4dbd-a6c5-a70ad23452a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\log">
+      <UniqueIdentifier>{6d29c607-177b-42fb-ba40-de587ec4efe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\model">
+      <UniqueIdentifier>{1ab12c60-213d-4921-ad35-ecc928c42eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\persist">
+      <UniqueIdentifier>{f4185e05-ff2c-4de9-b986-a9ddbdcabb43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rbac">
+      <UniqueIdentifier>{74535048-b4e4-41a8-8f0f-b3c677bb4e45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{dedc8d55-8529-4b6b-a0c7-7ce5e81218d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\config">
+      <UniqueIdentifier>{10e1b520-f1ba-47b2-bb7a-46fbdcc71f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\effect">
+      <UniqueIdentifier>{06d74ac4-68a5-4baa-932f-d2d4e41567c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\log">
+      <UniqueIdentifier>{28fe4e63-0598-413c-b648-bffe7f637acc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{93b22bd0-00aa-4852-a9b3-269983100cee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{31547059-1543-49ac-aa16-860364d894d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rbac">
+      <UniqueIdentifier>{d53307e2-cfa3-4792-81fb-d6b24d671d88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\persist">
+      <UniqueIdentifier>{9388ff30-cbb1-4259-a070-4701249ef401}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -30,47 +69,44 @@
     <ClInclude Include="enforcer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="matcher.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="config\config.h">
+      <Filter>Header Files\config</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="effect\effector.h">
+      <Filter>Header Files\effect</Filter>
     </ClInclude>
-    <ClInclude Include="operator.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="errors\rbac_errors.h">
+      <Filter>Header Files\errors</Filter>
     </ClInclude>
-    <ClInclude Include="csv_adapter.h">
-      <Filter>Header Files\adapters</Filter>
+    <ClInclude Include="log\logger.h">
+      <Filter>Header Files\log</Filter>
     </ClInclude>
-    <ClInclude Include="policy_manager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="model\model.h">
+      <Filter>Header Files\model</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="model\policy.h">
+      <Filter>Header Files\model</Filter>
     </ClInclude>
-    <ClInclude Include="role_manager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="model\assertion.h">
+      <Filter>Header Files\model</Filter>
     </ClInclude>
-    <ClInclude Include="logger.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="persist\file_adapter.h">
+      <Filter>Header Files\persist</Filter>
     </ClInclude>
-    <ClInclude Include="file_adapter.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="rbac\role_manager.h">
+      <Filter>Header Files\rbac</Filter>
     </ClInclude>
-    <ClInclude Include="effector.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="util\utils.h">
+      <Filter>Header Files\util</Filter>
     </ClInclude>
-    <ClInclude Include="rbac_errors.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="persist\adapter.h">
+      <Filter>Header Files\persist</Filter>
     </ClInclude>
-    <ClInclude Include="config.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="util\matcher.h">
+      <Filter>Header Files\util</Filter>
     </ClInclude>
-    <ClInclude Include="assertion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="policy.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="util\operator.h">
+      <Filter>Header Files\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -83,44 +119,41 @@
     <ClCompile Include="enforcer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="matcher.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="config\config.cpp">
+      <Filter>Source Files\config</Filter>
     </ClCompile>
-    <ClCompile Include="utils.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="effect\effector.cpp">
+      <Filter>Source Files\effect</Filter>
     </ClCompile>
-    <ClCompile Include="operator.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="log\logger.cpp">
+      <Filter>Source Files\log</Filter>
     </ClCompile>
-    <ClCompile Include="csv_adapter.cpp">
-      <Filter>Source Files\adapters</Filter>
+    <ClCompile Include="model\model.cpp">
+      <Filter>Source Files\model</Filter>
     </ClCompile>
-    <ClCompile Include="policy_manager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="model\policy.cpp">
+      <Filter>Source Files\model</Filter>
     </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="model\assertion.cpp">
+      <Filter>Source Files\model</Filter>
     </ClCompile>
-    <ClCompile Include="role_manager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="persist\file_adapter.cpp">
+      <Filter>Source Files\persist</Filter>
     </ClCompile>
-    <ClCompile Include="logger.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="rbac\role_manager.cpp">
+      <Filter>Source Files\rbac</Filter>
     </ClCompile>
-    <ClCompile Include="file_adapter.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="util\utils.cpp">
+      <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="effector.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="persist\adapter.cpp">
+      <Filter>Source Files\persist</Filter>
     </ClCompile>
-    <ClCompile Include="config.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="util\matcher.cpp">
+      <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="assertion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="policy.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="util\operator.cpp">
+      <Filter>Source Files\util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "assertion.h"
 
 void Assertion::buildRoleLinks(RoleManager& rolem) {

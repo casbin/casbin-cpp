@@ -5,17 +5,16 @@
 #include <string>
 #include <regex>
 #include "utils.h"
-#include "Operator.h"
+#include "operator.h"
 
 using namespace std;
 
 class Matcher {
-	string policyeffect;
 	std::vector<Operator*> knownOperators{ new AND(), new OR(), new EQUALS() };
+protected:
+	string injectValue(map<string, string>, string);
+	string parseString(string);
 public:
 	string matcherString;
-	bool mergeDecisions(vector<string>);
-	string injectValue(map<string, vector<string>>, string, string, string);
-	string parseString(string);
-	bool addPolicyEffect(string);
+	bool eval(map<string, string>, string);
 };

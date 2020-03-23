@@ -14,28 +14,87 @@
 * limitations under the License.
 */
 
-#include "pch.h"
 #include "enforcer.h"
 
+void Enforcer::initWithFile(string modelFile, string policyPath) {
+	FileAdapter* a = new FileAdapter(policyPath);
+	initWithAdapter(modelFile, a);
+}
+
+void Enforcer::initWithAdapter(string modelFile, Adapter* a) {
+	Model* m = new Model(modelFile);
+	initWithModelAndAdapter(m, a);
+}
+
+void Enforcer::initWithModelAndAdapter(Model* m, Adapter* a) {
+	adapter = a;
+	model = m;
+	a->loadPolicy(model);
+
+	initialize();
+}
+
+void Enforcer::initialize() {
+	rm = new RoleManager();
+	eft = new Effector();
+}
+
+void printStructuret(map<string, string> structure) {
+	for (auto& kv : structure) {
+		cout << kv.first << ":" << kv.second;
+	}
+}
+
 bool Enforcer::enforce(string sub, string obj, string act) {
-	/*string request = sub + "," + obj + "," + act;
-	vector<string> policyeffects;
-	for (vector<string> ele : pmanager.getFilteredPolicy("p")) {
-		string response = m.injectValue(mmanager.getRPStructure(), request, join(ele, ','), m.matcherString);
-		response = m.parseString(response);
-		policyeffects.push_back(response);
+	vector<Effect> effects;
+	map<string, string> structure;
+	string expString = model->model.find("m")->second->data.find("m")->second->value;
+	Matcher matcher;
+
+	vector<string> rtokens = model->model.find("r")->second->data.find("r")->second->tokens;
+	vector<string> ptokens = model->model.find("p")->second->data.find("p")->second->tokens;
+
+	for (string pol : getPolicy()) {
+		structure.insert({ rtokens[0], sub });
+		structure.insert({ rtokens[1], obj });
+		structure.insert({ rtokens[2], act });
+
+		int i = 0;
+		vector<string> parr = split(pol, ',');
+		for (string ptoken : ptokens) {
+			structure.insert({ ptoken, parr[i] });
+			i++;
+		}
+
+		bool result = matcher.eval(structure, expString);
+		if (result) effects.push_back(Effect::Allow);
+		else effects.push_back(Effect::Deny);
+
+		structure.clear();
 	}
 
-	return m.mergeDecisions(policyeffects);*/
-	return true;
+	cout << model->model.find("e")->second->data.find("e")->second->value;
+
+	return eft->mergeEffects(model->model.find("e")->second->data.find("e")->second->value, effects);
+}
+
+Model* Enforcer::getModel() {
+	return model;
+}
+
+void Enforcer::setModel(Model m) {
+	model = &m;
+	initialize();
 }
 
 vector<string> Enforcer::getPolicy() {
-	vector<vector<string>> temp = pmanager.getPolicy();
-	vector<string> result;
-	for (vector<string> ele : temp) {
-		result.push_back(join(ele, ','));
+	vector<string> temp;
+	AssertionMap* astm = model->model.find("p")->second;
+	Assertion* ast = astm->data.find("p")->second;
+
+	for (vector<string> str : ast->policy) {
+		temp.push_back(join(str, ','));
 	}
 
-	return result;
+	return temp;
 }

@@ -1,15 +1,7 @@
 #include "pch.h"
-#include "../casbin/csv_adapter.h"
-#include "../casbin/config.h"
-#include "../casbin/model.h"
-#include "../casbin/logger.h"
-
-TEST(CSVAdapterTest, FileReadTest) {
-	CSVAdapter e;
-	e.readFile("../../examples/policy.csv");
-	vector<vector<string>> data = e.getData();
-	EXPECT_EQ(2, data.size()) << "The resulting size is " << data.size();
-}
+#include "../casbin/config/config.h"
+#include "../casbin/log/logger.h"
+#include "../casbin/enforcer.h"
 
 TEST(ConfAdapterTest, FileReadTest) {
 	Config e("../../examples/model.conf");
@@ -43,20 +35,23 @@ TEST(ConfAdapterTest, StringReadTest) {
 	EXPECT_EQ("value", e.get("test::key"));
 }
 
-TEST(ModelTest, FileReadTest) {
-	//Model m("../../examples/model.conf");
-	//EXPECT_EQ("r.sub == p.sub && r.obj == p.obj && r.act == p.act", m.getMatcherString()) << "The matcher string is " << m.getMatcherString();
-	// EXPECT_EQ("some(where (p.eft == allow))", m.getPolicyEffect()) << "The policy effect is " << m.getPolicyEffect();
-}
-
-TEST(ModelTest, RPTest) {
-	//Model m("../../examples/model.conf");
-	//map<string, vector<string>> structure = m.getRPStructure();
-	// EXPECT_EQ("r.sub,r.obj,r.act", join(structure.find("request_definition")->second, ',')) << "The request string is " << join(structure.find("request_definition")->second, ',');
-	// EXPECT_EQ("p.sub,p.obj,p.act", join(structure.find("policy_definition")->second, ',')) << "The request string is " << join(structure.find("policy_definition")->second, ',');
-}
-
 TEST(LogTest, WriteFileTest) {
 	Logger log;
 	log.print("Sample log");
+}
+
+TEST(EnforcerTest, PolicyTest) {
+	Enforcer e("../../examples/model.conf", "../../examples/policy.csv");
+	vector<string> temp = e.getPolicy();
+	vector<string> result = { "alice,data1,read", "bob,data2,write" };
+
+	EXPECT_EQ(join(temp, '-'), join(result, '-'));
+}
+
+TEST(EnforcerTest, ModelTest) {
+	Enforcer e("../../examples/model.conf", "../../examples/policy.csv");
+	EXPECT_EQ(true, e.enforce("alice", "data1", "read"));
+	EXPECT_EQ(false, e.enforce("alice", "data1", "write"));
+	EXPECT_EQ(true, e.enforce("bob", "data2", "write"));
+	EXPECT_EQ(false, e.enforce("bob", "data2", "read"));
 }

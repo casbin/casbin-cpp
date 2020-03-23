@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "logger.h"
 
 void Logger::appendToFile(string line) {

@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "utils.h"
 
 extern "C++" inline string ltrim(string str, const string chars)

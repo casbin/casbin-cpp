@@ -99,12 +99,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;CASBIN_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -133,14 +133,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;CASBIN_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,46 +150,44 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="assertion.h" />
-    <ClInclude Include="config.h" />
-    <ClInclude Include="csv_adapter.h" />
-    <ClInclude Include="effector.h" />
+    <ClInclude Include="persist\adapter.h" />
+    <ClInclude Include="model\assertion.h" />
+    <ClInclude Include="config\config.h" />
+    <ClInclude Include="effect\effector.h" />
     <ClInclude Include="enforcer.h" />
-    <ClInclude Include="file_adapter.h" />
+    <ClInclude Include="persist\file_adapter.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="logger.h" />
-    <ClInclude Include="matcher.h" />
-    <ClInclude Include="model.h" />
-    <ClInclude Include="operator.h" />
+    <ClInclude Include="log\logger.h" />
+    <ClInclude Include="util\matcher.h" />
+    <ClInclude Include="model\model.h" />
+    <ClInclude Include="util\operator.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="policy.h" />
-    <ClInclude Include="policy_manager.h" />
-    <ClInclude Include="rbac_errors.h" />
-    <ClInclude Include="role_manager.h" />
-    <ClInclude Include="utils.h" />
+    <ClInclude Include="model\policy.h" />
+    <ClInclude Include="errors\rbac_errors.h" />
+    <ClInclude Include="rbac\role_manager.h" />
+    <ClInclude Include="util\utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="assertion.cpp" />
-    <ClCompile Include="config.cpp" />
-    <ClCompile Include="csv_adapter.cpp" />
+    <ClCompile Include="persist\adapter.cpp" />
+    <ClCompile Include="model\assertion.cpp" />
+    <ClCompile Include="config\config.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="effector.cpp" />
+    <ClCompile Include="effect\effector.cpp" />
     <ClCompile Include="enforcer.cpp" />
-    <ClCompile Include="file_adapter.cpp" />
-    <ClCompile Include="logger.cpp" />
-    <ClCompile Include="matcher.cpp" />
-    <ClCompile Include="model.cpp" />
-    <ClCompile Include="operator.cpp" />
+    <ClCompile Include="persist\file_adapter.cpp" />
+    <ClCompile Include="log\logger.cpp" />
+    <ClCompile Include="util\matcher.cpp" />
+    <ClCompile Include="model\model.cpp" />
+    <ClCompile Include="util\operator.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="policy.cpp" />
-    <ClCompile Include="policy_manager.cpp" />
-    <ClCompile Include="role_manager.cpp" />
-    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="model\policy.cpp" />
+    <ClCompile Include="rbac\role_manager.cpp" />
+    <ClCompile Include="util\utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "config.h"
 
 const string DEFAULT_SECTION = "default";
@@ -6,7 +5,7 @@ const string DEFAULT_SECTION = "default";
 void Config::parseStream(stringstream& stream) {
 	string line;
 	string key;
-	string section;
+	string section = "";
 	bool canWrite = false;
 	smatch m;
 	while (getline(stream, line))
@@ -30,7 +29,7 @@ void Config::parseStream(stringstream& stream) {
 }
 
 bool Config::addConfig(string section, string option, string value) {
-	section = trim(section);
+	// section = trim(section);
 	option = trim(option);
 	value = trim(value);
 

@@ -25,25 +25,41 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include "utils.h"
-#include "policy_manager.h"
-#include "model.h"
-#include "Matcher.h"
+#include "util/utils.h"
+#include "model/model.h"
+#include "effect/effector.h"
+#include "util/matcher.h"
+#include "persist/file_adapter.h"
+#include "rbac/role_manager.h"
 
 using namespace std;
 
 class ENFORCER_API Enforcer {
-	PolicyManager pmanager;
-	Model mmanager;
-	Matcher m;
+	string modelPath;
+	Model* model;
+	Effector* eft;
+	Adapter* adapter;
+	RoleManager* rm;
+
+protected:
+	void initialize();
+	void initWithFile(string, string);
+	void initWithAdapter(string, Adapter*);
+	void initWithModelAndAdapter(Model*, Adapter*);
 public:
-	Enforcer(string model, string p) {
-		pmanager.readPolicy(p);
-		/*mmanager.readModel(model);
-		m.addPolicyEffect(mmanager.getPolicyEffect());
-		m.matcherString = mmanager.getMatcherString();*/
+	Enforcer(string modelFile) {
+		initWithFile(modelFile, "");
 	}
+	Enforcer(string modelFile, string policyFile) {
+		initWithFile(modelFile, policyFile);
+	}
+	Enforcer(string modelFile, Adapter* policyAdapter) {
+		initWithAdapter(modelFile, policyAdapter);
+	}
+
 	bool enforce(string sub, string obj, string act);
+	Model* getModel();
+	void setModel(Model m);
 	vector<string> getAllSubjects();
 	vector<string> getAllNamedSubjects(string);
 	vector<string> getAllObjects();

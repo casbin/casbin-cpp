@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Operator.h"
 
 string AND::operate(string a, string b)

@@ -1,7 +1,6 @@
-#include "pch.h"
 #include "effector.h"
 
-bool mergeEffects(string expr, vector<Effect> effects) {
+bool Effector::mergeEffects(string expr, vector<Effect> effects) {
 	bool result = false;
 	if (expr == "some(where (p_eft == allow))") {
 		result = false;
@@ -47,7 +46,6 @@ bool mergeEffects(string expr, vector<Effect> effects) {
 			}
 		}
 	}
-	else {
-		return false;
-	}
+
+	return result;
 }
