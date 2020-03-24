@@ -52,7 +52,9 @@ template<typename R,typename ... T>
 tuple <Enforcer, string> newEnforcer(R modelPath, T ... Q ){
     int p = sizeof...(Q);
     string params = {};
-    Enforcer e;
+    Enforcer e1;
+	Enforcer *e;
+	e = &e1;
 
     // Knowing the type of variables and storing it in string.
     if (p > 0) {
@@ -68,7 +70,7 @@ tuple <Enforcer, string> newEnforcer(R modelPath, T ... Q ){
     if (paramLen >= 1) {
         if(params[paramLen-1] == 'b')
 		{
-		    // e.EnableLog(enableLog);
+		    // e->EnableLog(enableLog);
 
 			parsedParamLen++;
 		}
@@ -81,12 +83,12 @@ tuple <Enforcer, string> newEnforcer(R modelPath, T ... Q ){
             char p1 = params[1];
             switch(p1) {
             case 'P': {
-                // auto err = e.InitWithFile(p0, p1);
+                // auto err = e->InitWithFile(p0, p1);
                 // if(err != NULL) {
                 //    return make_tuple(Enforcer(), err);
             }
             default: {
-                // auto err = e.InitWithAdapter(p0, p1.(persist.Adaptor));
+                // auto err = e->InitWithAdapter(p0, p1.(persist.Adaptor));
                 // if(err != NULL) {
                 //    return make_tuple(Enforcer(), err);
             }
@@ -97,7 +99,7 @@ tuple <Enforcer, string> newEnforcer(R modelPath, T ... Q ){
             case 'P':
                 // return make_tuple(Enforcer(), error.New("Invalid parameters for enforcer"));
             default:{
-                // auto err = e.InitWithModelAndAdapter(p0.(model.Model), params[1].(persist.Adapter));
+                // auto err = e->InitWithModelAndAdapter(p0.(model.Model), params[1].(persist.Adapter));
 		        // if err != NULL {
 			    //     return make_tuple(Enforcer(), err);
 		        // }
@@ -108,13 +110,13 @@ tuple <Enforcer, string> newEnforcer(R modelPath, T ... Q ){
 		char p0 = params[0];
         switch(p0){ 
 		case 'P': {
-			// auto err = e.InitWithFile(p0, "");
+			// auto err = e->InitWithFile(p0, "");
 			// if err != NULL {
 			//	return make_tuple(Enforcer(), err);
 			// }
         }
 		default: {
-			// auto err = e.InitWithModelAndAdapter(p0.(model.Model), nil);
+			// auto err = e->InitWithModelAndAdapter(p0.(model.Model), nil);
 			// if err != NULL {
 			// 	return make_tuple(Enforcer(), err);
 		    //}
