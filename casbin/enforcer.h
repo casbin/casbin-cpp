@@ -16,11 +16,20 @@
 
 #pragma once
 
+#include <model/model.h>
+#include <persist/adapter.h>
 #include <string>
 using namespace std;
 
 class Enforcer {
 	string modelPath;
 
+	Adapter adapter;
+	Model model;
+
+	void initialize();
 	bool enforce(string sub, string obj, string act);
+	string InitWithFile(string modelPath, string policyPath);
+	string InitWithAdapter(string modelPath, Adapter adapter);
+	string InitWithModelAndAdapter(Model m, Adapter adapter);
 };
