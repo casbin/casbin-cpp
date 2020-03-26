@@ -18,10 +18,14 @@
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files
-#ifdef OS_Win   //use OS's Macro to support both Windows and Linux
+#ifdef OS_Win   //use OS's Macro to support both Windows, Linux and Mac
 #include <windows.h>
 #endif
 // Linux Header Files
 #ifdef OS_Linux
 #include <linux.h>
+#endif
+// Mac Header Files
+#ifdef OS_Mac
+#include <mac.h>
 #endif
