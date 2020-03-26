@@ -18,13 +18,13 @@
 
 using namespace std;
 
-mutex mtx_lock;
-
 class Config : public ConfigInterface {
     private: 
         static const string DEFAULT_SECTION;
         static const string DEFAULT_COMMENT;
         static const string DEFAULT_COMMENT_SEM;
+        static mutex mtx_lock;
+
         unordered_map < string, unordered_map <string, string> > data;
 
         /**
@@ -34,7 +34,6 @@ class Config : public ConfigInterface {
             if (!section.compare("")) {
                 section = DEFAULT_SECTION;
             }
-
             bool ok = data[section].find(option) != data[section].end();
             data[section][option] = value;
             return !ok;
@@ -45,22 +44,22 @@ class Config : public ConfigInterface {
             ifstream infile;
             try {
                 infile.open(fname);
-                parseBuffer(&infile);
-            } catch (const ifstream::failure &e) {
+            } catch (const ifstream::failure e) {
                 mtx_lock.unlock();
                 IOException exception("Cannot open file.");
                 throw exception;
             }
+            parseBuffer(&infile);
+            mtx_lock.unlock();
+            infile.close();
         }
 
         void parseBuffer(istream* buf){
             string section = "";
             int lineNum = 0;
             string line;
-
             while (true) {
                 lineNum++;
-
                 if (getline(*buf, line, '\n')) {
                     if (!line.compare("")) {
                         continue;
@@ -68,19 +67,18 @@ class Config : public ConfigInterface {
                 } else {
                     break;
                 }
-
-
+                
                 line = trim(line);
                 if (line.find(DEFAULT_COMMENT)==0) {
                     continue;
                 } else if (line.find(DEFAULT_COMMENT_SEM)==0) {
                     continue;
                 } else if (line.find("[")==0 && ends_with(line, string("]"))) {
-                    section = line.substr(1, line.length() - 1);
+                    section = line.substr(1, line.length() - 2);
                 } else {
-                    vector <string> optionVal = split(line, string("="));
+                    vector <string> optionVal = split(line, string("="), 2);
                     if (optionVal.size() != 2) {
-                        char * error;
+                        char* error = new char;
                         sprintf(error,"parse the content error : line %d , %s = ? ", lineNum, optionVal[0].c_str());
                         throw IllegalArgumentException(string(error));
                     }
@@ -119,7 +117,7 @@ class Config : public ConfigInterface {
         }
 
         bool getBool(string key) {
-            return key.compare("true")==0;
+            return get(key).compare("true")==0;
         }
 
         int getInt(string key) {
@@ -127,7 +125,7 @@ class Config : public ConfigInterface {
         }
 
         float getFloat(string key) {
-            return atof(get(key).c_str());
+            return float(atof(get(key).c_str()));
         }
 
         string getString(string key) {
@@ -153,7 +151,7 @@ class Config : public ConfigInterface {
             string section = "";
             string option;
 
-            transform(key.begin(), key.end(), key.begin(), ::toupper);
+            transform(key.begin(), key.end(), key.begin(), ::tolower);
             vector <string> keys = split(key, string("::"));
             if (keys.size() >= 2) {
                 section = keys[0];
@@ -168,8 +166,7 @@ class Config : public ConfigInterface {
         string get(string key) {
             string section;
             string option;
-
-            transform(key.begin(), key.end(), key.begin(), ::toupper);
+            transform(key.begin(), key.end(), key.begin(), ::tolower);
             vector <string> keys = split(key, string("::"));
             if (keys.size() >= 2) {
                 section = keys[0];
@@ -178,7 +175,6 @@ class Config : public ConfigInterface {
                 section = DEFAULT_SECTION;
                 option = keys[0];
             }
-
             bool ok = data.find(section)!=data.end() && data[section].find(option) != data[section].end();
             if (ok) {
                 return data[section][option];
@@ -191,5 +187,6 @@ class Config : public ConfigInterface {
 const string Config::DEFAULT_SECTION = "default";
 const string Config::DEFAULT_COMMENT = "#";
 const string Config::DEFAULT_COMMENT_SEM = ";";
+mutex Config::mtx_lock;
 
 #endif

@@ -24,6 +24,150 @@
     <ClInclude Include="enforcer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="config\Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config\ConfigInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\DefaultEffector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Effect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Effector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="error\Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\IllegalArgumentException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\IOException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\MissingRequiredSections.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\UnsupportedOperationException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\exceptions\ParseException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\allFF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\byte.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\CIDR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\CIDRMask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\dtoi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\equal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\IP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\IPMask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\IPNet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\IPv4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\parseCIDR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\parseIP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\parseIPv4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\parseIPv6.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\Print.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\xtoi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="log\DefaultLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="log\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="log\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="log\LogUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Assertion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Policy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\Adapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\DefaultRoleManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\GroupRoleManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\RoleManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\arrayEquals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\arrayRemoveDuplicates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\builtInFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\ends_with.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\escapeAssertion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\findAllOccurences.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\join.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\removeComments.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\split.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\trim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

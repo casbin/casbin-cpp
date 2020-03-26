@@ -151,9 +151,57 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="config\Config.h" />
+    <ClInclude Include="config\ConfigInterface.h" />
+    <ClInclude Include="effect\DefaultEffector.h" />
+    <ClInclude Include="effect\Effect.h" />
+    <ClInclude Include="effect\Effector.h" />
     <ClInclude Include="enforcer.h" />
+    <ClInclude Include="error\Error.h" />
+    <ClInclude Include="exception\IllegalArgumentException.h" />
+    <ClInclude Include="exception\IOException.h" />
+    <ClInclude Include="exception\MissingRequiredSections.h" />
+    <ClInclude Include="exception\UnsupportedOperationException.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="IPParser\exceptions\ParseException.h" />
+    <ClInclude Include="IPParser\parser\allFF.h" />
+    <ClInclude Include="IPParser\parser\byte.h" />
+    <ClInclude Include="IPParser\parser\CIDR.h" />
+    <ClInclude Include="IPParser\parser\CIDRMask.h" />
+    <ClInclude Include="IPParser\parser\dtoi.h" />
+    <ClInclude Include="IPParser\parser\equal.h" />
+    <ClInclude Include="IPParser\parser\IP.h" />
+    <ClInclude Include="IPParser\parser\IPMask.h" />
+    <ClInclude Include="IPParser\parser\IPNet.h" />
+    <ClInclude Include="IPParser\parser\IPv4.h" />
+    <ClInclude Include="IPParser\parser\parseCIDR.h" />
+    <ClInclude Include="IPParser\parser\parseIP.h" />
+    <ClInclude Include="IPParser\parser\parseIPv4.h" />
+    <ClInclude Include="IPParser\parser\parseIPv6.h" />
+    <ClInclude Include="IPParser\parser\Print.h" />
+    <ClInclude Include="IPParser\parser\xtoi.h" />
+    <ClInclude Include="log\DefaultLogger.h" />
+    <ClInclude Include="log\Log.h" />
+    <ClInclude Include="log\Logger.h" />
+    <ClInclude Include="log\LogUtil.h" />
+    <ClInclude Include="model\Assertion.h" />
+    <ClInclude Include="model\Model.h" />
+    <ClInclude Include="model\Policy.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="persist\Adapter.h" />
+    <ClInclude Include="rbac\DefaultRoleManager.h" />
+    <ClInclude Include="rbac\GroupRoleManager.h" />
+    <ClInclude Include="rbac\RoleManager.h" />
+    <ClInclude Include="util\arrayEquals.h" />
+    <ClInclude Include="util\arrayRemoveDuplicates.h" />
+    <ClInclude Include="util\builtInFunctions.h" />
+    <ClInclude Include="util\ends_with.h" />
+    <ClInclude Include="util\escapeAssertion.h" />
+    <ClInclude Include="util\findAllOccurences.h" />
+    <ClInclude Include="util\join.h" />
+    <ClInclude Include="util\removeComments.h" />
+    <ClInclude Include="util\split.h" />
+    <ClInclude Include="util\trim.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
