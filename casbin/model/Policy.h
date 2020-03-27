@@ -59,16 +59,16 @@ vector < vector < string > > Model::GetPolicy(string sec, string ptype) {
 vector < vector < string > > Model::GetFilteredPolicy(string sec, string ptype, int fieldIndex, vector <string> fieldValues) {
 	vector < vector < string > > res;
 
-	for( vector < vector < string > > :: iterator it1 = M[sec].AMap[ptype]->Policy.begin() ; it1 != M[sec].AMap[ptype]->Policy.end() ; it1++){
+	for( vector < vector < string > > :: iterator it = M[sec].AMap[ptype]->Policy.begin() ; it != M[sec].AMap[ptype]->Policy.end() ; it++){
 		bool matched = true;
 		for(int i = 0 ; i < fieldValues.size() ; i++){
-			if(fieldValues[i] != "" && (*it1)[fieldIndex + i] != fieldValues[i] ){
+			if(fieldValues[i] != "" && (*it)[fieldIndex + i] != fieldValues[i] ){
 				matched = false;
 				break;
 			}
 		}
 		if(matched) {
-			res.push_back(*it1);
+			res.push_back(*it);
 		}
 	}
 
@@ -99,9 +99,7 @@ bool Model::AddPolicy(string sec, string ptype,  vector <string> rule) {
 bool Model::RemovePolicy(string sec, string ptype, vector <string> rule) {
 	for(int i = 0 ; i < M[sec].AMap[ptype]->Policy.size() ; i++){
 		if(arrayEquals(rule, M[sec].AMap[ptype]->Policy[i])) {
-			for(int j = i + 1 ; j < M[sec].AMap[ptype]->Policy.size() ; j++){
-				M[sec].AMap[ptype]->Policy.push_back(M[sec].AMap[ptype]->Policy[j]);
-			}
+			M[sec].AMap[ptype]->Policy.erase(M[sec].AMap[ptype]->Policy.begin() + i);
 			return true;
 		}
 	}

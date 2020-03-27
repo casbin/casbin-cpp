@@ -107,7 +107,7 @@ class Model{
 			}
         }
 
-		static bool loadAssertion(Model model,ConfigInterface* cfg, string sec, string key) {
+		static bool loadAssertion(Model model, ConfigInterface* cfg, string sec, string key) {
 			string value = cfg->getString(sectionNameMap[sec] + "::" + key);
 			return model.AddDef(sec, key, value);
 		}
@@ -142,14 +142,16 @@ class Model{
 
 		// NewModel creates a model from a .CONF file.
 		static Model NewModelFromFile(string path) {
-			Model m = NewModel();
+			Model m;
+			m = NewModel();
 			m.LoadModel(path);
 			return m;
 		}
 
 		// NewModel creates a model from a string which contains model text.
 		static Model NewModelFromString(string text) {
-			Model m = NewModel();
+			Model m;
+			m = NewModel();
 			m.LoadModelFromText(text);
 			return m;
 		}

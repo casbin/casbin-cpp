@@ -11,6 +11,13 @@
  */
 class DefaultEffector : public Effector{
     public:
+
+        // NewDefaultEffector is the constructor for DefaultEffector.
+        static DefaultEffector* newDefaultEffector(){
+            DefaultEffector* e;
+            return e;
+        }
+
         /**
          * mergeEffects merges all matching results collected by the enforcer into a single decision.
          */

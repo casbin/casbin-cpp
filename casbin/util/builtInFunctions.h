@@ -88,7 +88,8 @@ bool KeyMatch2(string key1, string key2) {
 }
 
 // KeyMatch2Func is the wrapper for KeyMatch2.
-bool KeyMatch2Func(vector <string> args) {
+template <typename argument>
+argument KeyMatch2Func(vector <argument> args) {
 	string name1 = args[0];
 	string name2 = args[1];
 
