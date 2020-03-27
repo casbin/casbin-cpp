@@ -20,3 +20,35 @@
 bool Enforcer::enforce(string sub, string obj, string act) {
 	return false;
 }
+
+
+void Enforcer::initialize() {
+	Enforcer* e;
+	// e.rm = defaultrolemanager.NewRoleManager(10)
+	// e.eft = effect.NewDefaultEffector()
+	// e.watcher = nil
+
+	e.enabled = true;
+	e.autoSave = true;
+	e.autoBuildRoleLinks = true;
+	e.autoNotifyWatcher = true;
+}
+
+// LoadModel reloads the model from the model CONF file.
+// Because the policy is attached to a model, so the policy is invalidated and needs to be reloaded by calling LoadPolicy().
+string Enforcer::loadModel() {
+	Enforcer* e;
+	string err;
+	// Model model;
+    // tie(e.model, err) = model.NewModelFromFile(e.modelPath);
+	if(err != " ") {
+		return err;
+	}
+
+	// e.model.PrintModel();
+	// e.fm = model.LoadFunctionMap();
+
+	e.initialize();
+
+	return " ";
+}

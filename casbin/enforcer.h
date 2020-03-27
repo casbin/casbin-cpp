@@ -17,10 +17,18 @@
 #pragma once
 
 #include <string>
+#include <tuple>
 using namespace std;
 
 class Enforcer {
 	string modelPath;
 
 	bool enforce(string sub, string obj, string act);
+	void initialize();
+	string loadModel();
+
+	bool	enabled;            
+	bool 	autoSave;           
+    bool	autoBuildRoleLinks; 
+	bool	autoNotifyWatcher;
 };
