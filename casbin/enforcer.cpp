@@ -20,3 +20,30 @@
 bool Enforcer::enforce(string sub, string obj, string act) {
 	return false;
 }
+
+// GetModel gets the current model.
+Model Enforcer::getModel() {
+	Enforcer* e;
+	return e.model;
+}
+
+// SetModel sets the current model.
+Model Enforcer::setModel(m model) {
+	Enforcer* e;
+	e.model = m
+	e.fm = model.LoadFunctionMap()
+
+	e.initialize()
+}
+
+// GetAdapter gets the current adapter.
+Adapter Enforce::getAdapter() {
+	Enforcer* e;
+	return e.adapter;
+}
+
+// SetAdapter sets the current adapter.
+Adapter Enforcer::setAdapter(Adapter, adapter) {
+	Enforcer* e;
+	e.adapter = adapter;
+}
