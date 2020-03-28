@@ -13,18 +13,22 @@ class TestConfig : public ::testing::Test {
 		void SetUp() override {
 			char* root = _getcwd(NULL, 0);
 			string rootStr = string(root);
+
 			vector <string> directories = split(rootStr, "\\", -1);
 			vector <string> left{"casbin-cpp"};
 			vector <string> :: iterator it = find_end(directories.begin(), directories.end(), left.begin(), left.end());
 			int index = directories.size() + (it - directories.end());
+
 			vector <string> finalDirectories(directories.begin(), directories.begin() + index + 1);
 			finalDirectories.push_back("casbin");
 			finalDirectories.push_back("config");
 			finalDirectories.push_back("testdata");
 			finalDirectories.push_back("testini.ini");
+
 			string filepath = finalDirectories[0];
 			for(int i = 1 ; i < finalDirectories.size() ; i++)
 				filepath = filepath + "/" + finalDirectories[i];
+
 			config = Config::newConfig(filepath);
 		}
 

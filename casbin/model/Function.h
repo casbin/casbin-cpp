@@ -1,48 +1,42 @@
 #ifndef CASBIN_CPP_MODEL_FUNCTION
 #define CASBIN_CPP_MODEL_FUNCTION
 
-#include <unordered_map>
 #include <string>
 
 #include "../util/builtInFunctions.h"
+#include "../duktape/duk_config.h"
+#include "./duktape_config.h"
 
 using namespace std;
-// package model
-
-// import (
-// 	"github.com/Knetic/govaluate"
-// 	"github.com/casbin/casbin/v2/util"
-// )
 
 class FunctionMap {
     private:
-
-        unordered_map<string, function>
+        Scope scope;
 
     public:
 
+        FunctionMap(){
+            scope = duk_create_heap_default();
+        }
+
         // AddFunction adds an expression function.
-        void AddFunction(string name, function govaluate.ExpressionFunction) {
-            fm[name] = function
+        void AddFunction(string fname, Function f, Index nargs = VARARGS) {
+            pushFunction(this->scope, f, nargs, fname);
         }
 
         // LoadFunctionMap loads an initial function map.
         FunctionMap LoadFunctionMap() {
             FunctionMap fm;
 
-            fm.AddFunction("keyMatch", KeyMatchFunc);
-            fm.AddFunction("keyMatch2", KeyMatch2Func);
-            fm.AddFunction("keyMatch3", KeyMatch3Func);
-            fm.AddFunction("keyMatch4", KeyMatch4Func);
-            fm.AddFunction("regexMatch", RegexMatchFunc);
-            fm.AddFunction("ipMatch", IPMatchFunc);
+            fm.AddFunction("keyMatch", KeyMatch);
+            fm.AddFunction("keyMatch2", KeyMatch2);
+            fm.AddFunction("keyMatch3", KeyMatch3);
+            fm.AddFunction("regexMatch", RegexMatch);
+            fm.AddFunction("ipMatch", IPMatch);
 
             return fm;
         }
 
 };
-
-// FunctionMap represents the collection of Function.
-type FunctionMap map[string]govaluate.ExpressionFunction
 
 #endif
