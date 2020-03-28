@@ -1,6 +1,5 @@
 #include <direct.h>
 #include <algorithm>
-#include <iostream>
 
 #include "pch.h"
 #include "../casbin/config/Config.h"
@@ -23,11 +22,9 @@ class TestConfig : public ::testing::Test {
 			finalDirectories.push_back("config");
 			finalDirectories.push_back("testdata");
 			finalDirectories.push_back("testini.ini");
-			// string filepath = string(root) + "/../../casbin/config/testdata/testini.ini";
 			string filepath = finalDirectories[0];
 			for(int i = 1 ; i < finalDirectories.size() ; i++)
 				filepath = filepath + "/" + finalDirectories[i];
-			cout << filepath << endl;
 			config = Config::newConfig(filepath);
 		}
 
@@ -35,7 +32,7 @@ class TestConfig : public ::testing::Test {
 };
 
 TEST_F(TestConfig, TestDebug) {
-	EXPECT_FALSE(config.getBool("debug"));
+	EXPECT_TRUE(config.getBool("debug"));
 }
 
 TEST_F(TestConfig, TestURL) {
