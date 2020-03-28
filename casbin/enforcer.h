@@ -22,5 +22,10 @@ using namespace std;
 class Enforcer {
 	string modelPath;
 
+	bool enabled;
+	bool autoSave;
+	bool autoBuildRoleLinks;
+	bool autoNotifyWatcher;
+
 	bool enforce(string sub, string obj, string act);
 };
