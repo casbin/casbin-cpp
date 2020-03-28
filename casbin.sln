@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "casbin", "casbin\casbin.vcxproj", "{BEAD4515-CC5D-4E73-BC71-334859913D06}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "casbin-test", "casbin-test\casbin-test.vcxproj", "{B5455BC9-9FC3-415D-BA38-10980946FFF4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\casbin-test.vcxproj", "{B5455BC9-9FC3-415D-BA38-10980946FFF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

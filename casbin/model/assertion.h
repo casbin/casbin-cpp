@@ -14,7 +14,7 @@ public:
 	string value;
 	vector<string> tokens;
 	vector<vector<string>> policy;
-	RoleManager rm;
+	RoleManager* rm;
 
-	void buildRoleLinks(RoleManager&);
+	void buildRoleLinks(RoleManager*);
 };

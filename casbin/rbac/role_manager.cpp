@@ -1,18 +1,49 @@
 #include "role_manager.h"
 
-Role newRole(string name) {
-	Role temp;
-	temp.name = name;
+Role* newRole(string name) {
+	Role* temp = new Role();
+	temp->name = name;
 
 	return temp;
 }
 
-Role deleteRole(Role role1, string name) {
-	for (auto itr = role1.roles.begin(); itr != role1.roles.end();itr++) {
-		if (*itr == name) role1.roles.erase(itr);
+void Role::addRole(Role* role) {
+	for (Role* temp : roles) {
+		if (temp->name == role->name) return;
+	}
+	roles.push_back(role);
+}
+
+void Role::deleteRole(Role* role) {
+	for (auto itr = roles.begin(); itr != roles.end(); itr++) {
+		Role* temp = *itr;
+		if (temp->name == role->name) {
+			roles.erase(itr);
+			return;
+		}
+	}
+}
+
+bool Role::hasRole(string n, int hierarchyLevel) {
+	if (name == name) return true;
+
+	if (hierarchyLevel <= 0) return false;
+
+	for (auto itr = roles.begin(); itr != roles.end(); itr++) {
+		Role* temp = *itr;
+		if (temp->hasRole(name, hierarchyLevel - 1)) return true;
 	}
 
-	return role1;
+	return false;
+}
+
+vector<string> Role::getRoles() {
+	vector<string> names;
+	for (Role* temp : roles) {
+		names.push_back(temp->name);
+	}
+
+	return names;
 }
 
 void RoleManager::addMatchingFunc(function<bool(string, string)> fn) {
@@ -36,52 +67,81 @@ bool RoleManager::hasRole(string name) {
 	return false;
 }
 
-void RoleManager::clear() {
-	allRoles.clear();
-}
-
-bool RoleManager::createRole(string name) {
+Role* RoleManager::createRole(string name) {
+	Role* role;
 	if (allRoles.find(name) == allRoles.end()) {
-		allRoles.insert({ name, newRole(name) });
+		role = newRole(name);
+		allRoles.insert(make_pair(name, role));
+	}
+	else {
+		role = allRoles.find(name)->second;
 	}
 
 	if (hasPattern) {
 		for (auto itr = allRoles.begin(); itr != allRoles.end(); itr++) {
 			if (matchingFunc(name, itr->first) && name != itr->first) {
-				allRoles.find(name)->second.roles.push_back(itr->first);
+				Role* role1 = itr->second;
+				role->addRole(role1);
 			}
 		}
 	}
 
-	return true;
+	return role;
 }
 
-bool RoleManager::addLink(string name1, string name2, vector<string> domain) {
-	name1.insert(0, domain[0] + "::");
-	name2.insert(0, domain[0] + "::");
-	createRole(name1);
-	createRole(name2);
-	allRoles.find(name1)->second.roles.push_back(name2);
-
-	return true;
+void RoleManager::clear() {
+	allRoles.clear();
 }
 
-bool RoleManager::addLink(string name1, string name2) {
-	createRole(name1);
-	createRole(name2);
-	allRoles.find(name1)->second.roles.push_back(name2);
-
-	return true;
-}
-
-bool RoleManager::deleteLink(string name1, string name2, string domain) {
+void RoleManager::addLink(string name1, string name2, string domain) {
 	name1.insert(0, domain + "::");
 	name2.insert(0, domain + "::");
-	if (allRoles.find(name1) != allRoles.end()) {
-		allRoles.find(name1)->second = deleteRole(allRoles.find(name1)->second, name2);
-		return true;
-	}
-	else return false;
+
+	Role* role1 = createRole(name1);
+	Role* role2 = createRole(name2);
+	role1->addRole(role2);
+}
+
+void RoleManager::addLink(string name1, string name2) {
+	Role* role1 = createRole(name1);
+	Role* role2 = createRole(name2);
+	role1->addRole(role2);
+}
+
+void RoleManager::deleteLink(string name1, string name2, string domain) {
+	name1.insert(0, domain + "::");
+	name2.insert(0, domain + "::");
+	
+	Role* role1 = createRole(name1);
+	Role* role2 = createRole(name2);
+	role1->deleteRole(role2);
+}
+
+void RoleManager::deleteLink(string name1, string name2) {
+	Role* role1 = createRole(name1);
+	Role* role2 = createRole(name2);
+	role1->deleteRole(role2);
+}
+
+bool RoleManager::hasLink(string name1, string name2, string domain) {
+	name1 = domain + "::" + name1;
+	name2 = domain + "::" + name2;
+
+	if (name1 == name2) return true;
+
+	if (!hasRole(name1) || !hasRole(name2)) return false;
+
+	Role* role1 = createRole(name1);
+	return role1->hasRole(name2, maxHierarchyLevel);
+}
+
+bool RoleManager::hasLink(string name1, string name2) {
+	if (name1 == name2) return true;
+
+	if (!hasRole(name1) || !hasRole(name2)) return false;
+
+	Role* role1 = createRole(name1);
+	return role1->hasRole(name2, maxHierarchyLevel);
 }
 
 vector<string> RoleManager::getRoles(string name, string domain) {
@@ -89,13 +149,19 @@ vector<string> RoleManager::getRoles(string name, string domain) {
 	
 	if (!hasRole(name)) return vector<string>();
 
-	vector<string> temp = allRoles.find(name)->second.roles;
+	vector<string> roles = createRole(name)->getRoles();
 
-	for (vector<string>::iterator itr = temp.begin(); itr != temp.end(); itr++) {
-		string tempstr = *itr;
-		*itr = tempstr.substr(domain.length() + 2);
+	for (auto itr = roles.begin(); itr != roles.end(); itr++) {
+		string temp = *itr;
+		*itr = temp.substr(domain.length() + 2, temp.length());
 	}
 
-	return temp;
+	return roles;
 }
 
+vector<string> RoleManager::getRoles(string name) {
+	if (!hasRole(name)) return vector<string>();
+	vector<string> roles = createRole(name)->getRoles();
+
+	return roles;
+}

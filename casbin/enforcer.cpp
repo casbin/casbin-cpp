@@ -17,6 +17,7 @@
 #include "enforcer.h"
 
 void Enforcer::initWithFile(string modelFile, string policyPath) {
+	modelPath = modelFile;
 	FileAdapter* a = new FileAdapter(policyPath);
 	initWithAdapter(modelFile, a);
 }
@@ -37,19 +38,18 @@ void Enforcer::initWithModelAndAdapter(Model* m, Adapter* a) {
 void Enforcer::initialize() {
 	rm = new RoleManager();
 	eft = new Effector();
-}
 
-void printStructuret(map<string, string> structure) {
-	for (auto& kv : structure) {
-		cout << kv.first << ":" << kv.second;
-	}
+	model->buildRoleLinks(rm);
 }
 
 bool Enforcer::enforce(string sub, string obj, string act) {
 	vector<Effect> effects;
 	map<string, string> structure;
+	map<string, function<bool(string, string)>> functions;
 	string expString = model->model.find("m")->second->data.find("m")->second->value;
-	Matcher matcher;
+
+	functions.insert(make_pair("g", generateGFunction(rm)));
+	Matcher matcher(functions);
 
 	vector<string> rtokens = model->model.find("r")->second->data.find("r")->second->tokens;
 	vector<string> ptokens = model->model.find("p")->second->data.find("p")->second->tokens;
@@ -72,8 +72,6 @@ bool Enforcer::enforce(string sub, string obj, string act) {
 
 		structure.clear();
 	}
-
-	cout << model->model.find("e")->second->data.find("e")->second->value;
 
 	return eft->mergeEffects(model->model.find("e")->second->data.find("e")->second->value, effects);
 }
@@ -98,3 +96,29 @@ vector<string> Enforcer::getPolicy() {
 
 	return temp;
 }
+
+void Enforcer::loadModel() {
+	model = new Model(modelPath);
+	initialize();
+}
+
+Adapter* Enforcer::getAdapter() {
+	return adapter;
+}
+
+void Enforcer::setAdapter(Adapter* a) {
+	adapter = a;
+}
+
+RoleManager* Enforcer::getRoleManager() {
+	return rm;
+}
+
+void Enforcer::setRoleManager(RoleManager* rolem) {
+	rm = rolem;
+}
+
+void Enforcer::clearPolicy() {
+	model->clearPolicy();
+}
+

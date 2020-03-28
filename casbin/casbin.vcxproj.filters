@@ -108,6 +108,9 @@
     <ClInclude Include="util\operator.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="util\builtin_operators.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

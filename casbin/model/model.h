@@ -44,4 +44,6 @@ public:
 	bool loadAssertion(Config, string, string);
 	bool addDef(string, string, string);
 	void printModel();
+	void clearPolicy();
+	void buildRoleLinks(RoleManager*);
 };

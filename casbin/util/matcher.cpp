@@ -10,13 +10,34 @@ string Matcher::injectValue(map<string, string> structure, string equation) {
 	return equation;
  }
 
+string Matcher::parseFunctions(string line) {
+	smatch m;
+
+	// Check for functions and operate on them
+	for (auto itr = functions.begin(); itr != functions.end(); itr++) {
+		string temp = regex_replace(line, regex(" "), ""); // Remove all whitespaces from the string
+		while (regex_search(temp, m, regex(itr->first + "\\(.*\\)"))) {
+			regex_search(temp, m, regex("\\(.*\\)")); // Get content inside the paranthensis
+			temp = m.str();
+			temp = temp.substr(1, temp.size() - 2);
+			vector<string> arr = split(temp, ',');
+			bool result = itr->second(arr[0], arr[1]);
+			if (result) line = regex_replace(line, regex(itr->first + "\\(.*\\)"), "true");
+			else line = regex_replace(line, regex(itr->first + "\\(.*\\)"), "false");
+		}
+	}
+
+	return trim(line);
+}
+
 // Parses the equation using recursive descent tree.
 string Matcher::parseString(string line)
 {
 	line = trim(line);
-	regex e("\\([^(].*?\\)");
+	regex e("\\([^(].*?\\)"); // Check for inner parathensis
 	smatch m;
 
+	// Parse all the values in the parathensis
 	while (regex_search(line, m, e)) {
 		string temp = m.str();
 		temp.erase(0, 1);
@@ -24,6 +45,7 @@ string Matcher::parseString(string line)
 		line = regex_replace(line, e, parseString(temp));
 	}
 
+	// Check for symbol and operate the expression 
 	for (Operator* op : knownOperators)
 	{
 		size_t location = line.find(op->symbol);
@@ -36,15 +58,10 @@ string Matcher::parseString(string line)
 	return trim(line);
 }
 
-void printStructure(map<string, string> structure) {
-	for (auto& kv : structure) {
-		cout << kv.first << ":" << kv.second << "0";
-	}
-}
-
 // Returns the final result of the evaluation
 bool Matcher::eval(map<string, string> struc, string equation) {
 	string temp = injectValue(struc, equation);
+	temp = parseFunctions(temp);
 	temp = parseString(temp);
 	if (temp == "true") return true;
 	return false;

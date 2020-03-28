@@ -53,7 +53,7 @@ void Model::loadModelFromConfig(Config cfg) {
 	for (string rs : requiredSections) {
 		if (!hasSection(rs)) ms.push_back(sectionNameMap.find(rs)->second);
 	}
-	if (ms.size() > 0) cout << "Missing sections are: " << join(ms, ',');
+	if (ms.size() > 0) printf("Missing sections are: %s \n", join(ms, ',').c_str());
 }
 
 void Model::loadSection(Config cfg, string sec) {
@@ -72,6 +72,30 @@ void Model::printModel() {
 	for (auto& item : model) {
 		for (auto& assertion : item.second->data) {
 			printf("%s.%s: %s \n", item.first.c_str(), assertion.first.c_str(), assertion.second->value.c_str());
+		}
+	}
+}
+
+void Model::clearPolicy() {
+	AssertionMap* temp = model.find("p")->second;
+	for (auto itr = temp->data.begin(); itr != temp->data.end(); itr++) {
+		Assertion* ast = itr->second;
+		ast->policy.clear();
+	}
+
+	AssertionMap* temp1 = model.find("g")->second;
+	for (auto itr1 = temp1->data.begin(); itr1 != temp1->data.end(); itr1++) {
+		Assertion* ast = itr1->second;
+		ast->policy.clear();
+	}
+}
+
+void Model::buildRoleLinks(RoleManager* rm) {
+	if (model.find("g") != model.end()) {
+		AssertionMap* astm = model.find("g")->second;
+		for (auto itr = astm->data.begin(); itr != astm->data.end(); itr++) {
+			Assertion* ast = itr->second;
+			ast->buildRoleLinks(rm);
 		}
 	}
 }

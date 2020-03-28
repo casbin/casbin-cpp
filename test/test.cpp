@@ -2,6 +2,7 @@
 #include "../casbin/config/config.h"
 #include "../casbin/log/logger.h"
 #include "../casbin/enforcer.h"
+#include "../casbin/util/matcher.h"
 
 TEST(ConfAdapterTest, FileReadTest) {
 	Config e("../../examples/model.conf");
@@ -51,6 +52,29 @@ TEST(EnforcerTest, PolicyTest) {
 TEST(EnforcerTest, ModelTest) {
 	Enforcer e("../../examples/model.conf", "../../examples/policy.csv");
 	EXPECT_EQ(true, e.enforce("alice", "data1", "read"));
+	EXPECT_EQ(false, e.enforce("alice", "data1", "write"));
+	EXPECT_EQ(true, e.enforce("bob", "data2", "write"));
+	EXPECT_EQ(false, e.enforce("bob", "data2", "read"));
+}
+
+bool g(string a, string b) {
+	return true;
+}
+
+TEST(MatcherTest, ParsingTest) {
+	map<string, function<bool(string, string)>> functions;
+	map<string, string> structure = { { "r.sub", "alice" }, { "p.sub", "alice" } };
+	functions.insert({ "g", g });
+	Matcher m(functions);
+
+	bool result = m.eval(structure, "g(a, b) && r.sub == p.sub");
+	EXPECT_EQ(true, result);
+}
+
+TEST(EnforcerTest, RBACTest) {
+	Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_policy.csv");
+
+	EXPECT_EQ(true, e.enforce("alice", "data2", "read"));
 	EXPECT_EQ(false, e.enforce("alice", "data1", "write"));
 	EXPECT_EQ(true, e.enforce("bob", "data2", "write"));
 	EXPECT_EQ(false, e.enforce("bob", "data2", "read"));

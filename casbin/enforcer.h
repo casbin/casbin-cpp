@@ -26,6 +26,7 @@
 #include <vector>
 #include <functional>
 #include "util/utils.h"
+#include "util/builtin_operators.h"
 #include "model/model.h"
 #include "effect/effector.h"
 #include "util/matcher.h"
@@ -59,7 +60,13 @@ public:
 
 	bool enforce(string sub, string obj, string act);
 	Model* getModel();
+	void loadModel();
 	void setModel(Model m);
+	Adapter* getAdapter();
+	void setAdapter(Adapter*);
+	RoleManager* getRoleManager();
+	void setRoleManager(RoleManager*);
+	void clearPolicy();
 	vector<string> getAllSubjects();
 	vector<string> getAllNamedSubjects(string);
 	vector<string> getAllObjects();

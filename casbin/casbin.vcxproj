@@ -24,6 +24,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>casbin</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>src</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -158,6 +159,7 @@
     <ClInclude Include="persist\file_adapter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="log\logger.h" />
+    <ClInclude Include="util\builtin_operators.h" />
     <ClInclude Include="util\matcher.h" />
     <ClInclude Include="model\model.h" />
     <ClInclude Include="util\operator.h" />
