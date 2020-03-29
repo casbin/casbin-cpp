@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../duktape/duktape.h"
+#include "../duktape/scope.h"
 
 #define VARARGS DUK_VARARGS
 #define RETURN_RESULT 1

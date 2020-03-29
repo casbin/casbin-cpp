@@ -4,8 +4,7 @@
 #include <string>
 
 #include "../util/builtInFunctions.h"
-#include "../duktape/duk_config.h"
-#include "./duktape_config.h"
+#include "../duktape/scope.h"
 
 using namespace std;
 

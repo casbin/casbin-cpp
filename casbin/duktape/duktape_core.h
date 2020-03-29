@@ -11788,7 +11788,7 @@ DUK_INTERNAL const duk_uint8_t duk_builtins_data[4281] = {
 
 /* automatic undefs */
 #undef DUK__REFCINIT
-#line 1 "duk_error_macros.c"
+// #line 1 "duk_error_macros.c"
 /*
  *  Error and fatal handling.
  */

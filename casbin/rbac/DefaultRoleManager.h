@@ -109,14 +109,17 @@ class DefaultRoleManager : public RoleManager {
         }
 
     public:
+
         /**
          * DefaultRoleManager is the constructor for creating an instance of the
          * default RoleManager implementation.
          *
          * @param maxHierarchyLevel the maximized allowed RBAC hierarchy level.
          */
-        DefaultRoleManager(int maxHierarchyLevel) {
-            this->maxHierarchyLevel = maxHierarchyLevel;
+        static DefaultRoleManager* NewRoleManager(int maxHierarchyLevel) {
+            DefaultRoleManager rm;
+            rm->maxHierarchyLevel = maxHierarchyLevel;
+            return rm;
         }
 
         

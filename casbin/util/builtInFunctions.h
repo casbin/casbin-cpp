@@ -6,7 +6,7 @@
 #include <regex>
 
 #include "../rbac/RoleManager.h"
-#include "../model/duktape_config.h"
+#include "../model/scope_config.h"
 #include "./findAllOccurences.h"
 #include "../exception/IllegalArgumentException.h"
 #include "../IPParser/parser/CIDR.h"
@@ -150,15 +150,15 @@ ReturnType GFunction(Scope scope) {
 	rm = (RoleManager *)getPointer(scope);
 
 	if(rm == NULL) {
-		duk_push_boolean(scope, name1 == name2);
+		pushBooleanValue(scope, name1 == name2);
 	} else if(len == 2) {
 		vector <string> domain;
 		bool res = rm->hasLink(name1, name2, domain);
-		duk_push_boolean(scope, res);
+		pushBooleanValue(scope, res);
 	} else {
 		vector <string> domain{getString(scope, 2)};
 		bool res = rm->hasLink(name1, name2, domain);
-		duk_push_boolean(scope, res);
+		pushBooleanValue(scope, res);
 	}
 
 	return RETURN_RESULT;

@@ -4,8 +4,6 @@
 #include "Effector.h"
 #include "../exception/UnsupportedOperationException.h"
 
-#endif
-
 /**
  * DefaultEffector is default effector for Casbin.
  */
@@ -13,7 +11,7 @@ class DefaultEffector : public Effector{
     public:
 
         // NewDefaultEffector is the constructor for DefaultEffector.
-        static DefaultEffector* newDefaultEffector(){
+        static DefaultEffector* NewDefaultEffector(){
             DefaultEffector* e;
             return e;
         }
@@ -71,3 +69,5 @@ class DefaultEffector : public Effector{
             return result;
         }
 };
+
+#endif

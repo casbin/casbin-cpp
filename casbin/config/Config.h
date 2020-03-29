@@ -46,8 +46,7 @@ class Config : public ConfigInterface {
                 infile.open(fname);
             } catch (const ifstream::failure e) {
                 mtx_lock.unlock();
-                IOException exception("Cannot open file.");
-                throw exception;
+                throw IOException("Cannot open file.");
             }
             parseBuffer(&infile);
             mtx_lock.unlock();
