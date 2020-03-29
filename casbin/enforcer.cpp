@@ -49,6 +49,12 @@ bool Enforcer::enforce(string sub, string obj, string act) {
 	string expString = model->model.find("m")->second->data.find("m")->second->value;
 
 	functions.insert(make_pair("g", generateGFunction(rm)));
+	functions.insert(make_pair("keyMatch", keyMatch));
+	functions.insert(make_pair("keyMatch2", keyMatch2));
+	functions.insert(make_pair("keyMatch4", keyMatch4));
+	functions.insert(make_pair("regexMatch", regexMatch));
+	functions.insert(make_pair("ipMatch", ipMatch));
+
 	Matcher matcher(functions);
 
 	vector<string> rtokens = model->model.find("r")->second->data.find("r")->second->tokens;

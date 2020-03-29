@@ -178,6 +178,7 @@
     <ClCompile Include="enforcer.cpp" />
     <ClCompile Include="persist\file_adapter.cpp" />
     <ClCompile Include="log\logger.cpp" />
+    <ClCompile Include="util\builtin_operators.cpp" />
     <ClCompile Include="util\matcher.cpp" />
     <ClCompile Include="model\model.cpp" />
     <ClCompile Include="util\operator.cpp" />

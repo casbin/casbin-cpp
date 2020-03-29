@@ -10,20 +10,20 @@ string Matcher::injectValue(map<string, string> structure, string equation) {
 	return equation;
  }
 
-string Matcher::parseFunctions(string line) {
+string Matcher::parseFunctions(map<string, string> structure, string line) {
 	smatch m;
 
 	// Check for functions and operate on them
 	for (auto itr = functions.begin(); itr != functions.end(); itr++) {
 		string temp = regex_replace(line, regex(" "), ""); // Remove all whitespaces from the string
-		while (regex_search(temp, m, regex(itr->first + "\\(.*\\)"))) {
-			regex_search(temp, m, regex("\\(.*\\)")); // Get content inside the paranthensis
+		while (regex_search(temp, m, regex(itr->first + "\\(.*?\\)"))) {
+			regex_search(temp, m, regex("\\(.*?\\)")); // Get content inside the paranthensis
 			temp = m.str();
 			temp = temp.substr(1, temp.size() - 2);
 			vector<string> arr = split(temp, ',');
-			bool result = itr->second(arr[0], arr[1]);
-			if (result) line = regex_replace(line, regex(itr->first + "\\(.*\\)"), "true");
-			else line = regex_replace(line, regex(itr->first + "\\(.*\\)"), "false");
+			bool result = itr->second(structure.find(arr[0])->second, structure.find(arr[1])->second);
+			if (result) line = regex_replace(line, regex(itr->first + "\\(.*?\\)"), "true");
+			else line = regex_replace(line, regex(itr->first + "\\(.*?\\)"), "false");
 		}
 	}
 
@@ -60,8 +60,8 @@ string Matcher::parseString(string line)
 
 // Returns the final result of the evaluation
 bool Matcher::eval(map<string, string> struc, string equation) {
-	string temp = injectValue(struc, equation);
-	temp = parseFunctions(temp);
+	string temp = parseFunctions(struc, equation);
+	temp = injectValue(struc, temp);
 	temp = parseString(temp);
 	if (temp == "true") return true;
 	return false;

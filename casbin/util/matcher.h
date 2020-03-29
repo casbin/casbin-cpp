@@ -22,7 +22,7 @@ class MATCHER_API Matcher {
 protected:
 	string injectValue(map<string, string>, string);
 	string parseString(string);
-	string parseFunctions(string);
+	string parseFunctions(map<string, string>, string);
 public:
 	Matcher() {
 	}

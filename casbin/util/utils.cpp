@@ -1,5 +1,7 @@
 #include "utils.h"
 
+using namespace std;
+
 extern "C++" inline string ltrim(string str, const string chars)
 {
 	str.erase(0, str.find_first_not_of(chars));
@@ -66,3 +68,4 @@ vector<string> split(string text, string delim)
 string escapeAssertion(string s) {
 	return regex_replace(s, std::regex("\\."), "_");
 }
+
