@@ -21,9 +21,12 @@ string Matcher::parseFunctions(map<string, string> structure, string line) {
 			temp = m.str();
 			temp = temp.substr(1, temp.size() - 2);
 			vector<string> arr = split(temp, ',');
-			bool result = itr->second(structure.find(arr[0])->second, structure.find(arr[1])->second);
-			if (result) line = regex_replace(line, regex(itr->first + "\\(.*?\\)"), "true");
-			else line = regex_replace(line, regex(itr->first + "\\(.*?\\)"), "false");
+
+			if (structure.find(arr[0]) != structure.end() && structure.find(arr[1]) != structure.end()) {
+				bool result = itr->second(structure.find(arr[0])->second, structure.find(arr[1])->second);
+				if (result) line = regex_replace(line, regex(itr->first + "\\(.*?\\)"), "true");
+				else line = regex_replace(line, regex(itr->first + "\\(.*?\\)"), "false");
+			}
 		}
 	}
 

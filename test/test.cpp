@@ -52,44 +52,52 @@ TEST(EnforcerTest, PolicyTest) {
 TEST(EnforcerTest, ModelTest) {
 	Enforcer e("../../examples/model.conf", "../../examples/policy.csv");
 
-	EXPECT_EQ(true, e.enforce("alice", "data1", "read"));
-	EXPECT_EQ(false, e.enforce("alice", "data1", "write"));
-	EXPECT_EQ(true, e.enforce("bob", "data2", "write"));
-	EXPECT_EQ(false, e.enforce("bob", "data2", "read"));
+	EXPECT_EQ(true, e.enforce(string("alice"), string("data1"), string("read")));
+	EXPECT_EQ(false, e.enforce(string("alice"), string("data1"), string("write")));
+	EXPECT_EQ(true, e.enforce(string("bob"), string("data2"), string("write")));
+	EXPECT_EQ(false, e.enforce(string("bob"), string("data2"), string("read")));
 }
 
 TEST(EnforcerTest, RBACTest) {
 	Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_policy.csv");
 
-	EXPECT_EQ(true, e.enforce("alice", "data2", "read"));
-	EXPECT_EQ(false, e.enforce("alice", "data1", "write"));
-	EXPECT_EQ(true, e.enforce("bob", "data2", "write"));
-	EXPECT_EQ(false, e.enforce("bob", "data2", "read"));
+	EXPECT_EQ(true, e.enforce(string("alice"), string("data2"), string("read")));
+	EXPECT_EQ(false, e.enforce(string("alice"), string("data1"), string("write")));
+	EXPECT_EQ(true, e.enforce(string("bob"), string("data2"), string("write")));
+	EXPECT_EQ(false, e.enforce(string("bob"), string("data2"), string("read")));
 }
 
 TEST(EnforcerTest, KeyMatchTest) {
 	Enforcer e("../../examples/keymatch_model.conf", "../../examples/keymatch_policy.csv");
 
-	EXPECT_EQ(true, e.enforce("alice", "/alice_data", "GET"));
-	EXPECT_EQ(true, e.enforce("cathy", "/cathy_data", "POST"));
-	EXPECT_EQ(true, e.enforce("cathy", "/cathy_data", "GET"));
-	EXPECT_EQ(false, e.enforce("bob", "/alice_data/", "GET"));
-	EXPECT_EQ(true, e.enforce("bob", "/alice_data/resource2", "GET"));
-	EXPECT_EQ(true, e.enforce("bob", "/bob_data/resource1", "POST"));
-	EXPECT_EQ(false, e.enforce("bob", "/bob_data/resource1", "GET"));
+	EXPECT_EQ(true, e.enforce(string("alice"), string("/alice_data"), string("GET")));
+	EXPECT_EQ(true, e.enforce(string("cathy"), string("/cathy_data"), string("POST")));
+	EXPECT_EQ(true, e.enforce(string("cathy"), string("/cathy_data"), string("GET")));
+	EXPECT_EQ(false, e.enforce(string("bob"), string("/alice_data/"), string("GET")));
+	EXPECT_EQ(true, e.enforce(string("bob"), string("/alice_data/resource2"), string("GET")));
+	EXPECT_EQ(true, e.enforce(string("bob"), string("/bob_data/resource1"), string("POST")));
+	EXPECT_EQ(false, e.enforce(string("bob"), string("/bob_data/resource1"), string("GET")));
 }
 
 TEST(EnforcerTest, KeyMatch2Test) {
 	Enforcer e("../../examples/keymatch2_model.conf", "../../examples/keymatch2_policy.csv");
 
-	EXPECT_EQ(true, e.enforce("alice", "/alice_data/af", "GET"));
-	EXPECT_EQ(false, e.enforce("alice", "/alice_data/af", "POST"));
-	EXPECT_EQ(false, e.enforce("bob", "/alice_data/af", "POST"));
+	EXPECT_EQ(true, e.enforce(string("alice"), string("/alice_data/af"), string("GET")));
+	EXPECT_EQ(false, e.enforce(string("alice"), string("/alice_data/af"), string("POST")));
+	EXPECT_EQ(false, e.enforce(string("bob"), string("/alice_data/af"), string("POST")));
 }
 
 TEST(EnforcerTest, IPMatchTest) {
 	Enforcer e("../../examples/ipmatch_model.conf", "../../examples/ipmatch_policy.csv");
 
-	EXPECT_EQ(true, e.enforce("192.168.2.255", "data1", "read"));
-	EXPECT_EQ(false, e.enforce("192.169.2.255", "data1", "read"));
+	EXPECT_EQ(true, e.enforce(string("192.168.2.255"), string("data1"), string("read")));
+	EXPECT_EQ(false, e.enforce(string("192.169.2.255"), string("data1"), string("read")));
+}
+
+TEST(EnforcerTest, ABACTest) {
+	Enforcer e("../../examples/abac_model.conf", "../../examples/policy.csv");
+
+	EXPECT_EQ(true, e.enforce(string("alice"), map<string, string>({ { "Owner", "alice" } }), string("read")));
+	EXPECT_EQ(false, e.enforce(string("bob"), map<string, string>({ { "Owner", "alice" } }), string("read")));
+	EXPECT_EQ(false, e.enforce(map<string, string>({ { "Owner", "alice" } }), map<string, string>({ { "Owner", "alice" } }), string("read")));
 }

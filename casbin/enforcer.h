@@ -25,6 +25,8 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <assert.h>
+#include <type_traits>
 #include "util/utils.h"
 #include "util/builtin_operators.h"
 #include "model/model.h"
@@ -32,6 +34,7 @@
 #include "util/matcher.h"
 #include "persist/file_adapter.h"
 #include "rbac/role_manager.h"
+#include <any>
 
 using namespace std;
 
@@ -47,6 +50,7 @@ protected:
 	void initWithFile(string, string);
 	void initWithAdapter(string, Adapter*);
 	void initWithModelAndAdapter(Model*, Adapter*);
+	bool runEnforce(map<string, string>);
 public:
 	Enforcer(string modelFile) {
 		initWithFile(modelFile, "");
@@ -58,7 +62,42 @@ public:
 		initWithAdapter(modelFile, policyAdapter);
 	}
 
-	bool enforce(string sub, string obj, string act);
+	template <typename T1, typename T2, typename T3>
+	bool enforce(T1 sub, T2 obj, T3 act) {
+		map<string, string> request;
+		vector<string> rtokens = model->model.find("r")->second->data.find("r")->second->tokens;
+
+		if (typeid(map<string, string>).name() == typeid(T1).name()) {
+			for (auto& kv : any_cast<map<string, string>>(sub)) {
+				request.insert({ rtokens[0] + "_" + kv.first, kv.second });
+			}
+		}
+		else {
+			request.insert({ rtokens[0], any_cast<string>(sub) });
+		}
+
+		if (typeid(map<string, string>).name() == typeid(T2).name()) {
+			for (auto& kv : any_cast<map<string, string>>(obj)) {
+				request.insert({ rtokens[1] + "_" + kv.first, kv.second });
+			}
+		}
+		else {
+		request.insert({ rtokens[1], any_cast<string>(obj) });
+		}
+
+		if (typeid(map<string, string>).name() == typeid(T3).name()) {
+			for (auto& kv : any_cast<map<string, string>>(act)) {
+				request.insert({ rtokens[2] + "_" + kv.first, kv.second });
+			}
+		}
+		else {
+		request.insert({ rtokens[2], any_cast<string>(act) });
+		}
+
+		return runEnforce(request);
+	}
+
+	//bool enforce(map<string, string> sub, map<string, string> obj, map<string, string> act);
 	Model* getModel();
 	void loadModel();
 	void setModel(Model m);
@@ -67,6 +106,8 @@ public:
 	RoleManager* getRoleManager();
 	void setRoleManager(RoleManager*);
 	void clearPolicy();
+
+	// Management API
 	vector<string> getAllSubjects();
 	vector<string> getAllNamedSubjects(string);
 	vector<string> getAllObjects();
@@ -99,7 +140,9 @@ public:
 	bool removeFilteredGroupingPolicy(int, string);
 	bool removeNamedGroupingPolicy(string, string);
 	bool removeFilteredNamedGroupingPolicy(string, int, string);
-	bool addFunction(function<bool (string, string)>);
+	bool addFunction(function<bool(string, string)>);
+
+	// RBAC API
 	vector<string> getRolesForUser(string);
 	vector<string> getUsersForRole(string);
 	bool hasRoleforUser(string, string);

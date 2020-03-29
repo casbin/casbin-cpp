@@ -42,7 +42,7 @@ void Enforcer::initialize() {
 	model->buildRoleLinks(rm);
 }
 
-bool Enforcer::enforce(string sub, string obj, string act) {
+bool Enforcer::runEnforce(map<string, string> request) {
 	vector<Effect> effects;
 	map<string, string> structure;
 	map<string, function<bool(string, string)>> functions;
@@ -56,14 +56,11 @@ bool Enforcer::enforce(string sub, string obj, string act) {
 	functions.insert(make_pair("ipMatch", ipMatch));
 
 	Matcher matcher(functions);
-
-	vector<string> rtokens = model->model.find("r")->second->data.find("r")->second->tokens;
 	vector<string> ptokens = model->model.find("p")->second->data.find("p")->second->tokens;
 
+
 	for (string pol : getPolicy()) {
-		structure.insert({ rtokens[0], sub });
-		structure.insert({ rtokens[1], obj });
-		structure.insert({ rtokens[2], act });
+		structure.insert(request.begin(), request.end());
 
 		int i = 0;
 		vector<string> parr = split(pol, ',');
