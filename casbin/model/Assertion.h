@@ -35,13 +35,13 @@ class Assertion {
 
 				if(char_count == 2) {
 					vector <string> domain;
-					RM->addLink(rule[0], rule[1], domain);
+					RM->AddLink(rule[0], rule[1], domain);
 				} else if(char_count == 3) {
 					vector <string> domain{rule[2]};
-					RM->addLink(rule[0], rule[1], domain);
+					RM->AddLink(rule[0], rule[1], domain);
 				} else if(char_count == 4) {
 					vector <string> domain{rule[2], rule[3]};
-					RM->addLink(rule[0], rule[1], domain);
+					RM->AddLink(rule[0], rule[1], domain);
 				}
 			}
 
@@ -53,7 +53,7 @@ class Assertion {
 
 			LogUtil :: LogPrint("Role links for: " + Key);
 		
-			RM->printRoles();
+			RM->PrintRoles();
 		}
 
 };

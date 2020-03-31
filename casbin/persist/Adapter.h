@@ -35,41 +35,41 @@ class Adapter {
     public:
 
         /**
-         * loadPolicy loads all policy rules from the storage.
+         * LoadPolicy loads all policy rules from the storage.
          *
          * @param model the model.
          */
-        virtual void loadPolicy(Model model) = 0;
+        virtual void LoadPolicy(Model model) = 0;
 
         /**
-         * savePolicy saves all policy rules to the storage.
+         * SavePolicy saves all policy rules to the storage.
          *
          * @param model the model.
          */
-        virtual void savePolicy(Model model) = 0;
+        virtual void SavePolicy(Model model) = 0;
 
         /**
-         * addPolicy adds a policy rule to the storage.
+         * AddPolicy adds a policy rule to the storage.
          * This is part of the Auto-Save feature.
          *
          * @param sec the section, "p" or "g".
          * @param ptype the policy type, "p", "p2", .. or "g", "g2", ..
          * @param rule the rule, like (sub, obj, act).
          */
-        virtual void addPolicy(string sec, string ptype, vector<string> rule) = 0;
+        virtual void AddPolicy(string sec, string ptype, vector<string> rule) = 0;
 
         /**
-         * removePolicy removes a policy rule from the storage.
+         * RemovePolicy removes a policy rule from the storage.
          * This is part of the Auto-Save feature.
          *
          * @param sec the section, "p" or "g".
          * @param ptype the policy type, "p", "p2", .. or "g", "g2", ..
          * @param rule the rule, like (sub, obj, act).
          */
-        virtual void removePolicy(string sec, string ptype, vector<string> rule) = 0;
+        virtual void RemovePolicy(string sec, string ptype, vector<string> rule) = 0;
 
         /**
-         * removeFilteredPolicy removes policy rules that match the filter from the storage.
+         * RemoveFilteredPolicy removes policy rules that match the filter from the storage.
          * This is part of the Auto-Save feature.
          *
          * @param sec the section, "p" or "g".
@@ -78,7 +78,9 @@ class Adapter {
          * @param fieldValues the field values to be matched, value ""
          *                    means not to match this field.
          */
-        void removeFilteredPolicy(string sec, string ptype, int fieldIndex, vector <string> fieldValues);
+        virtual void RemoveFilteredPolicy(string sec, string ptype, int fieldIndex, vector <string> fieldValues) = 0;
+
+        virtual bool IsFiltered() = 0;
 };
 
 #endif

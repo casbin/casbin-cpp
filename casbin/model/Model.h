@@ -62,13 +62,13 @@ class Model{
 
 		// LoadModel loads the model from model CONF file.
 		void LoadModel(string path) {
-			Config cfg = Config::newConfig(path);
+			Config cfg = Config::NewConfig(path);
 			LoadModelFromConfig(&cfg);
 		}
 
 		// LoadModelFromText loads the model from the text.
 		void LoadModelFromText(string text) {
-			Config cfg = Config::newConfigFromText(text);
+			Config cfg = Config::NewConfigFromText(text);
 			LoadModelFromConfig(&cfg);
 		}
 

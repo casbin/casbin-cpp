@@ -12,25 +12,27 @@ class FileAdapter : public Adapter {
     public:
 
         string  filePath;
+        bool filtered;
 
         // NewAdapter is the constructor for Adapter.
         static FileAdapter* NewAdapter(string filePath) {
             FileAdapter adapter;
             adapter.filePath = filePath;
+            adapter.filtered = false;
             return &adapter;
         }
 
         // LoadPolicy loads all policy rules from the storage.
-        void loadPolicy(Model model) {
+        void LoadPolicy(Model model) {
             if(this->filePath == "") {
                 throw CasbinAdapterException("Invalid file path, file path cannot be empty");
             }
 
-            this->loadPolicyFile(model, LoadPolicyLine);
+            this->LoadPolicyFile(model, LoadPolicyLine);
         }
 
         // SavePolicy saves all policy rules to the storage.
-        void savePolicy(Model model) {
+        void SavePolicy(Model model) {
             if(this->filePath == "") {
                 throw CasbinAdapterException("Invalid file path, file path cannot be empty");
             }
@@ -53,10 +55,10 @@ class FileAdapter : public Adapter {
                 }
             }
 
-            return this->savePolicyFile(rtrim(tmp, "\n"));
+            return this->SavePolicyFile(rtrim(tmp, "\n"));
         }
 
-        void loadPolicyFile(Model model, void (*handler)(string, Model)) {
+        void LoadPolicyFile(Model model, void (*handler)(string, Model)) {
             ifstream infile;
             try {
                 infile.open(this->filePath);
@@ -73,7 +75,7 @@ class FileAdapter : public Adapter {
             infile.close();
         }
 
-        void savePolicyFile(string text) {
+        void SavePolicyFile(string text) {
             ofstream outfile;
             outfile.open(this->filePath,ios::out);
             try {
@@ -88,20 +90,25 @@ class FileAdapter : public Adapter {
         }
 
         // AddPolicy adds a policy rule to the storage.
-        void addPolicy(string sec, string ptype, vector<string> rule) {
+        void AddPolicy(string sec, string ptype, vector<string> rule) {
             throw UnsupportedOperationException("not implemented");
         }
 
         // RemovePolicy removes a policy rule from the storage.
-        void removePolicy(string sec, string ptype, vector<string> rule) {
+        void RemovePolicy(string sec, string ptype, vector<string> rule) {
             throw UnsupportedOperationException("not implemented");
         }
 
         // RemoveFilteredPolicy removes policy rules that match the filter from the storage.
-        void removeFilteredPolicy(string sec, string ptype, int fieldIndex, vector<string> fieldValues) {
+        void RemoveFilteredPolicy(string sec, string ptype, int fieldIndex, vector<string> fieldValues) {
             throw UnsupportedOperationException("not implemented");
         }
 
+        // IsFiltered returns true if the loaded policy has been filtered.
+        bool IsFiltered() {
+            return this->filtered;
+        }
+        
 };
 
 #endif

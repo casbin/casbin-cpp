@@ -30,7 +30,7 @@ class Config : public ConfigInterface {
         /**
          * addConfig adds a new section->key:value to the configuration.
          */
-        bool addConfig(string section, string option, string value) {
+        bool AddConfig(string section, string option, string value) {
             if (!section.compare("")) {
                 section = DEFAULT_SECTION;
             }
@@ -39,7 +39,7 @@ class Config : public ConfigInterface {
             return !ok;
         }
     
-        void parse(string fname) {
+        void Parse(string fname) {
             mtx_lock.lock();
             ifstream infile;
             try {
@@ -48,12 +48,12 @@ class Config : public ConfigInterface {
                 mtx_lock.unlock();
                 throw IOException("Cannot open file.");
             }
-            parseBuffer(&infile);
+            ParseBuffer(&infile);
             mtx_lock.unlock();
             infile.close();
         }
 
-        void parseBuffer(istream* buf){
+        void ParseBuffer(istream* buf){
             string section = "";
             int lineNum = 0;
             string line;
@@ -83,7 +83,7 @@ class Config : public ConfigInterface {
                     }
                     string option = trim(optionVal[0]);
                     string value = trim(optionVal[1]);
-                    addConfig(section, option, value);
+                    AddConfig(section, option, value);
                 }
             }
         }
@@ -96,9 +96,9 @@ class Config : public ConfigInterface {
          * @param confName the path of the model file.
          * @return the constructor of Config.
          */
-        static Config newConfig(string confName) {
+        static Config NewConfig(string confName) {
             Config c;
-            c.parse(confName);
+            c.Parse(confName);
             return c;
         }
 
@@ -108,10 +108,10 @@ class Config : public ConfigInterface {
          * @param text the model text.
          * @return the constructor of Config.
          */
-        static Config newConfigFromText(string text) {
+        static Config NewConfigFromText(string text) {
             Config c;
             stringstream stream(text);
-            c.parseBuffer(&stream);
+            c.ParseBuffer(&stream);
             return c;
         }
 
@@ -158,7 +158,7 @@ class Config : public ConfigInterface {
             } else {
                 option = keys[0];
             }
-            addConfig(section, option, value);
+            AddConfig(section, option, value);
             mtx_lock.unlock();
         }
 

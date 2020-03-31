@@ -26,15 +26,16 @@ class GroupRoleManager : public DefaultRoleManager {
          *
          * @param maxHierarchyLevel the maximized allowed RBAC hierarchy level.
          */
-        GroupRoleManager(int maxHierarchyLevel) : DefaultRoleManager(maxHierarchyLevel) {
+        static GroupRoleManager* NewGroupRoleManager(int maxHierarchyLevel){
+            return (GroupRoleManager*)NewRoleManager(maxHierarchyLevel);
         }
 
         /**
          * hasLink determines whether role: name1 inherits role: name2.
          * domain is a prefix to the roles.
          */
-        bool hasLink(string name1, string name2, vector <string> domain) {
-            if(DefaultRoleManager :: hasLink(name1, name2, domain)) {
+        bool HasLink(string name1, string name2, vector <string> domain) {
+            if(DefaultRoleManager :: HasLink(name1, name2, domain)) {
                 return true;
             }
             unsigned int domain_length = sizeof(domain)/sizeof(domain[0]);
@@ -42,13 +43,13 @@ class GroupRoleManager : public DefaultRoleManager {
             if (domain_length == 1) {
                 try {
                     vector <string> domain1;
-                    vector <string> groups = DefaultRoleManager :: getRoles(name1, domain1);
+                    vector <string> groups = DefaultRoleManager :: GetRoles(name1, domain1);
                     for(vector <string> :: iterator group = groups.begin() ; group < groups.end() ; group++) {
-                        if(hasLink(*group, name2, domain)) {
+                        if(DefaultRoleManager :: HasLink(*group, name2, domain)) {
                             return true;
                         }
                     }
-                } catch (IllegalArgumentException ignore) {
+                } catch (CasbinRBACException ignore) {
                     return false;
                 }
             }
