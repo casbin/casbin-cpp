@@ -10,9 +10,12 @@ using namespace std;
 
 class FunctionMap {
     private:
+
         Scope scope;
 
     public:
+
+        unordered_map<string, Function> fmap;
 
         FunctionMap(){
             scope = duk_create_heap_default();
@@ -20,11 +23,12 @@ class FunctionMap {
 
         // AddFunction adds an expression function.
         void AddFunction(string fname, Function f, Index nargs = VARARGS) {
+            fmap[fname] = f;
             pushFunction(this->scope, f, nargs, fname);
         }
 
         // LoadFunctionMap loads an initial function map.
-        FunctionMap LoadFunctionMap() {
+        static FunctionMap LoadFunctionMap() {
             FunctionMap fm;
 
             fm.AddFunction("keyMatch", KeyMatch);

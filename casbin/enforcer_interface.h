@@ -96,6 +96,18 @@ class IEnforcer {
         virtual bool RemoveNamedGroupingPolicy(string ptype, vector<string> params) = 0;
         virtual bool RemoveFilteredNamedGroupingPolicy(string ptype, int fieldIndex, vector<string> fieldValues) = 0;
         virtual void AddFunction(string name, Function) = 0;
+
+        /* Internal API member functions */
+		virtual bool addPolicy(string sec, string ptype, vector<string> rule) = 0;
+		virtual bool removePolicy(string sec , string ptype , vector<string> rule) = 0;
+		virtual bool removeFilteredPolicy(string sec , string ptype , int fieldIndex , vector<string> fieldValues) = 0;
+
+		/* RBAC API with domains.*/
+		virtual vector<string> GetUsersForRoleInDomain(string name, string domain) = 0;
+		virtual vector<string> GetRolesForUserInDomain(string name, string domain) = 0;
+		virtual vector<vector<string>> GetPermissionsForUserInDomain(string user, string domain) = 0;
+		virtual bool AddRoleForUserInDomain(string user, string role, string domain) = 0;
+		virtual bool DeleteRoleForUserInDomain(string user, string role, string domain) = 0;
 };
 
 #endif

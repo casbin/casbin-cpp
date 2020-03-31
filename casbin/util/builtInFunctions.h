@@ -153,11 +153,11 @@ ReturnType GFunction(Scope scope) {
 		pushBooleanValue(scope, name1 == name2);
 	} else if(len == 2) {
 		vector <string> domain;
-		bool res = rm->hasLink(name1, name2, domain);
+		bool res = rm->HasLink(name1, name2, domain);
 		pushBooleanValue(scope, res);
 	} else {
 		vector <string> domain{getString(scope, 2)};
-		bool res = rm->hasLink(name1, name2, domain);
+		bool res = rm->HasLink(name1, name2, domain);
 		pushBooleanValue(scope, res);
 	}
 
