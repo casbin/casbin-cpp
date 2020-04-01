@@ -16,34 +16,35 @@ using namespace std;
 
 class AssertionMap {
 public:
-	map<string, Assertion*> data = {};
-	AssertionMap(string s, Assertion* a) {
+	unordered_map<string, assertion*> data = {};
+	AssertionMap(string s, assertion* a) {
 		data.insert(make_pair(s, a));
 	}
 };
 
 class MODEL_API Model {
 	Config adapter;
-	const map<string, string> sectionNameMap = { {"r", "request_definition"},
+	const unordered_map<string, string> sectionNameMap = { {"r", "request_definition"},
 	{"p", "policy_definition"},
 	{"g", "role_definition"},
 	{"e", "policy_effect"},
 	{"m", "matchers"} };
-	const array<string, 4> requiredSections = { "r", "p", "e", "m" };
+	const array<string, 4> required_sections_ = { "r", "p", "e", "m" };
 protected:
-	void loadModel(string);
-	void loadModelFromConfig(Config);
-	void loadSection(Config cfg, string sec);
-	void loadModelFromText(string);
-	bool hasSection(string);
+	void load_model(const string&);
+	void load_model_from_config(const Config&);
+	void load_section(const Config& cfg, const string& sec);
+	void load_model_from_text(string);
+	bool has_section(const string&);
 public:
-	map<string, AssertionMap*> model;
-	Model(string fileName) {
-		loadModel(fileName);
+	unordered_map<string, AssertionMap*> model;
+
+	explicit Model(const string& file_name) {
+		load_model(file_name);
 	}
-	bool loadAssertion(Config, string, string);
-	bool addDef(string, string, string);
-	void printModel();
-	void clearPolicy();
-	void buildRoleLinks(RoleManager*);
+	bool load_assertion(Config, const string&, const string&);
+	bool add_def(const string&, const string&, const string&);
+	void print_model();
+	void clear_policy();
+	void build_role_links(role_manager*);
 };

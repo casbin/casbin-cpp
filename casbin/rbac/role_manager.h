@@ -7,37 +7,38 @@
 #endif
 
 #include <vector>
-#include <map>
+#include <deque>
+#include <unordered_map>
 #include <string>
 #include <functional>
 
 using namespace std;
 
-struct Role {
+struct role {
 	string name;
-	vector<Role*> roles;
-	void addRole(Role*);
-	void deleteRole(Role*);
-	bool hasRole(string, int hierarchyLevel);
-	vector<string> getRoles();
+	deque<role*> roles;
+	auto add_role(role*) -> void;
+	auto delete_role(role*) -> void;
+	auto has_role(const string&, int hierarchy_level) -> bool;
+	auto get_roles() -> vector<string>;
 };
 
-class ROLEMANAGER_API RoleManager {
-	map<string, Role*> allRoles;
-	function<bool(string, string)> matchingFunc;
-	bool hasPattern = false;
-	int maxHierarchyLevel = 10;
+class ROLEMANAGER_API role_manager {
+	unordered_map<string, role*> all_roles_;
+	function<bool(string, string)> matching_func_;
+	bool has_pattern_ = false;
+	int max_hierarchy_level_ = 10;
 public:
-	void addMatchingFunc(function<bool(string, string)>);
-	bool hasRole(string);
-	void clear();
-	Role* createRole(string);
-	void addLink(string, string, string);
-	void addLink(string, string);
-	void deleteLink(string, string, string);
-	void deleteLink(string, string);
-	bool hasLink(string, string, string);
-	bool hasLink(string, string);
-	vector<string> getRoles(string, string);
-	vector<string> getRoles(string);
+	auto add_matching_func(function<bool(string, string)>) -> void;
+	auto has_role(const string&) -> bool;
+	auto clear() -> void;
+	auto create_role(const string&) -> role*;
+	auto add_link(string, string, const string&) -> void;
+	auto add_link(const string&, const string&) -> void;
+	auto delete_link(string, string, const string&) -> void;
+	auto delete_link(const string&, const string&) -> void;
+	auto has_link(string, string, const string&) -> bool;
+	auto has_link(const string&, const string&) -> bool;
+	auto get_roles(string, const string&) -> vector<string>;
+	auto get_roles(const string&) -> vector<string>;
 };

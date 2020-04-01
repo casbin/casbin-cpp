@@ -12,16 +12,16 @@
 #include "../rbac/role_manager.h"
 #include "utils.h"
 
-extern "C++" BUILTIN_OPERATORS_API bool keyMatch(string, string);
+extern "C++" BUILTIN_OPERATORS_API auto key_match(string, string) -> bool;
 
-extern "C++" BUILTIN_OPERATORS_API bool keyMatch2(string, string);
+extern "C++" BUILTIN_OPERATORS_API auto key_match2(string, string) -> bool;
 
-extern "C++" BUILTIN_OPERATORS_API bool keyMatch4(string, string);
+extern "C++" BUILTIN_OPERATORS_API auto key_match4(string, string) -> bool;
 
-extern "C++" BUILTIN_OPERATORS_API bool ipMatch(string, string);
+extern "C++" BUILTIN_OPERATORS_API auto ip_match(string, string) -> bool;
 
-extern "C++" BUILTIN_OPERATORS_API bool regexMatch(string, string);
+extern "C++" BUILTIN_OPERATORS_API auto regex_match(string, string) -> bool;
 
-extern "C++" BUILTIN_OPERATORS_API string escapeAssertion(string);
+extern "C++" BUILTIN_OPERATORS_API auto escape_assertion(string) -> string;
 
-extern "C++" BUILTIN_OPERATORS_API function<bool(string, string)> generateGFunction(RoleManager*);
+extern "C++" BUILTIN_OPERATORS_API auto generate_g_function(role_manager*) -> function<bool(string, string)>;

@@ -14,8 +14,8 @@
 using namespace std;
 
 class LOGGER_API Logger {
-	string fileName = "casbin_test.log";
+	string file_name_ = "casbin_test.log";
 public:
-	void appendToFile(string);
-	void print(string);
+	void append_to_file(const string&) const;
+	void print(const string&) const;
 };

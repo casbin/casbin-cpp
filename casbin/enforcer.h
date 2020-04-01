@@ -24,10 +24,6 @@
 
 #include <string>
 #include <vector>
-#include <functional>
-#include <assert.h>
-#include <type_traits>
-#include "util/utils.h"
 #include "util/builtin_operators.h"
 #include "model/model.h"
 #include "effect/effector.h"
@@ -39,36 +35,41 @@
 using namespace std;
 
 class ENFORCER_API Enforcer {
-	string modelPath;
-	Model* model;
-	Effector* eft;
-	Adapter* adapter;
-	RoleManager* rm;
+	string model_path_;
+	Model* model_{};
+	effector* eft_{};
+	Adapter* adapter_{};
+	role_manager* rm_{};
+
+	bool enabled_{};
+	bool auto_save_{};
+	bool auto_build_role_links_{};
+	bool auto_notify_watcher_{};
 
 protected:
 	void initialize();
-	void initWithFile(string, string);
-	void initWithAdapter(string, Adapter*);
-	void initWithModelAndAdapter(Model*, Adapter*);
-	bool runEnforce(map<string, string>);
+	void init_with_file(const string&, const string&);
+	void init_with_adapter(const string&, Adapter*);
+	void init_with_model_and_adapter(Model*, Adapter*);
+	[[nodiscard]] auto run_enforce(unordered_map<string, string>) const -> bool;
 public:
-	Enforcer(string modelFile) {
-		initWithFile(modelFile, "");
+	explicit Enforcer(const string& model_file) {
+		init_with_file(model_file, "");
 	}
-	Enforcer(string modelFile, string policyFile) {
-		initWithFile(modelFile, policyFile);
+	Enforcer(const string& model_file, const string& policy_file) {
+		init_with_file(model_file, policy_file);
 	}
-	Enforcer(string modelFile, Adapter* policyAdapter) {
-		initWithAdapter(modelFile, policyAdapter);
+	Enforcer(const string& model_file, Adapter* policy_adapter) {
+		init_with_adapter(model_file, policy_adapter);
 	}
 
 	template <typename T1, typename T2, typename T3>
 	bool enforce(T1 sub, T2 obj, T3 act) {
-		map<string, string> request;
-		vector<string> rtokens = model->model.find("r")->second->data.find("r")->second->tokens;
+		unordered_map<string, string> request;
+		auto rtokens = model_->model.find("r")->second->data.find("r")->second->tokens;
 
-		if (typeid(map<string, string>).name() == typeid(T1).name()) {
-			for (auto& kv : any_cast<map<string, string>>(sub)) {
+		if (typeid(unordered_map<string, string>).name() == typeid(T1).name()) {
+			for (auto& kv : any_cast<unordered_map<string, string>>(sub)) {
 				request.insert({ rtokens[0] + "_" + kv.first, kv.second });
 			}
 		}
@@ -76,8 +77,8 @@ public:
 			request.insert({ rtokens[0], any_cast<string>(sub) });
 		}
 
-		if (typeid(map<string, string>).name() == typeid(T2).name()) {
-			for (auto& kv : any_cast<map<string, string>>(obj)) {
+		if (typeid(unordered_map<string, string>).name() == typeid(T2).name()) {
+			for (auto& kv : any_cast<unordered_map<string, string>>(obj)) {
 				request.insert({ rtokens[1] + "_" + kv.first, kv.second });
 			}
 		}
@@ -85,8 +86,8 @@ public:
 		request.insert({ rtokens[1], any_cast<string>(obj) });
 		}
 
-		if (typeid(map<string, string>).name() == typeid(T3).name()) {
-			for (auto& kv : any_cast<map<string, string>>(act)) {
+		if (typeid(unordered_map<string, string>).name() == typeid(T3).name()) {
+			for (auto& kv : any_cast<unordered_map<string, string>>(act)) {
 				request.insert({ rtokens[2] + "_" + kv.first, kv.second });
 			}
 		}
@@ -94,31 +95,31 @@ public:
 		request.insert({ rtokens[2], any_cast<string>(act) });
 		}
 
-		return runEnforce(request);
+		return run_enforce(request);
 	}
 
-	//bool enforce(map<string, string> sub, map<string, string> obj, map<string, string> act);
-	Model* getModel();
-	void loadModel();
-	void setModel(Model m);
-	Adapter* getAdapter();
-	void setAdapter(Adapter*);
-	RoleManager* getRoleManager();
-	void setRoleManager(RoleManager*);
-	void clearPolicy();
+	//bool enforce(unordered_map<string, string> sub, unordered_map<string, string> obj, unordered_map<string, string> act);
+	[[nodiscard]] Model* get_model() const;
+	void load_model();
+	void set_model(Model m);
+	[[nodiscard]] auto get_adapter() const -> Adapter*;
+	void set_adapter(Adapter*);
+	[[nodiscard]] role_manager* get_role_manager() const;
+	void set_role_manager(role_manager*);
+	void clear_policy() const;
 
 	// Management API
-	vector<string> getAllSubjects();
-	vector<string> getAllNamedSubjects(string);
-	vector<string> getAllObjects();
-	vector<string> getAllNamedObjects(string);
-	vector<string> getAllActions();
-	vector<string> getAllNamedActions(string);
-	vector<string> getAllRoles();
-	vector<string> getAllNamedRoles(string);
-	vector<string> getPolicy();
-	vector<string> getFilteredPolicy(int, string);
-	vector<string> getNamedPolicy(string);
+	auto get_all_subjects() -> vector<string>;
+	auto get_all_named_subjects(string) -> vector<string>;
+	auto get_all_objects() -> vector<string>;
+	auto get_all_named_objects(string) -> vector<string>;
+	auto get_all_actions() -> vector<string>;
+	auto get_all_named_actions(string) -> vector<string>;
+	auto get_all_roles() -> vector<string>;
+	auto get_all_named_roles(string) -> vector<string>;
+	vector<string> get_policy() const;
+	vector<string> get_filtered_policy(int, string);
+	vector<string> get_named_policy(string);
 	vector<string> getFilteredNamedPolicy(string, int, string);
 	vector<string> getGroupingPolicy();
 	vector<string> getFilteredGroupingPolicy(int, string);

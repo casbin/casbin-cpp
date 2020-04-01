@@ -111,6 +111,12 @@
     <ClInclude Include="util\builtin_operators.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="enforcer_synced.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enforcer_cached.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -160,6 +166,12 @@
     </ClCompile>
     <ClCompile Include="util\builtin_operators.cpp">
       <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="enforcer_synced.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enforcer_cached.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

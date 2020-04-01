@@ -1,6 +1,7 @@
 #include "model.h"
 
-string getKeySuffix(int i) {
+auto get_key_suffix(const int i) -> string
+{
 	if (i == 1) {
 		return "";
 	}
@@ -8,67 +9,72 @@ string getKeySuffix(int i) {
 	return to_string(i);
 }
 
-bool Model::loadAssertion(Config c, string sec, string key) {
-	string value = c.get(sectionNameMap.find(sec)->second + "::" + key);
-	return addDef(sec, key, value);
+auto Model::load_assertion(Config c, const string& sec, const string& key) -> bool
+{
+	const auto value = c.get(sectionNameMap.find(sec)->second + "::" + key);
+	return add_def(sec, key, value);
 }
 
-bool Model::addDef(string sec, string key, string value) {
-	if (value == "") return false;
-	Assertion* ast = new Assertion();
+auto Model::add_def(const string& sec, const string& key, const string& value) -> bool
+{
+	if (value.empty()) return false;
+	auto ast = new assertion();
 	ast->key = key;
 	ast->value = value;
 
 	// Stores tokens in assertion such as r_sub, p_sub
 	if (sec == "r" || sec == "p") {
 		ast->tokens = split(ast->value, ',');
-		for (auto itr = ast->tokens.begin(); itr != ast->tokens.end(); itr++) {
+		for (auto itr = ast->tokens.begin(); itr != ast->tokens.end(); ++itr) {
 			*itr = trim(*itr);
 			*itr = key + "_" + *itr;
 		}
 	}
 	else {
-		ast->value = escapeAssertion(value); // Replaces r.sub in matcher to p_sub
+		ast->value = escape_assertion(value); // Replaces r.sub in matcher to p_sub
 	}
 
 	if (model.find(sec) == model.end()) {
-		AssertionMap* temp = new AssertionMap(key, ast);
+		auto temp = new AssertionMap(key, ast);
 		model.insert(make_pair(sec, temp));
 	}
 
 	return true;
 }
 
-void Model::loadModel(string filePath) {
-	Config cfg = Config(filePath);
-	loadModelFromConfig(cfg);
+void Model::load_model(const string& file_path) {
+	const auto cfg = Config(file_path);
+	load_model_from_config(cfg);
 }
 
-void Model::loadModelFromConfig(Config cfg) {
-	for (auto& sectionName : sectionNameMap) {
-		loadSection(cfg, sectionName.first);
+auto Model::load_model_from_config(const Config& cfg) -> void
+{
+	for (auto& section_name : sectionNameMap) {
+		load_section(cfg, section_name.first);
 	}
 
 	vector<string> ms;
-	for (string rs : requiredSections) {
-		if (!hasSection(rs)) ms.push_back(sectionNameMap.find(rs)->second);
+	for (const auto& rs : required_sections_) {
+		if (!has_section(rs)) ms.push_back(sectionNameMap.find(rs)->second);
 	}
-	if (ms.size() > 0) printf("Missing sections are: %s \n", join(ms, ',').c_str());
+	if (!ms.empty()) printf("Missing sections are: %s \n", join(ms, ',').c_str());
 }
 
-void Model::loadSection(Config cfg, string sec) {
-	int i = 1;
+auto Model::load_section(const Config& cfg, const string& sec) -> void
+{
+	auto i = 1;
 	while (true) {
-		if (!loadAssertion(cfg, sec, sec + getKeySuffix(i))) break;
+		if (!load_assertion(cfg, sec, sec + get_key_suffix(i))) break;
 		else i++;
 	}
 }
 
-bool Model::hasSection(string sec) {
+auto Model::has_section(const string& sec) -> bool
+{
 	return model.find(sec) != model.end();
 }
 
-void Model::printModel() {
+void Model::print_model() {
 	for (auto& item : model) {
 		for (auto& assertion : item.second->data) {
 			printf("%s.%s: %s \n", item.first.c_str(), assertion.first.c_str(), assertion.second->value.c_str());
@@ -76,26 +82,28 @@ void Model::printModel() {
 	}
 }
 
-void Model::clearPolicy() {
-	AssertionMap* temp = model.find("p")->second;
-	for (auto itr = temp->data.begin(); itr != temp->data.end(); itr++) {
-		Assertion* ast = itr->second;
+auto Model::clear_policy() -> void
+{
+	auto temp = model.find("p")->second;
+	for (auto itr = temp->data.begin(); itr != temp->data.end(); ++itr) {
+		auto ast = itr->second;
 		ast->policy.clear();
 	}
 
-	AssertionMap* temp1 = model.find("g")->second;
-	for (auto itr1 = temp1->data.begin(); itr1 != temp1->data.end(); itr1++) {
-		Assertion* ast = itr1->second;
+	auto temp1 = model.find("g")->second;
+	for (auto itr1 = temp1->data.begin(); itr1 != temp1->data.end(); ++itr1) {
+		auto ast = itr1->second;
 		ast->policy.clear();
 	}
 }
 
-void Model::buildRoleLinks(RoleManager* rm) {
+auto Model::build_role_links(role_manager* rm) -> void
+{
 	if (model.find("g") != model.end()) {
-		AssertionMap* astm = model.find("g")->second;
-		for (auto itr = astm->data.begin(); itr != astm->data.end(); itr++) {
-			Assertion* ast = itr->second;
-			ast->buildRoleLinks(rm);
+		auto astm = model.find("g")->second;
+		for (auto itr = astm->data.begin(); itr != astm->data.end(); ++itr) {
+			auto ast = itr->second;
+			ast->build_role_links(rm);
 		}
 	}
 }

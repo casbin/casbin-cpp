@@ -2,19 +2,19 @@
 
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <deque>
 #include <stdexcept>
 #include "../rbac/role_manager.h"
 
 using namespace std;
 
-class Assertion {
+class assertion {
 public:
 	string key;
 	string value;
 	vector<string> tokens;
-	vector<vector<string>> policy;
-	RoleManager* rm;
+	deque<vector<string>> policy;
+	role_manager* rm;
 
-	void buildRoleLinks(RoleManager*);
+	void build_role_links(role_manager*);
 };

@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <regex>
-#include <map>
+#include <unordered_map>
 
 
 using namespace std;
@@ -29,7 +29,7 @@ extern "C++" UTILS_API vector<string> split(string, string);
 
 extern "C++" UTILS_API string join(vector<string>, char);
 
-extern "C++" UTILS_API string escapeAssertion(string);
+extern "C++" UTILS_API string escape_assertion(string);
 
 
 

@@ -11,9 +11,9 @@
 
 using namespace std;
 
-enum class Effect { Allow, Indeterminate, Deny };
+enum class effect { allow, indeterminate, deny };
 
-class EFFECTOR_API Effector {
+class EFFECTOR_API effector {
 public:
-	bool mergeEffects(string, vector<Effect>);
+	static auto merge_effects(const string&, const vector<effect>&) -> bool;
 };

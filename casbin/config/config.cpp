@@ -1,12 +1,23 @@
 #include "config.h"
 
-const string DEFAULT_SECTION = "default";
+#include <utility>
+#include <fstream>
 
-void Config::parseStream(stringstream& stream) {
+const string default_section = "default";
+
+Config::Config()
+= default;
+
+Config::Config(const string& conf_name)
+{
+	read_from_file(conf_name);
+}
+
+auto Config::parse_stream(stringstream& stream) -> void
+{
 	string line;
 	string key;
 	string section = "";
-	bool canWrite = false;
 	smatch m;
 	while (getline(stream, line))
 	{
@@ -23,99 +34,104 @@ void Config::parseStream(stringstream& stream) {
 		{
 			smatch mat;
 			regex_search(line, mat, regex("="));
-			addConfig(section, mat.prefix(), mat.suffix());
+			add_config(section, mat.prefix(), mat.suffix());
 		}
 	}
 }
 
-bool Config::addConfig(string section, string option, string value) {
+auto Config::add_config(string section, string option, string value) -> bool
+{
 	// section = trim(section);
 	option = trim(option);
 	value = trim(value);
 
-	if (section == "")  section = DEFAULT_SECTION;
-	if (data.find(section) == data.end()) {
-		map<string, string> temp = { { option, value } };
-		data.insert({ section, temp });
+	if (section.empty())  section = default_section;
+	if (data_.find(section) == data_.end()) {
+		unordered_map<string, string> temp = { { option, value } };
+		data_.insert({ section, temp });
 
 		return true;
 	}
 	else {
-		if(data.find(section)->second.find(option) != data.find(section)->second.end())
-			data.find(section)->second.find(option)->second = value;
+		if(data_.find(section)->second.find(option) != data_.find(section)->second.end())
+			data_.find(section)->second.find(option)->second = value;
 		else
-			data.find(section)->second.insert({ option, value });
+			data_.find(section)->second.insert({ option, value });
 	}
 	return false;
 }
 
-void Config::readFromFile(string fileName) {
-	ifstream file(fileName, ios::out);
+auto Config::read_from_file(const string& file_name) -> void
+{
+	const ifstream file(file_name, ios::out);
 	if (!file.is_open())
 	{
-		cerr << "Error: Unable to open INI file " << fileName << " for reading!" << endl;
+		cerr << "Error: Unable to open INI file " << file_name << " for reading!" << endl;
 		return;
 	}
 	stringstream str;
 	str << file.rdbuf();
 
-	parseStream(str);
+	parse_stream(str);
 }
 
-void Config::readFromText(string text) {
+auto Config::read_from_text(const string& text) -> void
+{
 	stringstream str;
 	str << text;
 
-	parseStream(str);
+	parse_stream(str);
 }
 
 string Config::get(string key) {
 	string section;
 	string option;
 
-	vector<string> temp = split(key, "::");
+	vector<string> temp = split(move(key), "::");
 	if (temp.size() >= 2) {
 		section = temp[0];
 		option = temp[1];
 	}
 	else {
-		section = DEFAULT_SECTION;
+		section = default_section;
 		option = temp[0];
 	}
 
-	if (data.find(section) != data.end())
-		if (data.find(section)->second.find(option) != data.find(section)->second.end())
-			return data.find(section)->second.find(option)->second;
+	if (data_.find(section) != data_.end())
+		if (data_.find(section)->second.find(option) != data_.find(section)->second.end())
+			return data_.find(section)->second.find(option)->second;
 		else
 			return "";
 	else
 		return "";
 }
 
-vector<string> Config::strings(string key) {
-	string temp = get(key);
-	vector<string> arr = split(temp, ',');
+auto Config::strings(const string& key) -> vector<string>
+{
+	const auto temp = get(key);
+	auto arr = split(temp, ',');
 
-	for (auto itr = arr.begin(); itr != arr.end(); itr++) { // Trim all the whitepaces
+	for (auto itr = arr.begin(); itr != arr.end(); ++itr) { // Trim all the whitespace
 		*itr = trim(*itr);
 	}
 
 	return arr;
 }
 
-void Config::set(string key, string value) {
+auto Config::set(const string& key, const string& value) -> void
+{
 	string section;
 	string option;
 
-	vector<string> temp = split(key, "::");
+	auto temp = split(key, "::");
 	if (temp.size() >= 2) {
 		section = temp[0];
 		option = temp[1];
 	}
 	else {
-		section = DEFAULT_SECTION;
+		section = default_section;
 		option = temp[0];
 	}
 
-	addConfig(section, option, value);
+	add_config(section, option, value);
 }

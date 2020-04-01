@@ -6,7 +6,8 @@
 #define MATCHER_API __declspec(dllimport)
 #endif
 
-#include <map>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 #include <string>
 #include <regex>
@@ -16,19 +17,19 @@
 
 using namespace std;
 
-class MATCHER_API Matcher {
-	const std::vector<Operator*> knownOperators{ new AND(), new OR(), new EQUALS() };
-	map<string, function<bool(string, string)>> functions;
+class MATCHER_API matcher {
+	const std::vector<Operator*> known_operators_{ new AND(), new OR(), new EQUALS() };
+	unordered_map<string, function<bool(string, string)>> functions_;
 protected:
-	string injectValue(map<string, string>, string);
-	string parseString(string);
-	string parseFunctions(map<string, string>, string);
+	string inject_value(const unordered_map<string, string>&, string) const;
+	string parse_string(string) const;
+	string parse_functions(unordered_map<string, string>, string);
 public:
-	Matcher() {
+	matcher();
+
+	explicit matcher(unordered_map<string, function<bool(string, string)>> temp) {
+		functions_ = std::move(temp);
 	}
-	Matcher(map<string, function<bool(string, string)>> temp) {
-		functions = temp;
-	}
-	string matcherString;
-	bool eval(map<string, string>, string);
+	string matcher_string;
+	bool eval(const unordered_map<string, string>&, string);
 };

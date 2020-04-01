@@ -65,7 +65,7 @@ vector<string> split(string text, string delim)
 	else return vector<string>{text};
 }
 
-string escapeAssertion(string s) {
+string escape_assertion(string s) {
 	return regex_replace(s, std::regex("\\."), "_");
 }
 

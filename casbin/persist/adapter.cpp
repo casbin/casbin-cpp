@@ -1,19 +1,20 @@
 #include "adapter.h"
 
-void Adapter::loadPolicyLine(string line, Model* model) {
-	if (line == "" || *line.begin() == '#') {
+auto Adapter::load_policy_line(string line, Model* model) const -> void
+{
+	if (line.empty() || *line.begin() == '#') {
 		return;
 	}
 
-	vector<string> tokens = split(line, ',');
-	for (auto itr = tokens.begin(); itr != tokens.end(); itr++) {
+	auto tokens = split(line, ',');
+	for (auto itr = tokens.begin(); itr != tokens.end(); ++itr) {
 		*itr = trim(*itr);
 	}
 
-	vector<string> result = vector(tokens.begin() + 1, tokens.end());
-	string key = tokens[0];
-	string sec = key.substr(0, 1);
-	AssertionMap* tempasm = model->model.find(sec)->second;
-	Assertion* tempas = tempasm->data.find(key)->second;
+	const auto result = vector(tokens.begin() + 1, tokens.end());
+	const auto key = tokens[0];
+	const auto sec = key.substr(0, 1);
+	auto tempasm = model->model.find(sec)->second;
+	auto tempas = tempasm->data.find(key)->second;
 	tempas->policy.push_back(result);
 }

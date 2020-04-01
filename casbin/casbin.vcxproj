@@ -151,6 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="enforcer_cached.h" />
+    <ClInclude Include="enforcer_synced.h" />
     <ClInclude Include="persist\adapter.h" />
     <ClInclude Include="model\assertion.h" />
     <ClInclude Include="config\config.h" />
@@ -170,6 +172,8 @@
     <ClInclude Include="util\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="enforcer_cached.cpp" />
+    <ClCompile Include="enforcer_synced.cpp" />
     <ClCompile Include="persist\adapter.cpp" />
     <ClCompile Include="model\assertion.cpp" />
     <ClCompile Include="config\config.cpp" />

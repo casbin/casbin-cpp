@@ -1,7 +1,8 @@
 #include "matcher.h"
 
 // Injects value from the structure to the equation
-string Matcher::injectValue(map<string, string> structure, string equation) {
+string matcher::inject_value(const unordered_map<string, string>& structure, string equation) const
+{
 	for (auto& value : structure) {
 		regex e(value.first);
 		equation = regex_replace(equation, e, value.second);
@@ -10,20 +11,20 @@ string Matcher::injectValue(map<string, string> structure, string equation) {
 	return equation;
  }
 
-string Matcher::parseFunctions(map<string, string> structure, string line) {
+string matcher::parse_functions(unordered_map<string, string> structure, string line) {
 	smatch m;
 
 	// Check for functions and operate on them
-	for (auto itr = functions.begin(); itr != functions.end(); itr++) {
-		string temp = regex_replace(line, regex(" "), ""); // Remove all whitespaces from the string
+	for (auto itr = functions_.begin(); itr != functions_.end(); ++itr) {
+		auto temp = regex_replace(line, regex(" "), ""); // Remove all whitespaces from the string
 		while (regex_search(temp, m, regex(itr->first + "\\(.*?\\)"))) {
-			regex_search(temp, m, regex("\\(.*?\\)")); // Get content inside the paranthensis
+			regex_search(temp, m, regex("\\(.*?\\)")); // Get content inside the parenthesis
 			temp = m.str();
 			temp = temp.substr(1, temp.size() - 2);
-			vector<string> arr = split(temp, ',');
+			auto arr = split(temp, ',');
 
 			if (structure.find(arr[0]) != structure.end() && structure.find(arr[1]) != structure.end()) {
-				bool result = itr->second(structure.find(arr[0])->second, structure.find(arr[1])->second);
+				const auto result = itr->second(structure.find(arr[0])->second, structure.find(arr[1])->second);
 				if (result) line = regex_replace(line, regex(itr->first + "\\(.*?\\)"), "true");
 				else line = regex_replace(line, regex(itr->first + "\\(.*?\\)"), "false");
 			}
@@ -33,28 +34,31 @@ string Matcher::parseFunctions(map<string, string> structure, string line) {
 	return trim(line);
 }
 
+matcher::matcher()
+= default;
+
 // Parses the equation using recursive descent tree.
-string Matcher::parseString(string line)
+string matcher::parse_string(string line) const
 {
 	line = trim(line);
-	regex e("\\([^(].*?\\)"); // Check for inner parathensis
+	regex e("\\([^(].*?\\)"); // Check for inner parenthesis
 	smatch m;
 
-	// Parse all the values in the parathensis
+	// Parse all the values in the parenthesis
 	while (regex_search(line, m, e)) {
 		string temp = m.str();
 		temp.erase(0, 1);
 		temp.erase(temp.length() - 1);
-		line = regex_replace(line, e, parseString(temp));
+		line = regex_replace(line, e, parse_string(temp));
 	}
 
 	// Check for symbol and operate the expression 
-	for (Operator* op : knownOperators)
+	for (auto op : known_operators_)
 	{
-		size_t location = line.find(op->symbol);
+		const auto location = line.find(op->symbol);
 		if (location != std::string::npos)
 		{
-			return op->operate(parseString(line.substr(0, location - 1)), parseString(line.substr(location + op->symbol.length())));
+			return op->operate(parse_string(line.substr(0, location - 1)), parse_string(line.substr(location + op->symbol.length())));
 		}
 	}
 
@@ -62,10 +66,11 @@ string Matcher::parseString(string line)
 }
 
 // Returns the final result of the evaluation
-bool Matcher::eval(map<string, string> struc, string equation) {
-	string temp = parseFunctions(struc, equation);
-	temp = injectValue(struc, temp);
-	temp = parseString(temp);
+auto matcher::eval(const unordered_map<string, string>& struc, const string equation) -> bool
+{
+	auto temp = parse_functions(struc, equation);
+	temp = inject_value(struc, temp);
+	temp = parse_string(temp);
 	if (temp == "true") return true;
 	return false;
 }

@@ -2,11 +2,10 @@
 #include "../casbin/config/config.h"
 #include "../casbin/log/logger.h"
 #include "../casbin/enforcer.h"
-#include "../casbin/util/matcher.h"
 
 TEST(ConfAdapterTest, FileReadTest) {
 	Config e("../../examples/model.conf");
-	string temp = join(e.strings("request_definition::r"), ',');
+	const auto temp = join(e.strings("request_definition::r"), ',');
 
 	EXPECT_EQ("sub, obj, act", e.get("request_definition::r"));
 	EXPECT_EQ("sub,obj,act", temp);
@@ -16,7 +15,7 @@ TEST(ConfAdapterTest, FileReadTest) {
 }
 
 TEST(ConfAdapterTest, StringReadTest) {
-	string text = "[request_definition] ; This is comment\n"
+	const string text = "[request_definition] ; This is comment\n"
 		"r = sub, obj, act\n"
 		"[policy_definition]\n"
 		"p = sub, obj, act\n"
@@ -26,7 +25,7 @@ TEST(ConfAdapterTest, StringReadTest) {
 		"m = r.sub == p.sub && r.obj == p.obj && r.act == p.act";
 
 	Config e;
-	e.readFromText(text);
+	e.read_from_text(text);
 	e.set("test::key", "value");
 
 	EXPECT_EQ("sub, obj, act", e.get("request_definition::r"));
@@ -37,14 +36,14 @@ TEST(ConfAdapterTest, StringReadTest) {
 }
 
 TEST(LogTest, WriteFileTest) {
-	Logger log;
+	const Logger log;
 	log.print("Sample log");
 }
 
 TEST(EnforcerTest, PolicyTest) {
 	Enforcer e("../../examples/model.conf", "../../examples/policy.csv");
-	vector<string> temp = e.getPolicy();
-	vector<string> result = { "alice,data1,read", "bob,data2,write" };
+	auto temp = e.get_policy();
+	const vector<string> result = { "alice,data1,read", "bob,data2,write" };
 
 	EXPECT_EQ(join(temp, '-'), join(result, '-'));
 }
@@ -97,7 +96,7 @@ TEST(EnforcerTest, IPMatchTest) {
 TEST(EnforcerTest, ABACTest) {
 	Enforcer e("../../examples/abac_model.conf", "../../examples/policy.csv");
 
-	EXPECT_EQ(true, e.enforce(string("alice"), map<string, string>({ { "Owner", "alice" } }), string("read")));
-	EXPECT_EQ(false, e.enforce(string("bob"), map<string, string>({ { "Owner", "alice" } }), string("read")));
-	EXPECT_EQ(false, e.enforce(map<string, string>({ { "Owner", "alice" } }), map<string, string>({ { "Owner", "alice" } }), string("read")));
+	EXPECT_EQ(true, e.enforce(string("alice"), unordered_map<string, string>({ { "Owner", "alice" } }), string("read")));
+	EXPECT_EQ(false, e.enforce(string("bob"), unordered_map<string, string>({ { "Owner", "alice" } }), string("read")));
+	EXPECT_EQ(false, e.enforce(unordered_map<string, string>({ { "Owner", "alice" } }), unordered_map<string, string>({ { "Owner", "alice" } }), string("read")));
 }

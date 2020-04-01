@@ -6,14 +6,12 @@
 
 using namespace std;
 
-class FileAdapter: public Adapter {
-	string filePath;
+class file_adapter final : public Adapter {
+	string file_path_;
 public:
-	FileAdapter(string path) {
-		filePath = path;
-	}
-	void loadPolicy(Model*);
-	void savePolicy(Model*);
-	void addPolicy(string, string, vector<string>);
-	void removePolicy(string, string, vector<string>);
+	explicit file_adapter(const string& path);
+	auto load_policy(Model*) -> void override;
+	auto save_policy(Model*) -> void override;
+	auto add_policy(string, string, vector<string>) -> void override;
+	auto remove_policy(string, string, vector<string>) -> void override;
 };
