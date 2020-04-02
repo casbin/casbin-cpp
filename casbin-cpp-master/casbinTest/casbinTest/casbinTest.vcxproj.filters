@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Cparse">
+      <UniqueIdentifier>{8deaac4e-75b3-4b5f-8090-c020b9723240}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="assertion.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="file-adapter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="enforcer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="exceptions.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Cparse\builtin-features.cpp">
+      <Filter>Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="Cparse\containers.cpp">
+      <Filter>Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="Cparse\functions.cpp">
+      <Filter>Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="Cparse\packToken.cpp">
+      <Filter>Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="Cparse\shunting-yard.cpp">
+      <Filter>Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="assertion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="adapter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="file-adapter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="enforcer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Cparse\containers.h">
+      <Filter>Cparse</Filter>
+    </ClInclude>
+    <ClInclude Include="Cparse\functions.h">
+      <Filter>Cparse</Filter>
+    </ClInclude>
+    <ClInclude Include="Cparse\packToken.h">
+      <Filter>Cparse</Filter>
+    </ClInclude>
+    <ClInclude Include="Cparse\shunting-yard.h">
+      <Filter>Cparse</Filter>
+    </ClInclude>
+    <ClInclude Include="Cparse\shunting-yard-exceptions.h">
+      <Filter>Cparse</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

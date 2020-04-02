@@ -1,0 +1,4 @@
+﻿  file-adapter.cpp
+G:\GSoC\casbinTest\casbinTest\file-adapter.cpp(26,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\GSoC\casbinTest\casbinTest\file-adapter.cpp(141,7): warning C4553: “==”: 未使用表达式结果；是否打算使用“=”?
+  casbinTest.vcxproj -> G:\GSoC\casbinTest\Debug\casbinTest.exe
