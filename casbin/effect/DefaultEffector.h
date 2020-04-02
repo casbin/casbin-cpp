@@ -17,9 +17,9 @@ class DefaultEffector : public Effector{
         }
 
         /**
-         * mergeEffects merges all matching results collected by the enforcer into a single decision.
+         * MergeEffects merges all matching results collected by the enforcer into a single decision.
          */
-        bool mergeEffects(string expr, Effect effects[], float results[]) {
+        bool MergeEffects(string expr, vector<Effect> effects, vector<float> results) {
             bool result;
 
             unsigned int number_of_effects = sizeof(effects)/sizeof(effects[0]);

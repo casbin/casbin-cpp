@@ -39,9 +39,9 @@ class IEnforcer {
         virtual void EnableAutoSave(bool autoSave) = 0;
         virtual void EnableAutoBuildRoleLinks(bool autoBuildRoleLinks) = 0;
         virtual void BuildRoleLinks() = 0;
-        virtual bool enforce(string matcher, vector<string> rvals) = 0;
-        virtual bool Enforce(vector<string> rvals) = 0;
-        virtual bool EnforceWithMatcher(string matcher, vector<string> rvals) = 0;
+        virtual bool enforce(string matcher) = 0;
+        virtual bool Enforce() = 0;
+        virtual bool EnforceWithMatcher(string matcher) = 0;
 
         /* RBAC API */
         virtual vector<string> GetRolesForUser(string name) = 0;

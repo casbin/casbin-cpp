@@ -8,8 +8,8 @@
 #define VARARGS DUK_VARARGS
 #define RETURN_RESULT 1
 
-enum TYPE{
-    BOOL, FLOAT
+enum Type{
+    Bool, Float
 };
 
 typedef duk_context* Scope;
@@ -55,6 +55,10 @@ void pushPointerValue(Scope scope, void * ptr){
     duk_push_pointer(scope, ptr);
 }
 
+void pushObjectValue(Scope scope){
+    duk_push_global_object(scope);
+}
+
 void pushFunction(Scope scope, Function f, int nargs, string fname) {
     duk_push_c_function(scope, f, (Index)nargs);
     duk_put_global_string(scope, fname.c_str());
@@ -65,46 +69,111 @@ void pushBoolean(Scope scope, bool expression, string identifier){
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void pushTrueValue(Scope scope, string identifier){
+void pushTrue(Scope scope, string identifier){
     duk_push_true(scope);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void pushFalseValue(Scope scope, string identifier){
+void pushFalse(Scope scope, string identifier){
     duk_push_false(scope);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void pushIntValue(Scope scope, int integer, string identifier){
+void pushInt(Scope scope, int integer, string identifier){
     duk_push_int(scope, integer);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void pushFloatValue(Scope scope, float f, string identifier){
+void pushFloat(Scope scope, float f, string identifier){
     duk_push_number(scope, f);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void pushDoubleValue(Scope scope, double d, string identifier){
+void pushDouble(Scope scope, double d, string identifier){
     duk_push_number(scope, d);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void pushStringValue(Scope scope, string s, string identifier){
+void pushString(Scope scope, string s, string identifier){
     duk_push_string(scope, s.c_str());
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void pushPointerValue(Scope scope, void * ptr, string identifier){
+void pushPointer(Scope scope, void * ptr, string identifier){
     duk_push_pointer(scope, ptr);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-TYPE checkType(Scope scope){
+void pushObject(Scope scope, string identifier){
+    duk_push_global_object(scope);
+    duk_put_global_string(scope, identifier.c_str());
+}
+
+void pushFunctionPropToObject(Scope scope, string obj, Function f, int nargs, string fname) {
+    duk_get_global_string(scope, obj.c_str());
+    duk_push_c_function(scope, f, nargs);
+    duk_put_prop_string(scope, -2, fname.c_str());
+}
+
+void pushBooleanPropToObject(Scope scope, string obj, bool expression, string identifier){
+    duk_get_global_string(scope, obj.c_str());
+    duk_push_boolean(scope, expression);
+    duk_put_prop_string(scope, -2, identifier.c_str());
+}
+
+void pushTruePropToObject(Scope scope, string obj, string identifier){
+    duk_get_global_string(scope, obj.c_str());
+    duk_push_true(scope);
+    duk_put_prop_string(scope, -2, identifier.c_str());
+}
+
+void pushFalsePropToObject(Scope scope, string obj, string identifier){
+    duk_get_global_string(scope, obj.c_str());
+    duk_push_false(scope);
+    duk_put_prop_string(scope, -2, identifier.c_str());
+}
+
+void pushIntPropToObject(Scope scope, string obj, int integer, string identifier){
+    duk_get_global_string(scope, obj.c_str());
+    duk_push_int(scope, integer);
+    duk_put_prop_string(scope, -2, identifier.c_str());
+}
+
+void pushFloatPropToObject(Scope scope, string obj, float f, string identifier){
+    duk_get_global_string(scope, obj.c_str());
+    duk_push_number(scope, f);
+    duk_put_prop_string(scope, -2, identifier.c_str());
+}
+
+void pushDoublePropToObject(Scope scope, string obj, double d, string identifier){
+    duk_get_global_string(scope, obj.c_str());
+    duk_push_number(scope, d);
+    duk_put_prop_string(scope, -2, identifier.c_str());
+}
+
+void pushStringPropToObject(Scope scope, string obj, string s, string identifier){
+    duk_get_global_string(scope, obj.c_str());
+    duk_push_string(scope, s.c_str());
+    duk_put_prop_string(scope, -2, identifier.c_str());
+}
+
+void pushPointerPropToObject(Scope scope, string obj, void * ptr, string identifier){
+    duk_get_global_string(scope, obj.c_str());
+    duk_push_pointer(scope, ptr);
+    duk_put_prop_string(scope, -2, identifier.c_str());
+}
+
+void pushObjectPropToObject(Scope scope, string obj, string identifier){
+    duk_get_global_string(scope, obj.c_str());
+    duk_get_global_string(scope, identifier.c_str());
+    duk_put_prop_string(scope, -2, identifier.c_str());
+}
+
+Type checkType(Scope scope){
     if(duk_is_boolean(scope, -1))
-        return TYPE::BOOL;
-    else if(duk_is_number(scope, -1))
-        return TYPE::FLOAT;
+        return Type::Bool;
+    else
+        return Type::Float;
 }
 
 void fetchIdentifier(Scope scope, string identifier){
@@ -115,8 +184,8 @@ unsigned int size(Scope scope){
     return (unsigned int)duk_get_top(scope);
 }
 
-string getString(Scope scope, int id = -1){
-    return string(duk_to_string(scope, (Index)id));
+bool getBoolean(Scope scope, int id = -1){
+    return bool(duk_to_boolean(scope, (Index)id));
 }
 
 int getInt(Scope scope, int id = -1){
@@ -129,6 +198,10 @@ float getFloat(Scope scope, int id = -1){
 
 double getDouble(Scope scope, int id = -1){
     return double(duk_to_number(scope, (Index)id));
+}
+
+string getString(Scope scope, int id = -1){
+    return string(duk_to_string(scope, (Index)id));
 }
 
 void* getPointer(Scope scope, int id = -1){

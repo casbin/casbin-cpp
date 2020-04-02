@@ -52,9 +52,9 @@ class Model{
                 for(int i = 0; i < ast.Tokens.size() ; i++) {
                     ast.Tokens[i] = key + "_" + ast.Tokens[i];
                 }
-            } else {
-                ast.Value = removeComments(escapeAssertion(ast.Value));
             }
+			else
+                ast.Value = removeComments(escapeAssertion(ast.Value));
 
             M[sec].AMap[key] = &ast;
             return true;

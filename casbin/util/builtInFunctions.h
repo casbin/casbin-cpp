@@ -139,15 +139,12 @@ ReturnType IPMatch(Scope scope) {
 
 // GFunction is the method of the g(_, _) function.
 ReturnType GFunction(Scope scope) {
-	string name1 = getString(scope, 0);
-	string name2 = getString(scope, 1);
+	RoleManager *rm;
+	rm = (RoleManager *)getPointer(scope, 0);
+	string name1 = getString(scope, 1);
+	string name2 = getString(scope, 2);
 
 	int len = size(scope);
-
-	fetchIdentifier(scope, "rm");
-
-	RoleManager *rm;
-	rm = (RoleManager *)getPointer(scope);
 
 	if(rm == NULL) {
 		pushBooleanValue(scope, name1 == name2);

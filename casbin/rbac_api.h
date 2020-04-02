@@ -195,21 +195,25 @@ vector<vector<string>> Enforcer :: GetImplicitPermissionsForUser(string user, ve
 // GetImplicitUsersForPermission("data1", "read") will get: ["alice", "bob"].
 // Note: only users will be returned, roles (2nd arg in "g") will be excluded.
 vector<string> Enforcer :: GetImplicitUsersForPermission(vector<string> permission) {
-	vector<string> subjects = this->GetAllSubjects();
-	vector<string> roles = this->GetAllRoles();
+	// vector<string> subjects = this->GetAllSubjects();
+	// vector<string> roles = this->GetAllRoles();
 
-	vector<string> users = setSubtract(subjects, roles);
+	// vector<string> users = setSubtract(subjects, roles);
 
-	vector<string> res;
-	for(int i = 0 ; i < users.size() ; i++) {
-		vector<string> req = joinSlice(users[i], permission);
-		bool allowed = this->Enforce(req);
+	// vector<string> res;
+	// for(int i = 0 ; i < users.size() ; i++) {
+	// 	vector<string> req = joinSlice(users[i], permission);
+		
+	// 	// vector<void *> newReq;
+	// 	for(int i = 0 ; i < req.size() ; i++)
+	// 		newReq.push_back((void *)(&req[i]));
+	// 	bool allowed = this->Enforce(newReq);
 
-		if(allowed)
-			res.push_back(users[i]);
-	}
+	// 	if(allowed)
+	// 		res.push_back(users[i]);
+	// }
 
-	return res;
+	// return res;
 }
 
 #endif
