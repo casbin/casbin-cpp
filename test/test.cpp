@@ -2,6 +2,7 @@
 #include "../casbin/config/config.h"
 #include "../casbin/log/logger.h"
 #include "../casbin/enforcer.h"
+#include "../casbin/enforcer_cached.h"
 
 TEST(ConfAdapterTest, FileReadTest) {
 	Config e("../../examples/model.conf");
@@ -99,4 +100,14 @@ TEST(EnforcerTest, ABACTest) {
 	EXPECT_EQ(true, e.enforce(string("alice"), unordered_map<string, string>({ { "Owner", "alice" } }), string("read")));
 	EXPECT_EQ(false, e.enforce(string("bob"), unordered_map<string, string>({ { "Owner", "alice" } }), string("read")));
 	EXPECT_EQ(false, e.enforce(unordered_map<string, string>({ { "Owner", "alice" } }), unordered_map<string, string>({ { "Owner", "alice" } }), string("read")));
+}
+
+TEST(EnforcerTest, CachedTest) {
+	CachedEnforcer e("../../examples/model.conf", "../../examples/policy.csv");
+	e.enable_cache(true);
+
+	EXPECT_EQ(true, e.enforce(string("alice"), string("data1"), string("read")));
+	EXPECT_EQ(false, e.enforce(string("alice"), string("data1"), string("write")));
+	EXPECT_EQ(true, e.enforce(string("bob"), string("data2"), string("write")));
+	EXPECT_EQ(false, e.enforce(string("bob"), string("data2"), string("read")));
 }

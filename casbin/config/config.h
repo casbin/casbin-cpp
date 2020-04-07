@@ -9,9 +9,14 @@
 #include <unordered_map>
 #include <string>
 #include <regex>
+#include <mutex>
+#include <thread>
+#include <fstream>
 #include "../util/utils.h"
 
 using namespace std;
+
+inline mutex data_mutex;
 
 class CONFADAPTER_API Config {
 	unordered_map<string, unordered_map<string, string>> data_;

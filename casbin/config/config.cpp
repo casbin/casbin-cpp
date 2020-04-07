@@ -1,7 +1,5 @@
 #include "config.h"
 
-#include <utility>
-#include <fstream>
 
 const string default_section = "default";
 
@@ -17,7 +15,7 @@ auto Config::parse_stream(stringstream& stream) -> void
 {
 	string line;
 	string key;
-	string section = "";
+	string section;
 	smatch m;
 	while (getline(stream, line))
 	{
@@ -63,6 +61,7 @@ auto Config::add_config(string section, string option, string value) -> bool
 
 auto Config::read_from_file(const string& file_name) -> void
 {
+	lock_guard<mutex> guard(data_mutex);
 	const ifstream file(file_name, ios::out);
 	if (!file.is_open())
 	{
