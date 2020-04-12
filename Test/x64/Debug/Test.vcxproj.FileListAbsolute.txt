@@ -1,0 +1,1 @@
+G:\GSoC\casbin-cpp-master\Test\x64\Debug\Test.vcxproj.CopyComplete
