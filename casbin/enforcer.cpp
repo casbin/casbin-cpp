@@ -13,10 +13,23 @@ Enforcer::Enforcer()
 
 Enforcer::~Enforcer()
 {
-	delete model;
-	delete adapter;
 	delete rm;
 
+}
+
+Enforcer::Enforcer(const Enforcer& e) {
+	modelPath=e.modelPath;
+	model = unique_ptr<Model>(new Model(*e.model.get()));
+	eft = e.eft;
+	fm = e.fm;
+	FileAdapter* fa = dynamic_cast<FileAdapter*>(e.adapter.get());
+	adapter = unique_ptr<Adapter>(new FileAdapter(*fa));
+	//Watcher* watcher;
+	rm = e.rm;
+	enabled = e.enabled;
+	autoSave = e.autoSave;
+	autoBuildRoleLinks = e.autoBuildRoleLinks;
+	autoNotifyWatcher = e.autoNotifyWatcher;
 }
 
 Enforcer::Enforcer(const string& modelPath, const string& policyPath)
@@ -24,7 +37,7 @@ Enforcer::Enforcer(const string& modelPath, const string& policyPath)
 	InitWithFile(modelPath, policyPath);
 }
 
-Enforcer::Enforcer(Model* model, Adapter* adapter)
+Enforcer::Enforcer(unique_ptr<Model>& model, unique_ptr<Adapter>& adapter)
 {
 	InitWithModelAndAdapter(model, adapter);
 }
@@ -54,21 +67,21 @@ void Enforcer::BuildRoleLinks()
 
 void Enforcer::InitWithFile(const string& modelPath, const string& policyPath) {
 	Error err;
-	this->adapter = FileAdapter::newFileAdapter(policyPath);
-	this->model = Model::NewModelFromFile(modelPath);
+	this->adapter = unique_ptr<Adapter> (FileAdapter::newFileAdapter(policyPath));
+	this->model = unique_ptr<Model>(Model::NewModelFromFile(modelPath));
 	Initialize();
 	LoadPolicy();
 }
 
-void Enforcer::InitWithAdapter(const string& modelPath, Adapter* adapter)
+void Enforcer::InitWithAdapter(const string& modelPath, unique_ptr<Adapter>& adapter)
 {
 
 }
 
-void Enforcer::InitWithModelAndAdapter(Model* m, Adapter* adapter)
+void Enforcer::InitWithModelAndAdapter(unique_ptr<Model>& m, unique_ptr<Adapter>& adapter)
 {
-	this->adapter = adapter;
-	this->model = m;
+	this->adapter = move(adapter);
+	this->model = move(m);
 	//this->model.PrintModel();
 	//fm = LoadFunctionMap();
 	Initialize();
@@ -78,7 +91,7 @@ void Enforcer::InitWithModelAndAdapter(Model* m, Adapter* adapter)
 void Enforcer::LoadPolicy()
 {
 	model->ClearPolicy();
-	adapter->LoadPolicy(model);
+	adapter->LoadPolicy(model.get());
 	//model.PrintPolicy();
 	
 	if (autoBuildRoleLinks) {
@@ -90,13 +103,13 @@ void Enforcer::LoadPolicy()
 void Enforcer::LoadFilteredPolicy(Filter* filter)
 {
 	model->ClearPolicy();
-	Filteredadapter* fa = dynamic_cast<Filteredadapter*>(adapter);
+	Filteredadapter* fa = dynamic_cast<Filteredadapter*>(adapter.get());
 	if (fa == NULL) {
 		throw exception("filtered policies are not supported by this adapter");
 	}
 
 	try {
-		fa->LoadFilteredPolicy(model, filter);
+		fa->LoadFilteredPolicy(model.get(), filter);
 	}
 	catch (exception& e) {
 		if (e.what() != "invalid file path, file path cannot be empty") {
@@ -313,7 +326,7 @@ bool Enforcer::MergeEffects(const string& expr, const vector<Effect>& effects, c
 
 void Enforcer::LoadModel() {
 	Error err;
-	model = Model::NewModelFromFile(modelPath);
+	model = unique_ptr<Model>(Model::NewModelFromFile(modelPath));
 
 	model->PrintModel();
 	//fm = model.LoadFunctionMap();
@@ -321,20 +334,20 @@ void Enforcer::LoadModel() {
 	Initialize();
 }
 
-Model* Enforcer::GetModel() {
+unique_ptr<Model>& Enforcer::GetModel() {
 	return model;
 }
 
-void Enforcer::SetModel(Model* model) {
-	this->model = model;
+void Enforcer::SetModel(unique_ptr<Model>& model) {
+	this->model=move(model);
 }
 
-Adapter* Enforcer::GetAdapter() {
+unique_ptr<Adapter>& Enforcer::GetAdapter() {
 	return adapter;
 }
 
-void Enforcer::SetAdapter(Adapter* adapter) {
-	this->adapter = adapter;
+void Enforcer::SetAdapter(unique_ptr<Adapter>& adapter) {
+	this->adapter = move(adapter);
 }
 //void SetWatcher(Watcher* watcher);
 RoleManager* Enforcer::GetRoleManager() {
@@ -352,7 +365,7 @@ void Enforcer::ClearPolicy() {
 	model->ClearPolicy();
 }
 bool Enforcer::IsFiltered() {
-	Filteredadapter* fa = dynamic_cast<Filteredadapter*>(adapter);
+	Filteredadapter* fa = dynamic_cast<Filteredadapter*>(adapter.get());
 	if (fa == NULL) {
 		return false;
 	}
@@ -363,7 +376,7 @@ void Enforcer::SavePolicy() {
 	if (IsFiltered()) {
 		throw exception("cannot save a filtered policy");
 	}
-	adapter->SavePolicy(model);
+	adapter->SavePolicy(model.get());
 	/*
 		if(watcher != NULL){
 			return watcher->Update();
