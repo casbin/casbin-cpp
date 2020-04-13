@@ -3,17 +3,16 @@
 #include "../casbin/rbac/default-role-manager/default_role_manager.h"
 
 TEST(EnforcerTest, MoreParameters) {
-	Error err;
-	Enforcer e = Enforcer("..\\..\\casbin\\examples\\MoreParam.conf", "..\\..\\casbin\\examples\\MoreParam.csv");
+	Enforcer e = Enforcer("../../casbin/examples/MoreParam.conf", "../../casbin/examples/MoreParam.csv");
 
-	EXPECT_EQ(e.enforce(err, "", { "bob","data1","write","school" }), true);
-	EXPECT_EQ(e.enforce(err, "", { "bob","data1","write" ,"home" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "bob","data2","write","home" }), true);
-	EXPECT_EQ(e.enforce(err, "", { "bob","data2","write","school" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data1","write","school" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data1","write","home" }), true);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data2","write","school" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data2","write","home" }), false);
+	EXPECT_EQ(e.enforce("", { "bob","data1","write","school" }), true);
+	EXPECT_EQ(e.enforce("", { "bob","data1","write" ,"home" }), false);
+	EXPECT_EQ(e.enforce("", { "bob","data2","write","home" }), true);
+	EXPECT_EQ(e.enforce("", { "bob","data2","write","school" }), false);
+	EXPECT_EQ(e.enforce("", { "alice","data1","write","school" }), false);
+	EXPECT_EQ(e.enforce("", { "alice","data1","write","home" }), true);
+	EXPECT_EQ(e.enforce("", { "alice","data2","write","school" }), false);
+	EXPECT_EQ(e.enforce("", { "alice","data2","write","home" }), false);
 
 	system("pause");
 }
@@ -22,13 +21,9 @@ TEST(RoleManagerTest, AddTest) {
 	RoleManager* rm = new DefaultRoleManager(5);
 	rm->Addlink("alice", "admin1", {});
 	rm->Addlink("bob", "admin2", {});
-	bool res;
-	rm->HasLink(res, "alice", "admin1", {});
-	EXPECT_EQ(res, true);
-	rm->HasLink(res, "alice", "admin2", {});
-	EXPECT_EQ(res, false);
-	rm->HasLink(res, "bob", "admin2", {});
-	EXPECT_EQ(res, true);
+	EXPECT_EQ(rm->HasLink( "alice", "admin1", {}) , true);
+	EXPECT_EQ(rm->HasLink("alice", "admin2", {}) , false);
+	EXPECT_EQ(rm->HasLink("bob", "admin2", {}), true);
 	rm->Clear();
 	string k;
 	delete rm;
@@ -36,7 +31,6 @@ TEST(RoleManagerTest, AddTest) {
 }
 
 TEST(ModelTest, LoadFromTextTest) {
-	Error err;
 
 	string text = "[request_definition]\n"
 		"r = sub, obj, act\n\n"
@@ -49,52 +43,50 @@ TEST(ModelTest, LoadFromTextTest) {
 		"[matchers]\n"
 		"m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act";
 
-	Model* m = Model::NewModelFromString(err, text);
+	Model* m = Model::NewModelFromString(text);
 
 	m->PrintModel();
 
-	Adapter* adapter = FileAdapter::newFileAdapter("..\\..\\casbin\\examples\\RBAC.csv");
+	Adapter* adapter = FileAdapter::newFileAdapter("../../casbin/examples/RBAC.csv");
 	Enforcer e = Enforcer(m, adapter);
 
-	EXPECT_EQ(e.enforce(err, "", { "bob","data1","write" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "bob","data1","read" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "bob","data2","write" }), true);
-	EXPECT_EQ(e.enforce(err, "", { "bob","data2","read" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data1","write" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data1","read" }), true);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data2","write" }), true);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data2","read" }), true);
+	EXPECT_EQ(e.enforce( "", { "bob","data1","write" }), false);
+	EXPECT_EQ(e.enforce( "", { "bob","data1","read" }), false);
+	EXPECT_EQ(e.enforce( "", { "bob","data2","write" }), true);
+	EXPECT_EQ(e.enforce( "", { "bob","data2","read" }), false);
+	EXPECT_EQ(e.enforce( "", { "alice","data1","write" }), false);
+	EXPECT_EQ(e.enforce( "", { "alice","data1","read" }), true);
+	EXPECT_EQ(e.enforce( "", { "alice","data2","write" }), true);
+	EXPECT_EQ(e.enforce( "", { "alice","data2","read" }), true);
 
 	system("pause");
 }
 
 TEST(ConfigTest, LoadFromFileTest) {
-	Error err;
 
-	Model* m = Model::NewModelFromFile(err, "..\\..\\casbin\\examples\\RBAC.conf");
+	Model* m = Model::NewModelFromFile( "../../casbin/examples/RBAC.conf");
 
 	m->PrintModel();
 
-	Adapter* adapter = FileAdapter::newFileAdapter("..\\..\\casbin\\examples\\RBAC.csv");
+	Adapter* adapter = FileAdapter::newFileAdapter("../../casbin/examples/RBAC.csv");
 	Enforcer e = Enforcer(m, adapter);
 
-	EXPECT_EQ(e.enforce(err, "", { "bob","data1","write" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "bob","data1","read" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "bob","data2","write" }), true);
-	EXPECT_EQ(e.enforce(err, "", { "bob","data2","read" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data1","write" }), false);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data1","read" }), true);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data2","write" }), true);
-	EXPECT_EQ(e.enforce(err, "", { "alice","data2","read" }), true);
+	EXPECT_EQ(e.enforce( "", { "bob","data1","write" }), false);
+	EXPECT_EQ(e.enforce( "", { "bob","data1","read" }), false);
+	EXPECT_EQ(e.enforce( "", { "bob","data2","write" }), true);
+	EXPECT_EQ(e.enforce( "", { "bob","data2","read" }), false);
+	EXPECT_EQ(e.enforce( "", { "alice","data1","write" }), false);
+	EXPECT_EQ(e.enforce( "", { "alice","data1","read" }), true);
+	EXPECT_EQ(e.enforce( "", { "alice","data2","write" }), true);
+	EXPECT_EQ(e.enforce( "", { "alice","data2","read" }), true);
 
 	system("pause");
 }
 
 TEST(FilterTest, LoadTest) {
-	Error err;
 
-	Filteredadapter* fa = Filteredadapter::NewFilteredAdapter("..\\..\\casbin\\examples\\RBAC.csv");
-	Model* m = Model::NewModelFromFile(err, "..\\..\\casbin\\examples\\RBAC.conf");
+	Filteredadapter* fa = Filteredadapter::NewFilteredAdapter("../../casbin/examples/RBAC.csv");
+	Model* m = Model::NewModelFromFile( "../../casbin/examples/RBAC.conf");
 	Enforcer e = Enforcer(m, fa);
 
 	EXPECT_EQ(e.model->HasPolicy("p", "p", { "data2_admin","data2","write" }), true);
