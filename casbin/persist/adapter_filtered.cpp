@@ -19,27 +19,29 @@ Filteredadapter* Filteredadapter::NewFilteredAdapter(const string& filePath) {
 	return fa;
 }
 
-Error Filteredadapter::LoadPolicy(Model* model) {
+void Filteredadapter::LoadPolicy(Model* model) {
 	filtered = false;
-	return adapter->LoadPolicy(model);
+	adapter->LoadPolicy(model);
 }
 
-Error Filteredadapter::LoadFilteredPolicy(Model* model, Filter* filter) {
+void Filteredadapter::LoadFilteredPolicy(Model* model, Filter* filter) {
 	if (filter == NULL){
 		return LoadPolicy(model);
 	}
 	if (adapter->filePath == "") {
-		return Error("invalid file path, file path cannot be empty");
+		throw exception("invalid file path, file path cannot be empty");
 	}
 
-	Error err = LoadFilteredPolicyFile(model, filter, Adapter::LoadPolicyLine);
-		if (err.IsNull()){
-			filtered = true;
-		}
-		return err;
+	try {
+		LoadFilteredPolicyFile(model, filter, Adapter::LoadPolicyLine);
+	}
+	catch (exception& e) {
+		filtered = true;
+		throw e;
+	}
 }
 
-Error Filteredadapter::LoadFilteredPolicyFile(Model* model, Filter* filter, void(*handler)(const string&, Model*)) {
+void Filteredadapter::LoadFilteredPolicyFile(Model* model, Filter* filter, void(*handler)(const string&, Model*)) {
 	ifstream csvInput;
 	csvInput.open(adapter->filePath);
 	string line;
@@ -54,16 +56,15 @@ Error Filteredadapter::LoadFilteredPolicyFile(Model* model, Filter* filter, void
 		handler(line, model);
 	}
 	csvInput.close();
-	return Error();
 }
 
 bool Filteredadapter::IsFiltered() {
 	return filtered;
 }
 
-Error Filteredadapter::SavePolicy(Model* model) {
+void Filteredadapter::SavePolicy(Model* model) {
 	if (filtered){
-		return Error("cannot save a filtered policy");
+		throw exception("cannot save a filtered policy");
 	}
 	return adapter->SavePolicy(model);
 }
@@ -102,17 +103,17 @@ bool Filteredadapter::filterWords(const vector<string>& line, const vector<strin
 	return skipLine;
 }
 
-Error Filteredadapter::AddPolicy(const string& sec, const string& ptype, const vector<string>& rule)
+void Filteredadapter::AddPolicy(const string& sec, const string& ptype, const vector<string>& rule)
 {
-	return Error("not implemented");
+	throw exception("not implemented");
 }
 
-Error Filteredadapter::RemovePolicy(const string& sec, const string& ptype, const vector<string>& rule)
+void Filteredadapter::RemovePolicy(const string& sec, const string& ptype, const vector<string>& rule)
 {
-	return Error("not implemented");
+	throw exception("not implemented");
 }
 
-Error Filteredadapter::RemoveFilteredPolicy(const string& sec, const string& ptype, const int& fieldIndex, const vector <string>& fieldValues)
+void Filteredadapter::RemoveFilteredPolicy(const string& sec, const string& ptype, const int& fieldIndex, const vector <string>& fieldValues)
 {
-	return Error("not implemented");
+	throw exception("not implemented");
 }

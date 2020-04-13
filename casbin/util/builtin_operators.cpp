@@ -22,16 +22,12 @@ bool BuiltinOperators::GFunction(RoleManager* rm, initializer_list<string> ils)
 		return name1 == name2;
 	}
 	else if (lenargs == 2) {
-		bool res = false;
-		rm->HasLink(res, name1, name2, {});
-		return res;
+		return rm->HasLink(name1, name2, {});
 	}
 	else {
-		bool res = false;
 		beg++;
 		string domain = *beg;
-		rm->HasLink(res, name1, name2, {domain});
-		return res;
+		return rm->HasLink(name1, name2, { domain });
 	}
 }
 

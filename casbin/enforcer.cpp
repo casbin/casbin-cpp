@@ -45,30 +45,27 @@ void Enforcer::Initialize()
 	autoNotifyWatcher = true;
 }
 
-Error Enforcer::BuildRoleLinks()
+void Enforcer::BuildRoleLinks()
 {
-	Error err = rm->Clear();
-	if (!err.IsNull()){
-		return err;
-	}
+	rm->Clear();
 
 	return model->BuildRoleLinks(rm);
 }
 
-Error Enforcer::InitWithFile(const string& modelPath, const string& policyPath) {
+void Enforcer::InitWithFile(const string& modelPath, const string& policyPath) {
 	Error err;
 	this->adapter = FileAdapter::newFileAdapter(policyPath);
-	this->model = Model::NewModelFromFile(err,modelPath);
+	this->model = Model::NewModelFromFile(modelPath);
 	Initialize();
 	LoadPolicy();
-	return err;
 }
 
-Error Enforcer::InitWithAdapter(const string& modelPath, Adapter* adapter)
+void Enforcer::InitWithAdapter(const string& modelPath, Adapter* adapter)
 {
-	return Error();
+
 }
-Error Enforcer::InitWithModelAndAdapter(Model* m, Adapter* adapter)
+
+void Enforcer::InitWithModelAndAdapter(Model* m, Adapter* adapter)
 {
 	this->adapter = adapter;
 	this->model = m;
@@ -76,51 +73,45 @@ Error Enforcer::InitWithModelAndAdapter(Model* m, Adapter* adapter)
 	//fm = LoadFunctionMap();
 	Initialize();
 	LoadPolicy();
-	return Error();
 }
 
-Error Enforcer::LoadPolicy()
+void Enforcer::LoadPolicy()
 {
 	model->ClearPolicy();
 	adapter->LoadPolicy(model);
 	//model.PrintPolicy();
 	
 	if (autoBuildRoleLinks) {
-		Error err = BuildRoleLinks();
-		if( !err.IsNull()){
-			return err;
-		}
+		BuildRoleLinks();
 	}
 	
-	return Error();
 }
 
-Error Enforcer::LoadFilteredPolicy(Filter* filter)
+void Enforcer::LoadFilteredPolicy(Filter* filter)
 {
 	model->ClearPolicy();
 	Filteredadapter* fa = dynamic_cast<Filteredadapter*>(adapter);
 	if (fa == NULL) {
-		return Error("filtered policies are not supported by this adapter");
+		throw exception("filtered policies are not supported by this adapter");
 	}
 
-	Error err = fa->LoadFilteredPolicy(model, filter);
-	if (!err.IsNull() && err.Info() != "invalid file path, file path cannot be empty") {
-		return err;
+	try {
+		fa->LoadFilteredPolicy(model, filter);
+	}
+	catch (exception& e) {
+		if (e.what() != "invalid file path, file path cannot be empty") {
+			throw e;
+		}
 	}
 
 	if (autoBuildRoleLinks) {
-		Error err = BuildRoleLinks();
-		if (!err.IsNull()) {
-			return err;
-		}
+		BuildRoleLinks();
 	}
-	return Error();
 }
 
-bool Enforcer::enforce(Error& err, const string& matcher, initializer_list<string> rlists)
+bool Enforcer::enforce(const string& matcher, initializer_list<string> rlists)
 {
 	if (!enabled) {
-		err = Error();
 		return true;
 	}
 
@@ -195,7 +186,7 @@ bool Enforcer::enforce(Error& err, const string& matcher, initializer_list<strin
 					<< ", got " << pVals.size() << ", pvals: "
 					<< Util::ArrayToString(pVals) << endl;
 				ss >> errorInfo;
-				err = Error(errorInfo);
+				throw exception(errorInfo.data());
 				return false;
 			}
 
@@ -237,20 +228,20 @@ bool Enforcer::enforce(Error& err, const string& matcher, initializer_list<strin
 
 	}
 
-
-	err = MergeEffects(result,model->modelmap["e"]["e"].Value, policyEffects, matcherResults);
-	if (!err.IsNull()) {
+	try {
+		result = MergeEffects(model->modelmap["e"]["e"].Value, policyEffects, matcherResults);
+	}
+	catch (exception& e) {
 		return false;
 	}
 
-	err = Error();
 	return result;
 }
 
-bool Enforcer::Enforce(Error& err, initializer_list<string> rvals)
+bool Enforcer::Enforce(initializer_list<string> rvals)
 {
 
-	return enforce(err, "", rvals);
+	return enforce( "", rvals);
 }
 
 
@@ -266,7 +257,7 @@ void Enforcer::SetTokenMap(TokenMap& tokenmap, map<string, int>& rTokens, map<st
 	}
 }
 
-Error Enforcer::MergeEffects(bool& res, const string& expr, const vector<Effect>& effects, const vector<double>& results)
+bool Enforcer::MergeEffects(const string& expr, const vector<Effect>& effects, const vector<double>& results)
 {
 	bool result = false;
 	if( expr == "some(where (p_eft == allow))" ){
@@ -314,25 +305,20 @@ Error Enforcer::MergeEffects(bool& res, const string& expr, const vector<Effect>
 			}
 	}
 	else {
-		res = false;
-		return Error("unsupported effect");
+		throw exception("unsupported effect");
+		//return false;
 	}
-	res = result;
-	return Error();
+	return result;
 }
 
-Error Enforcer::LoadModel() {
+void Enforcer::LoadModel() {
 	Error err;
-	model = Model::NewModelFromFile(err,modelPath);
-	if (!err.IsNull()) {
-		return err;
-	}
+	model = Model::NewModelFromFile(modelPath);
 
 	model->PrintModel();
 	//fm = model.LoadFunctionMap();
 
 	Initialize();
-	return Error();
 }
 
 Model* Enforcer::GetModel() {
@@ -373,20 +359,16 @@ bool Enforcer::IsFiltered() {
 	return fa->IsFiltered();
 }
 
-Error Enforcer::SavePolicy() {
+void Enforcer::SavePolicy() {
 	if (IsFiltered()) {
-		return Error("cannot save a filtered policy");
+		throw exception("cannot save a filtered policy");
 	}
-	Error err = adapter->SavePolicy(model);
-	if (!err.IsNull()) {
-		return err;
-	}
+	adapter->SavePolicy(model);
 	/*
 		if(watcher != NULL){
 			return watcher->Update();
 		}
 	*/
-	return Error();
 }
 
 void  Enforcer::EnableEnforce(const bool& enable) {

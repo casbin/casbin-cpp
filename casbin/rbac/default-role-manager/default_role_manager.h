@@ -39,12 +39,12 @@ public:
 	void AddMatchingFunc(const string& name,MatchingFunc fn);
 	bool hasRole(const string& name);
 	Role* createRole(const string& name);
-	Error Clear();
-	Error Addlink(const string& name1, const string& name2, initializer_list<string> domain);
-	Error DeleteLink(const string& name1, const  string& name2, initializer_list<string> domain);
-	Error HasLink(bool& res, const string& name1, const  string& name2, initializer_list<string> domain);
-	Error GetRoles(vector<string>& res, const string& name,initializer_list<string> domain);
-	Error GetUsers(vector<string>& res, const string& name, initializer_list<string> domain);
-	Error PrintRoles();
+	void Clear();
+	void Addlink(const string& name1, const string& name2, initializer_list<string> domain);
+	void DeleteLink(const string& name1, const  string& name2, initializer_list<string> domain);
+	bool HasLink(const string& name1, const  string& name2, initializer_list<string> domain);
+	vector<string> GetRoles(const string& name,initializer_list<string> domain);
+	vector<string> GetUsers(const string& name, initializer_list<string> domain);
+	void PrintRoles();
 
 };

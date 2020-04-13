@@ -9,7 +9,7 @@
 #include<string>
 #include<vector>
 #include<initializer_list>
-#include"../errors/exceptions.h"
+#include<exception>
 
 using std::vector;
 using std::string;
@@ -18,11 +18,11 @@ using std::initializer_list;
 class ROLEMAMAGER_API RoleManager {
 public:
 	RoleManager() {};
-	virtual Error Clear() = 0;
-	virtual Error Addlink(const string& name1, const string& name2, initializer_list<string> domain) = 0;
-	virtual Error DeleteLink(const string& name1, const string& name2, initializer_list<string> domain) = 0;
-	virtual Error HasLink(bool& res,const string& name1, const string& name2, initializer_list<string> domain) = 0;
-	virtual Error GetRoles(vector<string>& res, const string& name, initializer_list<string> domain) = 0;
-	virtual Error GetUsers(vector<string>& res, const string& name, initializer_list<string> domain) = 0;
-	virtual Error PrintRoles() = 0;
+	virtual void Clear() = 0;
+	virtual void Addlink(const string& name1, const string& name2, initializer_list<string> domain) = 0;
+	virtual void DeleteLink(const string& name1, const string& name2, initializer_list<string> domain) = 0;
+	virtual bool HasLink(const string& name1, const string& name2, initializer_list<string> domain) = 0;
+	virtual vector<string> GetRoles(const string& name, initializer_list<string> domain) = 0;
+	virtual vector<string> GetUsers(const string& name, initializer_list<string> domain) = 0;
+	virtual void PrintRoles() = 0;
 };

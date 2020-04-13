@@ -4,6 +4,7 @@
 #include <sstream>
 #include <algorithm>
 #include <fstream>
+#include <exception>
 
 const string DEFAULT_SECTION = "default";
 const string DEFAULT_COMMENT = "#";
@@ -16,36 +17,35 @@ Config::Config() {
 
 }
 
-Config* Config::NewConfigFromFile(Error& err,const string& path) {
-	Config* cfg = new Config();
-	err = cfg->parseFile(path);
+Config* Config::NewConfigFromFile(const string& path) {
+	Config* cfg = new Config() ;
+	cfg->parseFile(path);
 	return cfg;
 }
 
-Config* Config::NewConfigFromText(Error& err, const string& text) {
-	Config* cfg = new Config();
-	err = cfg->parseText(text);
+Config* Config::NewConfigFromText(const string& text) {
+	Config* cfg =new Config();
+	cfg->parseText(text);
 	return cfg;
 }
 
-Error Config::parseFile(const string& fname) {
-	m.lock();
+void Config::parseFile(const string& fname) {
 	ifstream fin(fname);
 	if (!fin.is_open()) {
-		return Error("file can't open");
+		string err_info = "Can't open the file: " + fname;
+		throw exception(err_info.data());
 	}
+
 	stringstream ss ;
 	ss << fin.rdbuf();
 	fin.close();
-	Error err = parseBuffer(ss);
-	m.unlock();
-	return err;
+	parseBuffer(ss);
 }
 
 
-Error Config::parseText(const string& text) {
+void Config::parseText(const string& text) {
 	stringstream ss = stringstream(text);
-	return parseBuffer(ss);
+	parseBuffer(ss);
 }
 
 bool Config::AddConfig(const string& section, const string& option, const string& value) {
@@ -59,29 +59,21 @@ bool Config::AddConfig(const string& section, const string& option, const string
 	return !ok;
 }
 
-Error Config::parseBuffer(stringstream& buf) {
+void Config::parseBuffer(stringstream& buf) {
 	string section;
 	int lineNum = 0;
 	string buffer;
 	bool canWrite = false;
 	while (true) {
 		if (canWrite) {
-			Error err = write(section, lineNum, buffer);
-			if (!err.IsNull()) {
-				return err;
-			}
-			else {
-				canWrite = false;
-			}
+			write(section, lineNum, buffer);
+			canWrite = false;
 		}
 		lineNum++;
 		string line;
 		if (!getline(buf, line)) {
 			if (buffer.size() > 0) {
-				Error err = write(section, lineNum, buffer);
-				if (!err.IsNull()) {
-					return err;
-				}
+				write(section, lineNum, buffer);
 			}
 			break;
 		}
@@ -92,10 +84,7 @@ Error Config::parseBuffer(stringstream& buf) {
 		}
 		else if (Util::HasPrefix(line,"[") && Util::HasSuffix(line,"]")) {
 			if (buffer.size() > 0) {
-				Error err = write(section, lineNum, buffer);
-				if (!err.IsNull()) {
-					return err;
-				}
+				write(section, lineNum, buffer);
 				canWrite = false;
 			}
 			section = line.substr(1, line.size()-2);
@@ -113,31 +102,30 @@ Error Config::parseBuffer(stringstream& buf) {
 			buffer += p;
 		}
 	}
-	return Error();
 }
 
-Error Config::write(const string& section, const  int& lineNum,  string& buffer) {
+void Config::write(const string& section, const  int& lineNum,  string& buffer) {
 	if (buffer.size() <= 0) {
-		return Error();
+		return;
+		//throw exception("buffer is empty");
 	}
 
 	vector<string> optionVal = Util::SplitN(buffer, "=", 2);
 	if (optionVal.size() != 2) {
 		string error_info = "parse the content error : line" + to_string(lineNum) +string(" , ") + optionVal[0] + string(" = ? ");
-		return Error(error_info);
+		throw exception(error_info.data());
 	}
 	string option = Util::Trim(optionVal[0], " ");
 	string value = Util::Trim(optionVal[1], " ");
 	AddConfig(section,option , value);
 	buffer = "";
-	return Error();
 }
 
-Error Config::Set(const string& key, const string& value) {
+void Config::Set(const string& key, const string& value) {
 	string key_tmp = key;
 	m.lock();
 	if (key_tmp.size() == 0) {
-		return Error("key is empty");
+		throw exception("key is empty");
 	}
 
 	string section;
@@ -155,7 +143,7 @@ Error Config::Set(const string& key, const string& value) {
 
 	AddConfig(section, option, value);
 	m.unlock();
-	return Error();
+
 }
 
 string Config::get(const string& key) {

@@ -10,7 +10,6 @@
 #include <vector>
 #include <map>
 #include <initializer_list>
-#include "../errors/exceptions.h"
 #include "assertion.h"
 #include "../rbac/role_manager.h"
 #include "../config/config.h"
@@ -32,17 +31,17 @@ public:
     bool AddDef(const string sec, const string key, const string value);
 
 
-    static Model* NewModelFromFile(Error& err,const string& path);
-    static Model* NewModelFromString(Error& err, const string& text);
+    static Model* NewModelFromFile(const string& path);
+    static Model* NewModelFromString(const string& text);
     static bool loadAssertion(Model* model,Config* config, const string& sec, const string& key);
     static string getKeySuffix(const int& i);
     static void loadSection(Model* model, Config* config, const string& sec);
-    Error LoadModel(const string& path);
-    Error LoadModelFromText(const string& text);
-    Error loadModelFromConfig(Config* config);
+    void LoadModel(const string& path);
+    void LoadModelFromText(const string& text);
+    void loadModelFromConfig(Config* config);
     bool HasSection(const string& sec);
     void PrintModel(void);
-    Error BuildRoleLinks(RoleManager* rm);
+    void BuildRoleLinks(RoleManager* rm);
     void PrintPolicy(void);
     void ClearPolicy(void);
     vector<vector<string>> GetPolicy(const string& sec, const string& ptype);

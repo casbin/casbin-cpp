@@ -1,6 +1,5 @@
 #include "default_role_manager.h"
 #include "../role_manager.h"
-#include "../../errors/exceptions.h"
 #include <iostream>
 
 Role::Role(const string& name)
@@ -161,96 +160,90 @@ Role* DefaultRoleManager::createRole(const string& name)
 	return role;
 }
 
-Error DefaultRoleManager::Clear()
+void DefaultRoleManager::Clear()
 {
 	for (auto role : allRoles)
 	{
 		delete role.second;
 	}
 	allRoles.clear();
-	return Error();
 }
 
-Error DefaultRoleManager::Addlink(const string& name1, const string& name2, initializer_list<string> domain)
+void DefaultRoleManager::Addlink(const string& name1, const string& name2, initializer_list<string> domain)
 {
 	if (domain.size() == 1) {
 		string name1 = *(domain.begin()) + "::" + name1;
 		string name2 = *(domain.begin()) + "::" + name2;
 	}
 	else if (domain.size() > 1) {
-		return Error("ERR_DOMAIN_PARAMETER");
+		throw exception("ERR_DOMAIN_PARAMETER");
 	}
 
 	Role* role1 = createRole(name1);
 	Role* role2 = createRole(name2);
 	role1->addRole(role2);
 
-	return Error();
 }
 
 
-Error DefaultRoleManager::DeleteLink(const string& name1, const string& name2, initializer_list<string> domain)
+void DefaultRoleManager::DeleteLink(const string& name1, const string& name2, initializer_list<string> domain)
 {
 	if (domain.size() == 1) {
 		string name1 = *(domain.begin()) + "::" + name1;
 		string name2 = *(domain.begin()) + "::" + name2;
 	}
 	else if (domain.size() > 1) {
-		return Error("ERR_DOMAIN_PARAMETER");
+		throw exception("ERR_DOMAIN_PARAMETER");
 	}
 
 	if (!hasRole(name1) || hasRole(name2)) {
-		return Error("ERR_NAMES12_NOTFOUND");
+		throw exception("ERR_NAMES12_NOTFOUND");
 	}
 
 
 	Role* role1 = createRole(name1);
 	Role* role2 = createRole(name2);
 	role1->deleteRole(role2);
-	return Error();
 }
 
-Error DefaultRoleManager::HasLink(bool& res, const string& name1, const  string& name2, initializer_list<string> domain)
+bool DefaultRoleManager::HasLink(const string& name1, const  string& name2, initializer_list<string> domain)
 {
 	if (domain.size() == 1) {
 		string name1 = *(domain.begin()) + "::" + name1;
 		string name2 = *(domain.begin()) + "::" + name2;
 	}
 	else if (domain.size() > 1) {
-		res = false;
-		return Error("ERR_DOMAIN_PARAMETER");
+		return false;
+		//throw exception("ERR_DOMAIN_PARAMETER");
 	}
 
 	if (name1 == name2) {
-		res = true;
-		return Error();
+		return true;
 	}
 
 	if (!hasRole(name1) || !hasRole(name2)) {
-		res = false;
-		return Error();
+		return false;
 	}
 
 	Role* role1 = createRole(name1);
-	res = role1->hasRole(name2, maxHierarchyLevel);
-	return Error();
+
+	return role1->hasRole(name2, maxHierarchyLevel);
 }
 
-Error DefaultRoleManager::GetRoles(vector<string>& res, const string& name, initializer_list<string> domain)
+vector<string> DefaultRoleManager::GetRoles(const string& name, initializer_list<string> domain)
 {
 	vector<string> roles;
 	if (domain.size() == 1) {
 		string name = *(domain.begin()) + "::" + name;
 	}
 	else if (domain.size() > 1) {
-		res = roles;
-		return Error("ERR_DOMAIN_PARAMETER");
+		//return roles;
+		throw exception("ERR_DOMAIN_PARAMETER");
 	}
 
 
 	if (!hasRole(name)) {
-		res = roles;
-		return Error();
+		return roles;
 	}
 	roles = createRole(name)->getRoles();
 	if (domain.size() == 1) {
@@ -259,19 +252,18 @@ Error DefaultRoleManager::GetRoles(vector<string>& res, const string& name, init
 			role = role.substr((domain.begin())->size() + 2);
 		}
 	}
-	res = roles;
-	return Error();
+	return roles;
 }
 
-Error DefaultRoleManager::GetUsers(vector<string>& res, const string& name, initializer_list<string> domain)
+vector<string> DefaultRoleManager::GetUsers(const string& name, initializer_list<string> domain)
 {
 	vector<string> names;
 	if (domain.size() == 1) {
 		string name = *(domain.begin()) + "::" + name;
 	}
 	else if (domain.size() > 1) {
-		res = names;
-		return Error("ERR_DOMAIN_PARAMETER");
+		//return names;
+		throw exception("ERR_DOMAIN_PARAMETER");
 	}
 
 	for (auto role : allRoles) {
@@ -286,11 +278,10 @@ Error DefaultRoleManager::GetUsers(vector<string>& res, const string& name, init
 			n = n.substr((domain.begin())->size() + 2);
 		}
 	}
-	res = names;
-	return Error();
+	return names;
 }
 
-Error DefaultRoleManager::PrintRoles()
+void DefaultRoleManager::PrintRoles()
 {
-	return Error();
+
 }

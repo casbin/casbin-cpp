@@ -1,7 +1,6 @@
 #pragma once
 #include<string>
 #include<vector>
-#include "../errors/exceptions.h"
 #include"../rbac/role_manager.h"
 using namespace std;
 
@@ -13,6 +12,6 @@ public:
     vector<vector<string>> Policy;
     RoleManager* RM;
     Assertion();
-    Error buildRoleLinks(RoleManager* rm);
+    void buildRoleLinks(RoleManager* rm);
     void PrintAssertion();
 };

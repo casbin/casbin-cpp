@@ -12,13 +12,13 @@ class FILE_ADAPTER_API FileAdapter : public Adapter
 public:
 	FileAdapter(const string& filePath);
 	static FileAdapter* newFileAdapter(const string& filePath);
-	Error LoadPolicy(Model *model);
-	Error LoadPolicyFile(Model *model,void (*handler)(const string&, Model*));
+	void LoadPolicy(Model *model);
+	void LoadPolicyFile(Model *model,void (*handler)(const string&, Model*));
 	static void LoadPolicyLine(const string& line, Model* model);
-	Error SavePolicy(Model *model);
-	Error SavePolicyFile(const string& text);
-	Error AddPolicy(const string& sec, const string& ptype, const vector<string>& rule);
-	Error AddPolicies(const string& sec, const string& ptype, const vector<vector<string>>& rules);
-	Error RemovePolicy(const string& sec, const string& ptype, const vector<string>& rule);
-	Error RemoveFilteredPolicy(const string& sec,const string& ptype,const int& fieldIndex,const vector <string>& fieldValues);
+	void SavePolicy(Model *model);
+	void SavePolicyFile(const string& text);
+	void AddPolicy(const string& sec, const string& ptype, const vector<string>& rule);
+	void AddPolicies(const string& sec, const string& ptype, const vector<vector<string>>& rules);
+	void RemovePolicy(const string& sec, const string& ptype, const vector<string>& rule);
+	void RemoveFilteredPolicy(const string& sec,const string& ptype,const int& fieldIndex,const vector <string>& fieldValues);
 };

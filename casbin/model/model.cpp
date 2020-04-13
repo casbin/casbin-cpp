@@ -50,16 +50,11 @@ bool Model::AddDef(string sec, string key, string value)
 
 
 
-Error Model::BuildRoleLinks(RoleManager* rm)
+void Model::BuildRoleLinks(RoleManager* rm)
 {
 	for (auto ast : modelmap["g"]) {
-		Error err = ast.second.buildRoleLinks(rm);
-		if (!err.IsNull()) {
-			return err;
-		}
+		ast.second.buildRoleLinks(rm);
 	}
-
-	return Error();
 }
 
 
@@ -117,15 +112,15 @@ bool Model::HasPolicy(const string& sec, const  string& ptype, const vector<stri
 	return false;
 }
 
-Model* Model::NewModelFromFile(Error& err, const string& path) {
+Model* Model::NewModelFromFile(const string& path) {
 	Model* m = new Model();
-	err = m->LoadModel(path);
+	m->LoadModel(path);
 	return m;
 }
 
-Model*  Model::NewModelFromString(Error& err, const string& text) {
+Model*  Model::NewModelFromString(const string& text) {
 	Model* m = new Model();
-	err = m->LoadModelFromText(text);
+	m->LoadModelFromText(text);
 	return m;
 }
 
@@ -153,33 +148,19 @@ void  Model::loadSection(Model* model, Config* cfg, const string& sec) {
 	}
 }
 
-Error Model::LoadModel(const string& path) {
-	Error err;
-	Config* cfg  = Config::NewConfigFromFile(err, path);
-	if (!err.IsNull()) {
-		cout << "file error" << endl;
-		return err;
-	}
-
-	err = loadModelFromConfig(cfg);
+void Model::LoadModel(const string& path) {
+	Config* cfg  = Config::NewConfigFromFile(path);
+	loadModelFromConfig(cfg);
 	delete cfg;
-	return err;
 }
 
-Error Model::LoadModelFromText(const string& text) {
-	Error err;
-	Config* cfg = Config::NewConfigFromText(err, text);
-	if (!err.IsNull()) {
-		cout << "text error" << endl;
-		return err;
-	}
-
-	err = loadModelFromConfig(cfg);
+void Model::LoadModelFromText(const string& text) {
+	Config* cfg = Config::NewConfigFromText(text);
+	loadModelFromConfig(cfg);
 	delete cfg;
-	return err;
 }
 
-Error Model::loadModelFromConfig(Config* cfg) {
+void Model::loadModelFromConfig(Config* cfg) {
 	for (auto s : sectionNameMap) {
 		loadSection(this,cfg,s.first);
 	}
@@ -190,9 +171,8 @@ Error Model::loadModelFromConfig(Config* cfg) {
 		}
 	}
 	if (ms.size() > 0) {
-		return Error("missing required sections");
+		throw exception("missing required sections");
 	}
-	return Error();
 }
 
 bool Model::HasSection(const string& sec) {

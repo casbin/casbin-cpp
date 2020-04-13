@@ -47,7 +47,7 @@ void FileAdapter::LoadPolicyLine(const string& line, Model* model)
 
 }
 
-Error FileAdapter::LoadPolicyFile(Model* model, void (*handler)(const string&, Model*))
+void FileAdapter::LoadPolicyFile(Model* model, void (*handler)(const string&, Model*))
 {
 	ifstream csvInput;
 	csvInput.open(filePath);
@@ -57,23 +57,22 @@ Error FileAdapter::LoadPolicyFile(Model* model, void (*handler)(const string&, M
 		handler(line, model);
 	}
 	csvInput.close();
-	return Error();
 }
 
-Error FileAdapter::LoadPolicy(Model* model)
+void FileAdapter::LoadPolicy(Model* model)
 {
 	if (filePath == "")
-		return Error("invalid file path, file path cannot be empty");
+		throw exception("invalid file path, file path cannot be empty");
 
-	return LoadPolicyFile(model, Adapter::LoadPolicyLine);
+	LoadPolicyFile(model, Adapter::LoadPolicyLine);
 }
 
 
-Error FileAdapter::SavePolicy(Model* model)
+void FileAdapter::SavePolicy(Model* model)
 {
 
 	if (filePath == ""){
-		return Error("invalid file path, file path cannot be empty");
+		throw exception("invalid file path, file path cannot be empty");
 	}
 
 	string buffer;
@@ -101,7 +100,7 @@ Error FileAdapter::SavePolicy(Model* model)
 	return SavePolicyFile(buffer);
 }
 
-Error FileAdapter::FileAdapter::SavePolicyFile(const string& text)
+void FileAdapter::FileAdapter::SavePolicyFile(const string& text)
 {
 	ofstream outFile;
 	try
@@ -112,16 +111,14 @@ Error FileAdapter::FileAdapter::SavePolicyFile(const string& text)
 	}
 	catch (exception& e)
 	{
-		string s = e.what();
-		Error err = Error(s);
+		cout << e.what() << endl;
 		outFile.close();
-		return err;
 	}
-	return Error();
+
 }
 
 //rules should be vectors like ["alice","data1","read"] , if the file doesn't exit, it will create a file(but not add a policy)
-Error FileAdapter::AddPolicy(const string& sec, const string& ptype, const vector<string>& rule)
+void FileAdapter::AddPolicy(const string& sec, const string& ptype, const vector<string>& rule)
 {
 	cout << "Add Policy:" << endl;
 	bool exist = true;
@@ -155,21 +152,18 @@ Error FileAdapter::AddPolicy(const string& sec, const string& ptype, const vecto
 	}
 	catch (exception& e)
 	{
-		string s =e.what();
-		Error err = Error(s);
+		cout << e.what() << endl;
 		outFile.close();
-		return err;
 	}
-	return Error();
 }
 
 
-Error FileAdapter::RemovePolicy(const string& sec, const string& ptype, const vector<string>& rule)
+void FileAdapter::RemovePolicy(const string& sec, const string& ptype, const vector<string>& rule)
 {
-	return Error("not implemented");
+	throw exception("not implemented");
 }
 
-Error FileAdapter::RemoveFilteredPolicy(const string& sec, const string& ptype, const int& fieldIndex, const vector <string>& fieldValues)
+void FileAdapter::RemoveFilteredPolicy(const string& sec, const string& ptype, const int& fieldIndex, const vector <string>& fieldValues)
 {
-	return Error("not implemented");
+	throw exception("not implemented");
 }
