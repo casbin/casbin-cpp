@@ -27,8 +27,9 @@ public:
 	map<string, map<string, string>> data;
 	mutex m;
 	Config();
-	static Config* NewConfigFromFile(const string& path);
-	static Config* NewConfigFromText(const string& text);
+	Config(const Config& cfg);
+	static Config NewConfigFromFile(const string& path);
+	static Config NewConfigFromText(const string& text);
 	void parseFile(const string& fname);
 	void parseText(const string& text);
 	void parseBuffer(stringstream& buf);

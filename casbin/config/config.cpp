@@ -17,15 +17,19 @@ Config::Config() {
 
 }
 
-Config* Config::NewConfigFromFile(const string& path) {
-	Config* cfg = new Config() ;
-	cfg->parseFile(path);
-	return cfg;
+Config::Config(const Config& cfg) {
+	data = cfg.data;
 }
 
-Config* Config::NewConfigFromText(const string& text) {
-	Config* cfg =new Config();
-	cfg->parseText(text);
+Config Config::NewConfigFromFile(const string& path) {
+	Config c = Config() ;
+	c.parseFile(path);
+	return c;
+}
+
+Config Config::NewConfigFromText(const string& text) {
+	Config cfg =Config();
+	cfg.parseText(text);
 	return cfg;
 }
 
