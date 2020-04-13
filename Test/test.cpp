@@ -43,11 +43,11 @@ TEST(ModelTest, LoadFromTextTest) {
 		"[matchers]\n"
 		"m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act";
 
-	Model* m = Model::NewModelFromString(text);
+	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromString(text));
 
 	m->PrintModel();
 
-	Adapter* adapter = FileAdapter::newFileAdapter("../../casbin/examples/RBAC.csv");
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../../casbin/examples/RBAC.csv"));
 	Enforcer e = Enforcer(m, adapter);
 
 	EXPECT_EQ(e.enforce( "", { "bob","data1","write" }), false);
@@ -64,11 +64,11 @@ TEST(ModelTest, LoadFromTextTest) {
 
 TEST(ConfigTest, LoadFromFileTest) {
 
-	Model* m = Model::NewModelFromFile( "../../casbin/examples/RBAC.conf");
+	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromFile( "../../casbin/examples/RBAC.conf"));
 
 	m->PrintModel();
 
-	Adapter* adapter = FileAdapter::newFileAdapter("../../casbin/examples/RBAC.csv");
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../../casbin/examples/RBAC.csv"));
 	Enforcer e = Enforcer(m, adapter);
 
 	EXPECT_EQ(e.enforce( "", { "bob","data1","write" }), false);
@@ -85,8 +85,8 @@ TEST(ConfigTest, LoadFromFileTest) {
 
 TEST(FilterTest, LoadTest) {
 
-	Filteredadapter* fa = Filteredadapter::NewFilteredAdapter("../../casbin/examples/RBAC.csv");
-	Model* m = Model::NewModelFromFile( "../../casbin/examples/RBAC.conf");
+	unique_ptr<Adapter> fa = unique_ptr<Adapter>(Filteredadapter::NewFilteredAdapter("../../casbin/examples/RBAC.csv"));
+	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromFile( "../../casbin/examples/RBAC.conf"));
 	Enforcer e = Enforcer(m, fa);
 
 	EXPECT_EQ(e.model->HasPolicy("p", "p", { "data2_admin","data2","write" }), true);
