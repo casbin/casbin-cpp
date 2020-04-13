@@ -28,6 +28,7 @@ public:
 
     Model();
     //~Model();
+
     bool AddDef(const string sec, const string key, const string value);
 
 

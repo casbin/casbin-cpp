@@ -119,7 +119,7 @@ Model* Model::NewModelFromFile(const string& path) {
 }
 
 Model*  Model::NewModelFromString(const string& text) {
-	Model* m = new Model();
+	Model* m =new Model();
 	m->LoadModelFromText(text);
 	return m;
 }
@@ -149,15 +149,13 @@ void  Model::loadSection(Model* model, Config* cfg, const string& sec) {
 }
 
 void Model::LoadModel(const string& path) {
-	Config* cfg  = Config::NewConfigFromFile(path);
-	loadModelFromConfig(cfg);
-	delete cfg;
+	Config cfg  = Config::NewConfigFromFile(path);
+	loadModelFromConfig(&cfg);
 }
 
 void Model::LoadModelFromText(const string& text) {
-	Config* cfg = Config::NewConfigFromText(text);
-	loadModelFromConfig(cfg);
-	delete cfg;
+	Config cfg = Config::NewConfigFromText(text);
+	loadModelFromConfig(&cfg);
 }
 
 void Model::loadModelFromConfig(Config* cfg) {
