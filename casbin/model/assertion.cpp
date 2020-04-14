@@ -39,5 +39,14 @@ void Assertion::buildRoleLinks(RoleManager* rm)
 }
 
 void Assertion::PrintAssertion() {
-   
+    cout << "------------------Assertion-------------------" << endl;
+    cout << "key:" << Key << endl;
+    cout << "Value:" << Value << endl;
+    cout << "Tokens:";
+    Util::PrintVector(Tokens);
+    cout << endl;
+    cout << "Policy:";
+    Util::Print2DVector(Policy);
+    cout << endl;
+    cout << "------------------Assertion-------------------" << endl;
 }

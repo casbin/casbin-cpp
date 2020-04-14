@@ -20,6 +20,8 @@ Model::Model()
 	modelmap = {};
 }
 
+
+
 bool Model::AddDef(string sec, string key, string value)
 {
 	if (value == "")
@@ -124,6 +126,17 @@ Model*  Model::NewModelFromString(const string& text) {
 	return m;
 }
 
+Model Model::ModelFromFile(const string& path) {
+	Model m = Model();
+	m.LoadModel(path);
+	return m;
+}
+Model Model::ModelFromString(const string& text) {
+	Model m = Model();
+	m.LoadModelFromText(text);
+	return m;
+}
+
 bool  Model::loadAssertion(Model* model, Config* cfg, const string& sec, const string& key) {
 	string value = cfg->String(sectionNameMap[sec] + "::" + key);
 	return model->AddDef(sec, key, value);
@@ -179,7 +192,18 @@ bool Model::HasSection(const string& sec) {
 
 void Model::PrintModel(void)
 {
-
+	/*
+	cout << "--------------------Model------------------" << endl;
+	for (auto asmap : modelmap)
+	{
+		for (auto as : asmap.second)
+		{
+			cout << "model[" << asmap.first << "][" << as.first << "]:" << endl;
+			as.second.PrintAssertion();
+		}
+	}
+	cout << "--------------------Model------------------" << endl;
+	*/
 }
 
 

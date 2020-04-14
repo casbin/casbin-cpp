@@ -12,10 +12,25 @@ Filter::Filter(const vector<string>& p, const vector<string>& g) {
 	G = g;
 }
 
+Filteredadapter::Filteredadapter() {
+
+}
+
+Filteredadapter::Filteredadapter(Filteredadapter& fa) {
+	this->adapter = move(fa.adapter);
+	this->filtered = fa.filtered;
+	this->filePath = fa.filePath;
+}
+
+Filteredadapter::Filteredadapter(const string& filePath) {
+	filtered = true;
+	adapter = unique_ptr<Adapter>(new FileAdapter(filePath));
+}
+
 Filteredadapter* Filteredadapter::NewFilteredAdapter(const string& filePath) {
 	Filteredadapter* fa = new Filteredadapter();
 	fa->filtered = true;
-	fa->adapter = new FileAdapter(filePath);
+	fa->adapter = unique_ptr<Adapter>(new FileAdapter(filePath));
 	return fa;
 }
 

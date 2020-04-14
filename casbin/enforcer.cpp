@@ -13,19 +13,17 @@ Enforcer::Enforcer()
 
 Enforcer::~Enforcer()
 {
-	delete rm;
 
 }
 
-Enforcer::Enforcer(const Enforcer& e) {
+Enforcer::Enforcer(Enforcer& e) {
 	modelPath=e.modelPath;
-	model = unique_ptr<Model>(new Model(*e.model.get()));
+	model = move(e.model);
 	eft = e.eft;
 	fm = e.fm;
-	FileAdapter* fa = dynamic_cast<FileAdapter*>(e.adapter.get());
-	adapter = unique_ptr<Adapter>(new FileAdapter(*fa));
+	adapter = move(e.adapter);
 	//Watcher* watcher;
-	rm = e.rm;
+	rm = move(e.rm);
 	enabled = e.enabled;
 	autoSave = e.autoSave;
 	autoBuildRoleLinks = e.autoBuildRoleLinks;
@@ -37,6 +35,31 @@ Enforcer::Enforcer(const string& modelPath, const string& policyPath)
 	InitWithFile(modelPath, policyPath);
 }
 
+Enforcer::Enforcer(Model& m, Adapter& a)
+{
+	unique_ptr<Adapter> upa;
+	FileAdapter* fa = dynamic_cast<FileAdapter*>(&a);
+	Filteredadapter* filter = dynamic_cast<Filteredadapter*>(&a);
+	if (fa != NULL) {
+		upa = unique_ptr<Adapter>(new FileAdapter(*fa));
+	} else if(filter != NULL){
+		upa = unique_ptr<Adapter>(new Filteredadapter(*filter));
+	}
+	else {
+		throw exception("undefinded adapter type doesn't support pass-by-reference!!Please pass it by unique_ptr!!");
+	}
+
+	unique_ptr<Model> upm = unique_ptr<Model>(new Model(m));
+
+	this->adapter = move(upa);
+	this->model = move(upm);
+	this->model->PrintModel();
+	//this->model.PrintModel();
+	//fm = LoadFunctionMap();
+	Initialize();
+	LoadPolicy();
+}
+
 Enforcer::Enforcer(unique_ptr<Model>& model, unique_ptr<Adapter>& adapter)
 {
 	InitWithModelAndAdapter(model, adapter);
@@ -44,8 +67,8 @@ Enforcer::Enforcer(unique_ptr<Model>& model, unique_ptr<Adapter>& adapter)
 
 void Enforcer::Initialize()
 {
-	rm = new DefaultRoleManager(10);
-	fm[KEY_ROLEMANAGER] = Ptype(rm);
+	rm = unique_ptr<RoleManager>( new DefaultRoleManager(10));
+	fm[KEY_ROLEMANAGER] = Ptype(rm.get());
 
 	/*
 	e.eft = effect.NewDefaultEffector()
@@ -62,7 +85,7 @@ void Enforcer::BuildRoleLinks()
 {
 	rm->Clear();
 
-	return model->BuildRoleLinks(rm);
+	return model->BuildRoleLinks(rm.get());
 }
 
 void Enforcer::InitWithFile(const string& modelPath, const string& policyPath) {
@@ -92,8 +115,8 @@ void Enforcer::LoadPolicy()
 {
 	model->ClearPolicy();
 	adapter->LoadPolicy(model.get());
+	model->PrintModel();
 	//model.PrintPolicy();
-	
 	if (autoBuildRoleLinks) {
 		BuildRoleLinks();
 	}
@@ -145,7 +168,7 @@ bool Enforcer::enforce(const string& matcher, initializer_list<string> rlists)
 
 
 	for (auto ast : model->modelmap["g"]) {
-		rm = ast.second.RM;
+		//rm = ast.second.RM;
 		list<string> ls = { "A","B","C" };
 		fm[ast.first] = CppFunction(fm, &BuiltinOperators::GFunctionFunc , ls);
 	}
@@ -350,12 +373,12 @@ void Enforcer::SetAdapter(unique_ptr<Adapter>& adapter) {
 	this->adapter = move(adapter);
 }
 //void SetWatcher(Watcher* watcher);
-RoleManager* Enforcer::GetRoleManager() {
+unique_ptr<RoleManager>& Enforcer::GetRoleManager() {
 	return rm;
 }
 
-void Enforcer::SetRoleManager(RoleManager* rm) {
-	this->rm = rm;
+void Enforcer::SetRoleManager(unique_ptr<RoleManager>& rm) {
+	this->rm = move(rm);
 }
 
 void Enforcer::SetEffector() {

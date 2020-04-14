@@ -2,6 +2,26 @@
 #include "../casbin/enforcer.h"
 #include "../casbin/rbac/default-role-manager/default_role_manager.h"
 
+TEST(EnforcerTest, PassByReferenceTest) {
+	FileAdapter fa = FileAdapter("../../casbin/examples/MoreParam.csv");
+	Model m = Model::ModelFromFile("../../casbin/examples/MoreParam.conf");
+
+	
+	Enforcer e = Enforcer(m,fa);
+	/*
+
+	EXPECT_EQ(e.enforce("", { "bob","data1","write","school" }), true);
+	EXPECT_EQ(e.enforce("", { "bob","data1","write" ,"home" }), false);
+	EXPECT_EQ(e.enforce("", { "bob","data2","write","home" }), true);
+	EXPECT_EQ(e.enforce("", { "bob","data2","write","school" }), false);
+	EXPECT_EQ(e.enforce("", { "alice","data1","write","school" }), false);
+	EXPECT_EQ(e.enforce("", { "alice","data1","write","home" }), true);
+	EXPECT_EQ(e.enforce("", { "alice","data2","write","school" }), false);
+	EXPECT_EQ(e.enforce("", { "alice","data2","write","home" }), false);
+	*/
+	system("pause");
+}
+
 TEST(EnforcerTest, MoreParameters) {
 	Enforcer e = Enforcer("../../casbin/examples/MoreParam.conf", "../../casbin/examples/MoreParam.csv");
 
@@ -16,6 +36,7 @@ TEST(EnforcerTest, MoreParameters) {
 
 	system("pause");
 }
+
 
 TEST(RoleManagerTest, AddTest) {
 	RoleManager* rm = new DefaultRoleManager(5);

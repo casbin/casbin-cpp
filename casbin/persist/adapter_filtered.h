@@ -19,8 +19,11 @@ public:
 
 class FILTERED_ADAPTER_API Filteredadapter:public Adapter {
 public:
-	Adapter* adapter;
+	unique_ptr<Adapter> adapter;
 	bool filtered;
+	Filteredadapter();
+	Filteredadapter(Filteredadapter& fa);
+	Filteredadapter(const string& filePath);
 	static Filteredadapter* NewFilteredAdapter(const string& filePath);
 	void LoadPolicy(Model* model);
 	void LoadFilteredPolicy(Model* model, Filter* filter);

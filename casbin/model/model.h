@@ -34,6 +34,9 @@ public:
 
     static Model* NewModelFromFile(const string& path);
     static Model* NewModelFromString(const string& text);
+    static Model ModelFromFile(const string& path);
+    static Model ModelFromString(const string& text);
+
     static bool loadAssertion(Model* model,Config* config, const string& sec, const string& key);
     static string getKeySuffix(const int& i);
     static void loadSection(Model* model, Config* config, const string& sec);

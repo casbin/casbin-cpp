@@ -27,7 +27,7 @@ public:
 
 	unique_ptr<Adapter> adapter;
 	//Watcher* watcher;
-	RoleManager* rm;
+	unique_ptr<RoleManager> rm;
 	bool enabled;
 	bool autoSave;
 	bool autoBuildRoleLinks;
@@ -36,9 +36,10 @@ public:
 	Enforcer();
 	~Enforcer();
 
-	Enforcer(const Enforcer& e);
+	Enforcer(Enforcer& e);
 	Enforcer(unique_ptr<Model>& model, const string& policyPath);
 	Enforcer(const string& modelPath, unique_ptr<Adapter>& adapter);
+	Enforcer(Model& model, Adapter& adapter);
 	Enforcer(unique_ptr<Model>& model, unique_ptr<Adapter>& adapter);
 	Enforcer(const string& modelPath, const string& policyPath);
 
@@ -52,8 +53,8 @@ public:
 	unique_ptr<Adapter>& GetAdapter();
 	void SetAdapter(unique_ptr<Adapter>& adapter);
 	//void SetWatcher(Watcher* watcher);
-	RoleManager* GetRoleManager();
-	void SetRoleManager(RoleManager* rm);
+	unique_ptr<RoleManager>& GetRoleManager();
+	void SetRoleManager(unique_ptr<RoleManager>& rm);
 	void SetEffector();
 	void ClearPolicy();
 	void LoadPolicy();
