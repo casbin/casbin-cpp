@@ -1,15 +1,25 @@
 #pragma once
+
+#ifdef CASBIN_EXPORTS
+#define BULTIN_API __declspec(dllexport)
+#else
+#define BULTIN_API __declspec(dllimport)
+#endif
+
 #include"../errors/exceptions.h"
 #include"../rbac/role_manager.h"
 #include "../Cparse/shunting-yard.h"
+#include "util.h"
 #include <initializer_list>
+
+
 
 extern const string KEY_ROLEMANAGER;
 
 
-class BuiltinOperators {
+class BULTIN_API BuiltinOperators {
 public:
-	Error validateVariadicArgs();
+	//Error validateVariadicArgs();
 	static bool KeyMatch(string key1, string key2);
 	static bool KeyMatch2(string key1, string key2);
 	static bool KeyMatch3(string key1, string key2);

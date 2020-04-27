@@ -1,26 +1,8 @@
 #include "pch.h"
 #include "../casbin/enforcer.h"
 #include "../casbin/rbac/default-role-manager/default_role_manager.h"
-
-TEST(EnforcerTest, PassByReferenceTest) {
-	FileAdapter fa = FileAdapter("../../casbin/examples/MoreParam.csv");
-	Model m = Model::ModelFromFile("../../casbin/examples/MoreParam.conf");
-
-	
-	Enforcer e = Enforcer(m,fa);
-	/*
-
-	EXPECT_EQ(e.enforce("", { "bob","data1","write","school" }), true);
-	EXPECT_EQ(e.enforce("", { "bob","data1","write" ,"home" }), false);
-	EXPECT_EQ(e.enforce("", { "bob","data2","write","home" }), true);
-	EXPECT_EQ(e.enforce("", { "bob","data2","write","school" }), false);
-	EXPECT_EQ(e.enforce("", { "alice","data1","write","school" }), false);
-	EXPECT_EQ(e.enforce("", { "alice","data1","write","home" }), true);
-	EXPECT_EQ(e.enforce("", { "alice","data2","write","school" }), false);
-	EXPECT_EQ(e.enforce("", { "alice","data2","write","home" }), false);
-	*/
-	system("pause");
-}
+#include "../casbin/util/builtin_operators.h"
+#include "../casbin/util/util.h"
 
 TEST(EnforcerTest, MoreParameters) {
 	Enforcer e = Enforcer("../../casbin/examples/MoreParam.conf", "../../casbin/examples/MoreParam.csv");
@@ -129,3 +111,91 @@ TEST(FilterTest, LoadTest) {
 	system("pause");
 }
 
+TEST(KeyMatchTest, RawKeyMatchTest) {
+
+	//cout << "Test Key" << endl;
+	
+	EXPECT_EQ(BuiltinOperators::KeyMatch("/foo/bar","/foo/*"), true);
+	EXPECT_EQ(BuiltinOperators::KeyMatch("/fao/bar", "/foo/*"), false);
+
+	EXPECT_EQ(BuiltinOperators::KeyMatch2("/foo/bar", "/foo/*"), true);
+
+	
+	EXPECT_EQ(BuiltinOperators::KeyMatch2("/fao/bar", "/foo/*"), false);
+
+	
+	EXPECT_EQ(BuiltinOperators::KeyMatch2("/resource1", "/:resource"), true);
+	
+	EXPECT_EQ(BuiltinOperators::KeyMatch3("/foo/bar", "/foo/*"), true);
+	EXPECT_EQ(BuiltinOperators::KeyMatch3("/fao/bar", "/foo/*"), false);
+	EXPECT_EQ(BuiltinOperators::KeyMatch3("/resource1", "/{resource}"), true);
+	EXPECT_EQ(BuiltinOperators::KeyMatch3("/parent/123/child/456", "/parent/{id}/child/{id}"), true);
+	
+	EXPECT_EQ(BuiltinOperators::KeyMatch4("/foo/bar", "/foo/*"), true);
+	EXPECT_EQ(BuiltinOperators::KeyMatch4("/fao/bar", "/foo/*"), false);
+	EXPECT_EQ(BuiltinOperators::KeyMatch4("/parent/123/child/123", "/parent/{id}/child/{id}"), true);
+	EXPECT_EQ(BuiltinOperators::KeyMatch4("/parent/123/child/456", "/parent/{id}/child/{id}"), false);
+
+	EXPECT_EQ(BuiltinOperators::IPMatch("192.168.2.123", "192.168.2.0/24"), true);
+	EXPECT_EQ(BuiltinOperators::IPMatch("192.168.1.255", "192.168.2.0/24"), false);
+	EXPECT_EQ(BuiltinOperators::IPMatch("255.255.255.255", "255.255.0.0/16"), true);
+	
+	system("pause");
+}
+
+TEST(KeyMatchTest, KeyMatch1AndRegexTest) {
+	string text = "[request_definition]\n"
+		"r = sub, obj, act\n\n"
+		"[policy_definition]\n"
+		"p = sub, obj, act\n\n"
+		"[policy_effect]\n"
+		"e = some(where (p.eft == allow))\n\n"
+		"[matchers]\n"
+		"m = r.sub == p.sub && keyMatch(r.obj, p.obj) && regexMatch(r.act, p.act)";
+
+	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromString(text));
+
+	m->PrintModel();
+
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../../casbin/examples/keymatch_policy.csv"));
+	Enforcer e = Enforcer(m, adapter);
+
+	EXPECT_EQ(e.enforce("", { "alice","/alice_data/anyone","GET" }), true);
+	EXPECT_EQ(e.enforce("", { "alice","/alice_data/anyone","POST" }), false);
+	EXPECT_EQ(e.enforce("", { "alice","/alice_data/resource1","POST" }), true);
+	EXPECT_EQ(e.enforce("", { "cathy","/cathy_data","POST" }), true);
+	EXPECT_EQ(e.enforce("", { "cathy","/cathy_data","GET" }), true);
+	EXPECT_EQ(e.enforce("", { "cathy","/alice_data/resource1","POST" }), false);
+	EXPECT_EQ(e.enforce("", { "bob","/bob_data/any","POST" }), true);
+	EXPECT_EQ(e.enforce("", { "bob","/bob_data/any","GET" }), false);
+    EXPECT_EQ(e.enforce("", { "bob","/alice_data/resource2","GET" }), true);
+	EXPECT_EQ(e.enforce("", { "bob","/alice_data/resource1","GET" }), false);
+	system("pause");
+}
+
+TEST(KeyMatchTest, KeyMatch2Test) {
+	string text = "[request_definition]\n"
+		"r = sub, obj, act\n\n"
+		"[policy_definition]\n"
+		"p = sub, obj, act\n\n"
+		"[policy_effect]\n"
+		"e = some(where (p.eft == allow))\n\n"
+		"[matchers]\n"
+		"m = r.sub == p.sub && keyMatch2(r.obj, p.obj) && regexMatch(r.act, p.act)";
+
+	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromString(text));
+
+	m->PrintModel();
+
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../../casbin/examples/keymatch2_policy.csv"));
+	Enforcer e = Enforcer(m, adapter);
+
+	EXPECT_EQ(e.enforce("", { "alice","/alice_data/anyone","GET" }), true);
+	EXPECT_EQ(e.enforce("", { "alice","/alice_data2/anyone/using/anyone","GET" }), true);
+	EXPECT_EQ(e.enforce("", { "alice","/alice_data2/anyone/using/anyone/anyone","GET" }), false);
+	system("pause");
+}
+
+TEST(LastTest,LastTest2) {
+	system("pause");
+}

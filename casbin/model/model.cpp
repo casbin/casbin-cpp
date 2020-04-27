@@ -121,8 +121,10 @@ Model* Model::NewModelFromFile(const string& path) {
 }
 
 Model*  Model::NewModelFromString(const string& text) {
+	//cout << "from str" << endl;
 	Model* m =new Model();
 	m->LoadModelFromText(text);
+	//cout << "from str end" << endl;
 	return m;
 }
 

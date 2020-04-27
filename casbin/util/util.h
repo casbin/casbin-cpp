@@ -1,11 +1,18 @@
 #pragma once
 #pragma once
+
+#ifdef CASBIN_EXPORTS
+#define UTIL_API __declspec(dllexport)
+#else
+#define UTIL_API __declspec(dllimport)
+#endif
+
 #include<vector>
 #include<string>
 #include <initializer_list>
 using namespace std;
 
-class Util
+class UTIL_API Util
 {
 public:
 	static vector<string> Split(const string& s, const string& c);

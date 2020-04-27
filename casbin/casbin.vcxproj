@@ -166,10 +166,12 @@
     <ClInclude Include="enforcer.h" />
     <ClInclude Include="errors\exceptions.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ip\ip.h" />
     <ClInclude Include="log\default_logger.h" />
     <ClInclude Include="log\logger.h" />
     <ClInclude Include="log\log_util.h" />
     <ClInclude Include="model\assertion.h" />
+    <ClInclude Include="model\function.h" />
     <ClInclude Include="model\model.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="persist\adapter.h" />
@@ -206,6 +208,9 @@
     <ClCompile Include="errors\exceptions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ip\ip.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="log\default_logger.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -213,6 +218,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="model\assertion.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="model\function.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="model\model.cpp">

@@ -105,6 +105,12 @@ CppFunction::CppFunction(TokenMap gm, packToken (*func)(TokenMap, TokenMap), uns
 }
 
 // Build a function with no named args:
+CppFunction::CppFunction(){
+    this->_name = "";
+    globalMap = TokenMap();
+    func = NULL;
+}
+
 CppFunction::CppFunction(TokenMap gm, packToken (*func)(TokenMap, TokenMap), std::string name)
                          :globalMap(gm), func(func) {
   this->_name = name;

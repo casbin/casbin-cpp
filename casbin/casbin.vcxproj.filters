@@ -64,6 +64,12 @@
     <Filter Include="Source Files\util">
       <UniqueIdentifier>{c3d09bbc-e959-44fa-8b97-4ee062bf45a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ip">
+      <UniqueIdentifier>{e8d8c7cd-b2a7-4e9e-b62b-2b418b658686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ip">
+      <UniqueIdentifier>{c205d97e-e555-462d-9efd-258cce13b63d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -138,6 +144,12 @@
     <ClInclude Include="persist\file-adapter\file-adapter.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
+    <ClInclude Include="model\function.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="ip\ip.h">
+      <Filter>Header Files\ip</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -202,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="Test.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ip\ip.cpp">
+      <Filter>Source Files\ip</Filter>
+    </ClCompile>
+    <ClCompile Include="model\function.cpp">
+      <Filter>Source Files\model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

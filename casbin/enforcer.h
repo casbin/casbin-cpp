@@ -7,6 +7,7 @@
 #endif
 
 #include "./model/model.h"
+#include "./model/function.h"
 #include "./persist/file-adapter/file-adapter.h"
 #include "./persist/adapter_filtered.h"
 #include "./persist/adapter.h"
@@ -23,7 +24,8 @@ public:
 	string modelPath;
 	unique_ptr<Model> model;
 	Effect eft;
-	TokenMap fm;
+	TokenMap tm;
+	FunctionMap fm;
 
 	unique_ptr<Adapter> adapter;
 	//Watcher* watcher;
@@ -39,7 +41,6 @@ public:
 	Enforcer(Enforcer& e);
 	Enforcer(unique_ptr<Model>& model, const string& policyPath);
 	Enforcer(const string& modelPath, unique_ptr<Adapter>& adapter);
-	Enforcer(Model& model, Adapter& adapter);
 	Enforcer(unique_ptr<Model>& model, unique_ptr<Adapter>& adapter);
 	Enforcer(const string& modelPath, const string& policyPath);
 
