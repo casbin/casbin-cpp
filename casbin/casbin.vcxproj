@@ -164,6 +164,7 @@
     <ClInclude Include="Cparse\shunting-yard.h" />
     <ClInclude Include="effect\effect.h" />
     <ClInclude Include="enforcer.h" />
+    <ClInclude Include="enforcer_cached.h" />
     <ClInclude Include="errors\exceptions.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ip\ip.h" />
@@ -203,6 +204,9 @@
     </ClCompile>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="enforcer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="enforcer_cached.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="errors\exceptions.cpp">

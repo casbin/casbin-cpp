@@ -21,6 +21,7 @@ Enforcer::Enforcer(Enforcer& e) {
 	model = move(e.model);
 	eft = e.eft;
 	tm = e.tm;
+	fm = e.fm;
 	adapter = move(e.adapter);
 	//Watcher* watcher;
 	rm = move(e.rm);
@@ -91,6 +92,7 @@ void Enforcer::LoadPolicy()
 {
 	model->ClearPolicy();
 	adapter->LoadPolicy(model.get());
+
 	model->PrintModel();
 	//model.PrintPolicy();
 	if (autoBuildRoleLinks) {
@@ -148,12 +150,11 @@ void Enforcer::LoadFilteredPolicy(Filter* filter)
 	}
 }
 
-bool Enforcer::enforce(const string& matcher, initializer_list<string> rlists)
+bool Enforcer::enforce(const string& matcher,  vector<string> rVals)
 {
 	if (!enabled) {
 		return true;
 	}
-
 
 	/*
 
@@ -183,13 +184,7 @@ bool Enforcer::enforce(const string& matcher, initializer_list<string> rlists)
 
 	map<string, int> rTokens, pTokens;
 
-	vector<string> rVals;
 	bool result = false;
-
-	for (auto beg = rlists.begin(); beg != rlists.end();beg++)
-	{
-		rVals.push_back(*beg);
-	}
 
 	vector<string>* r = &model->modelmap["r"]["r"].Tokens;
 	for (int i=0;i< (*r).size();i++){
@@ -271,10 +266,9 @@ bool Enforcer::enforce(const string& matcher, initializer_list<string> rlists)
 	return result;
 }
 
-bool Enforcer::Enforce(initializer_list<string> rvals)
+bool Enforcer::Enforce(const vector<string>& rvals)
 {
-
-	return enforce( "", rvals);
+	return enforce("", rvals);
 }
 
 

@@ -3,6 +3,7 @@
 #include "../casbin/rbac/default-role-manager/default_role_manager.h"
 #include "../casbin/util/builtin_operators.h"
 #include "../casbin/util/util.h"
+#include "../casbin//enforcer_cached.h"
 
 TEST(EnforcerTest, MoreParameters) {
 	Enforcer e = Enforcer("../../casbin/examples/MoreParam.conf", "../../casbin/examples/MoreParam.csv");
@@ -196,6 +197,44 @@ TEST(KeyMatchTest, KeyMatch2Test) {
 	system("pause");
 }
 
+
+TEST(Cached, CachedTest) {
+
+	CachedEnforcer e = CachedEnforcer("../../casbin/examples/MoreParam.conf", "../../casbin/examples/MoreParam.csv");
+
+	cout << "Build!" << endl;
+	e.model->PrintModel();
+	e.EnableCache(true);
+	//e.model->PrintModel();
+	//e.model->PrintModel();
+
+	
+	EXPECT_EQ(e.Enforce({ "bob","data1","write","school" }), true);
+
+	
+	EXPECT_EQ(e.Enforce({ "bob","data1","write" ,"home" }), false);
+	EXPECT_EQ(e.Enforce({ "bob","data2","write","home" }), true);
+	EXPECT_EQ(e.Enforce({ "bob","data2","write","school" }), false);
+	EXPECT_EQ(e.Enforce({ "alice","data1","write","school" }), false);
+	EXPECT_EQ(e.Enforce({ "alice","data1","write","home" }), true);
+	EXPECT_EQ(e.Enforce({ "alice","data2","write","school" }), false);
+	EXPECT_EQ(e.Enforce({ "alice","data2","write","home" }), false);
+
+	EXPECT_EQ(e.Enforce({ "bob","data1","write","school" }), true);
+	EXPECT_EQ(e.Enforce({ "bob","data1","write" ,"home" }), false);
+	EXPECT_EQ(e.Enforce({ "bob","data2","write","home" }), true);
+	EXPECT_EQ(e.Enforce({ "bob","data2","write","school" }), false);
+	EXPECT_EQ(e.Enforce({ "alice","data1","write","school" }), false);
+	EXPECT_EQ(e.Enforce({ "alice","data1","write","home" }), true);
+	EXPECT_EQ(e.Enforce({ "alice","data2","write","school" }), false);
+	EXPECT_EQ(e.Enforce({ "alice","data2","write","home" }), false);
+
+	cout << "END" << endl;
+	system("pause");
+}
+
+
 TEST(LastTest,LastTest2) {
+	cout << "LastTest" << endl;
 	system("pause");
 }

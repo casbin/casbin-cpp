@@ -39,8 +39,8 @@ public:
 	~Enforcer();
 
 	Enforcer(Enforcer& e);
-	Enforcer(unique_ptr<Model>& model, const string& policyPath);
-	Enforcer(const string& modelPath, unique_ptr<Adapter>& adapter);
+	//Enforcer(unique_ptr<Model>& model, const string& policyPath);
+	//Enforcer(const string& modelPath, unique_ptr<Adapter>& adapter);
 	Enforcer(unique_ptr<Model>& model, unique_ptr<Adapter>& adapter);
 	Enforcer(const string& modelPath, const string& policyPath);
 
@@ -68,9 +68,9 @@ public:
 	void EnableAutoSave(const bool& enable);
 	void EnableAutoBuildRoleLinks(const bool& enable);
 	void BuildRoleLinks();
-	bool enforce(const string& matcher,const initializer_list<string> rval);
-	bool Enforce(initializer_list<string> rval);
-	bool EnforceWithMatcher(const string& matcher, initializer_list<string> rval);
+	bool enforce(const string& matcher, vector<string> rval);
+	bool Enforce(const vector<string>& rval);
+	//bool EnforceWithMatcher(const string& matcher, initializer_list<string> rval);
 	bool MergeEffects(const string& expr,const vector<Effect>& effects, const vector<double>& results);
 	void SetTokenMap(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<string>& rVals, vector<string>& pVals);
 };

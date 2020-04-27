@@ -150,6 +150,9 @@
     <ClInclude Include="ip\ip.h">
       <Filter>Header Files\ip</Filter>
     </ClInclude>
+    <ClInclude Include="enforcer_cached.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="model\function.cpp">
       <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="enforcer_cached.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
