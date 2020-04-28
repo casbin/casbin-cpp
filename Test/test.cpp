@@ -9,7 +9,7 @@
 
 
 TEST(EnforcerTest, MoreParameters) {
-	Enforcer e = Enforcer("examples/MoreParam.conf", "examples/MoreParam.csv");
+	Enforcer e = Enforcer("../casbin/examples/MoreParam.conf", "../casbin/examples/MoreParam.csv");
 
 	EXPECT_EQ(e.enforce("", { "bob","data1","write","school" }), true);
 	EXPECT_EQ(e.enforce("", { "bob","data1","write" ,"home" }), false);
@@ -54,7 +54,7 @@ TEST(ModelTest, LoadFromTextTest) {
 
 	m->PrintModel();
 
-	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("examples/RBAC.csv"));
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../casbin/examples/RBAC.csv"));
 	Enforcer e = Enforcer(m, adapter);
 
 	EXPECT_EQ(e.enforce( "", { "bob","data1","write" }), false);
@@ -71,11 +71,11 @@ TEST(ModelTest, LoadFromTextTest) {
 
 TEST(ConfigTest, LoadFromFileTest) {
 
-	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromFile( "examples/RBAC.conf"));
+	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromFile( "../casbin/examples/RBAC.conf"));
 
 	m->PrintModel();
 
-	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("examples/RBAC.csv"));
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../casbin/examples/RBAC.csv"));
 	Enforcer e = Enforcer(m, adapter);
 
 	EXPECT_EQ(e.enforce( "", { "bob","data1","write" }), false);
@@ -92,8 +92,8 @@ TEST(ConfigTest, LoadFromFileTest) {
 
 TEST(FilterTest, LoadTest) {
 
-	unique_ptr<Adapter> fa = unique_ptr<Adapter>(Filteredadapter::NewFilteredAdapter("examples/RBAC.csv"));
-	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromFile( "examples/RBAC.conf"));
+	unique_ptr<Adapter> fa = unique_ptr<Adapter>(Filteredadapter::NewFilteredAdapter("../casbin/examples/RBAC.csv"));
+	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromFile( "../casbin/examples/RBAC.conf"));
 	Enforcer e = Enforcer(m, fa);
 
 	EXPECT_EQ(e.model->HasPolicy("p", "p", { "data2_admin","data2","write" }), true);
@@ -161,7 +161,7 @@ TEST(KeyMatchTest, KeyMatch1AndRegexTest) {
 
 	m->PrintModel();
 
-	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("examples/keymatch_policy.csv"));
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../casbin/examples/keymatch_policy.csv"));
 	Enforcer e = Enforcer(m, adapter);
 
 	EXPECT_EQ(e.enforce("", { "alice","/alice_data/anyone","GET" }), true);
@@ -191,7 +191,7 @@ TEST(KeyMatchTest, KeyMatch2Test) {
 
 	m->PrintModel();
 
-	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("examples/keymatch2_policy.csv"));
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../casbin/examples/keymatch2_policy.csv"));
 	Enforcer e = Enforcer(m, adapter);
 
 	EXPECT_EQ(e.enforce("", { "alice","/alice_data/anyone","GET" }), true);
@@ -203,7 +203,7 @@ TEST(KeyMatchTest, KeyMatch2Test) {
 
 TEST(Cached, CachedTest) {
 
-	CachedEnforcer e = CachedEnforcer("examples/MoreParam.conf", "examples/MoreParam.csv");
+	CachedEnforcer e = CachedEnforcer("../casbin/examples/MoreParam.conf", "../casbin/examples/MoreParam.csv");
 
 	cout << "Build!" << endl;
 	e.model->PrintModel();
@@ -237,12 +237,7 @@ TEST(Cached, CachedTest) {
 }
 
 
-TEST(LastTest,LastTest2) {
-	cout << "LastTest" << endl;
-	system("pause");
-}
-
-TEST(EnforcerTest, ABACTest1) {
+TEST(ABACTest, ABACTest1) {
 
 	class TestClass :public MetaClass {
 	public:
@@ -273,7 +268,7 @@ TEST(EnforcerTest, ABACTest1) {
 
 	m->PrintModel();
 
-	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("examples/keymatch_policy.csv"));
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../casbin/examples/keymatch_policy.csv"));
 	Enforcer e = Enforcer(m, adapter);
 
 	TestClass a = TestClass(10, "sss");
@@ -288,7 +283,7 @@ TEST(EnforcerTest, ABACTest1) {
 	system("pause");
 }
 
-TEST(EnforcerTest, ABACTest2) {
+TEST(ABACTest, ABACTest2) {
 
 	class TestClass :public MetaClass {
 	public:
@@ -319,7 +314,7 @@ TEST(EnforcerTest, ABACTest2) {
 
 	m->PrintModel();
 
-	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("examples/keymatch_policy.csv"));
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../casbin/examples/keymatch_policy.csv"));
 	Enforcer e = Enforcer(m, adapter);
 
 	TestClass a = TestClass(10, "sss");
@@ -331,5 +326,10 @@ TEST(EnforcerTest, ABACTest2) {
 	EXPECT_EQ(e.enforce({ &a, &c,"read" }), false);
 	EXPECT_EQ(e.enforce({ &b, &c,"write" }), true);
 
+	system("pause");
+}
+
+TEST(LastTest, LastTest2) {
+	cout << "LastTest" << endl;
 	system("pause");
 }
