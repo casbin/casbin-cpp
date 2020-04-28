@@ -5,6 +5,9 @@
 #include "../casbin/util/util.h"
 #include "../casbin//enforcer_cached.h"
 
+
+
+
 TEST(EnforcerTest, MoreParameters) {
 	Enforcer e = Enforcer("../../casbin/examples/MoreParam.conf", "../../casbin/examples/MoreParam.csv");
 
@@ -236,5 +239,97 @@ TEST(Cached, CachedTest) {
 
 TEST(LastTest,LastTest2) {
 	cout << "LastTest" << endl;
+	system("pause");
+}
+
+TEST(EnforcerTest, ABACTest1) {
+
+	class TestClass :public MetaClass {
+	public:
+		int a;
+		string s;
+
+		TestClass(int aa, string ss) {
+			a = aa;
+			s = ss;
+		};
+
+		REGISTER_START
+			REGISTER_MEMBER(a)
+			REGISTER_MEMBER(s)
+			REGISTER_END
+	};
+
+	string text = "[request_definition]\n"
+		"r = sub, obj, act\n\n"
+		"[policy_definition]\n"
+		"p = sub, obj, act\n\n"
+		"[policy_effect]\n"
+		"e = some(where (p.eft == allow))\n\n"
+		"[matchers]\n"
+		"m = r.sub.a == r.obj.a ";
+
+	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromString(text));
+
+	m->PrintModel();
+
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../../casbin/examples/keymatch_policy.csv"));
+	Enforcer e = Enforcer(m, adapter);
+
+	TestClass a = TestClass(10, "sss");
+	TestClass b = TestClass(20, "bbb");
+	TestClass c = TestClass(10, "bbb");
+	packToken pc = &c;
+	cout << pc.str() << endl;
+	EXPECT_EQ(e.enforce({ &a, &b,"write" }), false);
+	EXPECT_EQ(e.enforce({ &a, &c,"read" }), true);
+	EXPECT_EQ(e.enforce({ &b, &c,"write" }), false);
+
+	system("pause");
+}
+
+TEST(EnforcerTest, ABACTest2) {
+
+	class TestClass :public MetaClass {
+	public:
+		int a;
+		string s;
+
+		TestClass(int aa, string ss) {
+			a = aa;
+			s = ss;
+		};
+
+		REGISTER_START
+			REGISTER_MEMBER(a)
+			REGISTER_MEMBER(s)
+			REGISTER_END
+	};
+
+	string text = "[request_definition]\n"
+		"r = sub, obj, act\n\n"
+		"[policy_definition]\n"
+		"p = sub, obj, act\n\n"
+		"[policy_effect]\n"
+		"e = some(where (p.eft == allow))\n\n"
+		"[matchers]\n"
+		"m = r.sub.s == r.obj.s ";
+
+	unique_ptr<Model> m = unique_ptr<Model>(Model::NewModelFromString(text));
+
+	m->PrintModel();
+
+	unique_ptr<Adapter> adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter("../../casbin/examples/keymatch_policy.csv"));
+	Enforcer e = Enforcer(m, adapter);
+
+	TestClass a = TestClass(10, "sss");
+	TestClass b = TestClass(20, "bbb");
+	TestClass c = TestClass(10, "bbb");
+	packToken pc = &c;
+	cout << pc.str() << endl;
+	EXPECT_EQ(e.enforce({ &a, &b,"write" }), false);
+	EXPECT_EQ(e.enforce({ &a, &c,"read" }), false);
+	EXPECT_EQ(e.enforce({ &b, &c,"write" }), true);
+
 	system("pause");
 }

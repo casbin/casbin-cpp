@@ -14,7 +14,23 @@
 #include "./util/util.h"
 #include "./effect/effect.h"
 #include <initializer_list>
+#include <unordered_map>
+#include <variant>
 #include"Cparse/shunting-yard.h"
+
+
+#define REGISTER_START                                  \
+public:                                                 \
+    unordered_map<string,packToken> GetMap() {          \
+        unordered_map<string,packToken> tm;
+
+#define REGISTER_MEMBER(_MEMBER_)                       \
+        tm[#_MEMBER_] = _MEMBER_ ;
+
+#define REGISTER_END                                    \
+        return tm;                                      \
+    };
+
 
 using namespace std;
 
@@ -69,8 +85,10 @@ public:
 	void EnableAutoBuildRoleLinks(const bool& enable);
 	void BuildRoleLinks();
 	bool enforce(const string& matcher, vector<string> rval);
+	bool enforce(vector<packToken> rvals);
 	bool Enforce(const vector<string>& rval);
 	//bool EnforceWithMatcher(const string& matcher, initializer_list<string> rval);
 	bool MergeEffects(const string& expr,const vector<Effect>& effects, const vector<double>& results);
 	void SetTokenMap(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<string>& rVals, vector<string>& pVals);
+	void SetTokenMapABAC(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<packToken>& rVals, vector<string>& pVals);
 };

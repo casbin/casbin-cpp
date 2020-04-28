@@ -150,6 +150,140 @@ void Enforcer::LoadFilteredPolicy(Filter* filter)
 	}
 }
 
+bool Enforcer::enforce(vector<packToken> rVals) {
+	if (!enabled) {
+		return true;
+	}
+
+	/*
+
+	for k, v := range e.fm {
+		functions[k] = v
+	}
+
+	if _, ok : = e.model["g"]; ok{
+		for key, ast : = range e.model["g"] {
+			rm: = ast.RM
+			functions[key] = util.GenerateGFunction(rm)
+		}
+	}
+	*/
+
+	string expString = model->modelmap["m"]["m"].Value;
+	/*
+	if (matcher == "") {
+		expString = model->modelmap["m"]["m"].Value;
+	}
+	else {
+		expString = matcher;
+	}
+	*/
+
+
+	map<string, int> rTokens, pTokens;
+
+	bool result = false;
+
+	vector<string>* r = &model->modelmap["r"]["r"].Tokens;
+	for (int i = 0; i < (*r).size(); i++) {
+		rTokens[(*r)[i]] = i;
+	}
+
+	vector<string>* p = &model->modelmap["p"]["p"].Tokens;
+	for (int i = 0; i < (*p).size(); i++) {
+		pTokens[(*p)[i]] = i;
+	}
+
+	for (auto r : rTokens) {
+		string token = r.first;
+		int i = -1;
+		while (true) {
+			size_t position = expString.find(token,i+1);
+			if (position == expString.npos) {
+				break;
+			}
+			else {
+				i = position;
+				int index = i + token.size();
+				if (expString[index] == '.') {
+					expString[index] = '_';
+				}
+			}
+		}
+	}
+
+	calculator c1;
+	c1 = calculator(expString.data());
+
+
+	int policyLen = model->modelmap["p"]["p"].Policy.size();
+	vector<Effect> policyEffects = vector<Effect>(policyLen);
+	vector<double> matcherResults = vector<double>(policyLen);
+
+	if (policyLen != 0) {
+		for (int i = 0; i < policyLen; i++) {
+			vector<string> pVals = model->modelmap["p"]["p"].Policy[i];
+			if (model->modelmap["r"]["r"].Tokens.size() != rVals.size())
+			{
+				string errorInfo;
+				stringstream ss;
+				ss << "invalid policy size: expected "
+					<< model->modelmap["r"]["r"].Tokens.size()
+					<< ", got " << pVals.size() << ", pvals: "
+					<< Util::ArrayToString(pVals) << endl;
+				ss >> errorInfo;
+				throw exception(errorInfo.data());
+				return false;
+			}
+
+			TokenMap vars;
+
+			vars = tm.getChild();
+
+			SetTokenMapABAC(vars, rTokens, pTokens, rVals, pVals);
+
+			result = c1.eval(vars).asBool();
+
+			if (!result) {
+				policyEffects[i] = Indeterminate;
+				continue;
+			}
+
+			if (pTokens.count("p_eft")) {
+				string eft = pVals[pTokens["p_eft"]];
+				if (eft == "allow") {
+					policyEffects[i] = Allow;
+				}
+				else if (eft == "deny") {
+					policyEffects[i] = Deny;
+				}
+				else {
+					policyEffects[i] = Indeterminate;
+				}
+			}
+			else {
+				policyEffects[i] = Allow;
+			}
+
+			if (model->modelmap["e"]["e"].Value == "priority(p_eft) || deny")
+				break;
+		}
+	}
+	else
+	{
+
+	}
+
+	try {
+		result = MergeEffects(model->modelmap["e"]["e"].Value, policyEffects, matcherResults);
+	}
+	catch (exception& e) {
+		return false;
+	}
+
+	return result;
+}
+
 bool Enforcer::enforce(const string& matcher,  vector<string> rVals)
 {
 	if (!enabled) {
@@ -278,6 +412,53 @@ void Enforcer::SetTokenMap(TokenMap& tokenmap, map<string, int>& rTokens, map<st
 	{
 		tokenmap[r.first] = rVals[rTokens[r.first]];
 	}
+	for (auto p : pTokens)
+	{
+		tokenmap[p.first] = pVals[pTokens[p.first]];
+	}
+}
+
+void Enforcer::SetTokenMapABAC(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<packToken>& rVals, vector<string>& pVals) {
+	for (auto r : rTokens)
+	{
+		packToken v = rVals[rTokens[r.first]];
+		bool isString = true;
+		bool isMetaClass = true;
+		string s;
+		MetaClass* mc=NULL;
+
+		try {
+			s = v.asString();
+		}
+		catch (exception& e) {
+			isString = false;
+		}
+
+		try {
+			mc = v.asPMeta().mc;
+		}
+		catch (exception& e) {
+			isMetaClass = false;
+		}
+		
+
+		if (isString)
+		{
+			tokenmap[r.first] = s;
+		}
+		else if (isMetaClass)
+		{
+			unordered_map<string, packToken> members = mc->GetMap();
+			for (auto member : members) {
+				tokenmap[r.first + "_" + member.first] = member.second;
+			}
+		}
+		else {
+			throw exception("wrong type!");
+		}
+	}
+
+
 	for (auto p : pTokens)
 	{
 		tokenmap[p.first] = pVals[pTokens[p.first]];
