@@ -52,6 +52,12 @@
     <Filter Include="Source Files\third_party\Cparse">
       <UniqueIdentifier>{22c1e89a-155c-4133-a5b3-c3f5d8240f78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ip">
+      <UniqueIdentifier>{d516b91f-1c53-4087-b696-09c0f8e9ba0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ip">
+      <UniqueIdentifier>{5beedb74-2461-4074-bc6c-aae39a32eddf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -105,6 +111,12 @@
     <ClInclude Include="third_party\Cparse\shunting-yard-exceptions.h">
       <Filter>Header Files\third_party\Cparse</Filter>
     </ClInclude>
+    <ClInclude Include="util\builtin_operators.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="ip\ip.h">
+      <Filter>Header Files\ip</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -151,6 +163,12 @@
     </ClCompile>
     <ClCompile Include="third_party\Cparse\shunting-yard.cpp">
       <Filter>Source Files\third_party\Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="util\builtin_operators.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="ip\ip.cpp">
+      <Filter>Source Files\ip</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

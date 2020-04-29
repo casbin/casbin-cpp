@@ -160,6 +160,7 @@
     <ClInclude Include="effect\effect.h" />
     <ClInclude Include="enforcer.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ip\ip.h" />
     <ClInclude Include="model\assertion.h" />
     <ClInclude Include="model\model.h" />
     <ClInclude Include="pch.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="third_party\Cparse\packToken.h" />
     <ClInclude Include="third_party\Cparse\shunting-yard-exceptions.h" />
     <ClInclude Include="third_party\Cparse\shunting-yard.h" />
+    <ClInclude Include="util\builtin_operators.h" />
     <ClInclude Include="util\util.h" />
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +182,9 @@
     </ClCompile>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="enforcer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ip\ip.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="model\assertion.cpp">
@@ -216,6 +221,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="third_party\Cparse\shunting-yard.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="util\builtin_operators.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="util\util.cpp">
