@@ -13,6 +13,45 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\config">
+      <UniqueIdentifier>{1d9ab280-cc33-4142-8f9f-ad7d11f7c383}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\effect">
+      <UniqueIdentifier>{b73c0dbf-b615-4172-aa1e-3b854766c0c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\model">
+      <UniqueIdentifier>{dbb3faf4-f54b-43e6-9f4e-08dc98b5d532}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\persist">
+      <UniqueIdentifier>{326f0521-e00c-42a1-be6b-d7c7ffe4a159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{32347781-7630-41ec-bc9e-ce27e103bc19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\config">
+      <UniqueIdentifier>{5c16547e-ba26-4e62-9a35-4131ebb94343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{4b5c5caf-4061-491e-8b1e-1a328b5bb68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\persist">
+      <UniqueIdentifier>{4951cf3a-668a-494b-88eb-a80ff48fba25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{c3d09bbc-e959-44fa-8b97-4ee062bf45a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\third_party">
+      <UniqueIdentifier>{5f8151ff-bdfd-49be-9d98-b338cfa721c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\third_party\Cparse">
+      <UniqueIdentifier>{4e972f42-1ff1-4126-8b50-898a4117de38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\third_party">
+      <UniqueIdentifier>{2ab3a4d6-a974-4352-8cf8-1ea8c9c34fc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\third_party\Cparse">
+      <UniqueIdentifier>{22c1e89a-155c-4133-a5b3-c3f5d8240f78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -23,6 +62,45 @@
     </ClInclude>
     <ClInclude Include="enforcer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config\config.h">
+      <Filter>Header Files\config</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\effect.h">
+      <Filter>Header Files\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="model\assertion.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="util\util.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\adapter.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\file-adapter\file-adapter.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\Cparse\catch.hpp">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\Cparse\containers.h">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\Cparse\functions.h">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\Cparse\packToken.h">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\Cparse\shunting-yard.h">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\Cparse\shunting-yard-exceptions.h">
+      <Filter>Header Files\third_party\Cparse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -35,5 +113,55 @@
     <ClCompile Include="enforcer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="util\util.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\adapter.cpp">
+      <Filter>Source Files\persist</Filter>
+    </ClCompile>
+    <ClCompile Include="model\assertion.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="config\config.cpp">
+      <Filter>Source Files\config</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\file-adapter\file-adapter.cpp">
+      <Filter>Source Files\persist</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\Cparse\builtin-features.cpp">
+      <Filter>Source Files\third_party\Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\Cparse\containers.cpp">
+      <Filter>Source Files\third_party\Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\Cparse\functions.cpp">
+      <Filter>Source Files\third_party\Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\Cparse\packToken.cpp">
+      <Filter>Source Files\third_party\Cparse</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\Cparse\shunting-yard.cpp">
+      <Filter>Source Files\third_party\Cparse</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="third_party\Cparse\builtin-features\functions.inc">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </None>
+    <None Include="third_party\Cparse\builtin-features\operations.inc">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </None>
+    <None Include="third_party\Cparse\builtin-features\reservedWords.inc">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </None>
+    <None Include="third_party\Cparse\builtin-features\typeSpecificFunctions.inc">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </None>
+    <None Include="third_party\Cparse\builtin-features.inc">
+      <Filter>Header Files\third_party\Cparse</Filter>
+    </None>
   </ItemGroup>
 </Project>
