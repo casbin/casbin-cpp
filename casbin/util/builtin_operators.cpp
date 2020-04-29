@@ -155,10 +155,28 @@ bool  BuiltinOperators::GlobMatch(string key1, string key2) {
 	return false;
 }
 
+bool BuiltinOperators::GFunction(RoleManager* rm, initializer_list<string> ils)
+{
+	int lenargs = ils.size();
+	auto beg = ils.begin();
+	string name1 = *beg;
+	beg++;
+	string name2 = *beg;
 
+	if (rm == NULL) {
+		return name1 == name2;
+	}
+	else if (lenargs == 2) {
+		return rm->HasLink(name1, name2, {});
+	}
+	else {
+		beg++;
+		string domain = *beg;
+		return rm->HasLink(name1, name2, { domain });
+	}
+}
 
 packToken  BuiltinOperators::KeyMatchFunc(TokenMap GlobalMap, TokenMap Scope) {
-	//cout << "KeyMatchFunc" << endl;
 	return KeyMatch(Scope["A"].asString(), Scope["B"].asString());
 }
 
@@ -172,7 +190,6 @@ packToken  BuiltinOperators::KeyMatch4Func(TokenMap GlobalMap, TokenMap Scope) {
 	return KeyMatch4(Scope["A"].asString(), Scope["B"].asString());
 }
 packToken  BuiltinOperators::RegexMatchFunc(TokenMap GlobalMap, TokenMap Scope) {
-	//cout << "RegexMatchFunc" << endl;
 	return RegexMatch(Scope["A"].asString(), Scope["B"].asString());
 }
 packToken  BuiltinOperators::IPMatchFunc(TokenMap GlobalMap, TokenMap Scope) {
@@ -180,4 +197,16 @@ packToken  BuiltinOperators::IPMatchFunc(TokenMap GlobalMap, TokenMap Scope) {
 }
 packToken  BuiltinOperators::GlobMatchFunc(TokenMap GlobalMap, TokenMap Scope) {
 	return GlobMatch(Scope["A"].asString(), Scope["B"].asString());
+}
+
+packToken BuiltinOperators::GFunctionFunc(TokenMap GlobalMap, TokenMap Scope)
+{
+	RoleManager* rm = GlobalMap[KEY_ROLEMANAGER].asPtype().rm;
+
+	if (Scope["C"].str() != "None") {
+		return GFunction(rm, {Scope["A"].asString(),Scope["B"].asString() ,Scope["C"].asString() });
+	}
+	else if (Scope["B"].str() != "None") {
+		return GFunction(rm, { Scope["A"].asString(),Scope["B"].asString()});
+	}
 }

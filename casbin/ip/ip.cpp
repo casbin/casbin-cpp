@@ -60,7 +60,7 @@ IP::IP(string ip) {
 			isIp = true;
 		}
 	}
-	//cout << (unsigned long)section[3] << " + " << ((unsigned long)section[2] << 8) << " + " << ((unsigned long)section[1] << 16) << " + " << ((unsigned long)section[0] << 24) << endl;
+
 	mask = (unsigned long)section[3] + ((unsigned long)section[2] << 8) + ((unsigned long)section[1] << 16) + ((unsigned long)section[0] << 24);
 
 }
@@ -97,12 +97,5 @@ bool IP::Contain(IP ip) {
 }
 
 void IP::Show() {
-	cout << "IsIP:" << isIp << endl;
-	cout << "IsCIDR:" << isCidr << endl;
-	cout << "Section:" << endl;
-	for (int i = 0; i < 4; i++)
-		cout << section[i] << " ";
-	cout << endl;
-	cout << "MaskLen:" << masklen << endl;
-	cout << "Mask:" << mask << endl;
+	
 }

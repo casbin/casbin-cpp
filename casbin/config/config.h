@@ -36,6 +36,7 @@ public:
 	void write(const string& section, const int& lineNum, string& buffer);
 	bool AddConfig(const string& section, const string& option, const string& value);
 	void Set(const string& key, const string& value);
+	void Show();
 	string get(const string& key);
 
 	bool Bool(const string& key);

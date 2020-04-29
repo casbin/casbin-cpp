@@ -13,6 +13,7 @@
 #include <map>
 #include <initializer_list>
 #include "assertion.h"
+#include "../rbac/role_manager.h"
 #include "../config/config.h"
 
 using namespace std;
@@ -46,7 +47,7 @@ public:
     void loadModelFromConfig(Config* config);
     bool HasSection(const string& sec);
     void PrintModel(void);
-    void BuildRoleLinks();
+    void BuildRoleLinks(RoleManager* rm);
     void PrintPolicy(void);
     void ClearPolicy(void);
     vector<vector<string>> GetPolicy(const string& sec, const string& ptype);

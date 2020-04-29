@@ -201,3 +201,11 @@ long Config::Long(const string& key) {
 	long b = atoi(get(key).c_str());
 	return b;
 }
+
+void Config::Show() {
+	for (auto d : data) {
+		for (auto dd : d.second) {
+			cout << "section: " << d.first << "  option: " << dd.first << "  data:" << dd.second << endl;
+		}
+	}
+}

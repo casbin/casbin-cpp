@@ -6,6 +6,7 @@
 #define BULTIN_API __declspec(dllimport)
 #endif
 
+#include"../rbac/role_manager.h"
 #include "../third_party/Cparse/shunting-yard.h"
 #include "util.h"
 #include <initializer_list>
@@ -25,6 +26,7 @@ public:
 	static bool RegexMatch(string key1, string key2);
 	static bool IPMatch(string key1, string key2);
 	static bool GlobMatch(string key1, string key2);
+	static bool GFunction(RoleManager* rm, initializer_list<string> ils);
 	static packToken KeyMatchFunc(TokenMap GlobalMap, TokenMap Scope);
 	static packToken KeyMatch2Func(TokenMap GlobalMap, TokenMap Scope);
 	static packToken KeyMatch3Func(TokenMap GlobalMap, TokenMap Scope);
@@ -32,5 +34,6 @@ public:
 	static packToken RegexMatchFunc(TokenMap GlobalMap, TokenMap Scope);
 	static packToken IPMatchFunc(TokenMap GlobalMap, TokenMap Scope);
 	static packToken GlobMatchFunc(TokenMap GlobalMap, TokenMap Scope);
+	static packToken GFunctionFunc(TokenMap GlobalMap, TokenMap Scope);
 	
 };

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "../casbin/enforcer.h"
+#include "../casbin/util/builtin_operators.h"
 
 int t = 0;
 
@@ -113,3 +114,53 @@ TEST(EnforcerTest, TestRBACModel) {
 	testEnforce(t, e, "bob", "data2", "write", true);
 }
 
+TEST(EnforcerTest, TestRBACModelWithDeny) {
+	Enforcer e = Enforcer("../casbin/examples/rbac_with_deny_model.conf", "../casbin/examples/rbac_with_deny_policy.csv");
+
+	testEnforce(t, e, "alice", "data1", "read", true);
+	testEnforce(t, e, "alice", "data1", "write", false);
+	testEnforce(t, e, "alice", "data2", "read", true);
+	testEnforce(t, e, "alice", "data2", "write", false);
+	testEnforce(t, e, "bob", "data1", "read", false);
+	testEnforce(t, e, "bob", "data1", "write", false);
+	testEnforce(t, e, "bob", "data2", "read", false);
+	testEnforce(t, e, "bob", "data2", "write", true);
+}
+
+TEST(EnforcerTest, TestRBACModelWithOnlyDeny) {
+	Enforcer e = Enforcer("../casbin/examples/rbac_with_not_deny_model.conf", "../casbin/examples/rbac_with_deny_policy.csv");
+
+	testEnforce(t, e, "alice", "data2", "write", false);
+}
+
+TEST(EnforcerTest, TestRBACModelWithCustomData) {
+	Enforcer e = Enforcer("../casbin/examples/rbac_model.conf", "../casbin/examples/rbac_policy.csv");
+
+	// You can add custom data to a grouping policy, Casbin will ignore it. It is only meaningful to the caller.
+	// This feature can be used to store information like whether "bob" is an end user (so no subject will inherit "bob")
+	// For Casbin, it is equivalent to: e.AddGroupingPolicy("bob", "data2_admin")
+	e.AddGroupingPolicy({ "bob", "data2_admin", "custom_data" });
+
+	testEnforce(t, e, "alice", "data1", "read", true);
+	testEnforce(t, e, "alice", "data1", "write", false);
+	testEnforce(t, e, "alice", "data2", "read", true);
+	testEnforce(t, e, "alice", "data2", "write", true);
+	testEnforce(t, e, "bob", "data1", "read", false);
+	testEnforce(t, e, "bob", "data1", "write", false);
+	testEnforce(t, e, "bob", "data2", "read", true);
+	testEnforce(t, e, "bob", "data2", "write", true);
+
+	// You should also take the custom data as a parameter when deleting a grouping policy.
+	// e.RemoveGroupingPolicy("bob", "data2_admin") won't work.
+	// Or you can remove it by using RemoveFilteredGroupingPolicy().
+	e.RemoveGroupingPolicy({ "bob", "data2_admin", "custom_data" });
+
+	testEnforce(t, e, "alice", "data1", "read", true);
+	testEnforce(t, e, "alice", "data1", "write", false);
+	testEnforce(t, e, "alice", "data2", "read", true);
+	testEnforce(t, e, "alice", "data2", "write", true);
+	testEnforce(t, e, "bob", "data1", "read", false);
+	testEnforce(t, e, "bob", "data1", "write", false);
+	testEnforce(t, e, "bob", "data2", "read", false);
+	testEnforce(t, e, "bob", "data2", "write", true);
+};

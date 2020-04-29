@@ -429,3 +429,84 @@ void  Enforcer::EnableAutoSave(const bool& enable) {
 void  Enforcer::EnableAutoBuildRoleLinks(const bool& enable) {
 	autoBuildRoleLinks = autoBuildRoleLinks;
 }
+
+bool  Enforcer::addPolicy(const string& sec, const string& ptype, const vector<string>& rule) {
+	bool ruleAdded = model->AddPolicy(sec, ptype, rule);
+	if (!ruleAdded) {
+		return ruleAdded;
+	}
+
+	if (adapter.get() != NULL && autoSave) {
+		try {
+			adapter->AddPolicy(sec, ptype, rule);
+		}
+		catch (exception& e) {
+			return ruleAdded;
+		}
+	}
+
+	/*
+	if e.watcher != nil && e.autoNotifyWatcher{
+		err: = e.watcher.Update()
+		if err != nil {
+			return ruleAdded, err
+		}
+	}*/
+
+	return ruleAdded;
+}
+
+bool  Enforcer::removePolicy(const string& sec, const string& ptype, const vector<string>& rule) {
+	bool ruleRemoved = model->RemovePolicy(sec, ptype, rule);
+	if (!ruleRemoved) {
+		return ruleRemoved;
+	}
+
+	if (adapter.get() != NULL && autoSave ){
+		try {
+			adapter->RemovePolicy(sec, ptype, rule);
+		}
+		catch (exception& e) {
+			return ruleRemoved;
+		}
+	}
+
+	/*
+	if e.watcher !=nil && e.autoNotifyWatcher {
+		err := e.watcher.Update()
+		if err != nil {
+			return ruleRemoved, err
+		}
+	}*/
+
+	return ruleRemoved;
+}
+
+//management_api
+bool Enforcer::AddGroupingPolicy(const vector<string>& params) {
+	return AddNamedGroupingPolicy("g", params);
+}
+
+bool Enforcer::AddNamedGroupingPolicy(string ptype,const vector<string>& params) {
+	bool ruleAdded;
+		ruleAdded = addPolicy("g", ptype, params);
+	
+	if (autoBuildRoleLinks){
+		BuildRoleLinks();
+	}
+	return ruleAdded;
+}
+
+bool Enforcer::RemoveGroupingPolicy(const vector<string>& params) {
+	return RemoveNamedGroupingPolicy("g", params);
+}
+
+bool Enforcer::RemoveNamedGroupingPolicy(string ptype, const vector<string>& params) {
+	bool ruleRemoved;
+	ruleRemoved = removePolicy("g", ptype, params);
+
+	if (autoBuildRoleLinks) {
+		BuildRoleLinks();
+	}
+	return ruleRemoved;
+}

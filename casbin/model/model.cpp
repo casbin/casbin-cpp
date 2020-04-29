@@ -52,9 +52,11 @@ bool Model::AddDef(string sec, string key, string value)
 
 
 
-void Model::BuildRoleLinks()
+void Model::BuildRoleLinks(RoleManager* rm)
 {
-
+	for (auto ast : modelmap["g"]) {
+		ast.second.buildRoleLinks(rm);
+	}
 }
 
 
@@ -119,10 +121,8 @@ Model* Model::NewModelFromFile(const string& path) {
 }
 
 Model*  Model::NewModelFromString(const string& text) {
-	//cout << "from str" << endl;
 	Model* m =new Model();
 	m->LoadModelFromText(text);
-	//cout << "from str end" << endl;
 	return m;
 }
 

@@ -90,4 +90,13 @@ public:
 	//bool EnforceWithMatcher(const string& matcher, initializer_list<string> rval);
 	bool MergeEffects(const string& expr,const vector<Effect>& effects, const vector<double>& results);
 	void SetTokenMap(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<string>& rVals, vector<string>& pVals);
+	bool addPolicy(const string& sec, const string& ptype, const vector<string>& rule);
+	bool removePolicy(const string& sec, const string& ptype, const vector<string>& rule);
+
+
+	//management_api
+	bool AddGroupingPolicy(const vector<string>& params);
+	bool AddNamedGroupingPolicy(string ptype,const vector<string>& params);
+	bool RemoveGroupingPolicy(const vector<string>& params);
+	bool RemoveNamedGroupingPolicy(string ptype, const vector<string>& params);
 };
