@@ -7,6 +7,7 @@
 #endif
 
 #include "./model/model.h"
+#include "./model/function.h"
 #include "./persist/file-adapter/file-adapter.h"
 #include "./persist/adapter_filtered.h"
 #include "./persist/adapter.h"
@@ -40,11 +41,11 @@ public:
 	unique_ptr<Model> model;
 	Effect eft;
 	TokenMap tm;
-	//FunctionMap fm;
+	FunctionMap fm;
 
 	unique_ptr<Adapter> adapter;
 	//Watcher* watcher;
-	//unique_ptr<RoleManager> rm;
+	unique_ptr<RoleManager> rm;
 	bool enabled;
 	bool autoSave;
 	bool autoBuildRoleLinks;
@@ -64,16 +65,14 @@ public:
 	void InitWithFile(const string& modelPath, const string& policyPath);
 	void InitWithAdapter(const string& modelPath, unique_ptr<Adapter>& adapter);
 	void InitWithModelAndAdapter(unique_ptr<Model>& model, unique_ptr<Adapter>& adapter);
-	bool enforce(const string& matcher, vector<string> rvals);
-	bool Enforce(const vector<string>& rvals);
 	void LoadModel();
 	unique_ptr<Model>& GetModel();
 	void SetModel(unique_ptr<Model>& model);
 	unique_ptr<Adapter>& GetAdapter();
 	void SetAdapter(unique_ptr<Adapter>& adapter);
 	//void SetWatcher(Watcher* watcher);
-	//unique_ptr<RoleManager>& GetRoleManager();
-	//void SetRoleManager(unique_ptr<RoleManager>& rm);
+	unique_ptr<RoleManager>& GetRoleManager();
+	void SetRoleManager(unique_ptr<RoleManager>& rm);
 	void SetEffector();
 	void ClearPolicy();
 	void LoadPolicy();
@@ -86,6 +85,8 @@ public:
 	void EnableAutoSave(const bool& enable);
 	void EnableAutoBuildRoleLinks(const bool& enable);
 	void BuildRoleLinks();
+	bool enforce(const string& matcher, vector<string> rvals);
+	bool Enforce(const vector<string>& rvals);
 	//bool EnforceWithMatcher(const string& matcher, initializer_list<string> rval);
 	bool MergeEffects(const string& expr,const vector<Effect>& effects, const vector<double>& results);
 	void SetTokenMap(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<string>& rVals, vector<string>& pVals);

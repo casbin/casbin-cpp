@@ -159,14 +159,18 @@
     <ClInclude Include="config\config.h" />
     <ClInclude Include="effect\effect.h" />
     <ClInclude Include="enforcer.h" />
+    <ClInclude Include="enforcer_cached.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ip\ip.h" />
     <ClInclude Include="model\assertion.h" />
+    <ClInclude Include="model\function.h" />
     <ClInclude Include="model\model.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="persist\adapter.h" />
     <ClInclude Include="persist\adapter_filtered.h" />
     <ClInclude Include="persist\file-adapter\file-adapter.h" />
+    <ClInclude Include="rbac\default-role-manager\default_role_manager.h" />
+    <ClInclude Include="rbac\role_manager.h" />
     <ClInclude Include="third_party\Cparse\catch.hpp" />
     <ClInclude Include="third_party\Cparse\containers.h" />
     <ClInclude Include="third_party\Cparse\functions.h" />
@@ -184,10 +188,16 @@
     <ClCompile Include="enforcer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="enforcer_cached.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ip\ip.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="model\assertion.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="model\function.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="model\model.cpp">
@@ -206,6 +216,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="persist\file-adapter\file-adapter.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="rbac\default-role-manager\default_role_manager.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="third_party\Cparse\builtin-features.cpp">

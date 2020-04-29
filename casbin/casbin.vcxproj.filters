@@ -58,6 +58,12 @@
     <Filter Include="Source Files\ip">
       <UniqueIdentifier>{5beedb74-2461-4074-bc6c-aae39a32eddf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rbac">
+      <UniqueIdentifier>{dd42ef44-53a8-4b2b-aaab-ca9fdb24fec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rbac">
+      <UniqueIdentifier>{ab5ba72a-6f28-40b7-bd81-2c1683d04786}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -117,6 +123,18 @@
     <ClInclude Include="ip\ip.h">
       <Filter>Header Files\ip</Filter>
     </ClInclude>
+    <ClInclude Include="rbac\role_manager.h">
+      <Filter>rbac</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\default-role-manager\default_role_manager.h">
+      <Filter>rbac</Filter>
+    </ClInclude>
+    <ClInclude Include="model\function.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="enforcer_cached.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -169,6 +187,15 @@
     </ClCompile>
     <ClCompile Include="ip\ip.cpp">
       <Filter>Source Files\ip</Filter>
+    </ClCompile>
+    <ClCompile Include="rbac\default-role-manager\default_role_manager.cpp">
+      <Filter>Source Files\rbac</Filter>
+    </ClCompile>
+    <ClCompile Include="model\function.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="enforcer_cached.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

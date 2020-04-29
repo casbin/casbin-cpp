@@ -1,6 +1,8 @@
 #include"enforcer.h"
 #include "./effect/effect.h"
 #include"third_party/Cparse/shunting-yard.h"
+#include "./rbac/default-role-manager/default_role_manager.h"
+#include "./util/builtin_operators.h"
 
 using namespace std;
 Enforcer::Enforcer()
@@ -18,10 +20,10 @@ Enforcer::Enforcer(Enforcer& e) {
 	model = move(e.model);
 	eft = e.eft;
 	tm = e.tm;
-	//fm = e.fm;
+	fm = e.fm;
 	adapter = move(e.adapter);
 	//Watcher* watcher;
-	//rm = move(e.rm);
+	rm = move(e.rm);
 	enabled = e.enabled;
 	autoSave = e.autoSave;
 	autoBuildRoleLinks = e.autoBuildRoleLinks;
@@ -43,12 +45,14 @@ Enforcer::Enforcer(const string& modelPath) {
 
 	this->adapter = unique_ptr<Adapter>(FileAdapter::newFileAdapter());
 	this->model = unique_ptr<Model>(Model::NewModelFromFile(modelPath));
+	fm = FunctionMap::LoadFunctionMap();
 	Initialize();
 	LoadPolicy();
 }
 
 void Enforcer::Initialize()
 {
+	rm = unique_ptr<RoleManager>( new DefaultRoleManager(10));
 
 	/*
 	e.eft = effect.NewDefaultEffector()
@@ -63,14 +67,15 @@ void Enforcer::Initialize()
 
 void Enforcer::BuildRoleLinks()
 {
-	//rm->Clear();
+	rm->Clear();
 
-	return model->BuildRoleLinks();
+	return model->BuildRoleLinks(rm.get());
 }
 
 void Enforcer::InitWithFile(const string& modelPath, const string& policyPath) {
 	this->adapter = unique_ptr<Adapter> (FileAdapter::newFileAdapter(policyPath));
 	this->model = unique_ptr<Model>(Model::NewModelFromFile(modelPath));
+	fm = FunctionMap::LoadFunctionMap();
 	Initialize();
 	LoadPolicy();
 }
@@ -84,6 +89,7 @@ void Enforcer::InitWithModelAndAdapter(unique_ptr<Model>& m, unique_ptr<Adapter>
 {
 	this->adapter = move(adapter);
 	this->model = move(m);
+	fm = FunctionMap::LoadFunctionMap();
 	//this->model.PrintModel();
 	Initialize();
 	LoadPolicy();
@@ -96,7 +102,7 @@ void Enforcer::LoadPolicy()
 		adapter->LoadPolicy(model.get());
 	}
 	catch (exception& e) {
-		cout << e.what() << endl;
+
 	}
 
 	model->PrintModel();
@@ -107,7 +113,17 @@ void Enforcer::LoadPolicy()
 	
 	tm = TokenMap();
 
+	tm[KEY_ROLEMANAGER] = Ptype(rm.get());
 
+	for (auto element : fm.fm) {
+		tm[element.first] = element.second;
+	}
+
+	for (auto ast : model->modelmap["g"]) {
+		//rm = ast.second.RM;
+		list<string> ls = { "A","B","C" };
+		tm[ast.first] = CppFunction(tm, &BuiltinOperators::GFunctionFunc, ls);
+	}
 }
 
 void Enforcer::LoadFilteredPolicy(Filter* filter)
@@ -133,12 +149,20 @@ void Enforcer::LoadFilteredPolicy(Filter* filter)
 
 	tm = TokenMap();
 
+	tm[KEY_ROLEMANAGER] = Ptype(rm.get());
+
+	for (auto element : fm.fm) {
+		tm[element.first] = element.second;
+	}
 
 	for (auto ast : model->modelmap["g"]) {
 		//rm = ast.second.RM;
 		list<string> ls = { "A","B","C" };
+		tm[ast.first] = CppFunction(tm, &BuiltinOperators::GFunctionFunc, ls);
 	}
 }
+
+
 
 bool Enforcer::enforce(const string& matcher,  vector<string> rVals)
 {
@@ -261,8 +285,6 @@ bool Enforcer::Enforce(const vector<string>& rvals)
 	return enforce("", rvals);
 }
 
-
-
 void Enforcer::SetTokenMap(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<string>& rVals, vector<string>& pVals)
 {
 	for (auto r : rTokens)
@@ -274,7 +296,6 @@ void Enforcer::SetTokenMap(TokenMap& tokenmap, map<string, int>& rTokens, map<st
 		tokenmap[p.first] = pVals[pTokens[p.first]];
 	}
 }
-
 
 bool Enforcer::MergeEffects(const string& expr, const vector<Effect>& effects, const vector<double>& results)
 {
@@ -334,6 +355,7 @@ void Enforcer::LoadModel() {
 	model = unique_ptr<Model>(Model::NewModelFromFile(modelPath));
 
 	model->PrintModel();
+	fm = FunctionMap::LoadFunctionMap();
 
 	Initialize();
 }
@@ -354,6 +376,13 @@ void Enforcer::SetAdapter(unique_ptr<Adapter>& adapter) {
 	this->adapter = move(adapter);
 }
 //void SetWatcher(Watcher* watcher);
+unique_ptr<RoleManager>& Enforcer::GetRoleManager() {
+	return rm;
+}
+
+void Enforcer::SetRoleManager(unique_ptr<RoleManager>& rm) {
+	this->rm = move(rm);
+}
 
 void Enforcer::SetEffector() {
 
