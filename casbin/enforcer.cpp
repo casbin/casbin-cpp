@@ -110,6 +110,35 @@ void Enforcer::LoadPolicy()
 
 }
 
+void Enforcer::LoadFilteredPolicy(Filter* filter)
+{
+	model->ClearPolicy();
+	Filteredadapter* fa = dynamic_cast<Filteredadapter*>(adapter.get());
+	if (fa == NULL) {
+		throw exception("filtered policies are not supported by this adapter");
+	}
+
+	try {
+		fa->LoadFilteredPolicy(model.get(), filter);
+	}
+	catch (exception& e) {
+		if (e.what() != "invalid file path, file path cannot be empty") {
+			throw e;
+		}
+	}
+
+	if (autoBuildRoleLinks) {
+		BuildRoleLinks();
+	}
+
+	tm = TokenMap();
+
+
+	for (auto ast : model->modelmap["g"]) {
+		//rm = ast.second.RM;
+		list<string> ls = { "A","B","C" };
+	}
+}
 
 bool Enforcer::enforce(const string& matcher,  vector<string> rVals)
 {
@@ -332,9 +361,18 @@ void Enforcer::SetEffector() {
 void Enforcer::ClearPolicy() {
 	model->ClearPolicy();
 }
-
+bool Enforcer::IsFiltered() {
+	Filteredadapter* fa = dynamic_cast<Filteredadapter*>(adapter.get());
+	if (fa == NULL) {
+		return false;
+	}
+	return fa->IsFiltered();
+}
 
 void Enforcer::SavePolicy() {
+	if (IsFiltered()) {
+		throw exception("cannot save a filtered policy");
+	}
 	adapter->SavePolicy(model.get());
 	/*
 		if(watcher != NULL){

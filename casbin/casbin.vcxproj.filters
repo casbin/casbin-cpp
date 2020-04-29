@@ -81,6 +81,9 @@
     <ClInclude Include="persist\adapter.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
+    <ClInclude Include="persist\adapter_filtered.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
     <ClInclude Include="persist\file-adapter\file-adapter.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
@@ -117,6 +120,9 @@
       <Filter>Source Files\util</Filter>
     </ClCompile>
     <ClCompile Include="persist\adapter.cpp">
+      <Filter>Source Files\persist</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\adapter_filtered.cpp">
       <Filter>Source Files\persist</Filter>
     </ClCompile>
     <ClCompile Include="model\assertion.cpp">

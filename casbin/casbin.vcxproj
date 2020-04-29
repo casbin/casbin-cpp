@@ -164,6 +164,7 @@
     <ClInclude Include="model\model.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="persist\adapter.h" />
+    <ClInclude Include="persist\adapter_filtered.h" />
     <ClInclude Include="persist\file-adapter\file-adapter.h" />
     <ClInclude Include="third_party\Cparse\catch.hpp" />
     <ClInclude Include="third_party\Cparse\containers.h" />
@@ -194,6 +195,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="persist\adapter.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="persist\adapter_filtered.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="persist\file-adapter\file-adapter.cpp">

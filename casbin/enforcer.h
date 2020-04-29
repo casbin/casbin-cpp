@@ -8,6 +8,7 @@
 
 #include "./model/model.h"
 #include "./persist/file-adapter/file-adapter.h"
+#include "./persist/adapter_filtered.h"
 #include "./persist/adapter.h"
 #include "./util/util.h"
 #include "./effect/effect.h"
@@ -76,6 +77,8 @@ public:
 	void SetEffector();
 	void ClearPolicy();
 	void LoadPolicy();
+	void LoadFilteredPolicy(Filter* filter);
+	bool IsFiltered();
 	void SavePolicy();
 	void EnableEnforce(const bool& enable);
 	void EnableLog(const bool& enable);
