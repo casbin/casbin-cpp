@@ -73,6 +73,8 @@ void Enforcer::BuildRoleLinks()
 }
 
 void Enforcer::InitWithFile(const string& modelPath, const string& policyPath) {
+	this->modelPath = modelPath;
+
 	this->adapter = unique_ptr<Adapter> (FileAdapter::newFileAdapter(policyPath));
 	this->model = unique_ptr<Model>(Model::NewModelFromFile(modelPath));
 	fm = FunctionMap::LoadFunctionMap();
@@ -509,4 +511,8 @@ bool Enforcer::RemoveNamedGroupingPolicy(string ptype, const vector<string>& par
 		BuildRoleLinks();
 	}
 	return ruleRemoved;
+}
+
+void Enforcer::AddFunction(string name, CppFunction function) {
+	fm.AddFunction(name, function);
 }

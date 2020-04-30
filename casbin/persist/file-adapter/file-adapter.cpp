@@ -129,12 +129,13 @@ void FileAdapter::FileAdapter::SavePolicyFile(const string& text)
 //rules should be vectors like ["alice","data1","read"] , if the file doesn't exit, it will create a file(but not add a policy)
 void FileAdapter::AddPolicy(const string& sec, const string& ptype, const vector<string>& rule)
 {
-	/*
+	
 	bool exist = true;
 	ifstream inFile(filePath);
 	if (!inFile.good())
 		exist = false;
 	inFile.close();
+
 	ofstream outFile;
 	try
 	{
@@ -160,14 +161,42 @@ void FileAdapter::AddPolicy(const string& sec, const string& ptype, const vector
 	{
 		cout << e.what() << endl;
 		outFile.close();
-	}*/
-	throw exception("not implemented");
+	}
 }
 
 
 void FileAdapter::RemovePolicy(const string& sec, const string& ptype, const vector<string>& rule)
 {
-	throw exception("not implemented");
+	bool exist = true;
+	ifstream inFile(filePath);
+	if (!inFile.good())
+	{
+		return;
+	}
+	
+	string data = ""; 
+	string line;
+	vector<string> ruleWithPtype;
+	ruleWithPtype.push_back(ptype);
+	ruleWithPtype.insert(ruleWithPtype.end(),rule.begin(),rule.end());
+	while (getline(inFile, line)) {
+		vector<string> v = Util::Split(line, ",");
+		for (int i = 0; i < v.size(); i++) {
+			v[i] = Util::Trim(v[i], " ");
+		}
+		if (!Util::ArrayEquals(v, ruleWithPtype)) {
+			data += (line + "\n");
+		}
+	}
+	if (data[data.size() - 1] == '\n') {
+		data = data.substr(0, data.size() - 1);
+	}
+
+	inFile.close(); 
+
+	ofstream os(filePath); 
+	os << data;
+	os.close();
 }
 
 void FileAdapter::RemoveFilteredPolicy(const string& sec, const string& ptype, const int& fieldIndex, const vector <string>& fieldValues)

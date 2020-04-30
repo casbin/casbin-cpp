@@ -39,5 +39,5 @@ void Assertion::buildRoleLinks(RoleManager* rm)
 }
 
 void Assertion::PrintAssertion() {
-  
+
 }

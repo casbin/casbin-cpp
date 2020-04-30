@@ -1,6 +1,12 @@
 #ifndef FUNCTIONS_H_
 #define FUNCTIONS_H_
 
+#ifdef CASBIN_EXPORTS
+#define CPPFUNCTION_API __declspec(dllexport)
+#else
+#define CPPFUNCTION_API  __declspec(dllimport)
+#endif
+
 #include <list>
 #include <string>
 
@@ -21,7 +27,7 @@ class Function : public TokenBase {
   virtual TokenBase* clone() const = 0;
 };
 
-class CppFunction : public Function {
+class CPPFUNCTION_API CppFunction : public Function {
  public:
   packToken (*func)(TokenMap,TokenMap);
   TokenMap globalMap;

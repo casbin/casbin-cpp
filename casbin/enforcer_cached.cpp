@@ -36,7 +36,6 @@ CachedEnforcer::CachedEnforcer(unique_ptr<Model>& model, unique_ptr<Adapter>& ad
 }
 
 CachedEnforcer::CachedEnforcer(const string& modelPath, const string& policyPath): Enforcer(modelPath, policyPath) {
-	cout << "CachedEnforcer" << endl;
 	enableCache = false;
 }
 

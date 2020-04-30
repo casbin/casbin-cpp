@@ -26,7 +26,7 @@ public:
 	static bool RegexMatch(string key1, string key2);
 	static bool IPMatch(string key1, string key2);
 	static bool GlobMatch(string key1, string key2);
-	static bool GFunction(RoleManager* rm, initializer_list<string> ils);
+	static bool GFunction(RoleManager* rm, vector<string> ils);
 	static packToken KeyMatchFunc(TokenMap GlobalMap, TokenMap Scope);
 	static packToken KeyMatch2Func(TokenMap GlobalMap, TokenMap Scope);
 	static packToken KeyMatch3Func(TokenMap GlobalMap, TokenMap Scope);

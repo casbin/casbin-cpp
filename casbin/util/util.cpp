@@ -4,6 +4,9 @@
 #include<map>
 string Util::ArrayToString(const vector<string>& s)
 {
+	if (s.size() == 0) {
+		return "";
+	}
 	string res = "";
 	vector<string> tmp = s;
 	vector<string>::iterator it = tmp.begin();

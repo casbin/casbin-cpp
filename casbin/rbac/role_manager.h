@@ -44,9 +44,9 @@ public:
 
 	RoleManager() {};
 	virtual void Clear() = 0;
-	virtual void Addlink(const string& name1, const string& name2, initializer_list<string> domain) = 0;
+	virtual void Addlink(string name1, string name2, initializer_list<string> domain) = 0;
 	virtual void DeleteLink(const string& name1, const string& name2, initializer_list<string> domain) = 0;
-	virtual bool HasLink(const string& name1, const string& name2, initializer_list<string> domain) = 0;
+	virtual bool HasLink(string name1,  string name2, vector<string> domain) = 0;
 	virtual vector<string> GetRoles(const string& name, initializer_list<string> domain) = 0;
 	virtual vector<string> GetUsers(const string& name, initializer_list<string> domain) = 0;
 	virtual void AddMatchingFunc(const string& name1, bool (*func) (string arg1, string arg2)) = 0;

@@ -17,9 +17,9 @@ public:
 	bool hasRole(const string& name);
 	Role* createRole(const string& name);
 	void Clear();
-	void Addlink(const string& name1, const string& name2, initializer_list<string> domain);
+	void Addlink(string name1, string name2, initializer_list<string> domain);
 	void DeleteLink(const string& name1, const  string& name2, initializer_list<string> domain);
-	bool HasLink(const string& name1, const  string& name2, initializer_list<string> domain);
+	bool HasLink(string name1, string name2, vector<string> domain);
 	vector<string> GetRoles(const string& name,initializer_list<string> domain);
 	vector<string> GetUsers(const string& name, initializer_list<string> domain);
 	void AddMatchingFunc(const string& name1, bool (*func) (string arg1, string arg2));

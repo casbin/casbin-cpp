@@ -111,7 +111,6 @@ bool DefaultRoleManager::hasRole(const string& name)
 	if (hasPattern) {
 		for (map<string,Role*>::iterator it=allRoles.begin();it!=allRoles.end();it++)
 		{
-			//cout << "name:" << name << "  if->first:" << it->first << endl;
 			if (matchingFunc(name, it->first)) {
 				ok = true;
 				break;
@@ -138,7 +137,6 @@ Role* DefaultRoleManager::createRole(const string& name)
 	if (hasPattern) {
 		for (map<string, Role*>::iterator it = allRoles.begin(); it != allRoles.end(); it++)
 		{
-			//cout << "name:" << name << "  if->first:" << it->first << endl;
 			if (matchingFunc(name, it->first) && name!= it->first) {
 				Role* role1;
 				if (allRoles.count(it->first)) {
@@ -165,11 +163,11 @@ void DefaultRoleManager::Clear()
 	allRoles.clear();
 }
 
-void DefaultRoleManager::Addlink(const string& name1, const string& name2, initializer_list<string> domain)
+void DefaultRoleManager::Addlink(string name1, string name2, initializer_list<string> domain)
 {
 	if (domain.size() == 1) {
-		string name1 = *(domain.begin()) + "::" + name1;
-		string name2 = *(domain.begin()) + "::" + name2;
+		name1 = *(domain.begin()) + "::" + name1;
+		name2 = *(domain.begin()) + "::" + name2;
 	}
 	else if (domain.size() > 1) {
 		throw exception("ERR_DOMAIN_PARAMETER");
@@ -202,11 +200,12 @@ void DefaultRoleManager::DeleteLink(const string& name1, const string& name2, in
 	role1->deleteRole(role2);
 }
 
-bool DefaultRoleManager::HasLink(const string& name1, const  string& name2, initializer_list<string> domain)
+bool DefaultRoleManager::HasLink(string name1,string name2, vector<string> domain)
 {
+
 	if (domain.size() == 1) {
-		string name1 = *(domain.begin()) + "::" + name1;
-		string name2 = *(domain.begin()) + "::" + name2;
+		name1 = domain[0] + "::" + name1;
+		name2 = domain[0] + "::" + name2;
 	}
 	else if (domain.size() > 1) {
 		return false;
@@ -279,7 +278,9 @@ vector<string> DefaultRoleManager::GetUsers(const string& name, initializer_list
 
 void DefaultRoleManager::PrintRoles()
 {
-
+	for (auto r : allRoles) {
+		//cout << r.second->toString() << endl;
+	}
 }
 
 void DefaultRoleManager::AddMatchingFunc(const string& name1, bool (*func) (string arg1, string arg2)) {

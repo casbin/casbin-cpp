@@ -155,13 +155,11 @@ bool  BuiltinOperators::GlobMatch(string key1, string key2) {
 	return false;
 }
 
-bool BuiltinOperators::GFunction(RoleManager* rm, initializer_list<string> ils)
+bool BuiltinOperators::GFunction(RoleManager* rm, vector<string> ils)
 {
 	int lenargs = ils.size();
-	auto beg = ils.begin();
-	string name1 = *beg;
-	beg++;
-	string name2 = *beg;
+	string name1 = ils[0];
+	string name2 = ils[1];
 
 	if (rm == NULL) {
 		return name1 == name2;
@@ -170,8 +168,8 @@ bool BuiltinOperators::GFunction(RoleManager* rm, initializer_list<string> ils)
 		return rm->HasLink(name1, name2, {});
 	}
 	else {
-		beg++;
-		string domain = *beg;
+		string domain = ils[2];
+		rm->PrintRoles();
 		return rm->HasLink(name1, name2, { domain });
 	}
 }
