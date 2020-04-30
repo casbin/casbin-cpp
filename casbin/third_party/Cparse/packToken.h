@@ -5,14 +5,17 @@
 #define META_CLASS_API __declspec(dllexport)
 #define PMETA_API __declspec(dllexport)
 #define PACKTOKEN_API __declspec(dllexport)
+#define PTYPE_API __declspec(dllexport)
 #else
 #define META_CLASS_API __declspec(dllimport)
 #define PMETA_API __declspec(dllimport)
 #define PACKTOKEN_API __declspec(dllimport)
+#define PTYPE_API __declspec(dllimport)
 #endif
 
 #include <string>
 #include <unordered_map>
+#include"../../rbac/role_manager.h"
 
 enum myTypes {
     PTYPE = 0x24,
@@ -22,11 +25,24 @@ enum myTypes {
 
 class META_CLASS_API MetaClass {
 public:
-    virtual std::unordered_map<std::string, packToken> GetMap() {
-        return std::unordered_map<std::string, packToken>();
+    virtual std::unordered_map<string, packToken> GetMap() {
+        return std::unordered_map<string, packToken>();
     };
 };
 
+struct PTYPE_API Ptype : public TokenBase {
+    RoleManager* rm;
+
+    Ptype(RoleManager* rm) {
+        this->type = PTYPE;
+        this->rm = rm;
+    }
+
+    // Implementing required virtual function:
+    TokenBase* clone() const {
+        return new Ptype(*this);
+    }
+};
 
 struct PMETA_API PMeta : public TokenBase {
     MetaClass* mc;
@@ -72,6 +88,7 @@ class PACKTOKEN_API packToken {
   packToken(const std::string& s) : base(new Token<std::string>(s, STR)) {}
   packToken(const TokenMap& map);
   packToken(const TokenList& list);
+  packToken(const Ptype& p);
   packToken(const PMeta& p);
   packToken(MetaClass* mc);
   ~packToken() { delete base; }
@@ -92,6 +109,7 @@ class PACKTOKEN_API packToken {
   std::string& asString() const;
   TokenMap& asMap() const;
   TokenList& asList() const;
+  Ptype& asPtype() const;
   PMeta& asPMeta() const;
   Tuple& asTuple() const;
   STuple& asSTuple() const;

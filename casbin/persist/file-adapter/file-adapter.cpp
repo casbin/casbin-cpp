@@ -129,6 +129,7 @@ void FileAdapter::FileAdapter::SavePolicyFile(const string& text)
 //rules should be vectors like ["alice","data1","read"] , if the file doesn't exit, it will create a file(but not add a policy)
 void FileAdapter::AddPolicy(const string& sec, const string& ptype, const vector<string>& rule)
 {
+	/*
 	bool exist = true;
 	ifstream inFile(filePath);
 	if (!inFile.good())
@@ -159,7 +160,8 @@ void FileAdapter::AddPolicy(const string& sec, const string& ptype, const vector
 	{
 		cout << e.what() << endl;
 		outFile.close();
-	}
+	}*/
+	throw exception("not implemented");
 }
 
 
