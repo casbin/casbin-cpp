@@ -84,6 +84,7 @@ TEST(EnforcerTest, TestBasicModelWithRoot) {
 	testEnforce(t, e, "root", "data2", "write", true);
 }
 
+//root no policy
 
 TEST(EnforcerTest, TestBasicModelWithoutUsers) {
 	Enforcer e = Enforcer("../casbin/examples/basic_without_users_model.conf", "../casbin/examples/basic_without_users_policy.csv");
@@ -114,6 +115,36 @@ TEST(EnforcerTest, TestRBACModel) {
 	testEnforce(t, e, "bob", "data1", "write", false);
 	testEnforce(t, e, "bob", "data2", "read", false);
 	testEnforce(t, e, "bob", "data2", "write", true);
+}
+
+TEST(EnforcerTest, TestRBACModelWithResourceRoles) {
+	Enforcer e = Enforcer("../casbin/examples/rbac_with_resource_roles_model.conf", "../casbin/examples/rbac_with_resource_roles_policy.csv");
+
+	testEnforce(t, e, "alice", "data1", "read", true);
+	testEnforce(t, e, "alice", "data1", "write", true);
+	testEnforce(t, e, "alice", "data2", "read", false);
+	testEnforce(t, e, "alice", "data2", "write", true);
+	testEnforce(t, e, "bob", "data1", "read", false);
+	testEnforce(t, e, "bob", "data1", "write", false);
+	testEnforce(t, e, "bob", "data2", "read", false);
+	testEnforce(t, e, "bob", "data2", "write", true);
+}
+
+
+
+TEST(EnforcerTest, TestRBACModelWithDomains) {
+	//Config cfg = Config::NewConfigFromFile("../casbin/examples/rbac_with_domains_model.conf");
+	//cfg.Show();
+	Enforcer e = Enforcer("../casbin/examples/rbac_with_domains_model.conf", "../casbin/examples/rbac_with_domains_policy.csv");
+	e.model->PrintModel();
+	testDomainEnforce(t, e, "alice", "domain1", "data1", "read", true);
+	testDomainEnforce(t, e, "alice", "domain1", "data1", "write", true);
+	testDomainEnforce(t, e, "alice", "domain1", "data2", "read", false);
+	testDomainEnforce(t, e, "alice", "domain1", "data2", "write", false);
+	testDomainEnforce(t, e, "bob", "domain2", "data1", "read", false);
+	testDomainEnforce(t, e, "bob", "domain2", "data1", "write", false);
+	testDomainEnforce(t, e, "bob", "domain2", "data2", "read", true);
+	testDomainEnforce(t, e, "bob", "domain2", "data2", "write", true);
 }
 
 TEST(EnforcerTest, TestRBACModelWithDeny) {
@@ -168,33 +199,6 @@ TEST(EnforcerTest, TestRBACModelWithCustomData) {
 };
 
 
-TEST(EnforcerTest, TestRBACModelWithDomains) {
-	//Config cfg = Config::NewConfigFromFile("../casbin/examples/rbac_with_domains_model.conf");
-	//cfg.Show();
-	Enforcer e = Enforcer("../casbin/examples/rbac_with_domains_model.conf", "../casbin/examples/rbac_with_domains_policy.csv");
-	e.model->PrintModel();
-	testDomainEnforce(t, e, "alice", "domain1", "data1", "read", true);
-	testDomainEnforce(t, e, "alice", "domain1", "data1", "write", true);
-	testDomainEnforce(t, e, "alice", "domain1", "data2", "read", false);
-	testDomainEnforce(t, e, "alice", "domain1", "data2", "write", false);
-	testDomainEnforce(t, e, "bob", "domain2", "data1", "read", false);
-	testDomainEnforce(t, e, "bob", "domain2", "data1", "write", false);
-	testDomainEnforce(t, e, "bob", "domain2", "data2", "read", true);
-	testDomainEnforce(t, e, "bob", "domain2", "data2", "write", true);
-}
-
-TEST(EnforcerTest, TestRBACModelWithResourceRoles) {
-	Enforcer e = Enforcer("../casbin/examples/rbac_with_resource_roles_model.conf", "../casbin/examples/rbac_with_resource_roles_policy.csv");
-
-	testEnforce(t, e, "alice", "data1", "read", true);
-	testEnforce(t, e, "alice", "data1", "write", true);
-	testEnforce(t, e, "alice", "data2", "read", false);
-	testEnforce(t, e, "alice", "data2", "write", true);
-	testEnforce(t, e, "bob", "data1", "read", false);
-	testEnforce(t, e, "bob", "data1", "write", false);
-	testEnforce(t, e, "bob", "data2", "read", false);
-	testEnforce(t, e, "bob", "data2", "write", true);
-}
 
 TEST(EnforcerTest, TestRBACModelWithCustomRoleManager) {
 	Enforcer e = Enforcer("../casbin/examples/rbac_model.conf", "../casbin/examples/rbac_policy.csv");
@@ -320,4 +324,35 @@ TEST(EnforcerTest, TestABACModel) {
 	testEnforce(t, e, "bob", &data1, "write", false);
 	testEnforce(t, e, "bob", &data2, "read", true);
 	testEnforce(t, e, "bob", &data2, "write", true);
+}
+
+TEST(EnforcerTest, TestRBACModelInMultiLines) {
+	Enforcer e = Enforcer("../casbin/examples/rbac_model_in_multi_line.conf", "../casbin/examples/rbac_policy.csv");
+
+	testEnforce(t, e, "alice", "data1", "read", true);
+	testEnforce(t, e, "alice", "data1", "write", false);
+	testEnforce(t, e, "alice", "data2", "read", true);
+	testEnforce(t, e, "alice", "data2", "write", true);
+	testEnforce(t, e, "bob", "data1", "read", false);
+	testEnforce(t, e, "bob", "data1", "write", false);
+	testEnforce(t, e, "bob", "data2", "read", false);
+	testEnforce(t, e, "bob", "data2", "write", true);
+}
+
+TEST(EnforcerTest, TestPriorityModel) {
+	Enforcer e = Enforcer("../casbin/examples/priority_model.conf", "../casbin/examples/priority_policy.csv");
+
+	testEnforce(t, e, "alice", "data1", "read", true);
+	testEnforce(t, e, "alice", "data1", "write", false);
+	testEnforce(t, e, "alice", "data2", "read", false);
+	testEnforce(t, e, "alice", "data2", "write", false);
+	testEnforce(t, e, "bob", "data1", "read", false);
+	testEnforce(t, e, "bob", "data1", "write", false);
+	testEnforce(t, e, "bob", "data2", "read", true);
+	testEnforce(t, e, "bob", "data2", "write", false);
+}
+
+TEST(EnforcerTest, TestPriorityModelIndeterminate) {
+	Enforcer e = Enforcer("../casbin/examples/priority_model.conf", "../casbin/examples/priority_indeterminate_policy.csv");
+	testEnforce(t, e, "alice", "data1", "read", false);
 }
