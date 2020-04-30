@@ -22,9 +22,14 @@ bool  BuiltinOperators::KeyMatch(string key1, string key2) {
 }
 
 bool  BuiltinOperators::KeyMatch2(string key1, string key2) {
-	
 	if (key2.find("/*") != key2.npos) {
 		key2 = key2.replace(key2.find("/*"), -1, "/.*");
+	}
+	if (key2.find("{") != key2.npos) {
+		key2 = key2.replace(key2.find("{"), 1, "\\{");
+	}
+	if (key2.find("}") != key2.npos) {
+		key2 = key2.replace(key2.find("}"), 1, "\\}");
 	}
 
 	regex pattern("(.*):[^/]+(.*)");
@@ -35,8 +40,7 @@ bool  BuiltinOperators::KeyMatch2(string key1, string key2) {
 		}
 		key2 = regex_replace(key2, pattern, "$1[^/]+$2");
 	}
-
-	return regex_match(key1, regex("^" + key2 + "$"));
+	return RegexMatch(key1, ("^" + key2 + "$"));
 }
 
 bool  BuiltinOperators::KeyMatch3(string key1, string key2) {

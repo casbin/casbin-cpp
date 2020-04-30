@@ -61,6 +61,9 @@
     <Filter Include="Source Files\rbac">
       <UniqueIdentifier>{ab5ba72a-6f28-40b7-bd81-2c1683d04786}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\rbac">
+      <UniqueIdentifier>{1936bbba-b73b-4eb7-9cb8-0b5623b28d39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -125,6 +128,12 @@
     </ClInclude>
     <ClInclude Include="enforcer_cached.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\role_manager.h">
+      <Filter>Header Files\rbac</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\default-role-manager\default_role_manager.h">
+      <Filter>Header Files\rbac</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -537,13 +537,11 @@ void Enforcer::SetTokenMapABAC(TokenMap& tokenmap, map<string, int>& rTokens, ma
 		{
 			unordered_map<string, packToken> members = mc->GetMap();
 			for (auto member : members) {
-				cout << "TokenMap[" << r.first + "_" + member.first << "] =" << member.second<<endl;
 				tokenmap[r.first + "_" + member.first] = member.second;
 			}
 		}
 		else {
 			tokenmap[r.first] = v;
-			cout << "TokenMap[" << r.first << "] =" << v << endl;
 		}
 	}
 
@@ -596,7 +594,6 @@ bool Enforcer::enforceABAC(const string& matcher, vector<packToken> rVals) {
 		}
 	}
 
-	cout << "expString:" << expString << endl;
 	calculator c1;
 	c1 = calculator(expString.data());
 
