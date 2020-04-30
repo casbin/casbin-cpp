@@ -10,6 +10,7 @@ using namespace std;
 const string KEY_ROLEMANAGER = "default_rolemanager";
 
 
+
 bool  BuiltinOperators::KeyMatch(string key1, string key2) {
 	int i = key2.find_first_of('*');
 	if (i == -1)

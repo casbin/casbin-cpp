@@ -3,18 +3,18 @@
 
 FunctionMap FunctionMap::LoadFunctionMap() {
 	FunctionMap fm;
-	TokenMap gm;
-	list<string> ls = {"A","B"};
-	fm.AddFunction("keyMatch", CppFunction(gm, &BuiltinOperators::KeyMatchFunc, ls));
-	fm.AddFunction("keyMatch2", CppFunction(gm, &BuiltinOperators::KeyMatch2Func, ls));
-	fm.AddFunction("keyMatch3", CppFunction(gm, &BuiltinOperators::KeyMatch3Func, ls));
-	fm.AddFunction("keyMatch4", CppFunction(gm, &BuiltinOperators::KeyMatch4Func, ls));
-	fm.AddFunction("regexMatch", CppFunction(gm, &BuiltinOperators::RegexMatchFunc, ls));
-	fm.AddFunction("ipMatch", CppFunction(gm, &BuiltinOperators::IPMatchFunc, ls));
-	fm.AddFunction("globMatch", CppFunction(gm, &BuiltinOperators::GlobMatchFunc, ls));
+	fm.AddFunction("keyMatch", &BuiltinOperators::KeyMatchFunc);
+	fm.AddFunction("keyMatch2", &BuiltinOperators::KeyMatch2Func);
+	fm.AddFunction("keyMatch3", &BuiltinOperators::KeyMatch3Func);
+	fm.AddFunction("keyMatch4",&BuiltinOperators::KeyMatch4Func);
+	fm.AddFunction("regexMatch", &BuiltinOperators::RegexMatchFunc);
+	fm.AddFunction("ipMatch",  &BuiltinOperators::IPMatchFunc);
+	fm.AddFunction("globMatch",&BuiltinOperators::GlobMatchFunc);
 	return fm;
 }
 
-void FunctionMap::AddFunction(string name, CppFunction function) {
-	fm[name] = function;
+void FunctionMap::AddFunction(string name, WrapFunc func) {
+	TokenMap gm;
+	list<string> ls = { "A","B" };
+	fm[name] = CppFunction(gm, func, ls);
 }

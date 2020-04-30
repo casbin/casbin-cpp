@@ -513,8 +513,9 @@ bool Enforcer::RemoveNamedGroupingPolicy(string ptype, const vector<string>& par
 	return ruleRemoved;
 }
 
-void Enforcer::AddFunction(string name, CppFunction function) {
+void Enforcer::AddFunction(string name, WrapFunc function) {
 	fm.AddFunction(name, function);
+	tm[name] = fm.fm[name];
 }
 
 void Enforcer::SetTokenMapABAC(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<packToken>& rVals, vector<string>& pVals) {

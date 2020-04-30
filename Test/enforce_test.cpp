@@ -294,6 +294,20 @@ bool CustomFunction(string key1,  string key2){
 	}
 }
 
+
+packToken CustomFunctionWrapper(TokenMap GlobalMap, TokenMap Scope) {
+	return CustomFunction(Scope["A"].asString(), Scope["B"].asString());
+}
+
+TEST(EnforcerTest, TestKeyMatchCustomModel) {
+	Enforcer e = Enforcer("../casbin/examples/keymatch_custom_model.conf", "../casbin/examples/keymatch2_policy.csv");
+	e.AddFunction("keyMatchCustom", &CustomFunctionWrapper);
+	testEnforce(t, e, "alice", "/alice_data2/myid", "GET", false);
+	testEnforce(t, e, "alice", "/alice_data2/myid/using/res_id", "GET", true);
+}
+
+
+
 TEST(EnforcerTest, TestIPMatchModel) {
 	Enforcer e = Enforcer("../casbin/examples/ipmatch_model.conf", "../casbin/examples/ipmatch_policy.csv");
 

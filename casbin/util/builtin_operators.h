@@ -6,6 +6,7 @@
 #define BULTIN_API __declspec(dllimport)
 #endif
 
+
 #include"../rbac/role_manager.h"
 #include "../third_party/Cparse/shunting-yard.h"
 #include "util.h"

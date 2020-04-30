@@ -2,6 +2,14 @@
 #ifndef CONTAINERS_H_
 #define CONTAINERS_H_
 
+#ifdef CASBIN_EXPORTS
+#define TOKENMAP_API __declspec(dllexport)
+#define MAPDATA_API __declspec(dllexport)
+#else
+#define TOKENMAP_API __declspec(dllimport)
+#define MAPDATA_API __declspec(dllexport)
+#endif
+
 #include <map>
 #include <list>
 #include <vector>
@@ -47,12 +55,13 @@ struct Iterator : public Iterable {
   Iterator* getIterator() const;
 };
 
-class TokenMap;
+class TOKENMAP_API TokenMap;
 typedef std::map<std::string, packToken> TokenMap_t;
 
-struct MapData_t {
+struct MAPDATA_API MapData_t {
   TokenMap_t map;
   TokenMap* parent;
+  MapData_t();
   MapData_t(TokenMap* p);
   MapData_t(const MapData_t& other);
   ~MapData_t();

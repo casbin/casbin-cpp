@@ -102,5 +102,5 @@ public:
 	bool AddNamedGroupingPolicy(string ptype,const vector<string>& params);
 	bool RemoveGroupingPolicy(const vector<string>& params);
 	bool RemoveNamedGroupingPolicy(string ptype, const vector<string>& params);
-	void AddFunction(string name, CppFunction function);
+	void AddFunction(string name, WrapFunc func);
 };
