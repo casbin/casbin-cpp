@@ -10,6 +10,7 @@ void testEnforce(int t, Enforcer& e, string a, string b, string c, bool res) {
 	EXPECT_EQ(myres, res);
 }
 
+
 void testEnforce(int t, Enforcer& e, string a, string b, bool res) {
 	bool myres = e.Enforce({ a,b });
 	EXPECT_EQ(myres, res);
@@ -281,3 +282,42 @@ TEST(EnforcerTest, TestIPMatchModel) {
 	testEnforce(t, e, "192.168.0.1", "data2", "write", false);
 }
 
+//To use ABAC model,you should registe the member of the class,and inherit the MetaClass
+class testResource : public MetaClass {
+public:
+	string Name;
+	string Owner;
+	REGISTER_START
+		REGISTER_MEMBER(Name)
+		REGISTER_MEMBER(Owner)
+		REGISTER_END
+};
+
+testResource newTestResource(string name, string owner)  {
+	testResource r = testResource();
+	r.Name = name;
+	r.Owner = owner;
+	return r;
+}
+
+void testEnforce(int t, Enforcer& e, string a, testResource* b, string c, bool res) {
+	//to use ABAC model,you should pass by pointer
+	bool myres = e.EnforceABAC({ a,b,c });
+	EXPECT_EQ(myres, res);
+}
+
+TEST(EnforcerTest, TestABACModel) {
+	Enforcer e = Enforcer("../casbin/examples/abac_model.conf");
+
+	testResource data1 = newTestResource("data1", "alice");
+	testResource data2 = newTestResource("data2", "bob");
+
+	testEnforce(t, e, "alice", &data1, "read", true);
+	testEnforce(t, e, "alice", &data1, "write", true);
+	testEnforce(t, e, "alice", &data2, "read", false);
+	testEnforce(t, e, "alice", &data2, "write", false);
+	testEnforce(t, e, "bob", &data1, "read", false);
+	testEnforce(t, e, "bob", &data1, "write", false);
+	testEnforce(t, e, "bob", &data2, "read", true);
+	testEnforce(t, e, "bob", &data2, "write", true);
+}

@@ -169,8 +169,6 @@
     <ClInclude Include="persist\adapter.h" />
     <ClInclude Include="persist\adapter_filtered.h" />
     <ClInclude Include="persist\file-adapter\file-adapter.h" />
-    <ClInclude Include="rbac\default-role-manager\default_role_manager.h" />
-    <ClInclude Include="rbac\role_manager.h" />
     <ClInclude Include="third_party\Cparse\catch.hpp" />
     <ClInclude Include="third_party\Cparse\containers.h" />
     <ClInclude Include="third_party\Cparse\functions.h" />

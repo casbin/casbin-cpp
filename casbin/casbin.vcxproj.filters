@@ -58,9 +58,6 @@
     <Filter Include="Source Files\ip">
       <UniqueIdentifier>{5beedb74-2461-4074-bc6c-aae39a32eddf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="rbac">
-      <UniqueIdentifier>{dd42ef44-53a8-4b2b-aaab-ca9fdb24fec5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\rbac">
       <UniqueIdentifier>{ab5ba72a-6f28-40b7-bd81-2c1683d04786}</UniqueIdentifier>
     </Filter>
@@ -122,12 +119,6 @@
     </ClInclude>
     <ClInclude Include="ip\ip.h">
       <Filter>Header Files\ip</Filter>
-    </ClInclude>
-    <ClInclude Include="rbac\role_manager.h">
-      <Filter>rbac</Filter>
-    </ClInclude>
-    <ClInclude Include="rbac\default-role-manager\default_role_manager.h">
-      <Filter>rbac</Filter>
     </ClInclude>
     <ClInclude Include="model\function.h">
       <Filter>Header Files\model</Filter>
