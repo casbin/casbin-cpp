@@ -28,13 +28,13 @@ public:
 	static bool IPMatch(string key1, string key2);
 	static bool GlobMatch(string key1, string key2);
 	static bool GFunction(RoleManager* rm, vector<string> ils);
-	static packToken KeyMatchFunc(TokenMap GlobalMap, TokenMap Scope);
-	static packToken KeyMatch2Func(TokenMap GlobalMap, TokenMap Scope);
-	static packToken KeyMatch3Func(TokenMap GlobalMap, TokenMap Scope);
-	static packToken KeyMatch4Func(TokenMap GlobalMap, TokenMap Scope);
-	static packToken RegexMatchFunc(TokenMap GlobalMap, TokenMap Scope);
-	static packToken IPMatchFunc(TokenMap GlobalMap, TokenMap Scope);
-	static packToken GlobMatchFunc(TokenMap GlobalMap, TokenMap Scope);
-	static packToken GFunctionFunc(TokenMap GlobalMap, TokenMap Scope);
+	static packToken KeyMatchFunc(TokenMap Scope);
+	static packToken KeyMatch2Func(TokenMap Scope);
+	static packToken KeyMatch3Func(TokenMap Scope);
+	static packToken KeyMatch4Func(TokenMap Scope);
+	static packToken RegexMatchFunc(TokenMap Scope);
+	static packToken IPMatchFunc(TokenMap Scope);
+	static packToken GlobMatchFunc(TokenMap Scope);
+	static function<packToken(TokenMap)> GenerateGFunc(RoleManager* rm);
 	
 };

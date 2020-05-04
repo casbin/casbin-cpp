@@ -3,11 +3,11 @@
 #define CONTAINERS_H_
 
 #ifdef CASBIN_EXPORTS
+#define MAPDATA_API __declspec(dllexport)
 #define TOKENMAP_API __declspec(dllexport)
-#define MAPDATA_API __declspec(dllexport)
 #else
+#define MAPDATA_API __declspec(dllimport)
 #define TOKENMAP_API __declspec(dllimport)
-#define MAPDATA_API __declspec(dllexport)
 #endif
 
 #include <map>
@@ -74,7 +74,7 @@ struct TokenMap : public Container<MapData_t>, public Iterable {
   static TokenMap empty;
   static TokenMap& base_map();
   static TokenMap& default_global();
-  static packToken default_constructor(TokenMap globalMap, TokenMap scope);
+  static packToken default_constructor(TokenMap scope);
 
  public:
   // Attribute getters for the `MapData_t` content:
@@ -142,7 +142,7 @@ struct GlobalScope : public TokenMap {
 typedef std::vector<packToken> TokenList_t;
 
 struct TokenList : public Container<TokenList_t>, public Iterable {
-  static packToken default_constructor(TokenMap globalMap, TokenMap scope);
+  static packToken default_constructor(TokenMap scope);
 
  public:
   // Attribute getter for the `TokenList_t` content:
@@ -173,11 +173,7 @@ struct TokenList : public Container<TokenList_t>, public Iterable {
 
   packToken& operator[](const uint64_t idx) const {
     if (list().size() <= idx) {
-      
-        
-        
-        
-        std::out_of_range("List index out of range!");
+      throw std::out_of_range("List index out of range!");
     }
     return list()[idx];
   }

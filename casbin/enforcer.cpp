@@ -115,7 +115,7 @@ void Enforcer::LoadPolicy()
 	
 	tm = TokenMap();
 
-	tm[KEY_ROLEMANAGER] = Ptype(rm.get());
+	//tm[KEY_ROLEMANAGER] = Ptype(rm.get());
 
 	for (auto element : fm.fm) {
 		tm[element.first] = element.second;
@@ -124,7 +124,7 @@ void Enforcer::LoadPolicy()
 	for (auto ast : model->modelmap["g"]) {
 		//rm = ast.second.RM;
 		list<string> ls = { "A","B","C" };
-		tm[ast.first] = CppFunction(tm, &BuiltinOperators::GFunctionFunc, ls);
+		tm[ast.first] = CppFunction(BuiltinOperators::GenerateGFunc(rm.get()), ls);
 	}
 }
 
@@ -151,8 +151,6 @@ void Enforcer::LoadFilteredPolicy(Filter* filter)
 
 	tm = TokenMap();
 
-	tm[KEY_ROLEMANAGER] = Ptype(rm.get());
-
 	for (auto element : fm.fm) {
 		tm[element.first] = element.second;
 	}
@@ -160,7 +158,7 @@ void Enforcer::LoadFilteredPolicy(Filter* filter)
 	for (auto ast : model->modelmap["g"]) {
 		//rm = ast.second.RM;
 		list<string> ls = { "A","B","C" };
-		tm[ast.first] = CppFunction(tm, &BuiltinOperators::GFunctionFunc, ls);
+		tm[ast.first] = CppFunction(BuiltinOperators::GenerateGFunc(rm.get()), ls);
 	}
 }
 
@@ -518,112 +516,3 @@ void Enforcer::AddFunction(string name, WrapFunc function) {
 	tm[name] = fm.fm[name];
 }
 
-void Enforcer::SetTokenMapABAC(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<packToken>& rVals, vector<string>& pVals) {
-	for (auto r : rTokens)
-	{
-		packToken v = rVals[rTokens[r.first]];
-		bool isString = true;
-		bool isMetaClass = true;
-		MetaClass* mc = NULL;
-
-		try {
-			mc = v.asPMeta().mc;
-		}
-		catch (exception& e) {
-			isMetaClass = false;
-		}
-
-
-		if (isMetaClass)
-		{
-			unordered_map<string, packToken> members = mc->GetMap();
-			for (auto member : members) {
-				tokenmap[r.first + "_" + member.first] = member.second;
-			}
-		}
-		else {
-			tokenmap[r.first] = v;
-		}
-	}
-
-}
-
-bool Enforcer::EnforceABAC(const vector<packToken>& rvals)
-{
-	return enforceABAC("", rvals);
-}
-
-bool Enforcer::enforceABAC(const string& matcher, vector<packToken> rVals) {
-
-	if (!enabled) {
-		return true;
-	}
-
-	string expString = model->modelmap["m"]["m"].Value;
-
-	if (matcher == "") {
-		expString = model->modelmap["m"]["m"].Value;
-	}
-	else {
-		expString = matcher;
-	}
-
-	map<string, int> rTokens, pTokens;
-
-	bool result = false;
-
-	vector<string>* r = &model->modelmap["r"]["r"].Tokens;
-	for (int i = 0; i < (*r).size(); i++) {
-		rTokens[(*r)[i]] = i;
-	}
-
-	for (auto r : rTokens) {
-		string token = r.first;
-		int i = -1;
-		while (true) {
-			size_t position = expString.find(token, i + 1);
-			if (position == expString.npos) {
-				break;
-			}
-			else {
-				i = position;
-				int index = i + token.size();
-				if (expString[index] == '.') {
-					expString[index] = '_';
-				}
-			}
-		}
-	}
-
-	calculator c1;
-	c1 = calculator(expString.data());
-
-
-	int policyLen = 1;
-	vector<Effect> policyEffects = vector<Effect>(policyLen);
-	vector<double> matcherResults = vector<double>(policyLen);
-
-	vector<string> pVals = {};
-	if (model->modelmap["r"]["r"].Tokens.size() != rVals.size())
-	{
-		string errorInfo;
-		stringstream ss;
-		ss << "invalid policy size: expected "
-			<< model->modelmap["r"]["r"].Tokens.size()
-			<< ", got " << pVals.size() << ", pvals: "
-			<< Util::ArrayToString(pVals) << endl;
-		ss >> errorInfo;
-		throw exception(errorInfo.data());
-		return false;
-	}
-
-	TokenMap vars;
-
-	vars = tm.getChild();
-
-	SetTokenMapABAC(vars, rTokens, pTokens, rVals, pVals);
-
-	result = c1.eval(vars).asBool();
-
-	return result;
-}

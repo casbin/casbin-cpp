@@ -19,9 +19,6 @@ packToken::strFunc_t& packToken::str_custom() {
 
 packToken::packToken(const TokenMap& map) : base(new TokenMap(map)) {}
 packToken::packToken(const TokenList& list) : base(new TokenList(list)) {}
-packToken::packToken(const Ptype& p) : base(new Ptype(p)) {}
-packToken::packToken(const PMeta& p) : base(new PMeta(p)) {}
-packToken::packToken(MetaClass* mc) : base(new PMeta(mc)) {}
 
 packToken& packToken::operator=(const packToken& t) {
   delete base;
@@ -170,21 +167,6 @@ TokenList& packToken::asList() const {
   return *static_cast<TokenList*>(base);
 }
 
-Ptype& packToken::asPtype() const {
-    if (base->type != PTYPE) {
-        throw bad_cast::bad_cast(
-            "The Token is not a Ptype!");
-    }
-    return *static_cast<Ptype*>(base);
-}
-
-PMeta& packToken::asPMeta() const {
-    if (base->type != PMETA) {
-        throw bad_cast::bad_cast(
-            "The Token is not a PMeta!");
-    }
-    return *static_cast<PMeta*>(base);
-}
 
 Tuple& packToken::asTuple() const {
   if (base->type != TUPLE) {
@@ -311,10 +293,6 @@ std::string packToken::str(const TokenBase* base, uint32_t nest) {
       }
       ss << " ]";
       return ss.str();
-    case PTYPE:
-        return "ptype";
-    case PMETA:
-        return "pmeta";
     default:
       if (base->type & IT) {
         return "[Iterator]";

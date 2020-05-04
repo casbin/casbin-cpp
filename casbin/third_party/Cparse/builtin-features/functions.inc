@@ -4,7 +4,7 @@ namespace builtin_functions {
 
 /* * * * * Built-in Functions: * * * * */
 
-packToken default_print(TokenMap global,TokenMap scope) {
+packToken default_print(TokenMap scope) {
   // Get the argument list:
   TokenList list = scope["args"].asList();
 
@@ -28,7 +28,7 @@ packToken default_print(TokenMap global,TokenMap scope) {
   return packToken::None();
 }
 
-packToken default_sum(TokenMap global,TokenMap scope) {
+packToken default_sum(TokenMap scope) {
   // Get the arguments:
   TokenList list = scope["args"].asList();
 
@@ -44,13 +44,13 @@ packToken default_sum(TokenMap global,TokenMap scope) {
   return sum;
 }
 
-packToken default_eval(TokenMap global,TokenMap scope) {
+packToken default_eval(TokenMap scope) {
   std::string code = scope["value"].asString();
   // Evaluate it as a calculator expression:
   return calculator::calculate(code.c_str(), scope);
 }
 
-packToken default_float(TokenMap global,TokenMap scope) {
+packToken default_float(TokenMap scope) {
   packToken tok = scope["value"];
   if (tok->type & NUM) return tok.asDouble();
 
@@ -61,17 +61,14 @@ packToken default_float(TokenMap global,TokenMap scope) {
   double ret = strtod(str.c_str(), &rest);
 
   if (str == rest) {
-    
-    
-    
-    std::runtime_error("Could not convert \"" + str + "\" to float!");
+    throw std::runtime_error("Could not convert \"" + str + "\" to float!");
   } else if (errno) {
     std::range_error("Value too big or too small to fit a Double!");
   }
   return ret;
 }
 
-packToken default_int(TokenMap global,TokenMap scope) {
+packToken default_int(TokenMap scope) {
   packToken tok = scope["value"];
   if (tok->type & NUM) return tok.asInt();
 
@@ -89,14 +86,14 @@ packToken default_int(TokenMap global,TokenMap scope) {
   return ret;
 }
 
-packToken default_str(TokenMap global,TokenMap scope) {
+packToken default_str(TokenMap scope) {
   // Return its string representation:
   packToken tok = scope["value"];
   if (tok->type == STR) return tok;
   return tok.str();
 }
 
-packToken default_type(TokenMap global,TokenMap scope) {
+packToken default_type(TokenMap scope) {
   packToken tok = scope["value"];
   packToken* p_type;
 
@@ -123,31 +120,31 @@ packToken default_type(TokenMap global,TokenMap scope) {
   }
 }
 
-packToken default_sqrt(TokenMap global,TokenMap scope) {
+packToken default_sqrt(TokenMap scope) {
   // Get a single argument:
   double number = scope["num"].asDouble();
 
   return sqrt(number);
 }
-packToken default_sin(TokenMap global,TokenMap scope) {
+packToken default_sin(TokenMap scope) {
   // Get a single argument:
   double number = scope["num"].asDouble();
 
   return sin(number);
 }
-packToken default_cos(TokenMap global,TokenMap scope) {
+packToken default_cos(TokenMap scope) {
   // Get a single argument:
   double number = scope["num"].asDouble();
 
   return cos(number);
 }
-packToken default_tan(TokenMap global,TokenMap scope) {
+packToken default_tan(TokenMap scope) {
   // Get a single argument:
   double number = scope["num"].asDouble();
 
   return tan(number);
 }
-packToken default_abs(TokenMap global,TokenMap scope) {
+packToken default_abs(TokenMap scope) {
   // Get a single argument:
   double number = scope["num"].asDouble();
 
@@ -155,7 +152,7 @@ packToken default_abs(TokenMap global,TokenMap scope) {
 }
 
 const args_t pow_args = {"number", "exp"};
-packToken default_pow(TokenMap global,TokenMap scope) {
+packToken default_pow(TokenMap scope) {
   // Get two arguments:
   double number = scope["number"].asDouble();
   double exp = scope["exp"].asDouble();
@@ -165,7 +162,7 @@ packToken default_pow(TokenMap global,TokenMap scope) {
 
 /* * * * * default constructor functions * * * * */
 
-packToken default_list(TokenMap global,TokenMap scope) {
+packToken default_list(TokenMap scope) {
   // Get the arguments:
   TokenList list = scope["args"].asList();
 
@@ -187,13 +184,13 @@ packToken default_list(TokenMap global,TokenMap scope) {
   }
 }
 
-packToken default_map(TokenMap global,TokenMap scope) {
+packToken default_map(TokenMap scope) {
   return scope["kwargs"];
 }
 
 /* * * * * Object inheritance tools: * * * * */
 
-packToken default_extend(TokenMap global,TokenMap scope) {
+packToken default_extend(TokenMap scope) {
   packToken tok = scope["value"];
 
   if (tok->type == MAP) {

@@ -4,7 +4,7 @@
 #include "../third_party/Cparse/shunting-yard.h"
 using namespace std;
 
-typedef packToken(*WrapFunc)(TokenMap a, TokenMap b);
+typedef packToken(*WrapFunc)(TokenMap a);
 
 class FunctionMap {
 public:

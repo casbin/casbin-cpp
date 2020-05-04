@@ -12,15 +12,12 @@
 #include<sstream>
 #include<vector>
 
-
 using namespace std;
 
 extern const string DEFAULT_SECTION;
 extern const string DEFAULT_COMMENT;
 extern const string DEFAULT_COMMENT_SEM;
 extern const string DEFAULT_MULTI_LINE_SEPARATOR;
-
-
 
 class CONFIG_API Config {
 public:

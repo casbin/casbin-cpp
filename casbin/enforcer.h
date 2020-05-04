@@ -86,13 +86,10 @@ public:
 	void EnableAutoBuildRoleLinks(const bool& enable);
 	void BuildRoleLinks();
 	bool enforce(const string& matcher, vector<string> rvals);
-	bool enforceABAC(const string& matcher, vector<packToken> rvals);
 	bool Enforce(const vector<string>& rvals);
-	bool EnforceABAC(const vector<packToken>& rvals);
 	//bool EnforceWithMatcher(const string& matcher, initializer_list<string> rval);
 	bool MergeEffects(const string& expr,const vector<Effect>& effects, const vector<double>& results);
 	void SetTokenMap(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<string>& rVals, vector<string>& pVals);
-	void SetTokenMapABAC(TokenMap& tokenmap, map<string, int>& rTokens, map<string, int>& pTokens, vector<packToken>& rVals, vector<string>& pVals);
 	bool addPolicy(const string& sec, const string& ptype, const vector<string>& rule);
 	bool removePolicy(const string& sec, const string& ptype, const vector<string>& rule);
 

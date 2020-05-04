@@ -14,7 +14,6 @@ FunctionMap FunctionMap::LoadFunctionMap() {
 }
 
 void FunctionMap::AddFunction(string name, WrapFunc func) {
-	TokenMap gm;
 	list<string> ls = { "A","B" };
-	fm[name] = CppFunction(gm, func, ls);
+	fm[name] = CppFunction(func, ls);
 }

@@ -13,8 +13,6 @@
 
 /* * * * * Operation class: * * * * */
 
-
-
 // Convert a type into an unique mask for bit wise operations:
 uint32_t Operation::mask(tokType_t type) {
   if (type == ANY_TYPE) {
@@ -376,7 +374,7 @@ TokenQueue_t calculator::toRPN(const char* expr,
         } else {
           // If it is the list constructor:
           // Add the list constructor to the rpn:
-          data.handle_token(new CppFunction(vars,&TokenList::default_constructor, "list"));
+          data.handle_token(new CppFunction(&TokenList::default_constructor, "list"));
 
           // We make the program see it as a normal function call:
           data.handle_op("()");
@@ -387,7 +385,7 @@ TokenQueue_t calculator::toRPN(const char* expr,
         break;
       case '{':
         // Add a map constructor call to the rpn:
-        data.handle_token(new CppFunction(vars, &TokenMap::default_constructor, "map"));
+        data.handle_token(new CppFunction(&TokenMap::default_constructor, "map"));
 
         // We make the program see it as a normal function call:
         data.handle_op("()");

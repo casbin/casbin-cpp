@@ -4,11 +4,12 @@
 #ifdef CASBIN_EXPORTS
 #define CPPFUNCTION_API __declspec(dllexport)
 #else
-#define CPPFUNCTION_API  __declspec(dllimport)
+#define CPPFUNCTION_API __declspec(dllimport)
 #endif
 
 #include <list>
 #include <string>
+#include<functional>
 
 typedef std::list<std::string> args_t;
 
@@ -29,27 +30,27 @@ class Function : public TokenBase {
 
 class CPPFUNCTION_API CppFunction : public Function {
  public:
-  packToken (*func)(TokenMap,TokenMap);
-  TokenMap globalMap;
+  packToken (*func)(TokenMap);
   args_t _args;
   std::string _name;
+  std::function<packToken(TokenMap)> stdFunc;
+  bool isStdFunc;
 
   CppFunction();
-  CppFunction( packToken(*func)(TokenMap, TokenMap), const args_t args,
-      std::string name = "");
-  CppFunction( packToken(*func)(TokenMap, TokenMap), unsigned int nargs,
-      const char** args, std::string name = "");
-  CppFunction( packToken(*func)(TokenMap, TokenMap), std::string name = "");
-
-  CppFunction(TokenMap gm,packToken (*func)(TokenMap,TokenMap), const args_t args,
+  CppFunction(packToken (*func)(TokenMap), const args_t args,
               std::string name = "");
-  CppFunction(TokenMap gm, packToken (*func)(TokenMap,TokenMap), unsigned int nargs,
+  CppFunction(packToken (*func)(TokenMap), unsigned int nargs,
               const char** args, std::string name = "");
-  CppFunction(TokenMap gm, packToken (*func)(TokenMap,TokenMap), std::string name = "");
+  CppFunction(packToken (*func)(TokenMap), std::string name = "");
+  CppFunction(std::function<packToken(TokenMap)> func, const args_t args,
+      std::string name = "");
+  CppFunction(std::function<packToken(TokenMap)> func, unsigned int nargs,
+      const char** args, std::string name = "");
+  CppFunction(std::function<packToken(TokenMap)> func, std::string name = "");
 
   virtual const std::string name() const { return _name; }
   virtual const args_t args() const { return _args; }
-  virtual packToken exec(TokenMap scope) const { return func(globalMap,scope); }
+  virtual packToken exec(TokenMap scope) const { if (!isStdFunc) return func(scope);  return stdFunc(scope); }
 
   virtual TokenBase* clone() const {
     return new CppFunction(static_cast<const CppFunction&>(*this));

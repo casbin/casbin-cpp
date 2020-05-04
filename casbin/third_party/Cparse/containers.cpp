@@ -23,7 +23,7 @@ TokenMap& TokenMap::default_global() {
   return global_map;
 }
 
-packToken TokenMap::default_constructor(TokenMap globalMap,TokenMap scope) {
+packToken TokenMap::default_constructor(TokenMap scope) {
   return scope["kwargs"];
 }
 
@@ -53,7 +53,7 @@ void TokenMap::MapIterator::reset() { it = map.begin(); }
 
 /* * * * * TokenList functions: * * * * */
 
-packToken TokenList::default_constructor(TokenMap globalmap,TokenMap scope) {
+packToken TokenList::default_constructor(TokenMap scope) {
   // Get the arguments:
   TokenList list = scope["args"].asList();
 
@@ -89,9 +89,7 @@ packToken* TokenList::ListIterator::next() {
 void TokenList::ListIterator::reset() { i = 0; }
 
 /* * * * * MapData_t struct: * * * * */
-MapData_t::MapData_t() {
-
-}
+MapData_t::MapData_t(){}
 MapData_t::MapData_t(TokenMap* p) : parent(p ? new TokenMap(*p) : 0) {}
 MapData_t::MapData_t(const MapData_t& other) {
   map = other.map;

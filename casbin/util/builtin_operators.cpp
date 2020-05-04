@@ -179,37 +179,37 @@ bool BuiltinOperators::GFunction(RoleManager* rm, vector<string> ils)
 	}
 }
 
-packToken  BuiltinOperators::KeyMatchFunc(TokenMap GlobalMap, TokenMap Scope) {
+packToken  BuiltinOperators::KeyMatchFunc(TokenMap Scope) {
 	return KeyMatch(Scope["A"].asString(), Scope["B"].asString());
 }
 
-packToken  BuiltinOperators::KeyMatch2Func(TokenMap GlobalMap, TokenMap Scope) {
+packToken  BuiltinOperators::KeyMatch2Func(TokenMap Scope) {
 	return KeyMatch2(Scope["A"].asString(), Scope["B"].asString());
 }
-packToken  BuiltinOperators::KeyMatch3Func(TokenMap GlobalMap, TokenMap Scope) {
+packToken  BuiltinOperators::KeyMatch3Func(TokenMap Scope) {
 	return KeyMatch3(Scope["A"].asString(), Scope["B"].asString());
 }
-packToken  BuiltinOperators::KeyMatch4Func(TokenMap GlobalMap, TokenMap Scope) {
+packToken  BuiltinOperators::KeyMatch4Func(TokenMap Scope) {
 	return KeyMatch4(Scope["A"].asString(), Scope["B"].asString());
 }
-packToken  BuiltinOperators::RegexMatchFunc(TokenMap GlobalMap, TokenMap Scope) {
+packToken  BuiltinOperators::RegexMatchFunc(TokenMap Scope) {
 	return RegexMatch(Scope["A"].asString(), Scope["B"].asString());
 }
-packToken  BuiltinOperators::IPMatchFunc(TokenMap GlobalMap, TokenMap Scope) {
+packToken  BuiltinOperators::IPMatchFunc(TokenMap Scope) {
 	return IPMatch(Scope["A"].asString(), Scope["B"].asString());
 }
-packToken  BuiltinOperators::GlobMatchFunc(TokenMap GlobalMap, TokenMap Scope) {
+packToken  BuiltinOperators::GlobMatchFunc(TokenMap Scope) {
 	return GlobMatch(Scope["A"].asString(), Scope["B"].asString());
 }
 
-packToken BuiltinOperators::GFunctionFunc(TokenMap GlobalMap, TokenMap Scope)
-{
-	RoleManager* rm = GlobalMap[KEY_ROLEMANAGER].asPtype().rm;
-
-	if (Scope["C"].str() != "None") {
-		return GFunction(rm, {Scope["A"].asString(),Scope["B"].asString() ,Scope["C"].asString() });
-	}
-	else if (Scope["B"].str() != "None") {
-		return GFunction(rm, { Scope["A"].asString(),Scope["B"].asString()});
-	}
+function<packToken(TokenMap)> BuiltinOperators::GenerateGFunc(RoleManager* rm) {
+	function <packToken(TokenMap)> GFunc = [=](TokenMap Scope) {
+		if (Scope["C"].str() != "None") {
+			return (packToken)GFunction(rm, { Scope["A"].asString(),Scope["B"].asString() ,Scope["C"].asString() });
+		}
+		else if (Scope["B"].str() != "None") {
+			return (packToken)GFunction(rm, { Scope["A"].asString(),Scope["B"].asString() });
+		}
+	};
+	return GFunc;
 }
