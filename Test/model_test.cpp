@@ -41,7 +41,7 @@ TEST(ModelTest, LoadModelFromString) {
 TEST(ModelTest, LoadModelFromConfig) {
 	Model* m = new Model();
 	Config c = Config::NewConfigFromFile("../casbin/examples/basic_model.conf");
-	m->loadModelFromConfig(&c);
+	m->LoadModelFromConfig(&c);
 	EXPECT_EQ(m != NULL, true);
 	delete m;
 
@@ -50,7 +50,7 @@ TEST(ModelTest, LoadModelFromConfig) {
 TEST(ModelTest, HasSection) {
 	Model* m = new Model();
 	Config c = Config::NewConfigFromFile("../casbin/examples/basic_model.conf");
-	m->loadModelFromConfig(&c);
+	m->LoadModelFromConfig(&c);
 	for (auto sec : requiredSections) {
 		EXPECT_EQ(m->HasSection(sec), true);
 	}

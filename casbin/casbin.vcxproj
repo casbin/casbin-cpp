@@ -244,6 +244,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include=".clang-format" />
     <None Include="third_party\Cparse\builtin-features.inc" />
     <None Include="third_party\Cparse\builtin-features\functions.inc" />
     <None Include="third_party\Cparse\builtin-features\operations.inc" />

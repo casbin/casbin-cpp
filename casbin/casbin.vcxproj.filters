@@ -214,5 +214,6 @@
     <None Include="third_party\Cparse\builtin-features.inc">
       <Filter>Header Files\third_party\Cparse</Filter>
     </None>
+    <None Include=".clang-format" />
   </ItemGroup>
 </Project>
