@@ -2,118 +2,118 @@
 #define CASBIN_CPP_RBAC_API
 
 #include "./enforcer.h"
-#include "./util/joinSlice.h"
-#include "./util/setSubtract.h"
+#include "./util/join_slice.h"
+#include "./util/set_subtract.h"
 
 // GetRolesForUser gets the roles that a user has.
 vector<string> Enforcer :: GetRolesForUser(string name) {
     vector<string> domain;
-	vector<string> res = this->model.M["g"].AMap["g"]->RM->GetRoles(name, domain);
-	return res;
+    vector<string> res = this->model->m["g"].assertion_map["g"]->rm->GetRoles(name, domain);
+    return res;
 }
 
 // GetUsersForRole gets the users that has a role.
 vector<string> Enforcer :: GetUsersForRole(string name) {
-	vector<string> domain;
-	vector<string> res = this->model.M["g"].AMap["g"]->RM->GetUsers(name, domain);
-	return res;
+    vector<string> domain;
+    vector<string> res = this->model->m["g"].assertion_map["g"]->rm->GetUsers(name, domain);
+    return res;
 }
 
 // HasRoleForUser determines whether a user has a role.
 bool Enforcer :: HasRoleForUser(string name, string role) {
-	vector<string> roles = this->GetRolesForUser(name);
+    vector<string> roles = this->GetRolesForUser(name);
 
-	bool hasRole = false;
-    for(int i = 0 ; i < roles.size() ; i++){
-        if(roles[i] == role){
-            hasRole = true;
+    bool has_role = false;
+    for (int i = 0 ; i < roles.size() ; i++) {
+        if (roles[i] == role) {
+            has_role = true;
             break;
         }
     }
 
-	return hasRole;
+    return has_role;
 }
 
 // AddRoleForUser adds a role for a user.
 // Returns false if the user already has the role (aka not affected).
 bool Enforcer :: AddRoleForUser(string user, string role) {
     vector<string> params{user, role};
-	return this->AddGroupingPolicy(params);
+    return this->AddGroupingPolicy(params);
 }
 
 // DeleteRoleForUser deletes a role for a user.
 // Returns false if the user does not have the role (aka not affected).
 bool Enforcer :: DeleteRoleForUser(string user, string role) {
     vector<string> params{user, role};
-	return this->RemoveGroupingPolicy(params);
+    return this->RemoveGroupingPolicy(params);
 }
 
 // DeleteRolesForUser deletes all roles for a user.
 // Returns false if the user does not have any roles (aka not affected).
 bool Enforcer :: DeleteRolesForUser(string user) {
-    vector<string> fieldValues{user};
-	return this->RemoveFilteredGroupingPolicy(0, fieldValues);
+    vector<string> field_values{user};
+    return this->RemoveFilteredGroupingPolicy(0, field_values);
 }
 
 // DeleteUser deletes a user.
 // Returns false if the user does not exist (aka not affected).
 bool Enforcer :: DeleteUser(string user) {
-    vector<string> fieldValues{user};
+    vector<string> field_values{user};
 
-	bool res1 = this->RemoveFilteredGroupingPolicy(0, fieldValues);
+    bool res1 = this->RemoveFilteredGroupingPolicy(0, field_values);
 
-	bool res2 = this->RemoveFilteredPolicy(0, fieldValues);
+    bool res2 = this->RemoveFilteredPolicy(0, field_values);
 
-	return res1 || res2;
+    return res1 || res2;
 }
 
 // DeleteRole deletes a role.
 // Returns false if the role does not exist (aka not affected).
 bool Enforcer :: DeleteRole(string role) {
-    vector<string> fieldValues{role};
+    vector<string> field_values{role};
 
-	bool res1 = this->RemoveFilteredGroupingPolicy(1, fieldValues);
+    bool res1 = this->RemoveFilteredGroupingPolicy(1, field_values);
 
-	bool res2 = this->RemoveFilteredPolicy(0, fieldValues);
+    bool res2 = this->RemoveFilteredPolicy(0, field_values);
 
-	return res1 || res2;
+    return res1 || res2;
 }
 
 // DeletePermission deletes a permission.
 // Returns false if the permission does not exist (aka not affected).
 bool Enforcer :: DeletePermission(vector<string> permission) {
-    vector<string> fieldValues{permission};
-	return this->RemoveFilteredPolicy(1, fieldValues);
+    vector<string> field_values{permission};
+    return this->RemoveFilteredPolicy(1, field_values);
 }
 
 // AddPermissionForUser adds a permission for a user or role.
 // Returns false if the user or role already has the permission (aka not affected).
 bool Enforcer :: AddPermissionForUser(string user, vector<string> permission) {
-	return this->AddPolicy(joinSlice(user, permission));
+    return this->AddPolicy(JoinSlice(user, permission));
 }
 
 // DeletePermissionForUser deletes a permission for a user or role.
 // Returns false if the user or role does not have the permission (aka not affected).
 bool Enforcer :: DeletePermissionForUser(string user, vector<string> permission) {
-	return this->RemovePolicy(joinSlice(user, permission));
+    return this->RemovePolicy(JoinSlice(user, permission));
 }
 
 // DeletePermissionsForUser deletes permissions for a user or role.
 // Returns false if the user or role does not have any permissions (aka not affected).
 bool Enforcer :: DeletePermissionsForUser(string user) {
-    vector<string> fieldValues{user};
-	return this->RemoveFilteredPolicy(0, fieldValues);
+    vector<string> field_values{user};
+    return this->RemoveFilteredPolicy(0, field_values);
 }
 
 // GetPermissionsForUser gets permissions for a user or role.
 vector<vector<string>> Enforcer :: GetPermissionsForUser(string user) {
-    vector<string> fieldValues{user};
-	return this->GetFilteredPolicy(0, fieldValues);
+    vector<string> field_values{user};
+    return this->GetFilteredPolicy(0, field_values);
 }
 
 // HasPermissionForUser determines whether a user has a permission.
 bool Enforcer :: HasPermissionForUser(string user, vector<string> permission) {
-	return this->HasPolicy(joinSlice(user, permission));
+    return this->HasPolicy(JoinSlice(user, permission));
 }
 
 // GetImplicitRolesForUser gets implicit roles that a user has.
@@ -125,29 +125,29 @@ bool Enforcer :: HasPermissionForUser(string user, vector<string> permission) {
 // GetRolesForUser("alice") can only get: ["role:admin"].
 // But GetImplicitRolesForUser("alice") will get: ["role:admin", "role:user"].
 vector<string> Enforcer :: GetImplicitRolesForUser(string name, vector<string> domain) {
-	vector<string> res;
-	unordered_map <string, bool> roleSet;
-	roleSet[name] = true;
+    vector<string> res;
+    unordered_map<string, bool> role_set;
+    role_set[name] = true;
 
-	vector<string> q;
-	q.push_back(name);
+    vector<string> q;
+    q.push_back(name);
 
-	while(q.size() > 0) {
-		string name = q[0];
-		q.erase(q.begin());
+    while (q.size() > 0) {
+        string name = q[0];
+        q.erase(q.begin());
 
-		vector<string> roles = this->rm->GetRoles(name, domain);
+        vector<string> roles = this->rm->GetRoles(name, domain);
 
-		for(int i = 0 ; i < roles.size() ; i++){
-			if(!(roleSet.find(roles[i]) != roleSet.end())){
-				res.push_back(roles[i]);
-				q.push_back(roles[i]);
-				roleSet[roles[i]] = true;
-			}
-		}
-	}
+        for (int i = 0 ; i < roles.size() ; i++) {
+            if (!(role_set.find(roles[i]) != role_set.end())) {
+                res.push_back(roles[i]);
+                q.push_back(roles[i]);
+                role_set[roles[i]] = true;
+            }
+        }
+    }
 
-	return res;
+    return res;
 }
 
 // GetImplicitPermissionsForUser gets implicit permissions for a user or role.
@@ -160,30 +160,29 @@ vector<string> Enforcer :: GetImplicitRolesForUser(string name, vector<string> d
 // GetPermissionsForUser("alice") can only get: [["alice", "data2", "read"]].
 // But GetImplicitPermissionsForUser("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
 vector<vector<string>> Enforcer :: GetImplicitPermissionsForUser(string user, vector<string> domain) {
-	vector<string> roles = this->GetImplicitRolesForUser(user, domain);
-	roles.insert(roles.begin(), user);
+    vector<string> roles = this->GetImplicitRolesForUser(user, domain);
+    roles.insert(roles.begin(), user);
 
-	bool withDomain = false;
-	if(domain.size() == 1) {
-		withDomain = true;
-	} else if(domain.size() > 1) {
-		throw CasbinEnforcerException("Domain should be 1 parameter");
-	}
+    bool with_domain = false;
+    if (domain.size() == 1)
+        with_domain = true;
+    else if (domain.size() > 1)
+        throw CasbinEnforcerException("Domain should be 1 parameter");
 
-	vector<vector<string>> res;
-	vector<vector<string>> permissions;
-	
-	for(int i = 0 ; i < roles.size() ; i++) {
-		if(withDomain)
-			permissions = this->GetPermissionsForUserInDomain(roles[i], domain[0]);
-		else
-			permissions = this->GetPermissionsForUser(roles[i]);
+    vector<vector<string>> res;
+    vector<vector<string>> permissions;
 
-		for(int i = 0 ; i < permissions.size() ; i++)
-			res.push_back(permissions[i]);
-	}
+    for (int i = 0 ; i < roles.size() ; i++) {
+        if (with_domain)
+            permissions = this->GetPermissionsForUserInDomain(roles[i], domain[0]);
+        else
+            permissions = this->GetPermissionsForUser(roles[i]);
 
-	return res;
+        for (int i = 0 ; i < permissions.size() ; i++)
+            res.push_back(permissions[i]);
+    }
+
+    return res;
 }
 
 // GetImplicitUsersForPermission gets implicit users for a permission.
@@ -195,25 +194,26 @@ vector<vector<string>> Enforcer :: GetImplicitPermissionsForUser(string user, ve
 // GetImplicitUsersForPermission("data1", "read") will get: ["alice", "bob"].
 // Note: only users will be returned, roles (2nd arg in "g") will be excluded.
 vector<string> Enforcer :: GetImplicitUsersForPermission(vector<string> permission) {
-	// vector<string> subjects = this->GetAllSubjects();
-	// vector<string> roles = this->GetAllRoles();
+    vector<string> subjects = this->GetAllSubjects();
+    vector<string> roles = this->GetAllRoles();
 
-	// vector<string> users = setSubtract(subjects, roles);
+    vector<string> users = SetSubtract(subjects, roles);
 
-	// vector<string> res;
-	// for(int i = 0 ; i < users.size() ; i++) {
-	// 	vector<string> req = joinSlice(users[i], permission);
-		
-	// 	// vector<void *> newReq;
-	// 	for(int i = 0 ; i < req.size() ; i++)
-	// 		newReq.push_back((void *)(&req[i]));
-	// 	bool allowed = this->Enforce(newReq);
+    vector<string> res;
+    for (int i = 0 ; i < users.size() ; i++) {
+        Scope scope;
+        PushObject(scope);
+        PushStringPropToObject(scope, "r", users[i], "sub");
+        PushStringPropToObject(scope, "r", permission[0], "obj");
+        PushStringPropToObject(scope, "r", permission[1], "act");
+        
+        bool allowed = this->Enforce(scope);
 
-	// 	if(allowed)
-	// 		res.push_back(users[i]);
-	// }
+        if (allowed)
+            res.push_back(users[i]);
+    }
 
-	// return res;
+    return res;
 }
 
 #endif

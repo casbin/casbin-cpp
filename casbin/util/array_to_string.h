@@ -6,9 +6,9 @@
 
 using namespace std;
 
-string arrayToString(vector<string> arr){
+string ArrayToString(vector<string> arr){
     string res = arr[0];
-    for(int i = 0 ; i < arr.size() ; i++)
+    for (int i = 0 ; i < arr.size() ; i++)
         res += ", " + arr[i];
     return res;
 }

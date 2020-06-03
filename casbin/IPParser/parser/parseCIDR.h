@@ -7,7 +7,7 @@
 #include "./IP.h"
 #include "./IPMask.h"
 #include "./dtoi.h"
-#include "./byte.h"
+#include "./Byte.h"
 #include "./parseIPv4.h"
 #include "./parseIPv6.h"
 #include "./CIDRMask.h"
@@ -23,7 +23,7 @@ CIDR parseCIDR(string s) {
 	}
 	string addr = s.substr(0, pos);
 	string mask = s.substr(pos+1, s.length()-pos-1);
-	byte iplen = IP :: IPv4len;
+	Byte iplen = IP :: IPv4len;
 	IP ip;
 	ip = parseIPv4(addr);
 	if(ip.isLegal == false) {

@@ -5,13 +5,13 @@
 
 #include "./IP.h"
 #include "./dtoi.h"
-#include "./byte.h"
+#include "./Byte.h"
 #include "./IPv4.h"
 
 using namespace std;
 
 IP parseIPv4(string s) {
-    vector <byte> pb(IP :: IPv4len, 0);
+    vector <Byte> pb(IP :: IPv4len, 0);
     IP ipv4;
 	for(int i = 0; i < IP :: IPv4len ; i++) {
 		if(s.length() == 0) {

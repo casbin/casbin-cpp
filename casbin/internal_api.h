@@ -5,14 +5,14 @@
 
 // addPolicy adds a rule to the current policy.
 bool Enforcer :: addPolicy(string sec, string ptype, vector<string> rule) {
-	bool ruleAdded = this->model.AddPolicy(sec, ptype, rule);
+	bool ruleAdded = this->model->AddPolicy(sec, ptype, rule);
 	if(!ruleAdded)
 		return ruleAdded;
 
-	if(this->adapter != NULL && this->autoSave)
+	if(this->adapter != NULL && this->auto_save)
         this->adapter->AddPolicy(sec, ptype, rule);
 
-	if(this->watcher != NULL && this->autoNotifyWatcher)
+	if(this->watcher != NULL && this->auto_notify_watcher)
 		this->watcher->Update();
 
 	return ruleAdded;
@@ -20,14 +20,14 @@ bool Enforcer :: addPolicy(string sec, string ptype, vector<string> rule) {
 
 // removePolicy removes a rule from the current policy.
 bool Enforcer :: removePolicy(string sec, string ptype, vector<string> rule) {
-	bool ruleRemoved = this->model.RemovePolicy(sec, ptype, rule);
+	bool ruleRemoved = this->model->RemovePolicy(sec, ptype, rule);
 	if(!ruleRemoved)
 		return ruleRemoved;
 
-	if(this->adapter != NULL && this->autoSave)
+	if(this->adapter != NULL && this->auto_save)
         this->adapter->RemovePolicy(sec, ptype, rule);
 
-	if(this->watcher !=NULL && this->autoNotifyWatcher)
+	if(this->watcher !=NULL && this->auto_notify_watcher)
 		this->watcher->Update();
 
 	return ruleRemoved;
@@ -35,14 +35,14 @@ bool Enforcer :: removePolicy(string sec, string ptype, vector<string> rule) {
 
 // removeFilteredPolicy removes rules based on field filters from the current policy.
 bool Enforcer :: removeFilteredPolicy(string sec, string ptype, int fieldIndex, vector<string> fieldValues){
-	bool ruleRemoved  = this->model.RemoveFilteredPolicy(sec, ptype, fieldIndex, fieldValues);
+	bool ruleRemoved  = this->model->RemoveFilteredPolicy(sec, ptype, fieldIndex, fieldValues);
 	if(!ruleRemoved)
 		return ruleRemoved;
 
-	if(this->adapter != NULL && this->autoSave)
+	if(this->adapter != NULL && this->auto_save)
         this->adapter->RemoveFilteredPolicy(sec, ptype, fieldIndex, fieldValues);
 
-	if(this->watcher !=NULL && this->autoNotifyWatcher)
+	if(this->watcher !=NULL && this->auto_notify_watcher)
 		this->watcher->Update();
 
 	return ruleRemoved;

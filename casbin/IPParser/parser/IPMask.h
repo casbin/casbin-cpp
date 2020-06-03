@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "./byte.h"
+#include "./Byte.h"
 
 using namespace std;
 
-typedef vector < byte > IPMask;
+typedef vector < Byte > IPMask;
 
 #endif

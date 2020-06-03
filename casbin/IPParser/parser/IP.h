@@ -7,16 +7,16 @@
 #include "./allFF.h"
 #include "./IPMask.h"
 #include "./equal.h"
-#include "./byte.h"
+#include "./Byte.h"
 
 using namespace std;
 
 class IP {
     public:
-        vector <byte> ip;
+        vector <Byte> ip;
         bool isLegal;
-        static byte IPv4len;
-        static byte IPv6len;
+        static Byte IPv4len;
+        static Byte IPv6len;
         static IPMask v4InV6Prefix;
 
         IP() {
@@ -41,7 +41,7 @@ class IP {
                 return ip_mask;
             }
             IP out;
-            vector <byte> outNew(n, 0);
+            vector <Byte> outNew(n, 0);
             out.ip = outNew;
             out.isLegal = true;
             for(int i = 0; i < n; i++) {
@@ -55,13 +55,13 @@ class IP {
                 return equal(ip, x.ip);
             }
             if(ip.size() == IPv4len && x.ip.size() == IPv6len) {
-                vector <byte> xNew1(x.ip.begin(), x.ip.begin() + 12);
-                vector <byte> xNew2(x.ip.begin() + 12, x.ip.end());
+                vector <Byte> xNew1(x.ip.begin(), x.ip.begin() + 12);
+                vector <Byte> xNew2(x.ip.begin() + 12, x.ip.end());
                 return equal(xNew1, v4InV6Prefix) && equal(ip, xNew2);
             }
             if(ip.size() == IPv6len && x.ip.size() == IPv4len) {
-                vector <byte> ipNew1(ip.begin(), ip.begin() + 12);
-                vector <byte> ipNew2(ip.begin() + 12, ip.end());
+                vector <Byte> ipNew1(ip.begin(), ip.begin() + 12);
+                vector <Byte> ipNew2(ip.begin() + 12, ip.end());
                 return equal(ipNew1, v4InV6Prefix) && equal(ipNew2, x.ip);
             }
             return false;
@@ -81,18 +81,18 @@ class IP {
             return ip1 + "." + ip2 + "." + ip3 + "." + ip4;
         }
 
-        // To4 converts the IPv4 address ip to a 4-byte representation.
+        // To4 converts the IPv4 address ip to a 4-Byte representation.
         // If ip is not an IPv4 address, To4 returns nil.
         IP To4() {
             if(ip.size() == IPv4len) {
                 return *this;
             }
             IP ipNew;
-            vector <byte> ipN (ip.begin(), ip.begin() + 10);
+            vector <Byte> ipN (ip.begin(), ip.begin() + 10);
             ipNew.ip = ipN;
             if(ip.size() == IPv6len && isZeros(ipNew) && ip[10] == 0xff && ip[11] == 0xff) {
                 IP ipNew2;
-                vector <byte> ipN(ip.begin() + 12, ip.begin() + 16);
+                vector <Byte> ipN(ip.begin() + 12, ip.begin() + 16);
                 ipNew2.ip = ipN;
                 return ipNew2;
             }
@@ -112,8 +112,8 @@ class IP {
 
 };
 
-byte IP :: IPv4len = 4;
-byte IP :: IPv6len = 16;
+Byte IP :: IPv4len = 4;
+Byte IP :: IPv6len = 16;
 IPMask IP :: v4InV6Prefix{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff};
 
 #endif

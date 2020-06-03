@@ -151,18 +151,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="config\Config.h" />
-    <ClInclude Include="config\ConfigInterface.h" />
-    <ClInclude Include="effect\DefaultEffector.h" />
-    <ClInclude Include="effect\Effect.h" />
-    <ClInclude Include="effect\Effector.h" />
-    <ClInclude Include="enforcer.h" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="config\config.h" />
+    <ClInclude Include="config\config_interface.h" />
+    <ClInclude Include="duktape\duktape.h" />
+    <ClInclude Include="duktape\duktape_core.h" />
+    <ClInclude Include="duktape\duk_config.h" />
+    <ClInclude Include="duktape\scope.h" />
+    <ClInclude Include="effect\default_effector.h" />
+    <ClInclude Include="effect\effect.h" />
+    <ClInclude Include="effect\effector.h" />
     <ClInclude Include="error\Error.h" />
+    <ClInclude Include="exception\CasbinAdapterException.h" />
+    <ClInclude Include="exception\CasbinEnforcerException.h" />
+    <ClInclude Include="exception\CasbinRBACException.h" />
     <ClInclude Include="exception\IllegalArgumentException.h" />
     <ClInclude Include="exception\IOException.h" />
     <ClInclude Include="exception\MissingRequiredSections.h" />
     <ClInclude Include="exception\UnsupportedOperationException.h" />
-    <ClInclude Include="framework.h" />
     <ClInclude Include="IPParser\exceptions\ParseException.h" />
     <ClInclude Include="IPParser\parser\allFF.h" />
     <ClInclude Include="IPParser\parser\byte.h" />
@@ -184,34 +198,33 @@
     <ClInclude Include="log\Log.h" />
     <ClInclude Include="log\Logger.h" />
     <ClInclude Include="log\LogUtil.h" />
-    <ClInclude Include="model\Assertion.h" />
-    <ClInclude Include="model\Model.h" />
-    <ClInclude Include="model\Policy.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="persist\Adapter.h" />
-    <ClInclude Include="rbac\DefaultRoleManager.h" />
-    <ClInclude Include="rbac\GroupRoleManager.h" />
-    <ClInclude Include="rbac\RoleManager.h" />
-    <ClInclude Include="util\arrayEquals.h" />
-    <ClInclude Include="util\arrayRemoveDuplicates.h" />
-    <ClInclude Include="util\builtInFunctions.h" />
+    <ClInclude Include="model\assertion.h" />
+    <ClInclude Include="model\function.h" />
+    <ClInclude Include="model\model.h" />
+    <ClInclude Include="model\policy.h" />
+    <ClInclude Include="model\scope_config.h" />
+    <ClInclude Include="persist\adapter.h" />
+    <ClInclude Include="persist\adapter_filtered.h" />
+    <ClInclude Include="persist\default_watcher.h" />
+    <ClInclude Include="persist\file-adapter\file_adapter.h" />
+    <ClInclude Include="persist\file-adapter\filtered_adapter.h" />
+    <ClInclude Include="persist\watcher.h" />
+    <ClInclude Include="rbac\default_role_manager.h" />
+    <ClInclude Include="rbac\group_role_manager.h" />
+    <ClInclude Include="rbac\role_manager.h" />
+    <ClInclude Include="util\array_equals.h" />
+    <ClInclude Include="util\array_remove_duplicates.h" />
+    <ClInclude Include="util\array_to_string.h" />
+    <ClInclude Include="util\built_in_functions.h" />
     <ClInclude Include="util\ends_with.h" />
-    <ClInclude Include="util\escapeAssertion.h" />
-    <ClInclude Include="util\findAllOccurences.h" />
+    <ClInclude Include="util\escape_assertion.h" />
+    <ClInclude Include="util\find_all_occurences.h" />
     <ClInclude Include="util\join.h" />
-    <ClInclude Include="util\removeComments.h" />
+    <ClInclude Include="util\join_slice.h" />
+    <ClInclude Include="util\remove_comments.h" />
+    <ClInclude Include="util\set_subtract.h" />
     <ClInclude Include="util\split.h" />
     <ClInclude Include="util\trim.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="enforcer.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

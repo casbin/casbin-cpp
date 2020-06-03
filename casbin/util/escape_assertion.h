@@ -12,7 +12,7 @@ using namespace std;
 * @param s the value of the matcher and effect assertions.
 * @return the escaped value.
 */
-string escapeAssertion(string s) {
+string EscapeAssertion(string s) {
     //Replace the first dot, because the string doesn't start with "m="
     // and is not covered by the regex.
     if (s.find("r")==0 || s.find("p")==0) {
@@ -26,8 +26,8 @@ string escapeAssertion(string s) {
     if (regex_search(s, match, regex_s)) {
         for (int i=1; i<match.size(); i++) {
             int pos = match.str(i).find(".");
-            string newStr = match.str(i).replace(pos, 1, "_");
-            s = s.replace(match.position(i), match.str(i).length(), newStr);
+            string new_str = match.str(i).replace(pos, 1, "_");
+            s = s.replace(match.position(i), match.str(i).length(), new_str);
         }
     }
     return s;

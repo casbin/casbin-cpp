@@ -1,19 +1,12 @@
-#include <direct.h>
-#include <algorithm>
+#include <string>
 
-#include "pch.h"
-#include "../casbin/config/Config.h"
 #include "../casbin/util/split.h"
+#include "pch.h"
 
 using namespace std;
 
-class TestConfig : public ::testing::Test {
+class TestModel : public ::testing::Test {
 	protected:
-
-		void SetUp() override {
-			string filepath = filePath("../casbin/config/testdata/testini.ini");
-			config = Config::NewConfig(filepath);
-		}
 
 		string filePath(string filepath) {
 			char* root = _getcwd(NULL, 0);
@@ -35,16 +28,14 @@ class TestConfig : public ::testing::Test {
 				filepath1 = filepath1 + "/" + finalDirectories[i];
 			return filepath1;
 		}
-
-		Config config;
 };
 
-TEST_F(TestConfig, TestDebug) {
+TEST_F(TestModel, TestDebug) {
 	EXPECT_TRUE(config.getBool("debug"));
 }
 
 TEST_F(TestConfig, TestURL) {
-	EXPECT_EQ( "act.wiki", config.getString("url"));
+	EXPECT_EQ("act.wiki", config.getString("url"));
 }
 
 TEST_F(TestConfig, TestRedis) {

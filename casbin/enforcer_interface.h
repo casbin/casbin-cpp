@@ -1,10 +1,10 @@
 #ifndef CASBIN_CPP_ENFORCER_INTERFACE
 #define CASBIN_CPP_ENFORCER_INTERFACE
 
-#include "./model/Model.h"
-#include "./persist/Adapter.h"
-#include "./persist/Watcher.h"
-#include "./effect/Effector.h"
+#include "./model/model.h"
+#include "./persist/adapter.h"
+#include "./persist/default_watcher.h"
+#include "./effect/effector.h"
 #include "./model/scope_config.h"
 
 // IEnforcer is the API interface of Enforcer
@@ -14,11 +14,11 @@ class IEnforcer {
         /* Enforcer API */
         virtual void InitWithFile(string modelPath, string policyPath) = 0;
         virtual void InitWithAdapter(string modelPath, Adapter* adapter) = 0;
-        virtual void InitWithModelAndAdapter(Model m, Adapter* adapter) = 0;
+        virtual void InitWithModelAndAdapter(Model* m, Adapter* adapter) = 0;
         virtual void initialize() = 0;
         virtual void LoadModel() = 0;
-        virtual Model GetModel() = 0;
-        virtual void SetModel(Model m) = 0;
+        virtual Model* GetModel() = 0;
+        virtual void SetModel(Model* m) = 0;
         virtual Adapter* GetAdapter() = 0;
         virtual void SetAdapter(Adapter* adapter) = 0;
         virtual void SetWatcher(Watcher* watcher) = 0;
@@ -34,14 +34,14 @@ class IEnforcer {
         virtual bool IsFiltered() = 0;
         virtual void SavePolicy() = 0;
         virtual void EnableEnforce(bool enable) = 0;
-        virtual void EnableLog(bool enable) = 0;
+        // virtual void EnableLog(bool enable) = 0;
         virtual void EnableAutoNotifyWatcher(bool enable) = 0;
         virtual void EnableAutoSave(bool autoSave) = 0;
         virtual void EnableAutoBuildRoleLinks(bool autoBuildRoleLinks) = 0;
         virtual void BuildRoleLinks() = 0;
-        virtual bool enforce(string matcher) = 0;
-        virtual bool Enforce() = 0;
-        virtual bool EnforceWithMatcher(string matcher) = 0;
+        virtual bool enforce(string matcherc, Scope scope) = 0;
+        virtual bool Enforce(Scope scope) = 0;
+        virtual bool EnforceWithMatcher(string matcher, Scope scope) = 0;
 
         /* RBAC API */
         virtual vector<string> GetRolesForUser(string name) = 0;

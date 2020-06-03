@@ -1,7 +1,7 @@
 #ifndef IP_PARSER_PARSER_CIDR_MASK
 #define IP_PARSER_PARSER_CIDR_MASK
 
-#include "./byte.h"
+#include "./Byte.h"
 #include "./IPMask.h"
 #include "./IP.h"
 

@@ -5,157 +5,157 @@
 #include <string>
 #include <vector>
 
-#include "../rbac/RoleManager.h"
+#include "../rbac/role_manager.h"
 #include "./Model.h"
-#include "../log/Logger.h"
-#include "../util/arrayEquals.h"
-#include "../util/arrayRemoveDuplicates.h"
+// #include "../log/Logger.h"
+#include "../util/array_equals.h"
+#include "../util/array_remove_duplicates.h"
 
 using namespace std;
 
 // BuildRoleLinks initializes the roles in RBAC.
 void Model::BuildRoleLinks(RoleManager* rm) {
-    for(unordered_map <string, Assertion *> :: iterator it = this->M["g"].AMap.begin() ; it != this->M["g"].AMap.end() ; it++) {
-        (it->second)->buildRoleLinks(rm);
+    for (unordered_map<string, Assertion*> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++) {
+        (it->second)->BuildRoleLinks(rm);
     }
 }
 
 // PrintPolicy prints the policy to log.
-void Model::PrintPolicy() {
-	DefaultLogger df_logger;
-	df_logger.EnableLog(true);
+void Model :: PrintPolicy() {
+    // DefaultLogger df_logger;
+    // df_logger.EnableLog(true);
 
-	Logger *logger = &df_logger;
-	LogUtil::SetLogger(*logger);
+    // Logger *logger = &df_logger;
+    // LogUtil::SetLogger(*logger);
 
-	LogUtil::LogPrint("Policy:");
+    // LogUtil::LogPrint("Policy:");
 
-    for(unordered_map <string, Assertion *> :: iterator it = this->M["p"].AMap.begin() ; it != this->M["p"].AMap.end() ; it++) {
-        LogUtil::LogPrint(it->first, ": ", (it->second)->Value, ": ", (it->second)->Policy);
+    for (unordered_map<string, Assertion*> :: iterator it = this->m["p"].assertion_map.begin() ; it != this->m["p"].assertion_map.end() ; it++) {
+        // LogUtil::LogPrint(it->first, ": ", (it->second)->Value, ": ", (it->second)->policy);
     }
 
-    for(unordered_map <string, Assertion *> :: iterator it = this->M["g"].AMap.begin() ; it != this->M["g"].AMap.end() ; it++) {
-        LogUtil::LogPrint(it->first, ": ", (it->second)->Value, ": ", (it->second)->Policy);
+    for (unordered_map<string, Assertion*> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++) {
+        // LogUtil::LogPrint(it->first, ": ", (it->second)->Value, ": ", (it->second)->policy);
     }
 }
 
 // ClearPolicy clears all current policy.
-void Model::ClearPolicy() {
-	for(unordered_map <string, Assertion *> :: iterator it = this->M["p"].AMap.begin() ; it != this->M["p"].AMap.end() ; it++) {
-        (it->second)->Policy.clear();
+void Model :: ClearPolicy() {
+    for (unordered_map<string, Assertion*> :: iterator it = this->m["p"].assertion_map.begin() ; it != this->m["p"].assertion_map.end() ; it++) {
+        (it->second)->policy.clear();
     }
 
-	for(unordered_map <string, Assertion *> :: iterator it = this->M["g"].AMap.begin() ; it != this->M["g"].AMap.end() ; it++) {
-        (it->second)->Policy.clear();
-	}
+    for (unordered_map<string, Assertion*> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++) {
+        (it->second)->policy.clear();
+    }
 }
 
 // GetPolicy gets all rules in a policy.
-vector < vector < string > > Model::GetPolicy(string sec, string ptype) {
-	return (this->M)[sec].AMap[ptype]->Policy;
+vector<vector<string>> Model::GetPolicy(string sec, string p_type) {
+    return (this->m)[sec].assertion_map[p_type]->policy;
 }
 
 // GetFilteredPolicy gets rules based on field filters from a policy.
-vector < vector < string > > Model::GetFilteredPolicy(string sec, string ptype, int fieldIndex, vector <string> fieldValues) {
-	vector < vector < string > > res;
+vector<vector<string>> Model::GetFilteredPolicy(string sec, string p_type, int field_index, vector <string> field_values) {
+    vector<vector<string>> res;
 
-	for( vector < vector < string > > :: iterator it = M[sec].AMap[ptype]->Policy.begin() ; it != M[sec].AMap[ptype]->Policy.end() ; it++){
-		bool matched = true;
-		for(int i = 0 ; i < fieldValues.size() ; i++){
-			if(fieldValues[i] != "" && (*it)[fieldIndex + i] != fieldValues[i] ){
-				matched = false;
-				break;
-			}
-		}
-		if(matched) {
-			res.push_back(*it);
-		}
-	}
+    for (vector<vector<string>> :: iterator it = m[sec].assertion_map[p_type]->policy.begin() ; it != m[sec].assertion_map[p_type]->policy.end() ; it++){
+        bool matched = true;
+        for(int i = 0 ; i < field_values.size() ; i++){
+            if(field_values[i] != "" && (*it)[field_index + i] != field_values[i] ){
+                matched = false;
+                break;
+            }
+        }
+        if(matched) {
+            res.push_back(*it);
+        }
+    }
 
-	return res;
+    return res;
 }
 
 // HasPolicy determines whether a model has the specified policy rule.
-bool Model::HasPolicy(string sec, string ptype, vector <string> rule) {
-	for(vector < vector < string > > :: iterator it = M[sec].AMap[ptype]->Policy.begin() ; it != M[sec].AMap[ptype]->Policy.end() ; it++){
-		if(arrayEquals(rule, *it)){
-			return true;
-		}
-	}
+bool Model::HasPolicy(string sec, string p_type, vector<string> rule) {
+    for (vector<vector<string>> :: iterator it = m[sec].assertion_map[p_type]->policy.begin() ; it != m[sec].assertion_map[p_type]->policy.end() ; it++) {
+        if (ArrayEquals(rule, *it)) {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 // AddPolicy adds a policy rule to the model.
-bool Model::AddPolicy(string sec, string ptype,  vector <string> rule) {
-	if(!this->HasPolicy(sec, ptype, rule)) {
-		M[sec].AMap[ptype]->Policy.push_back(rule);
-		return true;
-	}
-	return false;
+bool Model::AddPolicy(string sec, string p_type, vector<string> rule) {
+    if(!this->HasPolicy(sec, p_type, rule)) {
+        m[sec].assertion_map[p_type]->policy.push_back(rule);
+        return true;
+    }
+    return false;
 }
 
 // RemovePolicy removes a policy rule from the model.
-bool Model::RemovePolicy(string sec, string ptype, vector <string> rule) {
-	for(int i = 0 ; i < M[sec].AMap[ptype]->Policy.size() ; i++){
-		if(arrayEquals(rule, M[sec].AMap[ptype]->Policy[i])) {
-			M[sec].AMap[ptype]->Policy.erase(M[sec].AMap[ptype]->Policy.begin() + i);
-			return true;
-		}
-	}
+bool Model::RemovePolicy(string sec, string p_type, vector <string> rule) {
+    for (int i = 0 ; i < m[sec].assertion_map[p_type]->policy.size() ; i++) {
+        if (ArrayEquals(rule, m[sec].assertion_map[p_type]->policy[i])) {
+            m[sec].assertion_map[p_type]->policy.erase(m[sec].assertion_map[p_type]->policy.begin() + i);
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 // RemoveFilteredPolicy removes policy rules based on field filters from the model.
-bool Model::RemoveFilteredPolicy(string sec, string ptype, int fieldIndex, vector <string> fieldValues) {
-	vector < vector < string > > tmp;
-	bool res = false;
-	for(vector < vector < string > > :: iterator it = M[sec].AMap[ptype]->Policy.begin() ; it != M[sec].AMap[ptype]->Policy.end() ; it++){
-		bool matched = true;
-		for(int i = 0 ; i < fieldValues.size() ; i++){
-			if(fieldValues[i] != "" && (*it)[fieldIndex+i] != fieldValues[i]) {
-				matched = false;
-				break;
-			}
-		}
-		if(matched) {
-			res = true;
-		} else {
-			tmp.push_back(*it);
-		}
-	}
+bool Model::RemoveFilteredPolicy(string sec, string p_type, int field_index, vector <string> field_values) {
+    vector<vector<string>> tmp;
+    bool res = false;
+    for (vector<vector< string>> :: iterator it = m[sec].assertion_map[p_type]->policy.begin() ; it != m[sec].assertion_map[p_type]->policy.end() ; it++) {
+        bool matched = true;
+        for (int i = 0 ; i < field_values.size() ; i++) {
+            if (field_values[i] != "" && (*it)[field_index+i] != field_values[i]) {
+                matched = false;
+                break;
+            }
+        }
+        if (matched) {
+            res = true;
+        } else {
+            tmp.push_back(*it);
+        }
+    }
 
-	M[sec].AMap[ptype]->Policy = tmp;
-	return res;
+    m[sec].assertion_map[p_type]->policy = tmp;
+    return res;
 }
 
 // GetValuesForFieldInPolicy gets all values for a field for all rules in a policy, duplicated values are removed.
-vector <string> Model::GetValuesForFieldInPolicy(string sec, string ptype, int fieldIndex) {
-	vector <string> values;
+vector<string> Model::GetValuesForFieldInPolicy(string sec, string p_type, int field_index) {
+    vector<string> values;
 
-	for(vector < vector < string > > :: iterator it = M[sec].AMap[ptype]->Policy.begin() ; it != M[sec].AMap[ptype]->Policy.end() ; it++){
-		values.push_back((*it)[fieldIndex]);
-	}
+    for (vector<vector<string>> :: iterator it = m[sec].assertion_map[p_type]->policy.begin() ; it != m[sec].assertion_map[p_type]->policy.end() ; it++){
+        values.push_back((*it)[field_index]);
+    }
 
-	arrayRemoveDuplicates(values);
+    ArrayRemoveDuplicates(values);
 
-	return values;
+    return values;
 }
 
-// GetValuesForFieldInPolicyAllTypes gets all values for a field for all rules in a policy of all ptypes, duplicated values are removed.
-vector <string> Model::GetValuesForFieldInPolicyAllTypes(string sec, int fieldIndex) {
-	vector <string> values;
+// GetValuesForFieldInPolicyAllTypes gets all values for a field for all rules in a policy of all p_types, duplicated values are removed.
+vector<string> Model::GetValuesForFieldInPolicyAllTypes(string sec, int field_index) {
+    vector<string> values;
 
-	for(unordered_map <string, Assertion*> :: iterator it = M[sec].AMap.begin() ; it != M[sec].AMap.end() ; it++){
-		for(vector <string> :: iterator it1 = this->GetValuesForFieldInPolicy(sec, it->first, fieldIndex).begin() ; it1 != this->GetValuesForFieldInPolicy(sec, it->first, fieldIndex).end() ; it1++) {
-			values.push_back(*it1);
-		}
-	}
+    for (unordered_map<string, Assertion*> :: iterator it = m[sec].assertion_map.begin() ; it != m[sec].assertion_map.end() ; it++) {
+        for (vector<string> :: iterator it1 = this->GetValuesForFieldInPolicy(sec, it->first, field_index).begin() ; it1 != this->GetValuesForFieldInPolicy(sec, it->first, field_index).end() ; it1++) {
+            values.push_back(*it1);
+        }
+    }
 
-	arrayRemoveDuplicates(values);
+    ArrayRemoveDuplicates(values);
 
-	return values;
+    return values;
 }
 
 #endif

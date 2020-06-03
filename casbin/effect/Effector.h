@@ -3,9 +3,7 @@
 
 #include <string>
 
-#include "Effect.h"
-
-#endif
+#include "effect.h"
 
 using namespace std;
 
@@ -24,3 +22,5 @@ class Effector{
          */
         virtual bool MergeEffects(string expr, vector<Effect> effects, vector<float> results) = 0;
 };
+
+#endif

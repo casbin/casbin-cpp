@@ -19,11 +19,15 @@ class Logger{
 
         //Print formats using the default formats for its operands and logs the message.
         template <typename... Object>
-        void Print(Object... objects);
+        void Print(Object... objects){
+            return;
+        }
 
         //Printf formats according to a format specifier and logs the message.
         template <typename... Object>
-        void Printf(string, Object... objects);
+        void Printf(string, Object... objects){
+            return;
+        }
 };
 
 #endif

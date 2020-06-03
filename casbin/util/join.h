@@ -6,11 +6,10 @@
 
 using namespace std;
 
-string join(vector <string> vos, string sep = " "){
+string Join(vector<string> vos, string sep = " "){
     string fs = vos[0];
-    for(int i = 1 ; i < vos.size() ; i++) {
+    for (int i = 1 ; i < vos.size() ; i++)
         fs += sep + vos[i];
-    }
     return fs;
 }
 

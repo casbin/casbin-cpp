@@ -1,7 +1,7 @@
 #ifndef CASBIN_CPP_PERSIST_ADAPTER_FILTERED
 #define CASBIN_CPP_PERSIST_ADAPTER_FILTERED
 
-#include "./Adapter.h"
+#include "./adapter.h"
 
 // FilteredAdapter is the interface for Casbin adapters supporting filtered policies.
 class FilteredAdapter : public Adapter {

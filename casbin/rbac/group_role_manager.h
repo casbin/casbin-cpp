@@ -1,7 +1,7 @@
 #ifndef CASBIN_CPP_RBAC_GROUP_ROLE_MANAGER
 #define CASBIN_CPP_RBAC_GROUP_ROLE_MANAGER
 
-#include "DefaultRoleManager.h"
+#include "./default_role_manager.h"
 
 using namespace std;
 
@@ -24,28 +24,28 @@ class GroupRoleManager : public DefaultRoleManager {
          * GroupRoleManager is the constructor for creating an instance of the
          * GroupRoleManager implementation.
          *
-         * @param maxHierarchyLevel the maximized allowed RBAC hierarchy level.
+         * @param max_hierarchy_level the maximized allowed RBAC hierarchy level.
          */
-        static GroupRoleManager* NewGroupRoleManager(int maxHierarchyLevel){
-            return (GroupRoleManager*)NewRoleManager(maxHierarchyLevel);
+        static GroupRoleManager* NewGroupRoleManager(int max_hierarchy_level){
+            return (GroupRoleManager*)NewRoleManager(max_hierarchy_level);
         }
 
         /**
          * hasLink determines whether role: name1 inherits role: name2.
          * domain is a prefix to the roles.
          */
-        bool HasLink(string name1, string name2, vector <string> domain) {
-            if(DefaultRoleManager :: HasLink(name1, name2, domain)) {
+        bool HasLink(string name1, string name2, vector<string> domain) {
+            if (DefaultRoleManager :: HasLink(name1, name2, domain)) {
                 return true;
             }
-            unsigned int domain_length = sizeof(domain)/sizeof(domain[0]);
+            unsigned int domain_length = sizeof(domain) / sizeof(domain[0]);
             // check name1's groups
             if (domain_length == 1) {
                 try {
-                    vector <string> domain1;
-                    vector <string> groups = DefaultRoleManager :: GetRoles(name1, domain1);
-                    for(vector <string> :: iterator group = groups.begin() ; group < groups.end() ; group++) {
-                        if(DefaultRoleManager :: HasLink(*group, name2, domain)) {
+                    vector<string> domain1;
+                    vector<string> groups = DefaultRoleManager :: GetRoles(name1, domain1);
+                    for (vector<string> :: iterator group = groups.begin() ; group < groups.end() ; group++) {
+                        if (DefaultRoleManager :: HasLink(*group, name2, domain)) {
                             return true;
                         }
                     }

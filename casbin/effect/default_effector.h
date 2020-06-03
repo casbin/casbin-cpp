@@ -1,7 +1,9 @@
 #ifndef CASBIN_CPP_EFFECT_DEFAULT_EFFECTOR
 #define CASBIN_CPP_EFFECT_DEFAULT_EFFECTOR
 
-#include "Effector.h"
+#include <vector>
+
+#include "effector.h"
 #include "../exception/UnsupportedOperationException.h"
 
 /**
@@ -12,7 +14,7 @@ class DefaultEffector : public Effector{
 
         // NewDefaultEffector is the constructor for DefaultEffector.
         static DefaultEffector* NewDefaultEffector(){
-            DefaultEffector* e;
+            DefaultEffector* e = new DefaultEffector;
             return e;
         }
 
@@ -22,7 +24,7 @@ class DefaultEffector : public Effector{
         bool MergeEffects(string expr, vector<Effect> effects, vector<float> results) {
             bool result;
 
-            unsigned int number_of_effects = sizeof(effects)/sizeof(effects[0]);
+            unsigned int number_of_effects = sizeof(effects) / sizeof(effects[0]);
 
             if (!expr.compare("some(where (p_eft == allow))")) {
                 result = false;

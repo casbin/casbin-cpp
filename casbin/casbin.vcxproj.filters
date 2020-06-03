@@ -13,161 +13,48 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enforcer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="config\Config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="config\ConfigInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="effect\DefaultEffector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="effect\Effect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="effect\Effector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="error\Error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\IllegalArgumentException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\IOException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\MissingRequiredSections.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\UnsupportedOperationException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\exceptions\ParseException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\allFF.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\byte.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\CIDR.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\CIDRMask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\dtoi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\equal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\IP.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\IPMask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\IPNet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\IPv4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\parseCIDR.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\parseIP.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\parseIPv4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\parseIPv6.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\Print.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\xtoi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="log\DefaultLogger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="log\Log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="log\Logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="log\LogUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="model\Assertion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="model\Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="model\Policy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="persist\Adapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rbac\DefaultRoleManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rbac\GroupRoleManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rbac\RoleManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\arrayEquals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\arrayRemoveDuplicates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\builtInFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\ends_with.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\escapeAssertion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\findAllOccurences.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\join.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\removeComments.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\split.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\trim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <Filter Include="Header Files\config">
+      <UniqueIdentifier>{32489c5d-6ea0-4d7e-9a3d-72ad59cd1ce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\duktape">
+      <UniqueIdentifier>{fc255813-1f15-42bb-bc05-26a1111d9c3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\effect">
+      <UniqueIdentifier>{5c372a6d-1a50-464b-a457-2c7bc084d256}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\error">
+      <UniqueIdentifier>{daea1e2a-9a60-4221-9919-96501c7697e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\exception">
+      <UniqueIdentifier>{2e3edbd9-b87d-42e7-aa4a-3dcfdb0af1a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IPParser">
+      <UniqueIdentifier>{dd621977-8fe3-4a62-884f-01f6e80142dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IPParser\exceptions">
+      <UniqueIdentifier>{d1074fed-f0a0-45f5-83ee-d7ae9b12678e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IPParser\parser">
+      <UniqueIdentifier>{7d77fee8-73c6-4fb8-93f4-95a3a59a79bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\log">
+      <UniqueIdentifier>{42a12854-7a61-467d-b190-af699f7d1687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\model">
+      <UniqueIdentifier>{14f349ba-d526-42d9-bdc6-941877176d1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\persist">
+      <UniqueIdentifier>{1edc3d86-e4a6-41bd-8c13-c6a849d3fd5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\persist\file-adapter">
+      <UniqueIdentifier>{4d2de745-b3c0-4019-a95b-a1b641e698da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rbac">
+      <UniqueIdentifier>{998783e5-4cdf-4808-9c75-e51ab0952cc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{6f74038e-9348-49cf-86e3-0288330df3aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -176,8 +63,202 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="enforcer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="duktape\duk_config.h">
+      <Filter>Header Files\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="duktape\duktape.h">
+      <Filter>Header Files\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="duktape\duktape_core.h">
+      <Filter>Header Files\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="duktape\scope.h">
+      <Filter>Header Files\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="error\Error.h">
+      <Filter>Header Files\error</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\CasbinAdapterException.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\CasbinEnforcerException.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\CasbinRBACException.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\IllegalArgumentException.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\IOException.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\MissingRequiredSections.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\UnsupportedOperationException.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\exceptions\ParseException.h">
+      <Filter>Header Files\IPParser\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\allFF.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\byte.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\CIDR.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\CIDRMask.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\dtoi.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\equal.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\IP.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\IPMask.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\IPNet.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\IPv4.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\parseCIDR.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\parseIP.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\parseIPv4.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\parseIPv6.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\Print.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IPParser\parser\xtoi.h">
+      <Filter>Header Files\IPParser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="log\DefaultLogger.h">
+      <Filter>Header Files\log</Filter>
+    </ClInclude>
+    <ClInclude Include="log\Log.h">
+      <Filter>Header Files\log</Filter>
+    </ClInclude>
+    <ClInclude Include="log\Logger.h">
+      <Filter>Header Files\log</Filter>
+    </ClInclude>
+    <ClInclude Include="log\LogUtil.h">
+      <Filter>Header Files\log</Filter>
+    </ClInclude>
+    <ClInclude Include="model\scope_config.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="config\config_interface.h">
+      <Filter>Header Files\config</Filter>
+    </ClInclude>
+    <ClInclude Include="config\config.h">
+      <Filter>Header Files\config</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\default_effector.h">
+      <Filter>Header Files\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\effect.h">
+      <Filter>Header Files\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\effector.h">
+      <Filter>Header Files\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="model\assertion.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\function.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\policy.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\adapter.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\adapter_filtered.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\default_watcher.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\watcher.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\file-adapter\file_adapter.h">
+      <Filter>Header Files\persist\file-adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\file-adapter\filtered_adapter.h">
+      <Filter>Header Files\persist\file-adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\default_role_manager.h">
+      <Filter>Header Files\rbac</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\group_role_manager.h">
+      <Filter>Header Files\rbac</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\role_manager.h">
+      <Filter>Header Files\rbac</Filter>
+    </ClInclude>
+    <ClInclude Include="util\array_equals.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\array_remove_duplicates.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\array_to_string.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\built_in_functions.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\ends_with.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\escape_assertion.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\find_all_occurences.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\join.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\join_slice.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\remove_comments.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\set_subtract.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\split.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\trim.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

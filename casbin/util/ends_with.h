@@ -5,7 +5,7 @@
 
 using namespace std;
 
-bool ends_with(string base, string suffix){
+bool EndsWith(string base, string suffix){
     int base_len = base.length();
     int suffix_len = suffix.length();
     return base.substr(base_len-suffix_len, suffix_len).compare(suffix) == 0;

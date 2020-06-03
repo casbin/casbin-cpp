@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <algorithm>
 
-#include "./ConfigInterface.h"
+#include "./config_interface.h"
 #include "../exception/IOException.h"
 #include "../exception/IllegalArgumentException.h"
 #include "../util/trim.h"
@@ -30,7 +30,7 @@ class Config : public ConfigInterface {
         /**
          * addConfig adds a new section->key:value to the configuration.
          */
-        bool AddConfig(string section, string option, string value) {
+        bool addConfig(string section, string option, string value) {
             if (!section.compare("")) {
                 section = DEFAULT_SECTION;
             }
@@ -39,7 +39,7 @@ class Config : public ConfigInterface {
             return !ok;
         }
     
-        void Parse(string fname) {
+        void parse(string fname) {
             mtx_lock.lock();
             ifstream infile;
             try {
@@ -48,17 +48,17 @@ class Config : public ConfigInterface {
                 mtx_lock.unlock();
                 throw IOException("Cannot open file.");
             }
-            ParseBuffer(&infile);
+            parseBuffer(&infile);
             mtx_lock.unlock();
             infile.close();
         }
 
-        void ParseBuffer(istream* buf){
+        void parseBuffer(istream* buf){
             string section = "";
-            int lineNum = 0;
+            int line_num = 0;
             string line;
             while (true) {
-                lineNum++;
+                line_num++;
                 if (getline(*buf, line, '\n')) {
                     if (!line.compare("")) {
                         continue;
@@ -67,23 +67,23 @@ class Config : public ConfigInterface {
                     break;
                 }
                 
-                line = trim(line);
+                line = Trim(line);
                 if (line.find(DEFAULT_COMMENT)==0) {
                     continue;
                 } else if (line.find(DEFAULT_COMMENT_SEM)==0) {
                     continue;
-                } else if (line.find("[")==0 && ends_with(line, string("]"))) {
+                } else if (line.find("[")==0 && EndsWith(line, string("]"))) {
                     section = line.substr(1, line.length() - 2);
                 } else {
-                    vector <string> optionVal = split(line, string("="), 2);
-                    if (optionVal.size() != 2) {
+                    vector <string> option_val = Split(line, string("="), 2);
+                    if (option_val.size() != 2) {
                         char* error = new char;
-                        sprintf(error,"parse the content error : line %d , %s = ? ", lineNum, optionVal[0].c_str());
+                        sprintf(error,"parse the content error : line %d , %s = ? ", line_num, option_val[0].c_str());
                         throw IllegalArgumentException(string(error));
                     }
-                    string option = trim(optionVal[0]);
-                    string value = trim(optionVal[1]);
-                    AddConfig(section, option, value);
+                    string option = Trim(option_val[0]);
+                    string value = Trim(option_val[1]);
+                    addConfig(section, option, value);
                 }
             }
         }
@@ -96,9 +96,9 @@ class Config : public ConfigInterface {
          * @param confName the path of the model file.
          * @return the constructor of Config.
          */
-        static Config NewConfig(string confName) {
-            Config c;
-            c.Parse(confName);
+        static Config* NewConfig(string conf_name) {
+            Config* c = new Config;
+            c->parse(conf_name);
             return c;
         }
 
@@ -108,39 +108,39 @@ class Config : public ConfigInterface {
          * @param text the model text.
          * @return the constructor of Config.
          */
-        static Config NewConfigFromText(string text) {
-            Config c;
+        static Config* NewConfigFromText(string text) {
+            Config *c = new Config;
             stringstream stream(text);
-            c.ParseBuffer(&stream);
+            c->parseBuffer(&stream);
             return c;
         }
 
-        bool getBool(string key) {
-            return get(key).compare("true")==0;
+        bool GetBool(string key) {
+            return Get(key).compare("true")==0;
         }
 
-        int getInt(string key) {
-            return atoi(get(key).c_str());
+        int GetInt(string key) {
+            return atoi(Get(key).c_str());
         }
 
-        float getFloat(string key) {
-            return float(atof(get(key).c_str()));
+        float GetFloat(string key) {
+            return float(atof(Get(key).c_str()));
         }
 
-        string getString(string key) {
-            return get(key);
+        string GetString(string key) {
+            return Get(key);
         }
 
-        vector <string> getStrings(string key) {
-            string v = get(key);
+        vector <string> GetStrings(string key) {
+            string v = Get(key);
             if (!v.compare("")) {
                 vector <string> empty;
                 return empty;
             }
-            return split(v,string(","));
+            return Split(v,string(","));
         }
 
-        void set(string key, string value) {
+        void Set(string key, string value) {
             mtx_lock.lock();
             if (key.length() == 0) {
                 mtx_lock.unlock();
@@ -151,22 +151,22 @@ class Config : public ConfigInterface {
             string option;
 
             transform(key.begin(), key.end(), key.begin(), ::tolower);
-            vector <string> keys = split(key, string("::"));
+            vector <string> keys = Split(key, string("::"));
             if (keys.size() >= 2) {
                 section = keys[0];
                 option = keys[1];
             } else {
                 option = keys[0];
             }
-            AddConfig(section, option, value);
+            addConfig(section, option, value);
             mtx_lock.unlock();
         }
 
-        string get(string key) {
+        string Get(string key) {
             string section;
             string option;
             transform(key.begin(), key.end(), key.begin(), ::tolower);
-            vector <string> keys = split(key, string("::"));
+            vector <string> keys = Split(key, string("::"));
             if (keys.size() >= 2) {
                 section = keys[0];
                 option = keys[1];

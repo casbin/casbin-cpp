@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 
-#include "./byte.h"
+#include "./Byte.h"
 
 using namespace std;
 
