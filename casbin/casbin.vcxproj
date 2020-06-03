@@ -169,6 +169,8 @@
     <ClInclude Include="effect\default_effector.h" />
     <ClInclude Include="effect\effect.h" />
     <ClInclude Include="effect\effector.h" />
+    <ClInclude Include="enforcer.h" />
+    <ClInclude Include="enforcer_interface.h" />
     <ClInclude Include="error\Error.h" />
     <ClInclude Include="exception\CasbinAdapterException.h" />
     <ClInclude Include="exception\CasbinEnforcerException.h" />
@@ -177,6 +179,7 @@
     <ClInclude Include="exception\IOException.h" />
     <ClInclude Include="exception\MissingRequiredSections.h" />
     <ClInclude Include="exception\UnsupportedOperationException.h" />
+    <ClInclude Include="internal_api.h" />
     <ClInclude Include="IPParser\exceptions\ParseException.h" />
     <ClInclude Include="IPParser\parser\allFF.h" />
     <ClInclude Include="IPParser\parser\byte.h" />
@@ -198,6 +201,7 @@
     <ClInclude Include="log\Log.h" />
     <ClInclude Include="log\Logger.h" />
     <ClInclude Include="log\LogUtil.h" />
+    <ClInclude Include="management_api.h" />
     <ClInclude Include="model\assertion.h" />
     <ClInclude Include="model\function.h" />
     <ClInclude Include="model\model.h" />
@@ -212,6 +216,8 @@
     <ClInclude Include="rbac\default_role_manager.h" />
     <ClInclude Include="rbac\group_role_manager.h" />
     <ClInclude Include="rbac\role_manager.h" />
+    <ClInclude Include="rbac_api.h" />
+    <ClInclude Include="rbac_api_with_domains.h" />
     <ClInclude Include="util\array_equals.h" />
     <ClInclude Include="util\array_remove_duplicates.h" />
     <ClInclude Include="util\array_to_string.h" />

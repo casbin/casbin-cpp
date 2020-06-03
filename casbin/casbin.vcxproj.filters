@@ -260,5 +260,23 @@
     <ClInclude Include="util\trim.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="enforcer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enforcer_interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="internal_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="management_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac_api_with_domains.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
