@@ -401,8 +401,14 @@ class Enforcer : public IEnforcer{
 
             this->adapter->SavePolicy(this->model);
 
-            if(this->watcher != NULL)
-                return this->watcher->Update();
+            if(this->watcher != NULL){
+                if (IsInstanceOf<WatcherEx>(this->watcher)){
+                    void* watcher = this->watcher;
+                    ((WatcherEx*)watcher)->UpdateSavePolicy(this->model);
+                }
+                else
+                    return this->watcher->Update();
+            }
         }
 
         // EnableEnforce changes the enforcing state of Casbin, when Casbin is disabled, all access will be allowed by the Enforce() function.

@@ -279,7 +279,7 @@ class Model{
         }
 
         // RemoveFilteredPolicy removes policy rules based on field filters from the model.
-        pair<bool, <vector<vector<string>>>> RemoveFilteredPolicy(string sec, string p_type, int field_index, vector<string> field_values) {
+        pair<bool, vector<vector<string>>> RemoveFilteredPolicy(string sec, string p_type, int field_index, vector<string> field_values) {
             vector<vector<string>> tmp;
             vector<vector<string>> effects;
             bool res = false;

@@ -2,6 +2,7 @@
 #define CASBIN_CPP_INTERNAL_API
 
 #include "./enforcer.h"
+#include "./persist/batch_adapter.h"
 #include "./util/is_instance_of.h"
 #include "./persist/watcher_ex.h"
 
@@ -33,7 +34,7 @@ bool Enforcer :: addPolicy(string sec, string p_type, vector<string> rule) {
 
 // addPolicies adds rules to the current policy.
 bool Enforcer :: addPolicies(string sec, string p_type, vector<vector<string>> rules) {
-    bool rules_added = this->model->AddPolicies(sec, p_type, rules)
+    bool rules_added = this->model->AddPolicies(sec, p_type, rules);
     if (!rules_added)
         return rules_added;
 
@@ -42,7 +43,7 @@ bool Enforcer :: addPolicies(string sec, string p_type, vector<vector<string>> r
 
     if (this->adapter != NULL && this->auto_save) {
         void* adapter = this->adapter;
-        ((BatchAdapter *)this->adapter)->AddPolicies(sec, ptype, rules);
+        ((BatchAdapter *)adapter)->AddPolicies(sec, p_type, rules);
     }
 
     if (this->watcher != NULL && this->auto_notify_watcher)
@@ -79,7 +80,7 @@ bool Enforcer :: removePolicy(string sec, string p_type, vector<string> rule) {
 
 // removePolicies removes rules from the current policy.
 bool Enforcer :: removePolicies(string sec, string p_type, vector<vector<string>> rules) {
-    bool rules_removed = this->model->AddPolicies(sec, p_type, rules)
+    bool rules_removed = this->model->AddPolicies(sec, p_type, rules);
     if (!rules_removed)
         return rules_removed;
 
@@ -88,7 +89,7 @@ bool Enforcer :: removePolicies(string sec, string p_type, vector<vector<string>
 
     if (this->adapter != NULL && this->auto_save) {
         void* adapter = this->adapter;
-        ((BatchAdapter *)this->adapter)->RemovePolicies(sec, ptype, rules);
+        ((BatchAdapter *)adapter)->RemovePolicies(sec, p_type, rules);
     }
 
     if (this->watcher != NULL && this->auto_notify_watcher)
@@ -99,7 +100,7 @@ bool Enforcer :: removePolicies(string sec, string p_type, vector<vector<string>
 
 // removeFilteredPolicy removes rules based on field filters from the current policy.
 bool Enforcer :: removeFilteredPolicy(string sec, string p_type, int field_index, vector<string> field_values){
-    pair<int, <vector<vector<string>>>> p = this->model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
+    pair<int, vector<vector<string>>> p = this->model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
     bool rule_removed = p.first;
     vector<vector<string>> effects = p.second;
 
@@ -107,7 +108,7 @@ bool Enforcer :: removeFilteredPolicy(string sec, string p_type, int field_index
         return rule_removed;
 
     if (sec == "g")
-        this->BuildIncrementalRoleLinks(policy_remove, p_type, effects)
+        this->BuildIncrementalRoleLinks(policy_remove, p_type, effects);
 
     if(this->adapter != NULL && this->auto_save)
         this->adapter->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
@@ -115,7 +116,7 @@ bool Enforcer :: removeFilteredPolicy(string sec, string p_type, int field_index
     if (this->watcher !=NULL && this->auto_notify_watcher) {
         if (IsInstanceOf<WatcherEx>(this->watcher)) {
             void* watcher = this->watcher;
-            ((WatcherEx*)watcher)->UpdateForRemoveFilteredPolicy(rule);
+            ((WatcherEx*)watcher)->UpdateForRemoveFilteredPolicy(field_index, field_values);
         }
         else
             this->watcher->Update();
