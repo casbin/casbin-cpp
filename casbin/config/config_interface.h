@@ -7,7 +7,6 @@
 using namespace std;
 
 class ConfigInterface {
-
     public:
 
         virtual string GetString(string key) = 0;

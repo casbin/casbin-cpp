@@ -2,7 +2,6 @@
 #define CASBIN_CPP_PERSIST_FILE_ADAPTER_FILTERED_ADAPTER
 
 #include "file_adapter.h"
-#include "../adapter.h"
 
 // Filter defines the filtering rules for a FilteredAdapter's policy. Empty values
 // are ignored, but all others must match the filter.
@@ -13,15 +12,7 @@ class Filter{
 };
 
 class FilteredAdapter : public FileAdapter {
-    public:
-
-        // NewFilteredAdapter is the constructor for FilteredAdapter.
-        static FilteredAdapter* NewFilteredAdapter(string file_path) {
-            FilteredAdapter* a;
-            a->filtered = true;
-            a->file_path = file_path;
-            return a;
-        }
+    private:
 
         static bool filterLine(string line, Filter* filter) {
             if (filter == NULL) {
@@ -60,27 +51,7 @@ class FilteredAdapter : public FileAdapter {
             return skip_line;
         }
 
-        // LoadPolicy loads all policy rules from the storage.
-        void LoadPolicy(Model* model) {
-            this->filtered = false;
-            this->LoadPolicy(model);
-        }
-
-        // LoadFilteredPolicy loads only policy rules that match the filter.
-        void LoadFilteredPolicy(Model* model, Filter* filter) {
-            if (filter == NULL) {
-                this->LoadPolicy(model);
-            }
-
-            if (this->file_path == "") {
-                throw CasbinAdapterException("Invalid file path, file path cannot be empty");
-            }
-
-            this->LoadFilteredPolicyFile(model, filter, LoadPolicyLine);
-            this->filtered = true;
-        }
-
-        void LoadFilteredPolicyFile(Model* model, Filter* filter, void (*handler)(string, Model*)) {
+        void loadFilteredPolicyFile(Model* model, Filter* filter, void (*handler)(string, Model*)) {
             ifstream out_file;
             try {
                 out_file.open(this->file_path);
@@ -99,6 +70,36 @@ class FilteredAdapter : public FileAdapter {
             }
 
             out_file.close();
+        }
+
+    public:
+
+        // NewFilteredAdapter is the constructor for FilteredAdapter.
+        static FilteredAdapter* NewFilteredAdapter(string file_path) {
+            FilteredAdapter* a = new FilteredAdapter;
+            a->filtered = true;
+            a->file_path = file_path;
+            return a;
+        }
+
+        // LoadPolicy loads all policy rules from the storage.
+        void LoadPolicy(Model* model) {
+            this->filtered = false;
+            this->FileAdapter::LoadPolicy(model);
+        }
+
+        // LoadFilteredPolicy loads only policy rules that match the filter.
+        void LoadFilteredPolicy(Model* model, Filter* filter) {
+            if (filter == NULL) {
+                this->LoadPolicy(model);
+            }
+
+            if (this->file_path == "") {
+                throw CasbinAdapterException("Invalid file path, file path cannot be empty");
+            }
+
+            this->loadFilteredPolicyFile(model, filter, LoadPolicyLine);
+            this->filtered = true;
         }
 
         // IsFiltered returns true if the loaded policy has been filtered.

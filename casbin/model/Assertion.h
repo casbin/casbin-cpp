@@ -9,40 +9,65 @@
 
 using namespace std;
 
+enum policy_op{
+    policy_add,
+    policy_remove
+};
+
 // Assertion represents an expression in a section of the model.
 // For example: r = sub, obj, act
 class Assertion {
-
     public:
+
         string key;
         string value;
-        vector <string> tokens;
-        vector <vector<string>> policy;
+        vector<string> tokens;
+        vector<vector<string>> policy;
         RoleManager *rm;
+
+        void BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, vector<vector<string>> rules) {
+            this->rm = rm;
+            int char_count = count(this->value.begin(), this->value.end(), '_');
+
+            if (char_count < 2)
+                throw new IllegalArgumentException("the number of \"_\" in role definition should be at least 2");
+
+            for (vector<vector<string>> :: iterator it = this->policy.begin() ; it != this->policy.end() ; it++) {
+                vector<string> rule = *it;
+
+                if (rule.size() < char_count)
+                    throw new IllegalArgumentException("grouping policy elements do not meet role definition");
+                if (rule.size() > char_count)
+                    rule = vector<string>(rule.begin(), rule.begin() + char_count);
+
+                vector<string> domain(rule.begin() + 2, rule.end());
+
+                switch(op) {
+                    case policy_op :: policy_add:
+                        this->rm->AddLink(rule[0], rule[1], domain);
+                    case policy_op :: policy_remove:
+                        this->rm->DeleteLink(rule[0], rule[1], domain);
+                }
+            }
+        }
 
         void BuildRoleLinks(RoleManager* rm) {
             this->rm = rm;
-            unsigned int char_count = count(this->value.begin(), this->value.end(), '_');
-            for(vector<vector<string>> :: iterator it = this->policy.begin() ; it != this->policy.end() ; it++){
+            int char_count = count(this->value.begin(), this->value.end(), '_');
 
-                vector <string> rule = *it;
-                if (char_count < 2) {
-                    throw new IllegalArgumentException("the number of \"_\" in role definition should be at least 2");
-                }
-                if (rule.size() < char_count) {
+            if (char_count < 2)
+                throw new IllegalArgumentException("the number of \"_\" in role definition should be at least 2");
+
+            for (vector<vector<string>> :: iterator it = this->policy.begin() ; it != this->policy.end() ; it++) {
+                vector<string> rule = *it;
+
+                if (rule.size() < char_count)
                     throw new IllegalArgumentException("grouping policy elements do not meet role definition");
-                }
+                if (rule.size() > char_count)
+                    rule = vector<string>(rule.begin(), rule.begin() + char_count);
 
-                if (char_count == 2) {
-                    vector<string> domain;
-                    this->rm->AddLink(rule[0], rule[1], domain);
-                } else if (char_count == 3) {
-                    vector<string> domain{rule[2]};
-                    this->rm->AddLink(rule[0], rule[1], domain);
-                } else if (char_count == 4) {
-                    vector<string> domain{rule[2], rule[3]};
-                    this->rm->AddLink(rule[0], rule[1], domain);
-                }
+                vector<string> domain(rule.begin() + 2, rule.end());
+                this->rm->AddLink(rule[0], rule[1], domain);
             }
 
             // DefaultLogger df_logger;
@@ -52,10 +77,9 @@ class Assertion {
             // LogUtil :: SetLogger(*logger);
 
             // LogUtil :: LogPrint("Role links for: " + Key);
-        
+
             this->rm->PrintRoles();
         }
-
 };
 
 #endif

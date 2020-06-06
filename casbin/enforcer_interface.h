@@ -82,32 +82,42 @@ class IEnforcer {
         virtual bool HasPolicy(vector<string> params) = 0;
         virtual bool HasNamedPolicy(string ptype, vector<string> params) = 0;
         virtual bool AddPolicy(vector<string> params) = 0;
+        virtual bool  AddPolicies(vector<vector<string>> rules) = 0;
         virtual bool AddNamedPolicy(string ptype, vector<string> params) = 0;
+        virtual bool AddNamedPolicies(string p_type, vector<vector<string>> rules) = 0;
         virtual bool RemovePolicy(vector<string> params) = 0;
-        virtual bool RemoveFilteredPolicy(int fieldIndex, vector<string> fieldValues) = 0;
+        virtual bool RemovePolicies(vector<vector<string>> rules) = 0;
+        virtual bool RemoveFilteredPolicy(int field_index, vector<string> field_values) = 0;
         virtual bool RemoveNamedPolicy(string ptype, vector<string> params) = 0;
-        virtual bool RemoveFilteredNamedPolicy(string ptype, int fieldIndex, vector<string> fieldValues) = 0;
+        virtual bool RemoveNamedPolicies(string p_type, vector<vector<string>> rules) = 0;
+        virtual bool RemoveFilteredNamedPolicy(string ptype, int field_index, vector<string> field_values) = 0;
         virtual bool HasGroupingPolicy(vector<string> params) = 0;
         virtual bool HasNamedGroupingPolicy(string ptype, vector<string> params) = 0;
         virtual bool AddGroupingPolicy(vector<string> params) = 0;
+        virtual bool AddGroupingPolicies(vector<vector<string>> rules) = 0;
         virtual bool AddNamedGroupingPolicy(string ptype, vector<string> params) = 0;
+        virtual bool AddNamedGroupingPolicies(string p_type, vector<vector<string>> rules) = 0;
         virtual bool RemoveGroupingPolicy(vector<string> params) = 0;
-        virtual bool RemoveFilteredGroupingPolicy(int fieldIndex, vector<string> fieldValues) = 0;
+        virtual bool RemoveGroupingPolicies(vector<vector<string>> rules) = 0;
+        virtual bool RemoveFilteredGroupingPolicy(int field_index, vector<string> field_values) = 0;
         virtual bool RemoveNamedGroupingPolicy(string ptype, vector<string> params) = 0;
+        virtual bool RemoveNamedGroupingPolicies(string p_type, vector<vector<string>> rules) = 0;
         virtual bool RemoveFilteredNamedGroupingPolicy(string ptype, int fieldIndex, vector<string> fieldValues) = 0;
         virtual void AddFunction(string name, Function) = 0;
 
         /* Internal API member functions */
-		virtual bool addPolicy(string sec, string ptype, vector<string> rule) = 0;
-		virtual bool removePolicy(string sec , string ptype , vector<string> rule) = 0;
-		virtual bool removeFilteredPolicy(string sec , string ptype , int fieldIndex , vector<string> fieldValues) = 0;
+        virtual bool addPolicy(string sec, string ptype, vector<string> rule) = 0;
+        virtual bool addPolicies(string sec, string p_type, vector<vector<string>> rules) = 0;
+        virtual bool removePolicy(string sec , string ptype , vector<string> rule) = 0;
+        virtual bool removePolicies(string sec, string p_type, vector<vector<string>> rules) = 0;
+        virtual bool removeFilteredPolicy(string sec , string ptype , int fieldIndex , vector<string> fieldValues) = 0;
 
-		/* RBAC API with domains.*/
-		virtual vector<string> GetUsersForRoleInDomain(string name, string domain) = 0;
-		virtual vector<string> GetRolesForUserInDomain(string name, string domain) = 0;
-		virtual vector<vector<string>> GetPermissionsForUserInDomain(string user, string domain) = 0;
-		virtual bool AddRoleForUserInDomain(string user, string role, string domain) = 0;
-		virtual bool DeleteRoleForUserInDomain(string user, string role, string domain) = 0;
+        /* RBAC API with domains.*/
+        virtual vector<string> GetUsersForRoleInDomain(string name, string domain) = 0;
+        virtual vector<string> GetRolesForUserInDomain(string name, string domain) = 0;
+        virtual vector<vector<string>> GetPermissionsForUserInDomain(string user, string domain) = 0;
+        virtual bool AddRoleForUserInDomain(string user, string role, string domain) = 0;
+        virtual bool DeleteRoleForUserInDomain(string user, string role, string domain) = 0;
 };
 
 #endif

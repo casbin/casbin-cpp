@@ -17,7 +17,6 @@
 #define CASBIN_CPP_ENFORCER
 
 #include "./exception/CasbinEnforcerException.h"
-#include "./model/policy.h"
 #include "./model/function.h"
 #include "./rbac/default_role_manager.h"
 #include "./effect/default_effector.h"
@@ -376,8 +375,10 @@ class Enforcer : public IEnforcer{
 
             FilteredAdapter* filteredAdapter;
 
-            if(this->adapter->IsFiltered())
-                filteredAdapter = (FilteredAdapter*)this->adapter;
+            if (this->adapter->IsFiltered()) {
+                void* adapter = this->adapter;
+                filteredAdapter = (FilteredAdapter*)adapter;
+            }
             else
                 throw CasbinAdapterException("filtered policies are not supported by this adapter");
 
@@ -436,6 +437,11 @@ class Enforcer : public IEnforcer{
             this->model->BuildRoleLinks(this->rm);
         }
 
+        // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
+        void BuildIncrementalRoleLinks(policy_op op, string p_type, vector<vector<string>> rules) {
+            return this->model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
+        }
+
         // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(Scope scope) {
             return this->enforce("", scope);
@@ -466,18 +472,26 @@ class Enforcer : public IEnforcer{
         bool HasPolicy(vector<string> params);
         bool HasNamedPolicy(string ptype, vector<string> params);
         bool AddPolicy(vector<string> params);
+        bool  AddPolicies(vector<vector<string>> rules);
         bool AddNamedPolicy(string ptype, vector<string> params);
+        bool AddNamedPolicies(string p_type, vector<vector<string>> rules);
         bool RemovePolicy(vector<string> params);
+        bool RemovePolicies(vector<vector<string>> rules);
         bool RemoveFilteredPolicy(int field_index, vector<string> field_values);
         bool RemoveNamedPolicy(string ptype, vector<string> params);
+        bool RemoveNamedPolicies(string p_type, vector<vector<string>> rules);
         bool RemoveFilteredNamedPolicy(string ptype, int field_index, vector<string> field_values);
         bool HasGroupingPolicy(vector<string> params);
         bool HasNamedGroupingPolicy(string ptype, vector<string> params);
         bool AddGroupingPolicy(vector<string> params);
+        bool AddGroupingPolicies(vector<vector<string>> rules);
         bool AddNamedGroupingPolicy(string ptype, vector<string> params);
+        bool AddNamedGroupingPolicies(string p_type, vector<vector<string>> rules);
         bool RemoveGroupingPolicy(vector<string> params);
+        bool RemoveGroupingPolicies(vector<vector<string>> rules);
         bool RemoveFilteredGroupingPolicy(int field_index, vector<string> field_values);
         bool RemoveNamedGroupingPolicy(string ptype, vector<string> params);
+        bool RemoveNamedGroupingPolicies(string p_type, vector<vector<string>> rules);
         bool RemoveFilteredNamedGroupingPolicy(string ptype, int field_index, vector<string> field_values);
         void AddFunction(string name, Function);
 
@@ -502,9 +516,10 @@ class Enforcer : public IEnforcer{
 
         /* Internal API member functions */
         bool addPolicy(string sec, string ptype, vector<string> rule);
-        bool removeFilteredPolicy(string sec , string ptype , int field_index , vector<string> field_values);
+        bool addPolicies(string sec, string p_type, vector<vector<string>> rules);
         bool removePolicy(string sec , string ptype , vector<string> rule);
-        
+        bool removePolicies(string sec, string p_type, vector<vector<string>> rules);
+        bool removeFilteredPolicy(string sec , string ptype , int fieldIndex , vector<string> fieldValues);
 
         /* RBAC API with domains.*/
         vector<string> GetUsersForRoleInDomain(string name, string domain);

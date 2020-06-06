@@ -34,6 +34,9 @@ void LoadPolicyLine(string line, Model* model) {
 class Adapter {
     public:
 
+        string  file_path;
+        bool filtered;
+
         /**
          * LoadPolicy loads all policy rules from the storage.
          *

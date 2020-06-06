@@ -1,21 +1,24 @@
 #ifndef CASBIN_CPP_PERSIST_DEFAULT_WATCHER
 #define CASBIN_CPP_PERSIST_DEFAULT_WATCHER
 
-#include "./Watcher.h"
+#include "./watcher.h"
 
-class DefaultWatcher : public Watcher {
+class DefaultWatcher: public Watcher {
     public:
 
-        template <typename Func>
-        void SetUpdateCallback(Func func) {
+        void UpdateForAddPolicy(vector<string> params) {
             return;
         }
 
-        void Update(){
+        void UpdateForRemovePolicy(vector<string> params) {
             return;
         }
 
-        void Close(){
+        void UpdateForRemoveFilteredPolicy(int field_index, vector<string> field_values) {
+            return;
+        }
+
+        void UpdateForSavePolicy(Model* model) {
             return;
         }
 };

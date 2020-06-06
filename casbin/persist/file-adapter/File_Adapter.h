@@ -8,15 +8,12 @@
 
 // Adapter is the file adapter for Casbin.
 // It can load policy from file or save policy to file.
-class FileAdapter : public Adapter {
+class FileAdapter : virtual public Adapter {
     public:
-
-        string  file_path;
-        bool filtered;
 
         // NewAdapter is the constructor for Adapter.
         static FileAdapter* NewAdapter(string file_path) {
-            FileAdapter* adapter;
+            FileAdapter* adapter = new FileAdapter;
             adapter->file_path = file_path;
             adapter->filtered = false;
             return adapter;
@@ -108,7 +105,6 @@ class FileAdapter : public Adapter {
         bool IsFiltered() {
             return this->filtered;
         }
-        
 };
 
 #endif

@@ -108,6 +108,12 @@ bool Enforcer :: AddPolicy(vector<string> params) {
     return this->AddNamedPolicy("p", params);
 }
 
+// AddPolicies adds authorization rules to the current policy.
+// If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
+// Otherwise the function returns true for the corresponding rule by adding the new rule.
+bool Enforcer :: AddPolicies(vector<vector<string>> rules) {
+    return this->AddNamedPolicies("p", rules);
+}
 
 // AddNamedPolicy adds an authorization rule to the current named policy.
 // If the rule already exists, the function returns false and the rule will not be added.
@@ -124,9 +130,21 @@ bool Enforcer :: AddNamedPolicy(string p_type, vector<string> params) {
     return this->addPolicy("p", p_type, policy);
 }
 
+// AddNamedPolicies adds authorization rules to the current named policy.
+// If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
+// Otherwise the function returns true for the corresponding by adding the new rule.
+bool Enforcer :: AddNamedPolicies(string p_type, vector<vector<string>> rules) {
+    return this->addPolicies("p", p_type, rules);
+}
+
 // RemovePolicy removes an authorization rule from the current policy.
 bool Enforcer :: RemovePolicy(vector<string> params) {
     return this->RemoveNamedPolicy("p", params);
+}
+
+// RemovePolicies removes authorization rules from the current policy.
+bool Enforcer :: RemovePolicies(vector<vector<string>> rules) {
+    return this->RemoveNamedPolicies("p", rules);
 }
 
 // RemoveFilteredPolicy removes an authorization rule from the current policy, field filters can be specified.
@@ -145,6 +163,11 @@ bool Enforcer :: RemoveNamedPolicy(string p_type, vector<string> params) {
     for (int i = 0 ; i < params.size() ; i++)
         policy.push_back(params[i]);
     return this->removePolicy("p", p_type, policy);
+}
+
+// RemoveNamedPolicies removes authorization rules from the current named policy.
+bool Enforcer :: RemoveNamedPolicies(string p_type, vector<vector<string>> rules) {
+	return this->removePolicies("p", p_type, rules);
 }
 
 // RemoveFilteredNamedPolicy removes an authorization rule from the current named policy, field filters can be specified.
@@ -177,6 +200,13 @@ bool Enforcer :: AddGroupingPolicy(vector<string> params) {
     return this->AddNamedGroupingPolicy("g", params);
 }
 
+// AddGroupingPolicies adds role inheritance rulea to the current policy.
+// If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
+// Otherwise the function returns true for the corresponding policy rule by adding the new rule.
+bool Enforcer :: AddGroupingPolicies(vector<vector<string>> rules) {
+    return this->AddNamedGroupingPolicies("g", rules);
+}
+
 // AddNamedGroupingPolicy adds a named role inheritance rule to the current policy.
 // If the rule already exists, the function returns false and the rule will not be added.
 // Otherwise the function returns true by adding the new rule.
@@ -199,9 +229,21 @@ bool Enforcer :: AddNamedGroupingPolicy(string p_type, vector<string> params) {
     return rule_added;
 }
 
+// AddNamedGroupingPolicies adds named role inheritance rules to the current policy.
+// If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
+// Otherwise the function returns true for the corresponding policy rule by adding the new rule.
+bool Enforcer :: AddNamedGroupingPolicies(string p_type, vector<vector<string>> rules) {
+    return this->addPolicies("g", p_type, rules);
+}
+
 // RemoveGroupingPolicy removes a role inheritance rule from the current policy.
 bool Enforcer :: RemoveGroupingPolicy(vector<string> params) {
     return this->RemoveNamedGroupingPolicy("g", params);
+}
+
+// RemoveGroupingPolicies removes role inheritance rulea from the current policy.
+bool Enforcer :: RemoveGroupingPolicies(vector<vector<string>> rules) {
+    return this->RemoveNamedGroupingPolicies("g", rules);
 }
 
 // RemoveFilteredGroupingPolicy removes a role inheritance rule from the current policy, field filters can be specified.
@@ -227,6 +269,11 @@ bool Enforcer :: RemoveNamedGroupingPolicy(string p_type, vector<string> params)
         this->BuildRoleLinks();
 
     return rule_removed;
+}
+
+// RemoveNamedGroupingPolicies removes role inheritance rules from the current named policy.
+bool Enforcer :: RemoveNamedGroupingPolicies(string p_type, vector<vector<string>> rules) {
+    return this->removePolicies("g", p_type, rules);
 }
 
 // RemoveFilteredNamedGroupingPolicy removes a role inheritance rule from the current named policy, field filters can be specified.

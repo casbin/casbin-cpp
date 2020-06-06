@@ -19,27 +19,27 @@
 using namespace std;
 
 class Config : public ConfigInterface {
-    private: 
+    private:
+
         static const string DEFAULT_SECTION;
         static const string DEFAULT_COMMENT;
         static const string DEFAULT_COMMENT_SEM;
         static mutex mtx_lock;
 
-        unordered_map < string, unordered_map <string, string> > data;
+        unordered_map<string, unordered_map<string, string>> data;
 
         /**
          * addConfig adds a new section->key:value to the configuration.
          */
-        bool addConfig(string section, string option, string value) {
-            if (!section.compare("")) {
+        bool AddConfig(string section, string option, string value) {
+            if (!section.compare(""))
                 section = DEFAULT_SECTION;
-            }
             bool ok = data[section].find(option) != data[section].end();
             data[section][option] = value;
             return !ok;
         }
-    
-        void parse(string fname) {
+
+        void Parse(string fname) {
             mtx_lock.lock();
             ifstream infile;
             try {
@@ -48,34 +48,31 @@ class Config : public ConfigInterface {
                 mtx_lock.unlock();
                 throw IOException("Cannot open file.");
             }
-            parseBuffer(&infile);
+            ParseBuffer(&infile);
             mtx_lock.unlock();
             infile.close();
         }
 
-        void parseBuffer(istream* buf){
+        void ParseBuffer(istream* buf){
             string section = "";
             int line_num = 0;
             string line;
             while (true) {
                 line_num++;
-                if (getline(*buf, line, '\n')) {
-                    if (!line.compare("")) {
+                if (getline(*buf, line, '\n'))
+                    if (!line.compare(""))
                         continue;
-                    }
-                } else {
+                else
                     break;
-                }
-                
                 line = Trim(line);
-                if (line.find(DEFAULT_COMMENT)==0) {
+                if (line.find(DEFAULT_COMMENT)==0)
                     continue;
-                } else if (line.find(DEFAULT_COMMENT_SEM)==0) {
+                else if (line.find(DEFAULT_COMMENT_SEM)==0)
                     continue;
-                } else if (line.find("[")==0 && EndsWith(line, string("]"))) {
+                else if (line.find("[")==0 && EndsWith(line, string("]")))
                     section = line.substr(1, line.length() - 2);
-                } else {
-                    vector <string> option_val = Split(line, string("="), 2);
+                else {
+                    vector<string> option_val = Split(line, string("="), 2);
                     if (option_val.size() != 2) {
                         char* error = new char;
                         sprintf(error,"parse the content error : line %d , %s = ? ", line_num, option_val[0].c_str());
@@ -83,7 +80,7 @@ class Config : public ConfigInterface {
                     }
                     string option = Trim(option_val[0]);
                     string value = Trim(option_val[1]);
-                    addConfig(section, option, value);
+                    AddConfig(section, option, value);
                 }
             }
         }
@@ -98,7 +95,7 @@ class Config : public ConfigInterface {
          */
         static Config* NewConfig(string conf_name) {
             Config* c = new Config;
-            c->parse(conf_name);
+            c->Parse(conf_name);
             return c;
         }
 
@@ -111,7 +108,7 @@ class Config : public ConfigInterface {
         static Config* NewConfigFromText(string text) {
             Config *c = new Config;
             stringstream stream(text);
-            c->parseBuffer(&stream);
+            c->ParseBuffer(&stream);
             return c;
         }
 
@@ -131,10 +128,10 @@ class Config : public ConfigInterface {
             return Get(key);
         }
 
-        vector <string> GetStrings(string key) {
+        vector<string> GetStrings(string key) {
             string v = Get(key);
             if (!v.compare("")) {
-                vector <string> empty;
+                vector<string> empty;
                 return empty;
             }
             return Split(v,string(","));
@@ -151,14 +148,14 @@ class Config : public ConfigInterface {
             string option;
 
             transform(key.begin(), key.end(), key.begin(), ::tolower);
-            vector <string> keys = Split(key, string("::"));
+            vector<string> keys = Split(key, string("::"));
             if (keys.size() >= 2) {
                 section = keys[0];
                 option = keys[1];
             } else {
                 option = keys[0];
             }
-            addConfig(section, option, value);
+            AddConfig(section, option, value);
             mtx_lock.unlock();
         }
 
@@ -166,7 +163,7 @@ class Config : public ConfigInterface {
             string section;
             string option;
             transform(key.begin(), key.end(), key.begin(), ::tolower);
-            vector <string> keys = Split(key, string("::"));
+            vector<string> keys = Split(key, string("::"));
             if (keys.size() >= 2) {
                 section = keys[0];
                 option = keys[1];
@@ -175,11 +172,9 @@ class Config : public ConfigInterface {
                 option = keys[0];
             }
             bool ok = data.find(section)!=data.end() && data[section].find(option) != data[section].end();
-            if (ok) {
+            if (ok)
                 return data[section][option];
-            } else {
-                return "";
-            }
+            return "";
         }
 };
 
