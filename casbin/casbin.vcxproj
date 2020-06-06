@@ -205,14 +205,17 @@
     <ClInclude Include="model\assertion.h" />
     <ClInclude Include="model\function.h" />
     <ClInclude Include="model\model.h" />
-    <ClInclude Include="model\policy.h" />
     <ClInclude Include="model\scope_config.h" />
     <ClInclude Include="persist\adapter.h" />
     <ClInclude Include="persist\adapter_filtered.h" />
+    <ClInclude Include="persist\batch_adapter.h" />
     <ClInclude Include="persist\default_watcher.h" />
+    <ClInclude Include="persist\default_watcher_ex.h" />
+    <ClInclude Include="persist\file-adapter\batch_file_adapter.h" />
     <ClInclude Include="persist\file-adapter\file_adapter.h" />
     <ClInclude Include="persist\file-adapter\filtered_adapter.h" />
     <ClInclude Include="persist\watcher.h" />
+    <ClInclude Include="persist\watcher_ex.h" />
     <ClInclude Include="rbac\default_role_manager.h" />
     <ClInclude Include="rbac\group_role_manager.h" />
     <ClInclude Include="rbac\role_manager.h" />
@@ -225,6 +228,7 @@
     <ClInclude Include="util\ends_with.h" />
     <ClInclude Include="util\escape_assertion.h" />
     <ClInclude Include="util\find_all_occurences.h" />
+    <ClInclude Include="util\is_instance_of.h" />
     <ClInclude Include="util\join.h" />
     <ClInclude Include="util\join_slice.h" />
     <ClInclude Include="util\remove_comments.h" />

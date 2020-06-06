@@ -23,6 +23,8 @@
 #include "./enforcer_interface.h"
 #include "./persist/file-adapter/file_adapter.h"
 #include "./persist/file-adapter/filtered_adapter.h"
+#include "./persist//watcher_ex.h"
+#include "./util/is_instance_of.h"
 
 // Enforcer is the main interface for authorization enforcement and policy management.
 class Enforcer : public IEnforcer{
@@ -402,9 +404,9 @@ class Enforcer : public IEnforcer{
             this->adapter->SavePolicy(this->model);
 
             if(this->watcher != NULL){
-                if (IsInstanceOf<WatcherEx>(this->watcher)){
+                if (IsInstanceOf<WatcherEx>(this->watcher)) {
                     void* watcher = this->watcher;
-                    ((WatcherEx*)watcher)->UpdateSavePolicy(this->model);
+                    ((WatcherEx*)watcher)->UpdateForSavePolicy(this->model);
                 }
                 else
                     return this->watcher->Update();

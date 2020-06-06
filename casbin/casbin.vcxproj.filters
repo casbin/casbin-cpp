@@ -191,9 +191,6 @@
     <ClInclude Include="model\model.h">
       <Filter>Header Files\model</Filter>
     </ClInclude>
-    <ClInclude Include="model\policy.h">
-      <Filter>Header Files\model</Filter>
-    </ClInclude>
     <ClInclude Include="persist\adapter.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
@@ -277,6 +274,21 @@
     </ClInclude>
     <ClInclude Include="rbac_api_with_domains.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\file-adapter\batch_file_adapter.h">
+      <Filter>Header Files\persist\file-adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\batch_adapter.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\default_watcher_ex.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\watcher_ex.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="util\is_instance_of.h">
+      <Filter>Header Files\util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
