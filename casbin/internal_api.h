@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CASBIN_CPP_INTERNAL_API
 #define CASBIN_CPP_INTERNAL_API
 

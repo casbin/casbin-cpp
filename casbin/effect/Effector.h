@@ -2,6 +2,7 @@
 #define CASBIN_CPP_EFFECT_EFFECTOR
 
 #include <string>
+#include <vector>
 
 #include "effect.h"
 
