@@ -3,8 +3,6 @@
 
 #include "./default_role_manager.h"
 
-using namespace std;
-
 /**
  * GroupRoleManager is used for authorization if the user's group is the role who has permission,
  * but the group information is in the default format (policy start with "g") and the role information
@@ -26,35 +24,13 @@ class GroupRoleManager : public DefaultRoleManager {
          *
          * @param max_hierarchy_level the maximized allowed RBAC hierarchy level.
          */
-        static GroupRoleManager* NewGroupRoleManager(int max_hierarchy_level){
-            return (GroupRoleManager*)NewRoleManager(max_hierarchy_level);
-        }
+        static GroupRoleManager* NewGroupRoleManager(int max_hierarchy_level);
 
         /**
          * hasLink determines whether role: name1 inherits role: name2.
          * domain is a prefix to the roles.
          */
-        bool HasLink(string name1, string name2, vector<string> domain) {
-            if (DefaultRoleManager :: HasLink(name1, name2, domain)) {
-                return true;
-            }
-            unsigned int domain_length = sizeof(domain) / sizeof(domain[0]);
-            // check name1's groups
-            if (domain_length == 1) {
-                try {
-                    vector<string> domain1;
-                    vector<string> groups = DefaultRoleManager :: GetRoles(name1, domain1);
-                    for (vector<string> :: iterator group = groups.begin() ; group < groups.end() ; group++) {
-                        if (DefaultRoleManager :: HasLink(*group, name2, domain)) {
-                            return true;
-                        }
-                    }
-                } catch (CasbinRBACException ignore) {
-                    return false;
-                }
-            }
-            return false;
-        }
+        bool HasLink(string name1, string name2, vector<string> domain);
 };
 
 #endif

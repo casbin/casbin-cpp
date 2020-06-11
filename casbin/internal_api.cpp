@@ -1,10 +1,10 @@
 #pragma once
-#ifndef CASBIN_CPP_INTERNAL_API
-#define CASBIN_CPP_INTERNAL_API
+
+#include "pch.h"
 
 #include "./enforcer.h"
 #include "./persist/batch_adapter.h"
-#include "./util/is_instance_of.h"
+#include "./util/util.h"
 #include "./persist/watcher_ex.h"
 
 // addPolicy adds a rule to the current policy.
@@ -125,5 +125,3 @@ bool Enforcer :: removeFilteredPolicy(string sec, string p_type, int field_index
 
     return rule_removed;
 }
-
-#endif

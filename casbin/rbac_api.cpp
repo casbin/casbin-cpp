@@ -1,10 +1,10 @@
 #pragma once
-#ifndef CASBIN_CPP_RBAC_API
-#define CASBIN_CPP_RBAC_API
+
+#include "pch.h"
 
 #include "./enforcer.h"
-#include "./util/join_slice.h"
-#include "./util/set_subtract.h"
+#include "./exception/CasbinEnforcerException.h"
+#include "./util/util.h"
 
 // GetRolesForUser gets the roles that a user has.
 vector<string> Enforcer :: GetRolesForUser(string name) {
@@ -202,7 +202,7 @@ vector<string> Enforcer :: GetImplicitUsersForPermission(vector<string> permissi
 
     vector<string> res;
     for (int i = 0 ; i < users.size() ; i++) {
-        Scope scope;
+        Scope scope = InitializeScope();
         PushObject(scope);
         PushStringPropToObject(scope, "r", users[i], "sub");
         PushStringPropToObject(scope, "r", permission[0], "obj");
@@ -216,5 +216,3 @@ vector<string> Enforcer :: GetImplicitUsersForPermission(vector<string> permissi
 
     return res;
 }
-
-#endif

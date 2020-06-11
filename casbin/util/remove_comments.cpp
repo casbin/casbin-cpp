@@ -1,9 +1,8 @@
-#ifndef CASBIN_CPP_UTIL_REMOVE_COMMENTS
-#define CASBIN_CPP_UTIL_REMOVE_COMMENTS
+#pragma once
 
-#include <string>
+#include "pch.h"
 
-#include "./trim.h"
+#include "./util.h"
 
 using namespace std;
 
@@ -15,5 +14,3 @@ string RemoveComments(string s) {
     string fin_str = s.substr(0, pos);
     return Trim(fin_str);
 }
-
-#endif

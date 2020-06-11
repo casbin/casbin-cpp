@@ -5,8 +5,7 @@
 #include <vector>
 
 #include "../model/model.h"
-#include "../util/split.h"
-#include "../util/trim.h"
+#include "../util/util.h"
 
 using namespace std;
 

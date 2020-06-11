@@ -8,20 +8,11 @@ class BatchFileAdapter: public BatchAdapter, public FileAdapter {
     public:
 
         // NewAdapter is the constructor for Adapter.
-        static BatchFileAdapter* NewAdapter(string file_path) {
-            BatchFileAdapter* adapter = new BatchFileAdapter;
-            adapter->file_path = file_path;
-            adapter->filtered = false;
-            return adapter;
-        }
+        static BatchFileAdapter* NewAdapter(string file_path);
 
-        void AddPolicies(string sec, string p_type, vector<vector<string>> rules) {
-            throw UnsupportedOperationException("not implemented hello");
-        }
+        void AddPolicies(string sec, string p_type, vector<vector<string>> rules);
 
-        void RemovePolicies(string sec, string p_type, vector<vector<string>> rules) {
-            throw UnsupportedOperationException("not implemented");
-        }
+        void RemovePolicies(string sec, string p_type, vector<vector<string>> rules);
 };
 
 #endif

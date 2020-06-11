@@ -1,5 +1,6 @@
-#ifndef CASBIN_CPP_RBAC_API_WITH_DOMAINS
-#define CASBIN_CPP_RBAC_API_WITH_DOMAINS
+#pragma once
+
+#include "pch.h"
 
 #include "./enforcer.h"
 
@@ -36,5 +37,3 @@ bool Enforcer :: DeleteRoleForUserInDomain(string user, string role, string doma
     vector<string> params{user, role, domain};
 	return this->RemoveGroupingPolicy(params);
 }
-
-#endif

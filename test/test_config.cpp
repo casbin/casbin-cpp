@@ -3,7 +3,7 @@
 
 #include "pch.h"
 #include "../casbin/config/Config.h"
-#include "../casbin/util/split.h"
+#include "../casbin/util/util.h"
 
 using namespace std;
 

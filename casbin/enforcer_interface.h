@@ -15,7 +15,7 @@ class IEnforcer {
         virtual void InitWithFile(string modelPath, string policyPath) = 0;
         virtual void InitWithAdapter(string modelPath, Adapter* adapter) = 0;
         virtual void InitWithModelAndAdapter(Model* m, Adapter* adapter) = 0;
-        virtual void initialize() = 0;
+        virtual void Initialize() = 0;
         virtual void LoadModel() = 0;
         virtual Model* GetModel() = 0;
         virtual void SetModel(Model* m) = 0;

@@ -1,8 +1,8 @@
-#ifndef CASBIN_CPP_UTIL_FIND_ALL_OCCURENCES
-#define CASBIN_CPP_UTIL_FIND_ALL_OCCURENCES
+#pragma once
 
-#include <string>
-#include <vector>
+#include "pch.h"
+
+#include "./util.h"
 
 using namespace std;
 
@@ -22,5 +22,3 @@ vector <size_t> FindAllOccurences(string data, string toSearch){
     }
     return vec;
 }
-
-#endif

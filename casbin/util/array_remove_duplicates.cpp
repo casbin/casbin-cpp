@@ -1,9 +1,10 @@
-#ifndef CASBIN_CPP_UTIL_ARRAY_REMOVE_DUPLICATES
-#define CASBIN_CPP_UTIL_ARRAY_REMOVE_DUPLICATES
+#pragma once
 
-#include <string>
-#include <vector>
+#include "pch.h"
+
 #include <unordered_map>
+
+#include "./util.h"
 
 using namespace std;
 
@@ -20,5 +21,3 @@ void ArrayRemoveDuplicates(vector<string> &s) {
     }
     s = vector<string> (s.begin(), s.begin()+j);
 }
-
-#endif

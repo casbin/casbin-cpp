@@ -1,15 +1,16 @@
-#ifndef CASBIN_CPP_UTIL_SPLIT
-#define CASBIN_CPP_UTIL_SPLIT
+#pragma once
+
+#include "pch.h"
 
 #include <string.h>
-#include <string>
-#include <vector>
+
+#include "./util.h"
 
 #define LARGE 2147483647
 
 using namespace std;
 
-vector<string> Split(string str, string del, int limit = 0){
+vector<string> Split(string str, string del, int limit){
     vector<string> tokens;
 
     if(limit<=0)
@@ -27,5 +28,3 @@ vector<string> Split(string str, string del, int limit = 0){
 
     return tokens;
 }
-
-#endif

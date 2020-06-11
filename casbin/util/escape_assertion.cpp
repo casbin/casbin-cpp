@@ -1,8 +1,10 @@
-#ifndef CASBIN_CPP_UTIL_ESCAPE_ASSERTION
-#define CASBIN_CPP_UTIL_ESCAPE_ASSERTION
+#pragma once
+
+#include "pch.h"
 
 #include <regex>
-#include <string>
+
+#include "./util.h"
 
 using namespace std;
 
@@ -32,5 +34,3 @@ string EscapeAssertion(string s) {
     }
     return s;
 }
-
-#endif

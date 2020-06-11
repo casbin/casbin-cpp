@@ -6,21 +6,12 @@
 class DefaultWatcher: public Watcher {
     public:
 
-        void UpdateForAddPolicy(vector<string> params) {
-            return;
-        }
+        template <typename Func>
+        void SetUpdateCallback(Func func);
 
-        void UpdateForRemovePolicy(vector<string> params) {
-            return;
-        }
+        void Update();
 
-        void UpdateForRemoveFilteredPolicy(int field_index, vector<string> field_values) {
-            return;
-        }
-
-        void UpdateForSavePolicy(Model* model) {
-            return;
-        }
+        void Close();
 };
 
 #endif

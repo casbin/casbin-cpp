@@ -16,15 +16,10 @@
 #ifndef CASBIN_CPP_ENFORCER
 #define CASBIN_CPP_ENFORCER
 
-#include "./exception/CasbinEnforcerException.h"
+#include "./rbac/role_manager.h"
 #include "./model/function.h"
-#include "./rbac/default_role_manager.h"
-#include "./effect/default_effector.h"
 #include "./enforcer_interface.h"
-#include "./persist/file-adapter/file_adapter.h"
-#include "./persist/file-adapter/filtered_adapter.h"
-#include "./persist//watcher_ex.h"
-#include "./util/is_instance_of.h"
+#include "./persist/adapter_filtered.h"
 
 // Enforcer is the main interface for authorization enforcement and policy management.
 class Enforcer : public IEnforcer{
@@ -45,202 +40,47 @@ class Enforcer : public IEnforcer{
         bool auto_notify_watcher;
 
         // enforce use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool enforce(string matcher, Scope scope) {
-            // TODO
-            // defer func() {
-            // 	if err := recover(); err != nil {
-            // 		fmt.Errorf("panic: %v", err)
-            // 	}
-            // }()
-
-            this->func_map.scope = scope;
-
-            if(this->enabled)
-                return true;
-
-            // for(unordered_map <string, Function> :: iterator it = this->fm.fmap.begin() ; it != this->fm.fmap.end() ; it++)
-            // 	this->fm.AddFunction(it->first, it->second);
-
-            string expString;
-            if(matcher == "")
-                expString = this->model->m["m"].assertion_map["m"]->value;
-            else
-                expString = matcher;
-
-            unordered_map <string, RoleManager*> rm_map;
-            bool ok = this->model->m.find("g") != this->model->m.end();
-            if(ok) {
-                for(unordered_map <string, Assertion*> :: iterator it = this->model->m["g"].assertion_map.begin() ; it != this->model->m["g"].assertion_map.end() ; it++){
-                    RoleManager* rm = it->second->rm;
-                    int index = expString.find((it->first)+"(");
-                    if(index != string::npos)
-                        expString.insert(index+(it->first+"(").length()-1, (it->first)+"_rm");
-                    PushPointer(this->func_map.scope, (void *)rm, (it->first)+"_rm");
-                    this->func_map.AddFunction(it->first, GFunction);
-                }
-            }
-
-            unordered_map <string, int> pIntTokens;
-            for(int i = 0 ; i < this->model->m["p"].assertion_map["p"]->tokens.size() ; i++)
-                pIntTokens[this->model->m["p"].assertion_map["p"]->tokens[i]] = i;
-
-            vector <string> pTokens = this->model->m["p"].assertion_map["p"]->tokens;
-
-            vector <Effect> policyEffects;
-            vector <float> matcherResults;
-
-            int policyLen = this->model->m["p"].assertion_map["p"]->policy.size();
-
-            if(policyLen != 0) {
-                if(this->model->m["r"].assertion_map["r"]->tokens.size() != this->func_map.GetRLen())
-                    return false;
-
-                //TODO
-                for( int i = 0 ; i < this->model->m["p"].assertion_map["p"]->policy.size() ; i++){
-                    // log.LogPrint("Policy Rule: ", pvals)
-                    vector<string> pVals = this->model->m["p"].assertion_map["p"]->policy[i];
-                    if(this->model->m["p"].assertion_map["p"]->tokens.size() != pVals.size())
-                        return false;
-
-                    PushObject(this->func_map.scope, "p");
-                    for(int j = 0 ; j < pTokens.size() ; j++){
-                        int index = pTokens[j].find("_");
-                        string token = pTokens[j].substr(index+1);
-                        PushStringPropToObject(this->func_map.scope, "p", pVals[j], token);
-                    }
-
-                    this->func_map.Eval(expString);
-                    //TODO
-                    // log.LogPrint("Result: ", result)
-
-                    if(CheckType(this->func_map.scope) == Type :: Bool){
-                        bool result = GetBoolean(this->func_map.scope);
-                        if(!result) {
-                            policyEffects[i] = Effect :: Indeterminate;
-                            continue;
-                        }
-                    }
-                    else if(CheckType(this->func_map.scope) == Type :: Float){
-                        bool result = GetFloat(this->func_map.scope);
-                        if(result == 0) {
-                            policyEffects[i] = Effect :: Indeterminate;
-                            continue;
-                        } else
-                            matcherResults[i] = result;
-                    }
-                    else
-                        return false;
-
-                    bool ok = pIntTokens.find("p_eft") != pIntTokens.end();
-                    if(ok) {
-                        int j = pIntTokens["p_eft"];
-                        string eft = pVals[j];
-                        if(eft == "allow")
-                            policyEffects[i] = Effect :: Allow;
-                        else if(eft == "deny")
-                            policyEffects[i] = Effect :: Deny;
-                        else
-                            policyEffects[i] = Effect :: Indeterminate;
-                    }
-                    else
-                        policyEffects[i] = Effect :: Allow;
-
-                    if(this->model->m["e"].assertion_map["e"]->value == "priority(p_eft) || deny")
-                        break;
-                }
-            } else {
-                this->func_map.Eval(expString);
-                bool result = this->func_map.GetBooleanResult();
-                //TODO
-                // log.LogPrint("Result: ", result)
-
-                if(result)
-                    policyEffects[0] = Effect::Allow;
-                else
-                    policyEffects[0] = Effect::Indeterminate;
-            }
-
-            //TODO
-            // log.LogPrint("Rule Results: ", policyEffects)
-
-            bool result = this->eft->MergeEffects(this->model->m["e"].assertion_map["e"]->value, policyEffects, matcherResults);
-            
-            return result;
-        }
+        bool enforce(string matcher, Scope scope);
 
     public:
 
         /**
          * Enforcer is the default constructor.
          */
-        static Enforcer* NewEnforcer() {
-            Enforcer* e = new Enforcer;
-            return e;
-        }
-
+        static Enforcer* NewEnforcer();
         /**
          * Enforcer initializes an enforcer with a model file and a policy file.
          *
          * @param model_path the path of the model file.
          * @param policyFile the path of the policy file.
          */
-        static Enforcer* NewEnforcer(string model_path, string policyFile) {
-            return NewEnforcer(model_path, FileAdapter :: NewAdapter(policyFile));
-        }
-
+        static Enforcer* NewEnforcer(string model_path, string policyFile);
         /**
          * Enforcer initializes an enforcer with a database adapter.
          *
          * @param model_path the path of the model file.
          * @param adapter the adapter.
          */
-        static Enforcer* NewEnforcer(string model_path, Adapter* adapter) {
-            Enforcer* e = NewEnforcer(Model :: NewModelFromFile(model_path), adapter);
-            e->model_path = model_path;
-            return e;
-        }
-
+        static Enforcer* NewEnforcer(string model_path, Adapter* adapter);
         /**
          * Enforcer initializes an enforcer with a model and a database adapter.
          *
          * @param m the model.
          * @param adapter the adapter.
          */
-        static Enforcer* NewEnforcer(Model* m, Adapter* adapter) {
-            Enforcer* e = new Enforcer;
-            e->adapter = adapter;
-            e->watcher = NULL;
-
-            e->model = m;
-            e->model->PrintModel();
-            e->func_map.LoadFunctionMap();
-
-            e->initialize();
-
-            if (e->adapter != NULL) {
-                e->LoadPolicy();
-            }
-            return e;
-        }
-
+        static Enforcer* NewEnforcer(Model* m, Adapter* adapter);
         /**
          * Enforcer initializes an enforcer with a model.
          *
          * @param m the model.
          */
-        static Enforcer* NewEnforcer(Model* m) {
-            return NewEnforcer(m, NULL);
-        }
-
+        static Enforcer* NewEnforcer(Model* m);
         /**
          * Enforcer initializes an enforcer with a model file.
          *
          * @param model_path the path of the model file.
          */
-        static Enforcer* NewEnforcer(string model_path) {
-            return NewEnforcer(model_path, "");
-        }
-
+        static Enforcer* NewEnforcer(string model_path);
         /**
          * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
          *
@@ -248,217 +88,65 @@ class Enforcer : public IEnforcer{
          * @param policyFile the path of the policy file.
          * @param enableLog whether to enable Casbin's log.
          */
-        static Enforcer* NewEnforcer(string model_path, string policyFile, bool enableLog) {
-            Enforcer* e = NewEnforcer(model_path, FileAdapter :: NewAdapter(policyFile));
-            // e.EnableLog(enableLog);
-            return e;
-        }
-
-
+        static Enforcer* NewEnforcer(string model_path, string policyFile, bool enableLog);
         // InitWithFile initializes an enforcer with a model file and a policy file.
-        void InitWithFile(string model_path, string policyPath) {
-            Adapter* a = FileAdapter::NewAdapter(policyPath);
-            this->InitWithAdapter(model_path, a);
-        }
-
+        void InitWithFile(string model_path, string policyPath);
         // InitWithAdapter initializes an enforcer with a database adapter.
-        void InitWithAdapter(string model_path, Adapter* adapter) {
-            Model* m = Model :: NewModelFromFile(model_path);
-
-            this->InitWithModelAndAdapter(m, adapter);
-
-            this->model_path = model_path;
-        }
-
+        void InitWithAdapter(string model_path, Adapter* adapter);
         // InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.
-        void InitWithModelAndAdapter(Model* m, Adapter* adapter) {
-            this->adapter = adapter;
-
-            this->model = m;
-            this->model->PrintModel();
-            this->func_map.LoadFunctionMap();
-
-            this->initialize();
-
-            // Do not initialize the full policy when using a filtered adapter
-            if(this->adapter != NULL && !this->adapter->IsFiltered()) 
-                this->LoadPolicy();
-        }
-
-        void initialize() {
-            this->rm = DefaultRoleManager :: NewRoleManager(10);
-            this->eft = DefaultEffector :: NewDefaultEffector();
-            this->watcher = NULL;
-
-            this->enabled = true;
-            this->auto_save = true;
-            this->auto_build_role_links = true;
-            this->auto_notify_watcher = true;
-        }
-
+        void InitWithModelAndAdapter(Model* m, Adapter* adapter);
+        void Initialize();
         // LoadModel reloads the model from the model CONF file.
         // Because the policy is attached to a model, so the policy is invalidated and needs to be reloaded by calling LoadPolicy().
-        void LoadModel() {
-            this->model = Model :: NewModelFromFile(this->model_path);
-
-            this->model->PrintModel();
-            this->func_map.LoadFunctionMap();
-
-            this->initialize();
-        }
-
+        void LoadModel();
         // GetModel gets the current model.
-        Model* GetModel() {
-            return this->model;
-        }
-
+        Model* GetModel();
         // SetModel sets the current model.
-        void SetModel(Model* m) {
-            this->model = m;
-            this->func_map.LoadFunctionMap();
-
-            this->initialize();
-        }
-
+        void SetModel(Model* m);
         // GetAdapter gets the current adapter.
-        Adapter* GetAdapter() {
-            return this->adapter;
-        }
-
+        Adapter* GetAdapter();
         // SetAdapter sets the current adapter.
-        void SetAdapter(Adapter* adapter) {
-            this->adapter = adapter;
-        }
-
+        void SetAdapter(Adapter* adapter);
         // SetWatcher sets the current watcher.
-        void SetWatcher(Watcher* watcher) {
-            this->watcher = watcher;
-            auto func = [&, this](string str) {
-                this->LoadPolicy();
-            };
-            watcher->SetUpdateCallback(func);
-        }
-
+        void SetWatcher(Watcher* watcher);
         // GetRoleManager gets the current role manager.
-        RoleManager* GetRoleManager() {
-            return this->rm;
-        }
-
+        RoleManager* GetRoleManager();
         // SetRoleManager sets the current role manager.
-        void SetRoleManager(RoleManager* rm) {
-            this->rm = rm;
-        }
-
+        void SetRoleManager(RoleManager* rm);
         // SetEffector sets the current effector.
-        void SetEffector(Effector* eft) {
-            this->eft = eft;
-        }
-
+        void SetEffector(Effector* eft);
         // ClearPolicy clears all policy.
-        void ClearPolicy() {
-            this->model->ClearPolicy();
-        }
-
+        void ClearPolicy();
         // LoadPolicy reloads the policy from file/database.
-        void LoadPolicy() {
-            this->model->ClearPolicy();
-            this->adapter->LoadPolicy(this->model);
-
-            this->model->PrintPolicy();
-
-            if(this->auto_build_role_links) {
-                this->BuildRoleLinks();
-            }
-        }
-
+        void LoadPolicy();
         //LoadFilteredPolicy reloads a filtered policy from file/database.
-        void LoadFilteredPolicy(Filter* filter) {
-            this->model->ClearPolicy();
-
-            FilteredAdapter* filteredAdapter;
-
-            if (this->adapter->IsFiltered()) {
-                void* adapter = this->adapter;
-                filteredAdapter = (FilteredAdapter*)adapter;
-            }
-            else
-                throw CasbinAdapterException("filtered policies are not supported by this adapter");
-
-            filteredAdapter->LoadFilteredPolicy(this->model, filter);
-
-            this->model->PrintPolicy();
-            if(this->auto_build_role_links)
-                this->BuildRoleLinks();
-        }
-
+        template<typename Filter>
+        void LoadFilteredPolicy(Filter filter);
         // IsFiltered returns true if the loaded policy has been filtered.
-        bool IsFiltered() {
-            return this->adapter->IsFiltered();
-        }
-
+        bool IsFiltered();
         // SavePolicy saves the current policy (usually after changed with Casbin API) back to file/database.
-        void SavePolicy() {
-            if(this->IsFiltered())
-                throw CasbinEnforcerException("cannot save a filtered policy");
-
-            this->adapter->SavePolicy(this->model);
-
-            if(this->watcher != NULL){
-                if (IsInstanceOf<WatcherEx>(this->watcher)) {
-                    void* watcher = this->watcher;
-                    ((WatcherEx*)watcher)->UpdateForSavePolicy(this->model);
-                }
-                else
-                    return this->watcher->Update();
-            }
-        }
-
+        void SavePolicy();
         // EnableEnforce changes the enforcing state of Casbin, when Casbin is disabled, all access will be allowed by the Enforce() function.
-        void EnableEnforce(bool enable) {
-            this->enabled = enable;
-        }
-
+        void EnableEnforce(bool enable);
         // EnableLog changes whether Casbin will log messages to the Logger.
         // void EnableLog(bool enable) {
             // log.GetLogger().EnableLog(enable);
         // }
 
         // EnableAutoNotifyWatcher controls whether to save a policy rule automatically notify the Watcher when it is added or removed.
-        void EnableAutoNotifyWatcher(bool enable) {
-            this->auto_notify_watcher = enable;
-        }
-
+        void EnableAutoNotifyWatcher(bool enable);
         // EnableAutoSave controls whether to save a policy rule automatically to the adapter when it is added or removed.
-        void EnableAutoSave(bool auto_save) {
-            this->auto_save = auto_save;
-        }
-
+        void EnableAutoSave(bool auto_save);
         // EnableAutoBuildRoleLinks controls whether to rebuild the role inheritance relations when a role is added or deleted.
-        void EnableAutoBuildRoleLinks(bool auto_build_role_links) {
-            this->auto_build_role_links = auto_build_role_links;
-        }
-
+        void EnableAutoBuildRoleLinks(bool auto_build_role_links);
         // BuildRoleLinks manually rebuild the role inheritance relations.
-        void BuildRoleLinks() {
-            this->rm->Clear();
-
-            this->model->BuildRoleLinks(this->rm);
-        }
-
+        void BuildRoleLinks();
         // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
-        void BuildIncrementalRoleLinks(policy_op op, string p_type, vector<vector<string>> rules) {
-            return this->model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
-        }
-
+        void BuildIncrementalRoleLinks(policy_op op, string p_type, vector<vector<string>> rules);
         // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(Scope scope) {
-            return this->enforce("", scope);
-        }
-
+        bool Enforce(Scope scope);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool EnforceWithMatcher(string matcher, Scope scope) {
-            return this->enforce(matcher, scope);
-        }
+        bool EnforceWithMatcher(string matcher, Scope scope);
 
         /*Management API member functions.*/
         vector<string> GetAllSubjects();

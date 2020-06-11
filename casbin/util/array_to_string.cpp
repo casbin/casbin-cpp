@@ -1,8 +1,8 @@
-#ifndef CASBIN_CPP_UTIL_ARRAY_TO_STRING
-#define CASBIN_CPP_UTIL_ARRAY_TO_STRING
+#pragma once
 
-#include <vector>
-#include <string>
+#include "pch.h"
+
+#include "./util.h"
 
 using namespace std;
 
@@ -12,5 +12,3 @@ string ArrayToString(vector<string> arr){
         res += ", " + arr[i];
     return res;
 }
-
-#endif

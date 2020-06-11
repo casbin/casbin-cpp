@@ -1,9 +1,10 @@
-#ifndef CASBIN_CPP_UTIL_SET_SUBTRACT
-#define CASBIN_CPP_UTIL_SET_SUBTRACT
+#pragma once
 
-#include <vector>
-#include <string>
+#include "pch.h"
+
 #include <unordered_map>
+
+#include "./util.h"
 
 using namespace std;
 
@@ -18,7 +19,5 @@ vector<string> SetSubtract(vector<string> a, vector<string> b) {
     for (int i = 0 ; i < a.size() ; i++)
         if (!mb[a[i]])
             diff.push_back(a[i]);
-	return diff;
+    return diff;
 }
-
-#endif

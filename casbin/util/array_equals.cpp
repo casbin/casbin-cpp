@@ -1,8 +1,8 @@
-#ifndef CASBIN_CPP_UTIL_ARRAY_EQUALS
-#define CASBIN_CPP_UTIL_ARRAY_EQUALS
+#pragma once
 
-#include <vector>
-#include <string>
+#include "pch.h"
+
+#include "./util.h"
 
 using namespace std;
 
@@ -19,5 +19,3 @@ bool ArrayEquals(vector<string> a, vector<string> b) {
     }
     return true;
 }
-
-#endif

@@ -1,5 +1,6 @@
-#ifndef CASBIN_CPP_MANAGEMENT_API
-#define CASBIN_CPP_MANAGEMENT_API
+#pragma once
+
+#include "pch.h"
 
 #include "./enforcer.h"
 
@@ -290,5 +291,3 @@ bool Enforcer :: RemoveFilteredNamedGroupingPolicy(string p_type, int field_inde
 void Enforcer :: AddFunction(string name, Function function) {
     this->func_map.AddFunction(name, function);
 }
-
-#endif

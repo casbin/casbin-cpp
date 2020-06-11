@@ -1,8 +1,8 @@
-#ifndef CASBIN_CPP_UTIL_JOIN_SLICE
-#define CASBIN_CPP_UTIL_JOIN_SLICE
+#pragma once
 
-#include <vector>
-#include <string>
+#include "pch.h"
+
+#include "./util.h"
 
 using namespace std;
 
@@ -12,5 +12,3 @@ vector<string> JoinSlice(string a, vector<string> slice) {
         result.push_back(slice[i]);
     return result;
 }
-
-#endif

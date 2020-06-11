@@ -63,6 +63,99 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="enforcer.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="internal_api.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="management_api.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rbac_api.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rbac_api_with_domains.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="util\array_equals.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\array_remove_duplicates.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\array_to_string.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\built_in_functions.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\ends_with.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\escape_assertion.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\find_all_occurences.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\is_instance_of.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\join.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\join_slice.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\remove_comments.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\set_subtract.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\split.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\trim.cpp">
+      <Filter>Header Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="config\config.cpp">
+      <Filter>Header Files\config</Filter>
+    </ClCompile>
+    <ClCompile Include="model\assertion.cpp">
+      <Filter>Header Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\function.cpp">
+      <Filter>Header Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model.cpp">
+      <Filter>Header Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\default_watcher.cpp">
+      <Filter>Header Files\persist</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\default_watcher_ex.cpp">
+      <Filter>Header Files\persist</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\file-adapter\batch_file_adapter.cpp">
+      <Filter>Header Files\persist\file-adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\file-adapter\file_adapter.cpp">
+      <Filter>Header Files\persist\file-adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\file-adapter\filtered_adapter.cpp">
+      <Filter>Header Files\persist\file-adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="rbac\default_role_manager.cpp">
+      <Filter>Header Files\rbac</Filter>
+    </ClCompile>
+    <ClCompile Include="rbac\group_role_manager.cpp">
+      <Filter>Header Files\rbac</Filter>
+    </ClCompile>
+    <ClCompile Include="model\scope_config.cpp">
+      <Filter>Header Files\model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="duktape\duk_config.h">
@@ -173,9 +266,6 @@
     <ClInclude Include="config\config.h">
       <Filter>Header Files\config</Filter>
     </ClInclude>
-    <ClInclude Include="effect\default_effector.h">
-      <Filter>Header Files\effect</Filter>
-    </ClInclude>
     <ClInclude Include="effect\effect.h">
       <Filter>Header Files\effect</Filter>
     </ClInclude>
@@ -188,25 +278,16 @@
     <ClInclude Include="model\function.h">
       <Filter>Header Files\model</Filter>
     </ClInclude>
-    <ClInclude Include="model\model.h">
-      <Filter>Header Files\model</Filter>
-    </ClInclude>
     <ClInclude Include="persist\adapter.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
     <ClInclude Include="persist\adapter_filtered.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
-    <ClInclude Include="persist\default_watcher.h">
-      <Filter>Header Files\persist</Filter>
-    </ClInclude>
     <ClInclude Include="persist\watcher.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
     <ClInclude Include="persist\file-adapter\file_adapter.h">
-      <Filter>Header Files\persist\file-adapter</Filter>
-    </ClInclude>
-    <ClInclude Include="persist\file-adapter\filtered_adapter.h">
       <Filter>Header Files\persist\file-adapter</Filter>
     </ClInclude>
     <ClInclude Include="rbac\default_role_manager.h">
@@ -218,61 +299,10 @@
     <ClInclude Include="rbac\role_manager.h">
       <Filter>Header Files\rbac</Filter>
     </ClInclude>
-    <ClInclude Include="util\array_equals.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\array_remove_duplicates.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\array_to_string.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\built_in_functions.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\ends_with.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\escape_assertion.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\find_all_occurences.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\join.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\join_slice.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\remove_comments.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\set_subtract.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\split.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\trim.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
     <ClInclude Include="enforcer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="enforcer_interface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="internal_api.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="management_api.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rbac_api.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rbac_api_with_domains.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="persist\file-adapter\batch_file_adapter.h">
@@ -287,8 +317,32 @@
     <ClInclude Include="persist\watcher_ex.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
-    <ClInclude Include="util\is_instance_of.h">
+    <ClInclude Include="model\model.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="util\built_in_functions.h">
       <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\pch.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\util.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="config\pch.h">
+      <Filter>Header Files\config</Filter>
+    </ClInclude>
+    <ClInclude Include="model\pch.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\pch.h">
+      <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\file-adapter\pch.h">
+      <Filter>Header Files\persist\file-adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac\pch.h">
+      <Filter>Header Files\rbac</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
