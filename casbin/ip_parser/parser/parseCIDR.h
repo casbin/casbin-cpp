@@ -11,7 +11,7 @@
 #include "./parseIPv4.h"
 #include "./parseIPv6.h"
 #include "./CIDRMask.h"
-#include "../exceptions/ParserException.h"
+#include "../exception/ParserException.h"
 
 CIDR parseCIDR(string s);
 

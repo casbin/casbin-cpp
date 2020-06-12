@@ -60,9 +60,4 @@ class Config : public ConfigInterface {
         string Get(string key);
 };
 
-const string Config::DEFAULT_SECTION = "default";
-const string Config::DEFAULT_COMMENT = "#";
-const string Config::DEFAULT_COMMENT_SEM = ";";
-mutex Config::mtx_lock;
-
 #endif

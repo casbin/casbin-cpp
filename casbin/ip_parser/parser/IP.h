@@ -36,8 +36,4 @@ class IP {
 
 };
 
-byte IP :: IPv4len = 4;
-byte IP :: IPv6len = 16;
-IPMask IP :: v4InV6Prefix{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff};
-
 #endif

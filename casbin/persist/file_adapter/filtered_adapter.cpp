@@ -7,6 +7,7 @@
 #include "./filtered_adapter.h"
 #include "../../exception/io_exception.h"
 #include "../../exception/casbin_adapter_exception.h"
+#include "../../util/util.h"
 
 using namespace std;
 

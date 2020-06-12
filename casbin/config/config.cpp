@@ -12,6 +12,11 @@
 #include "../exception/illegal_argument_exception.h"
 #include "../util/util.h"
 
+const string Config::DEFAULT_SECTION = "default";
+const string Config::DEFAULT_COMMENT = "#";
+const string Config::DEFAULT_COMMENT_SEM = ";";
+mutex Config::mtx_lock;
+
 /**
  * addConfig adds a new section->key:value to the configuration.
  */

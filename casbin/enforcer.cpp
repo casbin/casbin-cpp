@@ -4,7 +4,7 @@
 
 #include "./enforcer.h"
 #include "./persist/watcher_ex.h"
-#include "./persist/file-adapter/file_adapter.h"
+#include "./persist/file_adapter/file_adapter.h"
 #include "./rbac/default_role_manager.h"
 #include "./effect/default_effector.h"
 #include "./exception/casbin_adapter_exception.h"
@@ -39,7 +39,7 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
     if(ok) {
         for(unordered_map <string, Assertion*> :: iterator it = this->model->m["g"].assertion_map.begin() ; it != this->model->m["g"].assertion_map.end() ; it++){
             RoleManager* rm = it->second->rm;
-            int index = expString.find((it->first)+"(");
+            int index = int(expString.find((it->first)+"("));
             if(index != string::npos)
                 expString.insert(index+(it->first+"(").length()-1, (it->first)+"_rm");
             PushPointer(this->func_map.scope, (void *)rm, (it->first)+"_rm");
@@ -56,7 +56,7 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
     vector <Effect> policyEffects;
     vector <float> matcherResults;
 
-    int policyLen = this->model->m["p"].assertion_map["p"]->policy.size();
+    int policyLen = int(this->model->m["p"].assertion_map["p"]->policy.size());
 
     if(policyLen != 0) {
         if(this->model->m["r"].assertion_map["r"]->tokens.size() != this->func_map.GetRLen())
@@ -71,7 +71,7 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
 
             PushObject(this->func_map.scope, "p");
             for(int j = 0 ; j < pTokens.size() ; j++){
-                int index = pTokens[j].find("_");
+                int index = int(pTokens[j].find("_"));
                 string token = pTokens[j].substr(index+1);
                 PushStringPropToObject(this->func_map.scope, "p", pVals[j], token);
             }

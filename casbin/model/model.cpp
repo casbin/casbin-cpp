@@ -11,6 +11,16 @@
 
 using namespace std;
 
+unordered_map<string, string> Model :: section_name_map = {
+    {"r", "request_definition"},
+    {"p", "policy_definition"},
+    {"g", "role_definition"},
+    {"e", "policy_effect"},
+    {"m", "matchers"}
+};
+
+vector<string> Model :: required_sections{"r","p","e","m"};
+
 void Model :: LoadModelFromConfig(ConfigInterface *cfg) {
     for(unordered_map <string, string> :: iterator it = section_name_map.begin() ; it != section_name_map.end() ; it++)
         LoadSection(*this, cfg, it->first);

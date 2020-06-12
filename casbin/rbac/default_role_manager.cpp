@@ -168,7 +168,7 @@ void DefaultRoleManager :: AddLink(string name1, string name2, vector<string> do
  * domain is a prefix to the roles.
  */
 void DefaultRoleManager :: DeleteLink(string name1, string name2, vector<string> domain) {
-    unsigned int domain_length = domain.size();
+    unsigned int domain_length = int(domain.size());
     if (domain_length == 1) {
         name1 = domain[0] + "::" + name1;
         name2 = domain[0] + "::" + name2;
@@ -190,7 +190,7 @@ void DefaultRoleManager :: DeleteLink(string name1, string name2, vector<string>
  * domain is a prefix to the roles.
  */
 bool DefaultRoleManager :: HasLink(string name1, string name2, vector<string> domain) {
-    unsigned int domain_length = domain.size();
+    unsigned int domain_length = int(domain.size());
     if (domain_length == 1) {
         name1 = domain[0] + "::" + name1;
         name2 = domain[0] + "::" + name2;
@@ -215,7 +215,7 @@ bool DefaultRoleManager :: HasLink(string name1, string name2, vector<string> do
  * domain is a prefix to the roles.
  */
 vector<string> DefaultRoleManager :: GetRoles(string name, vector<string> domain) {
-    unsigned int domain_length = domain.size();
+    unsigned int domain_length = int(domain.size());
     if (domain_length == 1) {
         name = domain[0] + "::" + name;
     } else if (domain_length > 1) {

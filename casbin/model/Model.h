@@ -101,14 +101,4 @@ class Model{
         vector<string> GetValuesForFieldInPolicyAllTypes(string sec, int field_index);
 };
 
-unordered_map<string, string> Model :: section_name_map = {
-    {"r", "request_definition"},
-    {"p", "policy_definition"},
-    {"g", "role_definition"},
-    {"e", "policy_effect"},
-    {"m", "matchers"}
-};
-
-vector<string> Model :: required_sections{"r","p","e","m"};
-
 #endif

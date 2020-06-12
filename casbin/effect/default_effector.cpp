@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "./default_effector.h"
-#include "../exception/UnsupportedOperationException.h"
+#include "../exception/unsupported_operation_exception.h"
 
 // NewDefaultEffector is the constructor for DefaultEffector.
 DefaultEffector* DefaultEffector :: NewDefaultEffector(){

@@ -22,23 +22,11 @@
     <Filter Include="Header Files\effect">
       <UniqueIdentifier>{5c372a6d-1a50-464b-a457-2c7bc084d256}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\error">
-      <UniqueIdentifier>{daea1e2a-9a60-4221-9919-96501c7697e2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\exception">
       <UniqueIdentifier>{2e3edbd9-b87d-42e7-aa4a-3dcfdb0af1a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\log">
-      <UniqueIdentifier>{42a12854-7a61-467d-b190-af699f7d1687}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\model">
-      <UniqueIdentifier>{14f349ba-d526-42d9-bdc6-941877176d1d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\persist">
       <UniqueIdentifier>{1edc3d86-e4a6-41bd-8c13-c6a849d3fd5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\persist\file-adapter">
-      <UniqueIdentifier>{4d2de745-b3c0-4019-a95b-a1b641e698da}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\rbac">
       <UniqueIdentifier>{998783e5-4cdf-4808-9c75-e51ab0952cc9}</UniqueIdentifier>
@@ -52,7 +40,46 @@
     <Filter Include="Header Files\ip_parser\parser">
       <UniqueIdentifier>{608fe2a4-0ca4-4b1b-8585-b33692c7efe4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ip_parser\exceptions">
+    <Filter Include="Source Files\duktape">
+      <UniqueIdentifier>{19fadd05-2499-4380-9033-b75f79f90483}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\config">
+      <UniqueIdentifier>{02df1eec-cf14-4ca6-a900-09c7feada787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ip_parser">
+      <UniqueIdentifier>{d1ae171d-ef7f-4125-8c0b-c21c38a96a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rbac">
+      <UniqueIdentifier>{64f7731e-f8d6-4a9f-b49c-aeeb8e833cb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{6ce08247-6b46-4921-867b-2a3d7b56248d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\effect">
+      <UniqueIdentifier>{943dca81-dd7c-43b9-ba98-ee6efd09dd65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{8c4709f3-d214-42f5-b506-2f416b7e2819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\exception">
+      <UniqueIdentifier>{1521add1-3af8-4660-adb9-ec55175d4621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ip_parser\parser">
+      <UniqueIdentifier>{deb02d53-9580-4fb9-b666-6b3a2713d286}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ip_parser\exceptions">
+      <UniqueIdentifier>{c1a83ec0-b3e2-4b46-9755-6e20d8f26356}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\persist">
+      <UniqueIdentifier>{c9d1230b-64a7-4553-aba5-fe331709ed07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\persist\file_adapter">
+      <UniqueIdentifier>{ba2b7711-b8b5-4932-a296-e1ad76599728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\persist\file_adapter">
+      <UniqueIdentifier>{4d2de745-b3c0-4019-a95b-a1b641e698da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ip_parser\exception">
       <UniqueIdentifier>{523502e9-4d2b-4d36-8556-2f8e84d461aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -63,194 +90,173 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="enforcer.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="internal_api.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="management_api.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="rbac_api.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="rbac_api_with_domains.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="util\array_equals.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\array_remove_duplicates.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\array_to_string.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\built_in_functions.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\ends_with.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\escape_assertion.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\find_all_occurences.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\is_instance_of.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\join.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\join_slice.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\remove_comments.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\set_subtract.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\split.cpp">
-      <Filter>Header Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\trim.cpp">
-      <Filter>Header Files\util</Filter>
+    <ClCompile Include="duktape\duktape.cpp">
+      <Filter>Source Files\duktape</Filter>
     </ClCompile>
     <ClCompile Include="config\config.cpp">
-      <Filter>Header Files\config</Filter>
+      <Filter>Source Files\config</Filter>
     </ClCompile>
-    <ClCompile Include="model\assertion.cpp">
-      <Filter>Header Files\model</Filter>
-    </ClCompile>
-    <ClCompile Include="model\function.cpp">
-      <Filter>Header Files\model</Filter>
-    </ClCompile>
-    <ClCompile Include="model\model.cpp">
-      <Filter>Header Files\model</Filter>
-    </ClCompile>
-    <ClCompile Include="persist\default_watcher.cpp">
-      <Filter>Header Files\persist</Filter>
-    </ClCompile>
-    <ClCompile Include="persist\default_watcher_ex.cpp">
-      <Filter>Header Files\persist</Filter>
-    </ClCompile>
-    <ClCompile Include="persist\file-adapter\batch_file_adapter.cpp">
-      <Filter>Header Files\persist\file-adapter</Filter>
-    </ClCompile>
-    <ClCompile Include="persist\file-adapter\file_adapter.cpp">
-      <Filter>Header Files\persist\file-adapter</Filter>
-    </ClCompile>
-    <ClCompile Include="persist\file-adapter\filtered_adapter.cpp">
-      <Filter>Header Files\persist\file-adapter</Filter>
-    </ClCompile>
-    <ClCompile Include="rbac\default_role_manager.cpp">
-      <Filter>Header Files\rbac</Filter>
-    </ClCompile>
-    <ClCompile Include="rbac\group_role_manager.cpp">
-      <Filter>Header Files\rbac</Filter>
-    </ClCompile>
-    <ClCompile Include="model\scope_config.cpp">
-      <Filter>Header Files\model</Filter>
+    <ClCompile Include="effect\default_effector.cpp">
+      <Filter>Source Files\effect</Filter>
     </ClCompile>
     <ClCompile Include="exception\casbin_adapter_exception.cpp">
-      <Filter>Header Files\exception</Filter>
+      <Filter>Source Files\exception</Filter>
     </ClCompile>
     <ClCompile Include="exception\casbin_enforcer_exception.cpp">
-      <Filter>Header Files\exception</Filter>
+      <Filter>Source Files\exception</Filter>
     </ClCompile>
     <ClCompile Include="exception\casbin_rbac_exception.cpp">
-      <Filter>Header Files\exception</Filter>
+      <Filter>Source Files\exception</Filter>
     </ClCompile>
     <ClCompile Include="exception\illegal_argument_exception.cpp">
-      <Filter>Header Files\exception</Filter>
+      <Filter>Source Files\exception</Filter>
     </ClCompile>
     <ClCompile Include="exception\io_exception.cpp">
-      <Filter>Header Files\exception</Filter>
+      <Filter>Source Files\exception</Filter>
     </ClCompile>
     <ClCompile Include="exception\missing_required_sections.cpp">
-      <Filter>Header Files\exception</Filter>
+      <Filter>Source Files\exception</Filter>
     </ClCompile>
     <ClCompile Include="exception\unsupported_operation_exception.cpp">
-      <Filter>Header Files\exception</Filter>
-    </ClCompile>
-    <ClCompile Include="ip_parser\exceptions\ParserException.cpp">
-      <Filter>Header Files\ip_parser\exceptions</Filter>
+      <Filter>Source Files\exception</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\allFF.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\CIDRMask.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\dtoi.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\equal.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\IP.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\IPNet.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\IPv4.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\parseCIDR.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\parseIP.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
-    </ClCompile>
-    <ClCompile Include="ip_parser\parser\parseIPv4.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\parseIPv6.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\Print.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="ip_parser\parser\xtoi.cpp">
-      <Filter>Header Files\ip_parser\parser</Filter>
+      <Filter>Source Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="model\assertion.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\function.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\scope_config.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="util\array_equals.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\array_remove_duplicates.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\array_to_string.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\built_in_functions.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\ends_with.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\escape_assertion.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\find_all_occurences.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\is_instance_of.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\join.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\join_slice.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\remove_comments.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\set_subtract.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\split.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\trim.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="rbac\default_role_manager.cpp">
+      <Filter>Source Files\rbac</Filter>
+    </ClCompile>
+    <ClCompile Include="rbac\group_role_manager.cpp">
+      <Filter>Source Files\rbac</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\file_adapter\batch_file_adapter.cpp">
+      <Filter>Source Files\persist\file_adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\file_adapter\file_adapter.cpp">
+      <Filter>Source Files\persist\file_adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\file_adapter\filtered_adapter.cpp">
+      <Filter>Source Files\persist\file_adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\adapter.cpp">
+      <Filter>Source Files\persist</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\default_watcher.cpp">
+      <Filter>Source Files\persist</Filter>
+    </ClCompile>
+    <ClCompile Include="persist\default_watcher_ex.cpp">
+      <Filter>Source Files\persist</Filter>
+    </ClCompile>
+    <ClCompile Include="enforcer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="internal_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="management_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rbac_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rbac_api_with_domains.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\exception\ParserException.cpp">
+      <Filter>Source Files\ip_parser\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\parseIPv4.cpp">
+      <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="duktape\duk_config.h">
-      <Filter>Header Files\duktape</Filter>
-    </ClInclude>
-    <ClInclude Include="duktape\duktape.h">
-      <Filter>Header Files\duktape</Filter>
-    </ClInclude>
-    <ClInclude Include="duktape\duktape_core.h">
-      <Filter>Header Files\duktape</Filter>
-    </ClInclude>
-    <ClInclude Include="duktape\scope.h">
-      <Filter>Header Files\duktape</Filter>
-    </ClInclude>
-    <ClInclude Include="error\Error.h">
-      <Filter>Header Files\error</Filter>
-    </ClInclude>
-    <ClInclude Include="log\DefaultLogger.h">
-      <Filter>Header Files\log</Filter>
-    </ClInclude>
-    <ClInclude Include="log\Log.h">
-      <Filter>Header Files\log</Filter>
-    </ClInclude>
-    <ClInclude Include="log\Logger.h">
-      <Filter>Header Files\log</Filter>
-    </ClInclude>
-    <ClInclude Include="log\LogUtil.h">
-      <Filter>Header Files\log</Filter>
-    </ClInclude>
-    <ClInclude Include="model\scope_config.h">
-      <Filter>Header Files\model</Filter>
-    </ClInclude>
     <ClInclude Include="config\config_interface.h">
       <Filter>Header Files\config</Filter>
     </ClInclude>
@@ -263,12 +269,6 @@
     <ClInclude Include="effect\effector.h">
       <Filter>Header Files\effect</Filter>
     </ClInclude>
-    <ClInclude Include="model\assertion.h">
-      <Filter>Header Files\model</Filter>
-    </ClInclude>
-    <ClInclude Include="model\function.h">
-      <Filter>Header Files\model</Filter>
-    </ClInclude>
     <ClInclude Include="persist\adapter.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
@@ -279,7 +279,7 @@
       <Filter>Header Files\persist</Filter>
     </ClInclude>
     <ClInclude Include="persist\file-adapter\file_adapter.h">
-      <Filter>Header Files\persist\file-adapter</Filter>
+      <Filter>Header Files\persist\file_adapter</Filter>
     </ClInclude>
     <ClInclude Include="rbac\default_role_manager.h">
       <Filter>Header Files\rbac</Filter>
@@ -297,7 +297,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="persist\file-adapter\batch_file_adapter.h">
-      <Filter>Header Files\persist\file-adapter</Filter>
+      <Filter>Header Files\persist\file_adapter</Filter>
     </ClInclude>
     <ClInclude Include="persist\batch_adapter.h">
       <Filter>Header Files\persist</Filter>
@@ -307,9 +307,6 @@
     </ClInclude>
     <ClInclude Include="persist\watcher_ex.h">
       <Filter>Header Files\persist</Filter>
-    </ClInclude>
-    <ClInclude Include="model\model.h">
-      <Filter>Header Files\model</Filter>
     </ClInclude>
     <ClInclude Include="util\built_in_functions.h">
       <Filter>Header Files\util</Filter>
@@ -323,14 +320,11 @@
     <ClInclude Include="config\pch.h">
       <Filter>Header Files\config</Filter>
     </ClInclude>
-    <ClInclude Include="model\pch.h">
-      <Filter>Header Files\model</Filter>
-    </ClInclude>
     <ClInclude Include="persist\pch.h">
       <Filter>Header Files\persist</Filter>
     </ClInclude>
     <ClInclude Include="persist\file-adapter\pch.h">
-      <Filter>Header Files\persist\file-adapter</Filter>
+      <Filter>Header Files\persist\file_adapter</Filter>
     </ClInclude>
     <ClInclude Include="rbac\pch.h">
       <Filter>Header Files\rbac</Filter>
@@ -360,10 +354,10 @@
       <Filter>Header Files\exception</Filter>
     </ClInclude>
     <ClInclude Include="ip_parser\exceptions\ParserException.h">
-      <Filter>Header Files\ip_parser\exceptions</Filter>
+      <Filter>Header Files\ip_parser\exception</Filter>
     </ClInclude>
     <ClInclude Include="ip_parser\exceptions\pch.h">
-      <Filter>Header Files\ip_parser\exceptions</Filter>
+      <Filter>Header Files\ip_parser\exception</Filter>
     </ClInclude>
     <ClInclude Include="ip_parser\parser\allFF.h">
       <Filter>Header Files\ip_parser\parser</Filter>
@@ -415,6 +409,30 @@
     </ClInclude>
     <ClInclude Include="ip_parser\parser\xtoi.h">
       <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="duktape\duk_config.h">
+      <Filter>Header Files\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="duktape\duktape.h">
+      <Filter>Header Files\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="duktape\pch.h">
+      <Filter>Header Files\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="duktape\scope.h">
+      <Filter>Header Files\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\file-adapter\filtered_adapter.h">
+      <Filter>Header Files\persist\file_adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\default_effector.h">
+      <Filter>Header Files\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\pch.h">
+      <Filter>Header Files\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="persist\default_watcher.h">
+      <Filter>Header Files\persist</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

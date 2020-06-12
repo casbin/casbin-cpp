@@ -151,6 +151,11 @@
 *  If you are accidentally missing from this list, send me an e-mail
 *  (``sami.vaarala@iki.fi``) and I'll fix the omission.
 */
+#pragma once
+
+#include "pch.h"
+
+// #include "duk_config.h"
 
 #line 1 "duk_replacements.c"
 /*
@@ -784,6 +789,7 @@ struct duk_hobject;
 struct duk_hcompfunc;
 struct duk_hnatfunc;
 struct duk_hboundfunc;
+//#include "duk_config.h"
 struct duk_hthread;
 struct duk_hbufobj;
 struct duk_hdecenv;
@@ -7871,7 +7877,7 @@ struct duk_catcher {
 	 * on 32-bit targets this would make duk_catcher 16 bytes.
 	 */
 };
-
+//#include "duk_config.h"
 struct duk_hthread {
 	/* Shared object part */
 	duk_hobject obj;
@@ -11788,7 +11794,7 @@ DUK_INTERNAL const duk_uint8_t duk_builtins_data[4281] = {
 
 /* automatic undefs */
 #undef DUK__REFCINIT
-// #line 1 "duk_error_macros.c"
+#line 1 "duk_error_macros.c"
 /*
  *  Error and fatal handling.
  */

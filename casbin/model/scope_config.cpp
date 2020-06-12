@@ -4,8 +4,8 @@
 
 #include "./scope_config.h"
 
-Scope InitializeScope() {
-    return new duk_context;
+void* InitializeScope() {
+    return (void*)new int;
 }
 
 void PushFunctionValue(Scope scope, Function f, int nargs){

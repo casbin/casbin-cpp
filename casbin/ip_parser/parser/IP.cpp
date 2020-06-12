@@ -4,6 +4,10 @@
 
 #include "./IP.h"
 
+byte IP :: IPv4len = 4;
+byte IP :: IPv6len = 16;
+IPMask IP :: v4InV6Prefix{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff};
+
 IP :: IP() {
     isLegal = true;
 }
@@ -19,7 +23,7 @@ IP IP :: Mask(IPMask mask) {
         IPMask ip_3(ip.begin() + 12, ip.end());
         ip = ip_3;
     }
-    unsigned int n = ip.size();
+    unsigned int n = int(ip.size());
     if(n != mask.size()) {
         IP ip_mask;
         ip_mask.isLegal = false;
@@ -29,7 +33,7 @@ IP IP :: Mask(IPMask mask) {
     vector <byte> outNew(n, 0);
     out.ip = outNew;
     out.isLegal = true;
-    for(int i = 0; i < n; i++) {
+    for(int i = 0; i < int(n); i++) {
         out.ip[i] = ip[i] & mask[i];
     }
     return out;

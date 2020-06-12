@@ -2125,6 +2125,8 @@ typedef double duk_double_t;
  * 'struct duk_hthread' like the 'duk_hthread' typedef which is used
  * exclusively in internals.
  */
+//struct duk_hthread;
+//#include "duktape.cpp"
 typedef struct duk_hthread duk_context;
 
 /* Check whether we should use 64-bit integers or not.
