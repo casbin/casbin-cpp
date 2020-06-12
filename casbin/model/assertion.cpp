@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "./assertion.h"
-#include "../exception/IllegalArgumentException.h"
+#include "../exception/illegal_argument_exception.h"
 
 void Assertion :: BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, vector<vector<string>> rules) {
     this->rm = rm;

@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "./default_role_manager.h"
-#include "../exception/CasbinRBACException.h"
+#include "../exception/casbin_rbac_exception.h"
 
 Role* Role :: NewRole(string name) {
     Role* role = new Role;

@@ -7,11 +7,11 @@
 #include "./built_in_functions.h"
 #include "../rbac/role_manager.h"
 #include "./util.h"
-#include "../exception/IllegalArgumentException.h"
-#include "../IPParser/parser/CIDR.h"
-#include "../IPParser/parser/IP.h"
-#include "../IPParser/parser/parseCIDR.h"
-#include "../IPParser/parser/parseIP.h"
+#include "../exception/illegal_argument_exception.h"
+#include "../ip_parser/parser/CIDR.h"
+#include "../ip_parser/parser/IP.h"
+#include "../ip_parser/parser/parseCIDR.h"
+#include "../ip_parser/parser/parseIP.h"
 
 using namespace std;
 

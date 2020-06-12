@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "./enforcer.h"
-#include "./exception/CasbinEnforcerException.h"
+#include "./exception/casbin_enforcer_exception.h"
 #include "./util/util.h"
 
 // GetRolesForUser gets the roles that a user has.

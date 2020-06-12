@@ -7,8 +7,8 @@
 #include "./persist/file-adapter/file_adapter.h"
 #include "./rbac/default_role_manager.h"
 #include "./effect/default_effector.h"
-#include "./exception/CasbinAdapterException.h"
-#include "./exception/CasbinEnforcerException.h"
+#include "./exception/casbin_adapter_exception.h"
+#include "./exception/casbin_enforcer_exception.h"
 #include "./util/util.h"
 
 // enforce use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".

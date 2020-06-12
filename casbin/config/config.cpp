@@ -8,8 +8,8 @@
 #include <cstdio>
 
 #include "./config.h"
-#include "../exception/IOException.h"
-#include "../exception/IllegalArgumentException.h"
+#include "../exception/io_exception.h"
+#include "../exception/illegal_argument_exception.h"
 #include "../util/util.h"
 
 /**

@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "./group_role_manager.h"
-#include "../exception/CasbinRBACException.h"
+#include "../exception/casbin_rbac_exception.h"
 
 /**
  * GroupRoleManager is the constructor for creating an instance of the

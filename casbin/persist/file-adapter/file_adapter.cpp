@@ -6,9 +6,9 @@
 
 #include "./file_adapter.h"
 #include "../../util/util.h"
-#include "../../exception/IOException.h"
-#include "../../exception/UnsupportedOperationException.h"
-#include "../../exception/CasbinAdapterException.h"
+#include "../../exception/io_exception.h"
+#include "../../exception/unsupported_operation_exception.h"
+#include "../../exception/casbin_adapter_exception.h"
 
 // NewAdapter is the constructor for Adapter.
 FileAdapter* FileAdapter :: NewAdapter(string file_path) {

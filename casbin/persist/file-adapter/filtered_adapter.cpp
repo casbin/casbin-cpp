@@ -5,8 +5,8 @@
 #include <fstream>
 
 #include "./filtered_adapter.h"
-#include "../../exception/IOException.h"
-#include "../../exception/CasbinAdapterException.h"
+#include "../../exception/io_exception.h"
+#include "../../exception/casbin_adapter_exception.h"
 
 using namespace std;
 

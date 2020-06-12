@@ -6,7 +6,7 @@
 
 #include "./model.h"
 #include "../config/config.h"
-#include "../exception/MissingRequiredSections.h"
+#include "../exception/missing_required_sections.h"
 #include "../util/util.h"
 
 using namespace std;

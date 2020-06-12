@@ -28,15 +28,6 @@
     <Filter Include="Header Files\exception">
       <UniqueIdentifier>{2e3edbd9-b87d-42e7-aa4a-3dcfdb0af1a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\IPParser">
-      <UniqueIdentifier>{dd621977-8fe3-4a62-884f-01f6e80142dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\IPParser\exceptions">
-      <UniqueIdentifier>{d1074fed-f0a0-45f5-83ee-d7ae9b12678e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\IPParser\parser">
-      <UniqueIdentifier>{7d77fee8-73c6-4fb8-93f4-95a3a59a79bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\log">
       <UniqueIdentifier>{42a12854-7a61-467d-b190-af699f7d1687}</UniqueIdentifier>
     </Filter>
@@ -54,6 +45,15 @@
     </Filter>
     <Filter Include="Header Files\util">
       <UniqueIdentifier>{6f74038e-9348-49cf-86e3-0288330df3aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ip_parser">
+      <UniqueIdentifier>{fe9a31f8-f199-41cc-a143-97d857160133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ip_parser\parser">
+      <UniqueIdentifier>{608fe2a4-0ca4-4b1b-8585-b33692c7efe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ip_parser\exceptions">
+      <UniqueIdentifier>{523502e9-4d2b-4d36-8556-2f8e84d461aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +156,69 @@
     <ClCompile Include="model\scope_config.cpp">
       <Filter>Header Files\model</Filter>
     </ClCompile>
+    <ClCompile Include="exception\casbin_adapter_exception.cpp">
+      <Filter>Header Files\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="exception\casbin_enforcer_exception.cpp">
+      <Filter>Header Files\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="exception\casbin_rbac_exception.cpp">
+      <Filter>Header Files\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="exception\illegal_argument_exception.cpp">
+      <Filter>Header Files\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="exception\io_exception.cpp">
+      <Filter>Header Files\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="exception\missing_required_sections.cpp">
+      <Filter>Header Files\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="exception\unsupported_operation_exception.cpp">
+      <Filter>Header Files\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\exceptions\ParserException.cpp">
+      <Filter>Header Files\ip_parser\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\allFF.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\CIDRMask.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\dtoi.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\equal.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\IP.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\IPNet.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\IPv4.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\parseCIDR.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\parseIP.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\parseIPv4.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\parseIPv6.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\Print.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ip_parser\parser\xtoi.cpp">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="duktape\duk_config.h">
@@ -172,78 +235,6 @@
     </ClInclude>
     <ClInclude Include="error\Error.h">
       <Filter>Header Files\error</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\CasbinAdapterException.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\CasbinEnforcerException.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\CasbinRBACException.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\IllegalArgumentException.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\IOException.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\MissingRequiredSections.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="exception\UnsupportedOperationException.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\exceptions\ParseException.h">
-      <Filter>Header Files\IPParser\exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\allFF.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\byte.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\CIDR.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\CIDRMask.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\dtoi.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\equal.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\IP.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\IPMask.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\IPNet.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\IPv4.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\parseCIDR.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\parseIP.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\parseIPv4.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\parseIPv6.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\Print.h">
-      <Filter>Header Files\IPParser\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="IPParser\parser\xtoi.h">
-      <Filter>Header Files\IPParser\parser</Filter>
     </ClInclude>
     <ClInclude Include="log\DefaultLogger.h">
       <Filter>Header Files\log</Filter>
@@ -343,6 +334,87 @@
     </ClInclude>
     <ClInclude Include="rbac\pch.h">
       <Filter>Header Files\rbac</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\casbin_adapter_exception.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\casbin_enforcer_exception.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\casbin_rbac_exception.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\illegal_argument_exception.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\io_exception.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\missing_required_sections.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\pch.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="exception\unsupported_operation_exception.h">
+      <Filter>Header Files\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\exceptions\ParserException.h">
+      <Filter>Header Files\ip_parser\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\exceptions\pch.h">
+      <Filter>Header Files\ip_parser\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\allFF.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\byte.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\CIDR.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\CIDRMask.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\dtoi.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\equal.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\IP.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\IPMask.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\IPNet.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\IPv4.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\parseCIDR.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\parseIP.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\parseIPv4.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\parseIPv6.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\pch.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\Print.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\parser\xtoi.h">
+      <Filter>Header Files\ip_parser\parser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
