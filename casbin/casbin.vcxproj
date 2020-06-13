@@ -216,19 +216,22 @@
     <ClCompile Include="util\trim.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
     <ClInclude Include="config\config.h" />
     <ClInclude Include="config\config_interface.h" />
     <ClInclude Include="config\pch.h" />
+    <ClInclude Include="duktape.h" />
     <ClInclude Include="duktape\duktape.h" />
     <ClInclude Include="duktape\duk_config.h" />
     <ClInclude Include="duktape\pch.h" />
-    <ClInclude Include="duktape\scope.h" />
+    <ClInclude Include="effect.h" />
     <ClInclude Include="effect\default_effector.h" />
     <ClInclude Include="effect\effect.h" />
     <ClInclude Include="effect\effector.h" />
     <ClInclude Include="effect\pch.h" />
     <ClInclude Include="enforcer.h" />
     <ClInclude Include="enforcer_interface.h" />
+    <ClInclude Include="exception.h" />
     <ClInclude Include="exception\casbin_adapter_exception.h" />
     <ClInclude Include="exception\casbin_enforcer_exception.h" />
     <ClInclude Include="exception\casbin_rbac_exception.h" />
@@ -256,6 +259,13 @@
     <ClInclude Include="ip_parser\parser\pch.h" />
     <ClInclude Include="ip_parser\parser\Print.h" />
     <ClInclude Include="ip_parser\parser\xtoi.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="model\assertion.h" />
+    <ClInclude Include="model\function.h" />
+    <ClInclude Include="model\model.h" />
+    <ClInclude Include="model\pch.h" />
+    <ClInclude Include="model\scope_config.h" />
+    <ClInclude Include="persist.h" />
     <ClInclude Include="persist\adapter.h" />
     <ClInclude Include="persist\adapter_filtered.h" />
     <ClInclude Include="persist\batch_adapter.h" />
@@ -268,10 +278,12 @@
     <ClInclude Include="persist\pch.h" />
     <ClInclude Include="persist\watcher.h" />
     <ClInclude Include="persist\watcher_ex.h" />
+    <ClInclude Include="rbac.h" />
     <ClInclude Include="rbac\default_role_manager.h" />
     <ClInclude Include="rbac\group_role_manager.h" />
     <ClInclude Include="rbac\pch.h" />
     <ClInclude Include="rbac\role_manager.h" />
+    <ClInclude Include="util.h" />
     <ClInclude Include="util\built_in_functions.h" />
     <ClInclude Include="util\pch.h" />
     <ClInclude Include="util\util.h" />

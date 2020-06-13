@@ -12,7 +12,7 @@ class TestModel : public ::testing::Test {
 			char* root = _getcwd(NULL, 0);
 			string rootStr = string(root);
 
-			vector <string> directories = split(rootStr, "\\", -1);
+			vector <string> directories = Split(rootStr, "\\", -1);
 			vector <string> left{ "casbin-cpp" };
 			vector <string> ::iterator it = find_end(directories.begin(), directories.end(), left.begin(), left.end());
 			int index = directories.size() + (it - directories.end());

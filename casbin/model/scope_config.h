@@ -5,9 +5,8 @@
 
 #include <string>
 
-//#include "../duktape/duktape.h"
-//#include "../duktape/duk_config.h"
-#include "../duktape/scope.h"
+#include "../duktape/duktape.h"
+#include "../duktape/duk_config.h"
 
 #define VARARGS DUK_VARARGS
 #define RETURN_RESULT 1

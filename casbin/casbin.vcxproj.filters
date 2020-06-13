@@ -82,6 +82,9 @@
     <Filter Include="Header Files\ip_parser\exception">
       <UniqueIdentifier>{523502e9-4d2b-4d36-8556-2f8e84d461aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\model">
+      <UniqueIdentifier>{efc1c0ae-be20-4cac-a147-934d0743420a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -419,9 +422,6 @@
     <ClInclude Include="duktape\pch.h">
       <Filter>Header Files\duktape</Filter>
     </ClInclude>
-    <ClInclude Include="duktape\scope.h">
-      <Filter>Header Files\duktape</Filter>
-    </ClInclude>
     <ClInclude Include="persist\file-adapter\filtered_adapter.h">
       <Filter>Header Files\persist\file_adapter</Filter>
     </ClInclude>
@@ -433,6 +433,45 @@
     </ClInclude>
     <ClInclude Include="persist\default_watcher.h">
       <Filter>Header Files\persist</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="duktape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="persist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rbac.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\assertion.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\function.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\pch.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\scope_config.h">
+      <Filter>Header Files\model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

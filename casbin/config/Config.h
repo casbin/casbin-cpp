@@ -30,7 +30,7 @@ class Config : public ConfigInterface {
     public:
 
         /**
-         * newConfig create an empty configuration representation from file.
+         * NewConfig create an empty configuration representation from file.
          *
          * @param confName the path of the model file.
          * @return the constructor of Config.
