@@ -28,11 +28,11 @@ bool Config :: AddConfig(string section, string option, string value) {
     return !ok;
 }
 
-void Config :: Parse(string fname) {
+void Config :: Parse(string f_name) {
     mtx_lock.lock();
     ifstream infile;
     try {
-        infile.open(fname);
+        infile.open(f_name);
     } catch (const ifstream::failure e) {
         mtx_lock.unlock();
         throw IOException("Cannot open file.");
@@ -48,9 +48,10 @@ void Config :: ParseBuffer(istream* buf){
     string line;
     while (true) {
         line_num++;
-        if (getline(*buf, line, '\n'))
+        if (getline(*buf, line, '\n')){
             if (!line.compare(""))
                 continue;
+        }
         else
             break;
         line = Trim(line);

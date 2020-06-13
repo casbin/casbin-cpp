@@ -1,11 +1,12 @@
 #pragma once
 
+#include "pch.h"
+
 #include <direct.h>
 #include <algorithm>
 
-#include "pch.h"
-#include "../casbin/config/config.h"
-#include "../casbin/util/util.h"
+#include <config.h>
+#include <util.h>
 
 using namespace std;
 
@@ -26,7 +27,7 @@ class TestConfig : public ::testing::Test {
 			vector <string> directories = Split(rootStr, "\\", -1);
 			vector <string> left{ "casbin-cpp" };
 			vector <string> ::iterator it = find_end(directories.begin(), directories.end(), left.begin(), left.end());
-			int index = directories.size() + (it - directories.end());
+			int index = int(directories.size() + (it - directories.end()));
 
 			vector <string> finalDirectories(directories.begin(), directories.begin() + index + 1);
 

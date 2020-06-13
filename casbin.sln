@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "casbin", "casbin\casbin.vcxproj", "{BEAD4515-CC5D-4E73-BC71-334859913D06}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{5A6180CB-591D-4DFA-A953-C425868F0708}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BEAD4515-CC5D-4E73-BC71-334859913D06} = {BEAD4515-CC5D-4E73-BC71-334859913D06}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

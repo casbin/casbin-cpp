@@ -23,7 +23,7 @@ class Config : public ConfigInterface {
          */
         bool AddConfig(string section, string option, string value);
 
-        void Parse(string fname);
+        void Parse(string f_name);
 
         void ParseBuffer(istream* buf);
 
