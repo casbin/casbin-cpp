@@ -21,22 +21,20 @@ class Model{
 
         static unordered_map<string, string> section_name_map;
 
-        // Minimal required sections for a model to be valid
-        static vector<string> required_sections;
-
-        void LoadModelFromConfig(ConfigInterface *cfg);
-
-        bool HasSection(string sec);
-
-        static void LoadSection(Model model, ConfigInterface* cfg, string sec);
+        static void LoadSection(Model* model, ConfigInterface* cfg, string sec);
 
         static string GetKeySuffix(int i);
 
-        static bool LoadAssertion(Model model, ConfigInterface* cfg, string sec, string key);
+        static bool LoadAssertion(Model* model, ConfigInterface* cfg, string sec, string key);
 
     public:
 
         unordered_map<string, AssertionMap> m;
+
+        // Minimal required sections for a model to be valid
+        static vector<string> required_sections;
+
+        bool HasSection(string sec);
 
         // AddDef adds an assertion to the model.
         bool AddDef(string sec, string key, string value);
@@ -46,6 +44,8 @@ class Model{
 
         // LoadModelFromText loads the model from the text.
         void LoadModelFromText(string text);
+
+        void LoadModelFromConfig(ConfigInterface *cfg);
 
         // PrintModel prints the model to the log.
         void PrintModel();

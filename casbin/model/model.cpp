@@ -23,8 +23,7 @@ vector<string> Model :: required_sections{"r","p","e","m"};
 
 void Model :: LoadModelFromConfig(ConfigInterface *cfg) {
     for(unordered_map <string, string> :: iterator it = section_name_map.begin() ; it != section_name_map.end() ; it++)
-        LoadSection(*this, cfg, it->first);
-
+        LoadSection(this, cfg, it->first);
     vector<string> ms;
     for(vector<string> :: iterator it = required_sections.begin() ; it != required_sections.end() ; it++){
         if(!this->HasSection(*it))
@@ -38,7 +37,7 @@ bool Model :: HasSection(string sec) {
     return this->m.find(sec) != this->m.end();
 }
 
-void Model :: LoadSection(Model model, ConfigInterface* cfg, string sec) {
+void Model :: LoadSection(Model* model, ConfigInterface* cfg, string sec) {
     int i = 1;
     while(true) {
         if (!LoadAssertion(model, cfg, sec, sec+GetKeySuffix(i)))
@@ -58,20 +57,18 @@ string Model :: GetKeySuffix(int i) {
     return s;
 }
 
-bool Model :: LoadAssertion(Model model, ConfigInterface* cfg, string sec, string key) {
+bool Model :: LoadAssertion(Model* model, ConfigInterface* cfg, string sec, string key) {
     string value = cfg->GetString(section_name_map[sec] + "::" + key);
-    return model.AddDef(sec, key, value);
+    return model->AddDef(sec, key, value);
 }
 
 // AddDef adds an assertion to the model.
 bool Model :: AddDef(string sec, string key, string value) {
     if(value == "")
         return false;
-
     Assertion ast;
     ast.key = key;
     ast.value = value;
-
     if (sec == "r" || sec == "p") {
         ast.tokens = Split(ast.value, ",");
         for (int i = 0; i < ast.tokens.size() ; i++)
@@ -80,7 +77,10 @@ bool Model :: AddDef(string sec, string key, string value) {
     else
         ast.value = RemoveComments(EscapeAssertion(ast.value));
 
+    if (m.find(sec) != m.end())
+        m[sec] = AssertionMap();
     m[sec].assertion_map[key] = &ast;
+
     return true;
 }
 

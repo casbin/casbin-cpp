@@ -15,22 +15,20 @@ using namespace std;
 * @return the escaped value.
 */
 string EscapeAssertion(string s) {
-    //Replace the first dot, because the string doesn't start with "m="
-    // and is not covered by the regex.
-    if (s.find("r")==0 || s.find("p")==0) {
-        int pos = int(s.find("."));
-        s = s.replace(pos, 1, "_");
-    }
+    regex regex_s("[a-zA-Z0-9. ]+");
 
-    regex regex_s("(\\|| |=|\\)|\\(|&|<|>|,|\\+|-|!|\\*|\\/)(r|p)\\.");
-    smatch match;
+    sregex_iterator words_begin = sregex_iterator(s.begin(), s.end(), regex_s); 
+    auto words_end = sregex_iterator();
 
-    if (regex_search(s, match, regex_s)) {
-        for (int i=1; i<match.size(); i++) {
-            int pos = int(match.str(i).find("."));
-            string new_str = match.str(i).replace(pos, 1, "_");
-            s = s.replace(match.position(i), match.str(i).length(), new_str);
+    for (sregex_iterator k = words_begin ; k != words_end ; ++k) {
+        smatch match = *k;
+        string match_str = match.str();
+        int pos = int(match_str.find("."));
+        if(pos!=-1){
+            string new_str = match_str.replace(pos, 1, "_");
+            s = s.replace(match.position(), match.str().length(), new_str);
         }
     }
+
     return s;
 }
