@@ -76,6 +76,7 @@ TEST_F(TestModel, TestLoadModelFromConfig) {
 	Config* config = Config :: NewConfigFromText("");
 	try {
 		model->LoadModelFromConfig(config);
+		EXPECT_TRUE(false);
 	}
 	catch (MissingRequiredSections e) {
 		EXPECT_TRUE(true);
@@ -94,6 +95,7 @@ TEST_F(TestModel, TestHasSection) {
 	Config* config = Config::NewConfigFromText("");
 	try {
 		model->LoadModelFromConfig(config);
+		EXPECT_TRUE(false);
 	}
 	catch (MissingRequiredSections e) {
 		EXPECT_TRUE(true);
