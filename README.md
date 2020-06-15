@@ -17,7 +17,11 @@ production-ready | production-ready | production-ready | production-ready
 [PyCasbin](https://github.com/casbin/pycasbin) | [Casbin.NET](https://github.com/casbin-net/Casbin.NET) | [Casbin4D](https://github.com/casbin4d/Casbin4D) | [Casbin-RS](https://github.com/casbin/casbin-rs)
 production-ready | production-ready | experimental | production-ready
 
+<<<<<<< HEAD
 [<img src="https://casbin.org/img/langs/cpp.png" alt="c++" width="100"/>](https://github.com/casbin/casbin-cpp) |
+=======
+[<img src="https://casbin.org/img/langs/cpp.png" style="height:10%;width:10%;"/>](https://github.com/casbin/casbin-cpp) |
+>>>>>>> 0f1578ef7640631df3e9c7120c794bb7e2389161
 ----|
 [Casbin-CPP](https://github.com/casbin/casbin-cpp) |
 under-development |
