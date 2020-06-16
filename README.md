@@ -1,6 +1,8 @@
 Casbin-CPP
 ====
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
+
 **News**: Are you still worried about how to write the correct Casbin policy? ``Casbin online editor`` is coming to help! Try it at: http://casbin.org/editor/
 
 ![casbin Logo](casbin-logo.png)
