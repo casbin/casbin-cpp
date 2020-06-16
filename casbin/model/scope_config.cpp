@@ -4,8 +4,8 @@
 
 #include "./scope_config.h"
 
-void* InitializeScope() {
-    return (void*)new int;
+Scope InitializeScope() {
+    return duk_create_heap_default();
 }
 
 void PushFunctionValue(Scope scope, Function f, int nargs){

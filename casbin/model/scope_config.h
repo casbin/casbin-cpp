@@ -23,7 +23,7 @@ typedef duk_ret_t ReturnType;
 typedef duk_c_function Function;
 typedef duk_idx_t Index;
 
-void* InitializeScope();
+Scope InitializeScope();
 void PushFunctionValue(Scope scope, Function f, int nargs);
 void PushBooleanValue(Scope scope, bool expression);
 void PushTrueValue(Scope scope);

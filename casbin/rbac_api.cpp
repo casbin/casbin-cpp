@@ -202,7 +202,7 @@ vector<string> Enforcer :: GetImplicitUsersForPermission(vector<string> permissi
 
     vector<string> res;
     for (int i = 0 ; i < users.size() ; i++) {
-        Scope scope = (Scope)InitializeScope();
+        Scope scope = InitializeScope();
         PushObject(scope);
         PushStringPropToObject(scope, "r", users[i], "sub");
         PushStringPropToObject(scope, "r", permission[0], "obj");
