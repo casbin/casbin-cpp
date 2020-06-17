@@ -21,7 +21,7 @@ ReturnType KeyMatch(Scope scope) {
     string key1 = GetString(scope, 0);
     string key2 = GetString(scope, 1);
 
-    size_t pos = key1.find("*");
+    size_t pos = key2.find("*");
 
     if (pos == string :: npos) {
         PushBooleanValue(scope, key1 == key2);
