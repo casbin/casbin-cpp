@@ -32,7 +32,8 @@ namespace test_model
                 string rootStr = string(root);
 
                 vector <string> directories = Split(rootStr, "\\", -1);
-                vector <string> left{ "casbin-cpp" };
+                vector<string>::iterator it = find(directories.begin(), directories.end(), "x64");
+                vector <string> left{ *(it - 1) };
                 vector <string> ::iterator it = find_end(directories.begin(), directories.end(), left.begin(), left.end());
                 int index = int(directories.size() + (it - directories.end()));
 
