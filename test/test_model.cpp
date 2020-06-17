@@ -34,7 +34,7 @@ namespace test_model
                 vector <string> directories = Split(rootStr, "\\", -1);
                 vector<string>::iterator it = find(directories.begin(), directories.end(), "x64");
                 vector <string> left{ *(it - 1) };
-                vector <string> ::iterator it = find_end(directories.begin(), directories.end(), left.begin(), left.end());
+                it = find_end(directories.begin(), directories.end(), left.begin(), left.end());
                 int index = int(directories.size() + (it - directories.end()));
 
                 vector <string> finalDirectories(directories.begin(), directories.begin() + index + 1);
