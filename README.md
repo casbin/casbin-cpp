@@ -1,6 +1,7 @@
 Casbin-CPP
 ====
 
+[![Build Status](https://dev.azure.com/Casbin/casbin/_apis/build/status/casbin.casbin-cpp?branchName=master)](https://dev.azure.com/Casbin/casbin/_build/latest?definitionId=2&branchName=master)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
 
 **News**: Are you still worried about how to write the correct Casbin policy? ``Casbin online editor`` is coming to help! Try it at: http://casbin.org/editor/
