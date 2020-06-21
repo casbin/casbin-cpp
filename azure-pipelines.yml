@@ -31,4 +31,5 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    testAssemblyVer2: '**\*test*.obj'
+    testAssemblyVer2: '**/test*.dll'
+    codeCoverageEnabled: True
