@@ -1,0 +1,24 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  semantic-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run semantic-release
+        if: github.repository == 'divy9881/casbin-cpp' && github.event_name == 'push'
+        run: |
+          export PATH="$(yarn global bin):$PATH"
+          yarn global add semantic-release
+          semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
