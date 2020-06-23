@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run semantic-release
-        if: github.repository == 'divy9881/casbin-cpp' && github.event_name == 'push'
+        if: github.repository == 'casbin/casbin-cpp' && github.event_name == 'push'
         run: |
           export PATH="$(yarn global bin):$PATH"
           yarn global add semantic-release

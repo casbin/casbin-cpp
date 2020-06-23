@@ -2,6 +2,7 @@ Casbin-CPP
 ====
 
 [![Build Status](https://dev.azure.com/Casbin/casbin/_apis/build/status/casbin.casbin-cpp?branchName=master)](https://dev.azure.com/Casbin/casbin/_build?definitionId=2&branchName=master)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/casbin/casbin-cpp)](https://github.com/casbin/casbin/releases/latest)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
 
