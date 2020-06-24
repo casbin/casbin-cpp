@@ -13,15 +13,19 @@ IP :: IP() {
 }
 
 IP IP :: Mask(IPMask mask) {
-    IPMask mask_2(mask.begin(), mask.begin()+12);
-    if(mask.size() == IPv6len && ip.size() == IPv4len && allFF(mask_2)) {
-        IPMask mask_3(mask.begin() + 12, mask.end());
-        mask = mask_3;
+    if (mask.size() == IPv6len && ip.size() == IPv4len) {
+        IPMask mask_2(mask.begin(), mask.begin() + 12);
+        if (allFF(mask_2)) {
+            IPMask mask_3(mask.begin() + 12, mask.end());
+            mask = mask_3;
+        }
     }
-    IPMask ip_2(ip.begin(), ip.begin() + 12);
-    if(mask.size() == IPv4len && ip.size() == IPv6len && equal(ip_2, v4InV6Prefix)) {
-        IPMask ip_3(ip.begin() + 12, ip.end());
-        ip = ip_3;
+    if (mask.size() == IPv4len && ip.size() == IPv6len) {
+        IPMask ip_2(ip.begin(), ip.begin() + 12);
+        if (equal(ip_2, v4InV6Prefix)) {
+            IPMask ip_3(ip.begin() + 12, ip.end());
+            ip = ip_3;
+        }
     }
     unsigned int n = int(ip.size());
     if(n != mask.size()) {
