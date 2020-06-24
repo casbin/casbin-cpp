@@ -216,9 +216,6 @@
     <ClCompile Include="rbac\default_role_manager.cpp">
       <Filter>Source Files\rbac</Filter>
     </ClCompile>
-    <ClCompile Include="rbac\group_role_manager.cpp">
-      <Filter>Source Files\rbac</Filter>
-    </ClCompile>
     <ClCompile Include="persist\file_adapter\batch_file_adapter.cpp">
       <Filter>Source Files\persist\file_adapter</Filter>
     </ClCompile>
@@ -285,9 +282,6 @@
       <Filter>Header Files\persist\file_adapter</Filter>
     </ClInclude>
     <ClInclude Include="rbac\default_role_manager.h">
-      <Filter>Header Files\rbac</Filter>
-    </ClInclude>
-    <ClInclude Include="rbac\group_role_manager.h">
       <Filter>Header Files\rbac</Filter>
     </ClInclude>
     <ClInclude Include="rbac\role_manager.h">

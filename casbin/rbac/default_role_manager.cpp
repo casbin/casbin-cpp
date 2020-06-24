@@ -21,9 +21,9 @@ void Role :: AddRole(Role* role) {
 }
 
 void Role :: DeleteRole(Role* role) {
-    for (vector<Role*> :: iterator it = roles.begin() ; it != roles.end() ; it++) {
-        if (!(*it)->name.compare(role->name)) {
-            roles.erase(it);
+    for (int i = 0; i < roles.size();i++) {
+        if (!roles[i]->name.compare(role->name)) {
+            roles.erase(roles.begin()+i);
         }
     }
 }
