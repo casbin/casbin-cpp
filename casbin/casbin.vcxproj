@@ -198,7 +198,6 @@
     <ClCompile Include="persist\file_adapter\file_adapter.cpp" />
     <ClCompile Include="persist\file_adapter\filtered_adapter.cpp" />
     <ClCompile Include="rbac\default_role_manager.cpp" />
-    <ClCompile Include="rbac\group_role_manager.cpp" />
     <ClCompile Include="rbac_api.cpp" />
     <ClCompile Include="rbac_api_with_domains.cpp" />
     <ClCompile Include="util\array_equals.cpp" />
@@ -281,7 +280,6 @@
     <ClInclude Include="persist\watcher_ex.h" />
     <ClInclude Include="rbac.h" />
     <ClInclude Include="rbac\default_role_manager.h" />
-    <ClInclude Include="rbac\group_role_manager.h" />
     <ClInclude Include="rbac\pch.h" />
     <ClInclude Include="rbac\role_manager.h" />
     <ClInclude Include="util.h" />

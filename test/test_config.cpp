@@ -25,7 +25,6 @@ namespace test_config
 
             string filePath(string filepath) {
                 char* root = _getcwd(NULL, 0);
-                Logger::WriteMessage(root);
                 string rootStr = string(root);
 
                 vector <string> directories = Split(rootStr, "\\", -1);

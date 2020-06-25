@@ -43,28 +43,47 @@ ReturnType KeyMatch2(Scope scope) {
     string key1 = GetString(scope, 0);
     string key2 = GetString(scope, 1);
 
-    vector <size_t> indexes = FindAllOccurences(key2, "/*");
-    for (int i = 0 ; i < indexes.size() ; i++) {
-        key1.replace(indexes[i], 2, "/.*");
-    }
+    vector<string> key1_arr = Split(key1, "/");
+    vector<string> key2_arr = Split(key2, "/");
 
-    regex regex_s("(.*):[^/]+(.*)");
-    smatch match;
-
-    while (true) {
-
-        if (key2.find("/:") == string::npos)
+    bool res = true;
+    for(int i=0;i<key2_arr.size();i++){
+        if(i >= key1_arr.size()){
+            res = false;
             break;
-
-        if (regex_search(key2, match, regex_s)) {
-            for (int i=1; i<match.size(); i++)
-                key2 = key2.replace(match.position(i), match.str(i).length(), "$1[^/]+$2");
         }
-
+        if(key1_arr[i] != key2_arr[i]){
+            int index1 = key2_arr[i].find("*");
+            int index2 = key2_arr[i].find(":");
+            if(index1 != string::npos){
+                if(index1==0){
+                    res = true;
+                    break;
+                } else if(key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
+                    res = false;
+                    break;
+                } else
+                    continue;
+            }
+            if(index2==0){
+                if(key1_arr[i]=="" || !key2_arr[i].substr(1).compare("")){
+                    res = false;
+                    break;
+                }
+                else
+                    continue;
+            }
+            res = false;
+            break;
+        }else
+            continue;
     }
 
-    regex regex_s1("^" + key2 + "$");
-    PushBooleanValue(scope, regex_match(key1, regex_s1));
+    if(key2_arr.size() < key1_arr.size())
+        if(key2_arr[key2_arr.size()-1] != "*")
+            res = false;
+
+    PushBooleanValue(scope, res);
     return RETURN_RESULT;
 }
 
@@ -74,25 +93,48 @@ ReturnType KeyMatch3(Scope scope) {
     string key1 = GetString(scope, 0);
     string key2 = GetString(scope, 1);
 
-    vector<size_t> indexes = FindAllOccurences(key2, "/*");
-    for (int i = 0 ; i < indexes.size() ; i++)
-        key1.replace(indexes[i], 2, "/.*");
+    vector<string> key1_arr = Split(key1, "/");
+    vector<string> key2_arr = Split(key2, "/");
 
-    regex regex_s("(.*)\\{[^/]+\\}(.*)");
-    smatch match;
-
-    while (true) {
-        if (key2.find("/{") == string::npos)
+    bool res = true;
+    for(int i=0;i<key2_arr.size();i++){
+        if(i >= key1_arr.size()){
+            res = false;
             break;
-
-        if (regex_search(key2, match, regex_s)) {
-            for (int i=1; i<match.size(); i++)
-                key2 = key2.replace(match.position(i), match.str(i).length(), "$1[^/]+$2");
         }
+        if(key1_arr[i] != key2_arr[i]){
+            int index1 = key2_arr[i].find("*");
+            int index2 = key2_arr[i].find("{");
+            int index3 = key2_arr[i].find("}");
+            if(index1 != string::npos){
+                if(index1==0){
+                    res = true;
+                    break;
+                } else if(key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
+                    res = false;
+                    break;
+                } else
+                    continue;
+            }
+            if(index2==0 && index3 > 0 && index3 != string::npos){
+                if(key1_arr[i]=="" || !key2_arr[i].substr(1, key2_arr[i].length()-2).compare("")){
+                    res = false;
+                    break;
+                }
+                else
+                    continue;
+            }
+            res = false;
+            break;
+        }else
+            continue;
     }
 
-    regex regex_s1("^"+key2+"$");
-    PushBooleanValue(scope, regex_match(key1, regex_s1));
+    if(key2_arr.size() < key1_arr.size())
+        if(key2_arr[key2_arr.size()-1] != "*")
+            res = false;
+
+    PushBooleanValue(scope, res);
     return RETURN_RESULT;
 }
 
@@ -114,13 +156,13 @@ ReturnType IPMatch(Scope scope) {
 
     IP objIP1 = parseIP(ip1);
     if (objIP1.isLegal == false)
-        IllegalArgumentException("invalid argument: ip1 in IPMatch() function is not an IP address.");
+        throw IllegalArgumentException("invalid argument: ip1 in IPMatch() function is not an IP address.");
 
     CIDR objCIDR = parseCIDR(ip2);
     if (objCIDR.ip.isLegal == false) {
         IP objIP2 = parseIP(ip2);
         if (objIP2.isLegal == false)
-            IllegalArgumentException("invalid argument: ip1 in IPMatch() function is not an IP address.");
+            throw IllegalArgumentException("invalid argument: ip1 in IPMatch() function is not an IP address.");
 
         PushBooleanValue(scope, objIP1.Equal(objIP2));
         return RETURN_RESULT;

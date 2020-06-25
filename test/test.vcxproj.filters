@@ -27,6 +27,12 @@
     <ClCompile Include="test_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_built_in_functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_role_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
