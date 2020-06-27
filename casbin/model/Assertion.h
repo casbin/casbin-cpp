@@ -7,6 +7,7 @@ enum policy_op{
     policy_add,
     policy_remove
 };
+typedef enum policy_op policy_op;
 
 // Assertion represents an expression in a section of the model.
 // For example: r = sub, obj, act
@@ -17,7 +18,7 @@ class Assertion {
         string value;
         vector<string> tokens;
         vector<vector<string>> policy;
-        RoleManager *rm;
+        RoleManager* rm;
 
         void BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, vector<vector<string>> rules);
 

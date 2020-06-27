@@ -53,8 +53,8 @@ ReturnType KeyMatch2(Scope scope) {
             break;
         }
         if(key1_arr[i] != key2_arr[i]){
-            int index1 = key2_arr[i].find("*");
-            int index2 = key2_arr[i].find(":");
+            int index1 = int(key2_arr[i].find("*"));
+            int index2 = int(key2_arr[i].find(":"));
             if(index1 != string::npos){
                 if(index1==0){
                     res = true;
@@ -103,9 +103,9 @@ ReturnType KeyMatch3(Scope scope) {
             break;
         }
         if(key1_arr[i] != key2_arr[i]){
-            int index1 = key2_arr[i].find("*");
-            int index2 = key2_arr[i].find("{");
-            int index3 = key2_arr[i].find("}");
+            int index1 = int(key2_arr[i].find("*"));
+            int index2 = int(key2_arr[i].find("{"));
+            int index3 = int(key2_arr[i].find("}"));
             if(index1 != string::npos){
                 if(index1==0){
                     res = true;
