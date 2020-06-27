@@ -14,8 +14,8 @@ void Assertion :: BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, vecto
     if (char_count < 2)
         throw IllegalArgumentException("the number of \"_\" in role definition should be at least 2");
 
-    for (vector<vector<string>> :: iterator it = this->policy.begin() ; it != this->policy.end() ; it++) {
-        vector<string> rule = *it;
+    for(int i = 0 ; i < this->policy.size() ; i++){
+        vector<string> rule = this->policy[i];
 
         if (rule.size() < char_count)
             throw IllegalArgumentException("grouping policy elements do not meet role definition");
@@ -40,8 +40,8 @@ void Assertion :: BuildRoleLinks(RoleManager* rm) {
     if (char_count < 2)
         throw IllegalArgumentException("the number of \"_\" in role definition should be at least 2");
 
-    for (vector<vector<string>> :: iterator it = this->policy.begin() ; it != this->policy.end() ; it++) {
-        vector<string> rule = *it;
+    for(int i = 0 ; i < this->policy.size() ; i++){
+        vector<string> rule = policy[i];
 
         if (rule.size() < char_count)
             throw IllegalArgumentException("grouping policy elements do not meet role definition");

@@ -29,28 +29,23 @@ void Role :: DeleteRole(Role* role) {
 }
 
 bool Role :: HasRole(string name, int hierarchy_level) {
-    if (!this->name.compare(name)) {
+    if (!this->name.compare(name))
         return true;
-    }
 
-    if (hierarchy_level <= 0) {
+    if (hierarchy_level <= 0)
         return false;
-    }
 
-    for (vector<Role*> :: iterator it = roles.begin() ; it != roles.end() ; it++) {
-        if ((*it)->HasRole(name, hierarchy_level - 1)) {
+    for(int i = 0 ; i < roles.size() ; i++)
+        if (roles[i]->HasRole(name, hierarchy_level - 1))
             return true;
-        }
-    }
+
     return false;
 }
 
 bool Role :: HasDirectRole(string name) {
-    for (vector<Role*> :: iterator it = roles.begin() ; it != roles.end() ; it++) {
-        if (!(*it)->name.compare(name)) {
+    for(int i = 0 ; i < roles.size() ; i++)
+        if (!roles[i]->name.compare(name))
             return true;
-        }
-    }
 
     return false;
 }
@@ -70,22 +65,20 @@ string Role :: ToString() {
 
 vector<string> Role :: GetRoles() {
     vector<string> names;
-    for (vector<Role*> :: iterator it = roles.begin() ; it != roles.end() ; it++) {
-        names.push_back((*it)->name);
-    }
+    for(int i = 0 ; i < roles.size() ; i++)
+        names.push_back(roles[i]->name);
+
     return names;
 }
 
 bool DefaultRoleManager :: HasRole(string name) {
     bool ok = false;
-    if (this->has_pattern) {
-        for (unordered_map<string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++) {
+    if (this->has_pattern)
+        for (unordered_map<string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++)
             if (this->matching_func(name, it->first))
                 ok = true;
-        }
-    } else {
+    else
         ok = this->all_roles.find(name) != this->all_roles.end();
-    }
 
     return ok;
 }
@@ -172,13 +165,11 @@ void DefaultRoleManager :: DeleteLink(string name1, string name2, vector<string>
     if (domain_length == 1) {
         name1 = domain[0] + "::" + name1;
         name2 = domain[0] + "::" + name2;
-    } else if (domain_length > 1) {
+    } else if (domain_length > 1)
         throw CasbinRBACException("error: domain should be 1 parameter");
-    }
 
-    if (!HasRole(name1) || !HasRole(name2)) {
+    if (!HasRole(name1) || !HasRole(name2))
         throw CasbinRBACException("error: name1 or name2 does not exist");
-    }
 
     Role* role1 = this->CreateRole(name1);
     Role* role2 = this->CreateRole(name2);
@@ -194,17 +185,14 @@ bool DefaultRoleManager :: HasLink(string name1, string name2, vector<string> do
     if (domain_length == 1) {
         name1 = domain[0] + "::" + name1;
         name2 = domain[0] + "::" + name2;
-    } else if (domain_length > 1) {
+    } else if (domain_length > 1)
         throw CasbinRBACException("error: domain should be 1 parameter");
-    }
 
-    if (!name1.compare(name2)) {
+    if (!name1.compare(name2))
         return true;
-    }
 
-    if (!HasRole(name1) || !HasRole(name2)) {
+    if (!HasRole(name1) || !HasRole(name2))
         return false;
-    }
 
     Role* role1 = this->CreateRole(name1);
     return role1->HasRole(name2, max_hierarchy_level);
@@ -216,11 +204,10 @@ bool DefaultRoleManager :: HasLink(string name1, string name2, vector<string> do
  */
 vector<string> DefaultRoleManager :: GetRoles(string name, vector<string> domain) {
     unsigned int domain_length = int(domain.size());
-    if (domain_length == 1) {
+    if (domain_length == 1)
         name = domain[0] + "::" + name;
-    } else if (domain_length > 1) {
+    else if (domain_length > 1)
         throw CasbinRBACException("error: domain should be 1 parameter");
-    }
 
     if (!HasRole(name)) {
         vector<string> roles;
@@ -228,11 +215,10 @@ vector<string> DefaultRoleManager :: GetRoles(string name, vector<string> domain
     }
 
     vector<string> roles = this->CreateRole(name)->GetRoles();
-    if (domain_length == 1) {
-        for (int i = 0; i < roles.size(); i ++) {
+    if (domain_length == 1)
+        for (int i = 0; i < roles.size(); i ++)
             roles[i] = roles[i].substr(domain[0].length() + 2, roles[i].length() - domain[0].length() - 2);
-        }
-    }
+
     return roles;
 }
 
@@ -252,10 +238,10 @@ vector<string> DefaultRoleManager :: GetUsers(string name, vector<string> domain
             names.push_back(role->name);
     }
 
-    if (domain.size() == 1) {
+    if (domain.size() == 1)
         for (int i = 0 ; i < names.size() ; i++)
             names[i] = names[i].substr(domain[0].length() + 2, names[i].length() - domain[0].length() - 2);
-    }
+
     return names;
 }
 
@@ -272,8 +258,7 @@ void DefaultRoleManager :: PrintRoles() {
     string text = this->all_roles.begin()->second->ToString();
     unordered_map<string, Role*> :: iterator it = this->all_roles.begin();
     it++;
-    for ( ; it != this->all_roles.end() ; it++) {
+    for ( ; it != this->all_roles.end() ; it++)
         text += ", " + it->second->ToString();
-    }
     // LogUtil::LogPrint(text);
 }
