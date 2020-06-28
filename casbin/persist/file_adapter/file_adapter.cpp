@@ -20,9 +20,8 @@ FileAdapter* FileAdapter :: NewAdapter(string file_path) {
 
 // LoadPolicy loads all policy rules from the storage.
 void FileAdapter :: LoadPolicy(Model* model) {
-    if (this->file_path == "") {
+    if (this->file_path == "")
         throw CasbinAdapterException("Invalid file path, file path cannot be empty");
-    }
 
     this->LoadPolicyFile(model, LoadPolicyLine);
 }
