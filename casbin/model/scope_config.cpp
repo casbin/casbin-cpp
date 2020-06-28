@@ -110,7 +110,7 @@ void PushPointer(Scope scope, void * ptr, string identifier){
 }
 
 void PushObject(Scope scope, string identifier){
-    duk_push_global_object(scope);
+    duk_push_object(scope);
     duk_put_global_string(scope, identifier.c_str());
     duk_push_int(scope, 0);
     duk_put_global_string(scope, (identifier+"len").c_str());

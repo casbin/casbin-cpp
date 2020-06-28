@@ -91,9 +91,10 @@ bool Model :: AddDef(string sec, string key, string value) {
         ast->tokens = Split(ast->value, ",");
         for (int i = 0; i < ast->tokens.size() ; i++)
             ast->tokens[i] = key + "_" + Trim(ast->tokens[i]);
-    }
-    else
+    } else if(sec == "e")
         ast->value = RemoveComments(EscapeAssertion(ast->value));
+    else
+        ast->value = RemoveComments(ast->value);
 
     if (m.find(sec) != m.end())
         m[sec] = AssertionMap();

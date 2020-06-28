@@ -21,7 +21,7 @@
 #include "./function.h"
 
 FunctionMap :: FunctionMap(){
-    scope = duk_create_heap_default();
+    scope = InitializeScope();
 }
 
 int FunctionMap :: GetRLen(){
