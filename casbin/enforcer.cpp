@@ -18,7 +18,7 @@
 
 #include "pch.h"
 
-// #include <iostream>
+#include <algorithm>
 
 #include "./enforcer.h"
 #include "./persist/watcher_ex.h"
@@ -39,6 +39,7 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
     // }()
 
     this->func_map.scope = scope;
+    this->func_map.LoadFunctionMap();
 
     if(!this->enabled)
         return true;
@@ -52,16 +53,19 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
     else
         exp_string = matcher;
 
+
     unordered_map <string, RoleManager*> rm_map;
     bool ok = this->model->m.find("g") != this->model->m.end();
+
     if(ok) {
         for(unordered_map <string, Assertion*> :: iterator it = this->model->m["g"].assertion_map.begin() ; it != this->model->m["g"].assertion_map.end() ; it++){
             RoleManager* rm = it->second->rm;
+            int char_count = int(count(it->second->value.begin(), it->second->value.end(), '_'));
             int index = int(exp_string.find((it->first)+"("));
             if(index != string::npos)
-                exp_string.insert(index+(it->first+"(").length()-1, (it->first)+"_rm");
-            PushPointer(this->func_map.scope, (void *)rm, (it->first)+"_rm");
-            this->func_map.AddFunction(it->first, GFunction);
+                exp_string.insert(index+(it->first+"(").length(), "rm, ");
+            PushPointer(this->func_map.scope, (void *)rm, "rm");
+            this->func_map.AddFunction(it->first, GFunction, char_count + 1);
         }
     }
 
@@ -94,7 +98,7 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
                 PushStringPropToObject(this->func_map.scope, "p", p_vals[j], token);
             }
 
-            this->func_map.Eval(exp_string);
+            this->func_map.Evaluate(exp_string);
             
             //TODO
             // log.LogPrint("Result: ", result)
@@ -134,15 +138,17 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
                 break;
         }
     } else {
-        this->func_map.Eval(exp_string);
+        bool isValid = this->func_map.Evaluate(exp_string);
+        if(!isValid)
+            return false;
         bool result = this->func_map.GetBooleanResult();
+
         //TODO
         // log.LogPrint("Result: ", result)
-
         if(result)
-            policy_effects[0] = Effect::Allow;
+            policy_effects.push_back(Effect::Allow);
         else
-            policy_effects[0] = Effect::Indeterminate;
+            policy_effects.push_back(Effect::Indeterminate);
     }
 
     //TODO
@@ -200,7 +206,7 @@ Enforcer* Enforcer :: NewEnforcer(Model* m, Adapter* adapter) {
 
     e->Initialize();
 
-    if (e->adapter != NULL) {
+    if (e->adapter->file_path != "") {
         e->LoadPolicy();
     }
     return e;
@@ -346,7 +352,6 @@ void Enforcer :: ClearPolicy() {
 void Enforcer :: LoadPolicy() {
     this->model->ClearPolicy();
     this->adapter->LoadPolicy(this->model);
-
     this->model->PrintPolicy();
 
     if(this->auto_build_role_links) {

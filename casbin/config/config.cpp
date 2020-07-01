@@ -156,9 +156,10 @@ void Config :: Set(string key, string value) {
     if (keys.size() >= 2) {
         section = keys[0];
         option = keys[1];
-    } else {
-        option = keys[0];
     }
+    else
+        option = keys[0];
+
     AddConfig(section, option, value);
     mtx_lock.unlock();
 }

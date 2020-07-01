@@ -196,7 +196,7 @@
     <ClCompile Include="persist\default_watcher_ex.cpp" />
     <ClCompile Include="persist\file_adapter\batch_file_adapter.cpp" />
     <ClCompile Include="persist\file_adapter\file_adapter.cpp" />
-    <ClCompile Include="persist\file_adapter\filtered_adapter.cpp" />
+    <ClCompile Include="persist\file_adapter\filtered_file_adapter.cpp" />
     <ClCompile Include="rbac\default_role_manager.cpp" />
     <ClCompile Include="rbac_api.cpp" />
     <ClCompile Include="rbac_api_with_domains.cpp" />
@@ -267,14 +267,14 @@
     <ClInclude Include="model\scope_config.h" />
     <ClInclude Include="persist.h" />
     <ClInclude Include="persist\adapter.h" />
-    <ClInclude Include="persist\adapter_filtered.h" />
     <ClInclude Include="persist\batch_adapter.h" />
     <ClInclude Include="persist\default_watcher.h" />
     <ClInclude Include="persist\default_watcher_ex.h" />
     <ClInclude Include="persist\file-adapter\batch_file_adapter.h" />
     <ClInclude Include="persist\file-adapter\file_adapter.h" />
-    <ClInclude Include="persist\file-adapter\filtered_adapter.h" />
     <ClInclude Include="persist\file-adapter\pch.h" />
+    <ClInclude Include="persist\file_adapter\filtered_file_adapter.h" />
+    <ClInclude Include="persist\filtered_adapter.h" />
     <ClInclude Include="persist\pch.h" />
     <ClInclude Include="persist\watcher.h" />
     <ClInclude Include="persist\watcher_ex.h" />

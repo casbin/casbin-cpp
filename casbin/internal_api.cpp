@@ -22,6 +22,7 @@
 #include "./persist/batch_adapter.h"
 #include "./util/util.h"
 #include "./persist/watcher_ex.h"
+#include "./exception/unsupported_operation_exception.h"
 
 // addPolicy adds a rule to the current policy.
 bool Enforcer :: addPolicy(string sec, string p_type, vector<string> rule) {
@@ -34,8 +35,13 @@ bool Enforcer :: addPolicy(string sec, string p_type, vector<string> rule) {
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
     }
 
-    if (this->adapter != NULL && this->auto_save)
-        this->adapter->AddPolicy(sec, p_type, rule);
+    if (this->adapter != NULL && this->auto_save) {
+        try {
+            this->adapter->AddPolicy(sec, p_type, rule);
+        }
+        catch(UnsupportedOperationException e) {
+        }
+    }
 
     if (this->watcher != NULL && this->auto_notify_watcher) {
         if (IsInstanceOf<WatcherEx>(this->watcher)) {
@@ -79,9 +85,14 @@ bool Enforcer :: removePolicy(string sec, string p_type, vector<string> rule) {
         vector<vector<string>> rules{rule};
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
     }
-
-    if(this->adapter != NULL && this->auto_save)
-        this->adapter->RemovePolicy(sec, p_type, rule);
+    
+    if (this->adapter != NULL && this->auto_save) {
+        try {
+            this->adapter->RemovePolicy(sec, p_type, rule);
+        }
+        catch (UnsupportedOperationException e) {
+        }
+    }
 
     if(this->watcher !=NULL && this->auto_notify_watcher){
         if (IsInstanceOf<WatcherEx>(this->watcher)) {
@@ -127,8 +138,13 @@ bool Enforcer :: removeFilteredPolicy(string sec, string p_type, int field_index
     if (sec == "g")
         this->BuildIncrementalRoleLinks(policy_remove, p_type, effects);
 
-    if(this->adapter != NULL && this->auto_save)
-        this->adapter->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
+    if (this->adapter != NULL && this->auto_save) {
+        try {
+            this->adapter->RemoveFilteredPolicy(sec, p_type, field_index, field_values); \
+        }
+        catch (UnsupportedOperationException e) {
+        }
+    }
 
     if (this->watcher !=NULL && this->auto_notify_watcher) {
         if (IsInstanceOf<WatcherEx>(this->watcher)) {

@@ -119,7 +119,7 @@ class IEnforcer {
         virtual bool RemoveNamedGroupingPolicy(string ptype, vector<string> params) = 0;
         virtual bool RemoveNamedGroupingPolicies(string p_type, vector<vector<string>> rules) = 0;
         virtual bool RemoveFilteredNamedGroupingPolicy(string ptype, int fieldIndex, vector<string> fieldValues) = 0;
-        virtual void AddFunction(string name, Function) = 0;
+        virtual void AddFunction(string name, Function function, Index nargs) = 0;
 
         /* Internal API member functions */
         virtual bool addPolicy(string sec, string ptype, vector<string> rule) = 0;
