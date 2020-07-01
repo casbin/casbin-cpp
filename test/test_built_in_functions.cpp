@@ -11,6 +11,7 @@ namespace test_built_in_functions
     TEST_CLASS(TestBuiltInFunctions)
     {
         public:
+
             void TestKeyMatch(string key1, string key2, bool res) {
                 Scope scope = InitializeScope();
                 PushStringValue(scope, key1);
