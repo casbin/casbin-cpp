@@ -30,20 +30,20 @@ void FunctionMap :: ProcessFunctions(string expression){
         int index = int(expression.find((it->first)+"("));
 
         if(index != string::npos){
-            int close_index = expression.find(")", index);
-            int start = index + ((it->first)+"(").length();
+            int close_index = int(expression.find(")", index));
+            int start = index + int(((it->first)+"(").length());
 
             string function_params = expression.substr(start, close_index-start);
             FetchIdentifier(this->scope, it->first);
             vector<string> params = Split(function_params, ",");
 
             for(int i=0;i<params.size();i++){
-                int quote_index = params[i].find("\"");
+                int quote_index = int(params[i].find("\""));
                 if(quote_index == string::npos)
                     Get(this->scope, Trim(params[i]));
                 else{
                     params[i] = params[i].replace(quote_index, 1, "'");
-                    int second_quote_index = params[i].find("\"", quote_index+1);
+                    int second_quote_index = int(params[i].find("\"", quote_index+1));
                     params[i] = params[i].replace(second_quote_index, 1, "'");
                     Get(this->scope, Trim(params[i]));
                 }
