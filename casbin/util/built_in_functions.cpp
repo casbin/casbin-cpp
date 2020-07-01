@@ -20,6 +20,7 @@
 
 #include <regex>
 
+#include "../model/function.h"
 #include "./built_in_functions.h"
 #include "../rbac/role_manager.h"
 #include "./util.h"
@@ -37,20 +38,20 @@ ReturnType KeyMatch(Scope scope) {
     string key1 = GetString(scope, 0);
     string key2 = GetString(scope, 1);
 
+    PushBooleanValue(scope, KeyMatch(key1, key2));
+    return RETURN_RESULT;
+}
+
+bool KeyMatch(string key1, string key2) {
     size_t pos = key2.find("*");
 
-    if (pos == string :: npos) {
-        PushBooleanValue(scope, key1 == key2);
-        return RETURN_RESULT;
-    }
+    if (pos == string :: npos)
+        return key1 == key2;
 
-    if (key1.length() > pos) {
-        PushBooleanValue(scope, key1.substr(0, pos) == key2.substr(0, pos));
-        return RETURN_RESULT;
-    }
+    if (key1.length() > pos)
+        return key1.substr(0, pos) == key2.substr(0, pos);
 
-    PushBooleanValue(scope, key1 == key2.substr(0, pos));
-    return RETURN_RESULT;
+    return key1 == key2.substr(0, pos);
 }
 
 // KeyMatch2 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
@@ -59,6 +60,11 @@ ReturnType KeyMatch2(Scope scope) {
     string key1 = GetString(scope, 0);
     string key2 = GetString(scope, 1);
 
+    PushBooleanValue(scope, KeyMatch2(key1, key2));
+    return RETURN_RESULT;
+}
+
+bool KeyMatch2(string key1, string key2) {
     vector<string> key1_arr = Split(key1, "/");
     vector<string> key2_arr = Split(key2, "/");
 
@@ -99,8 +105,7 @@ ReturnType KeyMatch2(Scope scope) {
         if(key2_arr[key2_arr.size()-1] != "*")
             res = false;
 
-    PushBooleanValue(scope, res);
-    return RETURN_RESULT;
+    return res;
 }
 
 // KeyMatch3 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
@@ -109,6 +114,11 @@ ReturnType KeyMatch3(Scope scope) {
     string key1 = GetString(scope, 0);
     string key2 = GetString(scope, 1);
 
+    PushBooleanValue(scope, KeyMatch3(key1, key2));
+    return RETURN_RESULT;
+}
+
+bool KeyMatch3(string key1, string key2) {
     vector<string> key1_arr = Split(key1, "/");
     vector<string> key2_arr = Split(key2, "/");
 
@@ -150,8 +160,7 @@ ReturnType KeyMatch3(Scope scope) {
         if(key2_arr[key2_arr.size()-1] != "*")
             res = false;
 
-    PushBooleanValue(scope, res);
-    return RETURN_RESULT;
+    return res;
 }
 
 // RegexMatch determines whether key1 matches the pattern of key2 in regular expression.
@@ -159,9 +168,13 @@ ReturnType RegexMatch(Scope scope) {
     string key1 = GetString(scope, 0);
     string key2 = GetString(scope, 1);
 
-    regex regex_s(key2);
-    PushBooleanValue(scope, regex_match(key1, regex_s));
+    PushBooleanValue(scope, RegexMatch(key1, key2));
     return RETURN_RESULT;
+}
+
+bool RegexMatch(string key1, string key2) {
+    regex regex_s(key2);
+    return regex_match(key1, regex_s);
 }
 
 // IPMatch determines whether IP address ip1 matches the pattern of IP address ip2, ip2 can be an IP address or a CIDR pattern.
@@ -170,6 +183,11 @@ ReturnType IPMatch(Scope scope) {
     string ip1 = GetString(scope, 0);
     string ip2 = GetString(scope, 1);
 
+    PushBooleanValue(scope, IPMatch(ip1, ip2));
+    return RETURN_RESULT;
+}
+
+bool IPMatch(string ip1, string ip2) {
     IP objIP1 = parseIP(ip1);
     if (objIP1.isLegal == false)
         throw IllegalArgumentException("invalid argument: ip1 in IPMatch() function is not an IP address.");
@@ -180,17 +198,15 @@ ReturnType IPMatch(Scope scope) {
         if (objIP2.isLegal == false)
             throw IllegalArgumentException("invalid argument: ip1 in IPMatch() function is not an IP address.");
 
-        PushBooleanValue(scope, objIP1.Equal(objIP2));
-        return RETURN_RESULT;
+        return objIP1.Equal(objIP2);
     }
 
-    PushBooleanValue(scope, objCIDR.net.contains(objIP1));
-    return RETURN_RESULT;
+    return objCIDR.net.contains(objIP1);
 }
 
 // GFunction is the method of the g(_, _) function.
 ReturnType GFunction(Scope scope) {
-    RoleManager *rm;
+    RoleManager* rm;
     rm = (RoleManager*)GetPointer(scope, 0);
     string name1 = GetString(scope, 1);
     string name2 = GetString(scope, 2);
@@ -199,12 +215,12 @@ ReturnType GFunction(Scope scope) {
 
     if(rm == NULL)
         PushBooleanValue(scope, name1 == name2);
-    else if (len == 2) {
+    else if (len == 3) {
         vector<string> domain;
         bool res = rm->HasLink(name1, name2, domain);
         PushBooleanValue(scope, res);
     } else {
-        vector<string> domain{GetString(scope, 2)};
+        vector<string> domain{GetString(scope, 3)};
         bool res = rm->HasLink(name1, name2, domain);
         PushBooleanValue(scope, res);
     }
