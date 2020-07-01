@@ -20,7 +20,7 @@
 #include "./rbac/role_manager.h"
 #include "./model/function.h"
 #include "./enforcer_interface.h"
-#include "./persist/adapter_filtered.h"
+#include "./persist/filtered_adapter.h"
 
 // Enforcer is the main interface for authorization enforcement and policy management.
 class Enforcer : public IEnforcer{
@@ -33,7 +33,6 @@ class Enforcer : public IEnforcer{
 
         Adapter* adapter;
         Watcher* watcher;
-        RoleManager* rm;
 
         bool enabled;
         bool auto_save;
@@ -44,6 +43,8 @@ class Enforcer : public IEnforcer{
         bool enforce(string matcher, Scope scope);
 
     public:
+
+        RoleManager* rm;
 
         /**
          * Enforcer is the default constructor.
@@ -190,7 +191,7 @@ class Enforcer : public IEnforcer{
         bool RemoveNamedGroupingPolicy(string ptype, vector<string> params);
         bool RemoveNamedGroupingPolicies(string p_type, vector<vector<string>> rules);
         bool RemoveFilteredNamedGroupingPolicy(string ptype, int field_index, vector<string> field_values);
-        void AddFunction(string name, Function);
+        void AddFunction(string name, Function function, Index nargs);
 
         /*RBAC API member functions.*/
         vector<string> GetRolesForUser(string name);

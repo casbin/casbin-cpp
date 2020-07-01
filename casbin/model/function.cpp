@@ -19,9 +19,37 @@
 #include "pch.h"
 
 #include "./function.h"
+#include "../util/util.h"
 
 FunctionMap :: FunctionMap(){
-    scope = duk_create_heap_default();
+    scope = InitializeScope();
+}
+
+void FunctionMap :: ProcessFunctions(string expression){
+    for(unordered_map<string, Function> :: iterator it = this->func_map.begin() ; it != this->func_map.end() ; it++){
+        int index = int(expression.find((it->first)+"("));
+
+        if(index != string::npos){
+            int close_index = int(expression.find(")", index));
+            int start = index + int(((it->first)+"(").length());
+
+            string function_params = expression.substr(start, close_index-start);
+            FetchIdentifier(this->scope, it->first);
+            vector<string> params = Split(function_params, ",");
+
+            for(int i=0;i<params.size();i++){
+                int quote_index = int(params[i].find("\""));
+                if(quote_index == string::npos)
+                    Get(this->scope, Trim(params[i]));
+                else{
+                    params[i] = params[i].replace(quote_index, 1, "'");
+                    int second_quote_index = int(params[i].find("\"", quote_index+1));
+                    params[i] = params[i].replace(second_quote_index, 1, "'");
+                    Get(this->scope, Trim(params[i]));
+                }
+            }
+        }
+    }
 }
 
 int FunctionMap :: GetRLen(){
@@ -31,8 +59,9 @@ int FunctionMap :: GetRLen(){
     return -1;
 }
 
-void FunctionMap :: Eval(string expression){
-    duk_eval_string(scope, expression.c_str());
+bool FunctionMap :: Evaluate(string expression){
+    ProcessFunctions(expression);
+    return Eval(scope, expression);
 }
 
 bool FunctionMap :: GetBooleanResult(){
@@ -42,11 +71,11 @@ bool FunctionMap :: GetBooleanResult(){
 // AddFunction adds an expression function.
 void FunctionMap :: AddFunction(string func_name, Function f, Index nargs) {
     func_map[func_name] = f;
-    PushFunction(this->scope, f, nargs, func_name);
+    PushFunction(this->scope, f, func_name, nargs);
 }
 
-void FunctionMap :: AddFunctionPropToR(string identifier, Function func, unsigned int nargs){
-    PushFunctionPropToObject(scope, "r", func, nargs, identifier);
+void FunctionMap :: AddFunctionPropToR(string identifier, Function func, Index nargs){
+    PushFunctionPropToObject(scope, "r", func, identifier, nargs);
 }
 
 void FunctionMap :: AddBooleanPropToR(string identifier, bool val){
@@ -86,14 +115,10 @@ void FunctionMap :: AddObjectPropToR(string identifier){
 }
 
 // LoadFunctionMap loads an initial function map.
-FunctionMap FunctionMap :: LoadFunctionMap() {
-    FunctionMap func_map;
-
-    func_map.AddFunction("keyMatch", KeyMatch);
-    func_map.AddFunction("keyMatch2", KeyMatch2);
-    func_map.AddFunction("keyMatch3", KeyMatch3);
-    func_map.AddFunction("regexMatch", RegexMatch);
-    func_map.AddFunction("ipMatch", IPMatch);
-
-    return func_map;
+void FunctionMap :: LoadFunctionMap() {
+    AddFunction("keyMatch", KeyMatch, 2);
+    AddFunction("keyMatch2", KeyMatch2, 2);
+    AddFunction("keyMatch3", KeyMatch3, 2);
+    AddFunction("regexMatch", RegexMatch, 2);
+    AddFunction("ipMatch", IPMatch, 2);
 }

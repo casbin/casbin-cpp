@@ -33,27 +33,25 @@ DefaultEffector* DefaultEffector :: NewDefaultEffector(){
 bool DefaultEffector :: MergeEffects(string expr, vector<Effect> effects, vector<float> results) {
     bool result;
 
-    unsigned int number_of_effects = sizeof(effects) / sizeof(effects[0]);
-
-    if (!expr.compare("some(where (p_eft == allow))")) {
+    if (!expr.compare("some(where (p.eft == allow))")) {
         result = false;
-        for(unsigned int index = 0 ; index < number_of_effects ; index++){
+        for(unsigned int index = 0 ; index < effects.size() ; index++){
             if (effects[index] == Effect::Allow) {
                 result = true;
                 break;
             }
         }
-    } else if (!expr.compare("!some(where (p_eft == deny))")) {
+    } else if (!expr.compare("!some(where (p.eft == deny))")) {
         result = true;
-        for(unsigned int index = 0 ; index < number_of_effects ; index++){
+        for(unsigned int index = 0 ; index < effects.size(); index++){
             if (effects[index] == Effect::Deny) {
                 result = false;
                 break;
             }
         }
-    } else if (!expr.compare("some(where (p_eft == allow)) && !some(where (p_eft == deny))")) {
+    } else if (!expr.compare("some(where (p.eft == allow)) && !some(where (p.eft == deny))")) {
         result = false;
-        for(unsigned int index = 0 ; index < number_of_effects ; index++){
+        for(unsigned int index = 0 ; index < effects.size(); index++){
             if (effects[index] == Effect::Allow) {
                 result = true;
             } else if (effects[index] == Effect::Deny) {
@@ -61,9 +59,9 @@ bool DefaultEffector :: MergeEffects(string expr, vector<Effect> effects, vector
                 break;
             }
         }
-    } else if (!expr.compare("priority(p_eft) || deny")) {
+    } else if (!expr.compare("priority(p.eft) || deny")) {
         result = false;
-        for(unsigned int index = 0 ; index < number_of_effects ; index++){
+        for(unsigned int index = 0 ; index < effects.size(); index++){
             if (effects[index] != Effect::Indeterminate) {
                 if (effects[index] == Effect::Allow) {
                     result = true;

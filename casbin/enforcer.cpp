@@ -18,6 +18,8 @@
 
 #include "pch.h"
 
+#include <algorithm>
+
 #include "./enforcer.h"
 #include "./persist/watcher_ex.h"
 #include "./persist/file_adapter/file_adapter.h"
@@ -37,117 +39,123 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
     // }()
 
     this->func_map.scope = scope;
+    this->func_map.LoadFunctionMap();
 
-    if(this->enabled)
+    if(!this->enabled)
         return true;
 
     // for(unordered_map <string, Function> :: iterator it = this->fm.fmap.begin() ; it != this->fm.fmap.end() ; it++)
     // 	this->fm.AddFunction(it->first, it->second);
 
-    string expString;
+    string exp_string;
     if(matcher == "")
-        expString = this->model->m["m"].assertion_map["m"]->value;
+        exp_string = this->model->m["m"].assertion_map["m"]->value;
     else
-        expString = matcher;
+        exp_string = matcher;
+
 
     unordered_map <string, RoleManager*> rm_map;
     bool ok = this->model->m.find("g") != this->model->m.end();
+
     if(ok) {
         for(unordered_map <string, Assertion*> :: iterator it = this->model->m["g"].assertion_map.begin() ; it != this->model->m["g"].assertion_map.end() ; it++){
             RoleManager* rm = it->second->rm;
-            int index = int(expString.find((it->first)+"("));
+            int char_count = int(count(it->second->value.begin(), it->second->value.end(), '_'));
+            int index = int(exp_string.find((it->first)+"("));
             if(index != string::npos)
-                expString.insert(index+(it->first+"(").length()-1, (it->first)+"_rm");
-            PushPointer(this->func_map.scope, (void *)rm, (it->first)+"_rm");
-            this->func_map.AddFunction(it->first, GFunction);
+                exp_string.insert(index+(it->first+"(").length(), "rm, ");
+            PushPointer(this->func_map.scope, (void *)rm, "rm");
+            this->func_map.AddFunction(it->first, GFunction, char_count + 1);
         }
     }
 
-    unordered_map <string, int> pIntTokens;
+    unordered_map <string, int> p_int_tokens;
     for(int i = 0 ; i < this->model->m["p"].assertion_map["p"]->tokens.size() ; i++)
-        pIntTokens[this->model->m["p"].assertion_map["p"]->tokens[i]] = i;
+        p_int_tokens[this->model->m["p"].assertion_map["p"]->tokens[i]] = i;
 
-    vector <string> pTokens = this->model->m["p"].assertion_map["p"]->tokens;
+    vector <string> p_tokens = this->model->m["p"].assertion_map["p"]->tokens;
 
-    vector <Effect> policyEffects;
-    vector <float> matcherResults;
+    int policy_len = int(this->model->m["p"].assertion_map["p"]->policy.size());
 
-    int policyLen = int(this->model->m["p"].assertion_map["p"]->policy.size());
+    vector <Effect> policy_effects(policy_len, Effect :: Indeterminate);
+    vector <float> matcher_results;
 
-    if(policyLen != 0) {
+    if(policy_len != 0) {
         if(this->model->m["r"].assertion_map["r"]->tokens.size() != this->func_map.GetRLen())
             return false;
 
         //TODO
-        for( int i = 0 ; i < this->model->m["p"].assertion_map["p"]->policy.size() ; i++){
+        for( int i = 0 ; i < policy_len ; i++){
             // log.LogPrint("Policy Rule: ", pvals)
-            vector<string> pVals = this->model->m["p"].assertion_map["p"]->policy[i];
-            if(this->model->m["p"].assertion_map["p"]->tokens.size() != pVals.size())
+            vector<string> p_vals = this->model->m["p"].assertion_map["p"]->policy[i];
+            if(this->model->m["p"].assertion_map["p"]->tokens.size() != p_vals.size())
                 return false;
 
             PushObject(this->func_map.scope, "p");
-            for(int j = 0 ; j < pTokens.size() ; j++){
-                int index = int(pTokens[j].find("_"));
-                string token = pTokens[j].substr(index+1);
-                PushStringPropToObject(this->func_map.scope, "p", pVals[j], token);
+            for(int j = 0 ; j < p_tokens.size() ; j++){
+                int index = int(p_tokens[j].find("_"));
+                string token = p_tokens[j].substr(index+1);
+                PushStringPropToObject(this->func_map.scope, "p", p_vals[j], token);
             }
 
-            this->func_map.Eval(expString);
+            this->func_map.Evaluate(exp_string);
+            
             //TODO
             // log.LogPrint("Result: ", result)
-
             if(CheckType(this->func_map.scope) == Type :: Bool){
                 bool result = GetBoolean(this->func_map.scope);
                 if(!result) {
-                    policyEffects[i] = Effect :: Indeterminate;
+                    policy_effects[i] = Effect :: Indeterminate;
                     continue;
                 }
             }
             else if(CheckType(this->func_map.scope) == Type :: Float){
                 bool result = GetFloat(this->func_map.scope);
                 if(result == 0) {
-                    policyEffects[i] = Effect :: Indeterminate;
+                    policy_effects[i] = Effect :: Indeterminate;
                     continue;
                 } else
-                    matcherResults[i] = result;
+                    matcher_results[i] = result;
             }
             else
                 return false;
 
-            bool ok = pIntTokens.find("p_eft") != pIntTokens.end();
-            if(ok) {
-                int j = pIntTokens["p_eft"];
-                string eft = pVals[j];
+            bool is_p_eft = p_int_tokens.find("p_eft") != p_int_tokens.end();
+            if(is_p_eft) {
+                int j = p_int_tokens["p_eft"];
+                string eft = p_vals[j];
                 if(eft == "allow")
-                    policyEffects[i] = Effect :: Allow;
+                    policy_effects[i] = Effect :: Allow;
                 else if(eft == "deny")
-                    policyEffects[i] = Effect :: Deny;
+                    policy_effects[i] = Effect :: Deny;
                 else
-                    policyEffects[i] = Effect :: Indeterminate;
+                    policy_effects[i] = Effect :: Indeterminate;
             }
             else
-                policyEffects[i] = Effect :: Allow;
+                policy_effects[i] = Effect :: Allow;
 
             if(this->model->m["e"].assertion_map["e"]->value == "priority(p_eft) || deny")
                 break;
         }
     } else {
-        this->func_map.Eval(expString);
+        bool isValid = this->func_map.Evaluate(exp_string);
+        if(!isValid)
+            return false;
         bool result = this->func_map.GetBooleanResult();
+
         //TODO
         // log.LogPrint("Result: ", result)
-
         if(result)
-            policyEffects[0] = Effect::Allow;
+            policy_effects.push_back(Effect::Allow);
         else
-            policyEffects[0] = Effect::Indeterminate;
+            policy_effects.push_back(Effect::Indeterminate);
     }
 
     //TODO
     // log.LogPrint("Rule Results: ", policyEffects)
 
-    bool result = this->eft->MergeEffects(this->model->m["e"].assertion_map["e"]->value, policyEffects, matcherResults);
-    
+    bool result = this->eft->MergeEffects(this->model->m["e"].assertion_map["e"]->value, policy_effects, matcher_results);
+
     return result;
 }
 
@@ -198,7 +206,7 @@ Enforcer* Enforcer :: NewEnforcer(Model* m, Adapter* adapter) {
 
     e->Initialize();
 
-    if (e->adapter != NULL) {
+    if (e->adapter->file_path != "") {
         e->LoadPolicy();
     }
     return e;
@@ -344,7 +352,6 @@ void Enforcer :: ClearPolicy() {
 void Enforcer :: LoadPolicy() {
     this->model->ClearPolicy();
     this->adapter->LoadPolicy(this->model);
-
     this->model->PrintPolicy();
 
     if(this->auto_build_role_links) {

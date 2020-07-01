@@ -4,14 +4,14 @@
 
 #include <fstream>
 
-#include "./filtered_adapter.h"
+#include "./filtered_file_adapter.h"
 #include "../../exception/io_exception.h"
 #include "../../exception/casbin_adapter_exception.h"
 #include "../../util/util.h"
 
 using namespace std;
 
-bool FilteredAdapter :: filterLine(string line, Filter* filter) {
+bool FilteredFileAdapter :: filterLine(string line, Filter* filter) {
     if (filter == NULL)
         return false;
 
@@ -29,7 +29,7 @@ bool FilteredAdapter :: filterLine(string line, Filter* filter) {
     return filterWords(p, filter_slice);
 }
 
-bool FilteredAdapter :: filterWords(vector<string> line, vector<string> filter) {
+bool FilteredFileAdapter :: filterWords(vector<string> line, vector<string> filter) {
     if (line.size() < filter.size()+1)
         return true;
 
@@ -44,7 +44,7 @@ bool FilteredAdapter :: filterWords(vector<string> line, vector<string> filter) 
     return skip_line;
 }
 
-void FilteredAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter, void (*handler)(string, Model*)) {
+void FilteredFileAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter, void (*handler)(string, Model*)) {
     ifstream out_file;
     try {
         out_file.open(this->file_path);
@@ -66,21 +66,21 @@ void FilteredAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter, voi
 }
 
 // NewFilteredAdapter is the constructor for FilteredAdapter.
-FilteredAdapter* FilteredAdapter :: NewFilteredAdapter(string file_path) {
-    FilteredAdapter* a = new FilteredAdapter;
+FilteredFileAdapter* FilteredFileAdapter :: NewFilteredAdapter(string file_path) {
+    FilteredFileAdapter* a = new FilteredFileAdapter;
     a->filtered = true;
     a->file_path = file_path;
     return a;
 }
 
 // LoadPolicy loads all policy rules from the storage.
-void FilteredAdapter :: LoadPolicy(Model* model) {
+void FilteredFileAdapter :: LoadPolicy(Model* model) {
     this->filtered = false;
     this->FileAdapter::LoadPolicy(model);
 }
 
 // LoadFilteredPolicy loads only policy rules that match the filter.
-void FilteredAdapter :: LoadFilteredPolicy(Model* model, Filter* filter) {
+void FilteredFileAdapter :: LoadFilteredPolicy(Model* model, Filter* filter) {
     if (filter == NULL) {
         this->LoadPolicy(model);
     }
@@ -94,12 +94,12 @@ void FilteredAdapter :: LoadFilteredPolicy(Model* model, Filter* filter) {
 }
 
 // IsFiltered returns true if the loaded policy has been filtered.
-bool FilteredAdapter :: IsFiltered() {
+bool FilteredFileAdapter :: IsFiltered() {
     return this->filtered;
 }
 
 // SavePolicy saves all policy rules to the storage.
-void FilteredAdapter :: SavePolicy(Model* model) {
+void FilteredFileAdapter :: SavePolicy(Model* model) {
     if (this->filtered) {
         throw CasbinAdapterException("Cannot save a filtered policy");
     }

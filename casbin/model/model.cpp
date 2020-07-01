@@ -57,8 +57,9 @@ bool Model :: HasSection(string sec) {
 void Model :: LoadSection(Model* model, ConfigInterface* cfg, string sec) {
     int i = 1;
     while(true) {
-        if (!LoadAssertion(model, cfg, sec, sec+GetKeySuffix(i)))
+        if (!LoadAssertion(model, cfg, sec, sec+GetKeySuffix(i))){
             break;
+        }
         else
             i++;
     }
@@ -93,11 +94,12 @@ bool Model :: AddDef(string sec, string key, string value) {
             ast->tokens[i] = key + "_" + Trim(ast->tokens[i]);
     }
     else
-        ast->value = RemoveComments(EscapeAssertion(ast->value));
+        ast->value = RemoveComments(ast->value);
 
-    if (m.find(sec) != m.end())
+    if (m.find(sec) == m.end())
         m[sec] = AssertionMap();
     ast->policy = vector<vector<string>>{};
+
     m[sec].assertion_map[key] = ast;
 
     return true;
@@ -160,9 +162,8 @@ void Model :: BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, string se
 
 // BuildRoleLinks initializes the roles in RBAC.
 void Model :: BuildRoleLinks(RoleManager* rm) {
-    for (unordered_map<string, Assertion*> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++) {
+    for (unordered_map<string, Assertion*> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++)
         (it->second)->BuildRoleLinks(rm);
-    }
 }
 
 // PrintPolicy prints the policy to log.
@@ -186,13 +187,15 @@ void Model :: PrintPolicy() {
 
 // ClearPolicy clears all current policy.
 void Model :: ClearPolicy() {
-    for (unordered_map<string, Assertion*> :: iterator it = this->m["p"].assertion_map.begin() ; it != this->m["p"].assertion_map.end() ; it++)
+    for (unordered_map<string, Assertion*> :: iterator it = this->m["p"].assertion_map.begin() ; it != this->m["p"].assertion_map.end() ; it++){
         if((it->second)->policy.size() > 0)
             (it->second)->policy.clear();
+    }
 
-    for (unordered_map<string, Assertion*> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++)
+    for (unordered_map<string, Assertion*> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++){
         if((it->second)->policy.size() > 0)
             (it->second)->policy.clear();
+    }
 }
 
 // GetPolicy gets all rules in a policy.
@@ -221,7 +224,7 @@ vector<vector<string>> Model :: GetFilteredPolicy(string sec, string p_type, int
 
 // HasPolicy determines whether a model has the specified policy rule.
 bool Model :: HasPolicy(string sec, string p_type, vector<string> rule) {
-    vector<vector<string>> policy(m[sec].assertion_map[p_type]->policy);
+    vector<vector<string>> policy = m[sec].assertion_map[p_type]->policy;
     for(int i=0 ; i < policy.size() ; i++)
         if (ArrayEquals(rule, policy[i]))
             return true;
@@ -235,6 +238,7 @@ bool Model :: AddPolicy(string sec, string p_type, vector<string> rule) {
         m[sec].assertion_map[p_type]->policy.push_back(rule);
         return true;
     }
+
     return false;
 }
 
@@ -265,17 +269,19 @@ bool Model :: RemovePolicy(string sec, string p_type, vector<string> rule) {
 // RemovePolicies removes policy rules from the model.
 bool Model :: RemovePolicies(string sec, string p_type, vector<vector<string>> rules) {
     OUTER: for (int j = 0; j < rules.size(); j++) {
-        for (int i = 0; i < this->m[sec].assertion_map[p_type]->policy.size(); i++)
-            if (ArrayEquals(rules[j], this->m[sec].assertion_map[p_type]->policy[i])) {
+        for (int i = 0; i < this->m[sec].assertion_map[p_type]->policy.size(); i++){
+            if (ArrayEquals(rules[j], this->m[sec].assertion_map[p_type]->policy[i]))
                 goto OUTER;
         }
         return false;
     }
 
-    for (int j = 0; j < rules.size(); j++)
-        for (int i = 0; i < this->m[sec].assertion_map[p_type]->policy.size(); i++)
+    for (int j = 0; j < rules.size(); j++){
+        for (int i = 0; i < this->m[sec].assertion_map[p_type]->policy.size(); i++){
             if (ArrayEquals(rules[j], this->m[sec].assertion_map[p_type]->policy[i]))
                 this->m[sec].assertion_map[p_type]->policy.erase(this->m[sec].assertion_map[p_type]->policy.begin() + i);
+        }
+    }
 
     return true;
 }
@@ -288,8 +294,8 @@ pair<bool, vector<vector<string>>> Model :: RemoveFilteredPolicy(string sec, str
     bool res = false;
     for(int i = 0 ; i < policy.size() ; i++){
         bool matched = true;
-        for (int i = 0 ; i < field_values.size() ; i++) {
-            if (field_values[i] != "" && (policy[i])[field_index+i] != field_values[i]) {
+        for (int j = 0 ; j < field_values.size() ; j++) {
+            if (field_values[j] != "" && (policy[i])[field_index+j] != field_values[j]) {
                 matched = false;
                 break;
             }
