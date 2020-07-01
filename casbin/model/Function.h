@@ -30,16 +30,18 @@ class FunctionMap {
 
         FunctionMap();
 
+        void ProcessFunctions(string expression);
+
         int GetRLen();
 
-        void Eval(string expression);
+        bool Evaluate(string expression);
 
         bool GetBooleanResult();
 
         // AddFunction adds an expression function.
-        void AddFunction(string func_name, Function f, Index nargs = VARARGS);
+        void AddFunction(string func_name, Function f, Index nargs);
 
-        void AddFunctionPropToR(string identifier, Function func, unsigned int nargs = VARARGS);
+        void AddFunctionPropToR(string identifier, Function func, Index nargs);
 
         void AddBooleanPropToR(string identifier, bool val);
 
@@ -60,7 +62,7 @@ class FunctionMap {
         void AddObjectPropToR(string identifier);
 
         // LoadFunctionMap loads an initial function map.
-        static FunctionMap LoadFunctionMap();
+        void LoadFunctionMap();
 
 };
 

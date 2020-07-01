@@ -50,7 +50,7 @@ void PushDoubleValue(Scope scope, double d);
 void PushStringValue(Scope scope, string s);
 void PushPointerValue(Scope scope, void * ptr);
 void PushObjectValue(Scope scope);
-void PushFunction(Scope scope, Function f, int nargs, string fname);
+void PushFunction(Scope scope, Function f, string fname, int nargs);
 void PushBoolean(Scope scope, bool expression, string identifier);
 void PushTrue(Scope scope, string identifier);
 void PushFalse(Scope scope, string identifier);
@@ -60,7 +60,7 @@ void PushDouble(Scope scope, double d, string identifier);
 void PushString(Scope scope, string s, string identifier);
 void PushPointer(Scope scope, void * ptr, string identifier);
 void PushObject(Scope scope, string identifier = "r");
-void PushFunctionPropToObject(Scope scope, string obj, Function f, int nargs, string fname);
+void PushFunctionPropToObject(Scope scope, string obj, Function f, string fname, int nargs);
 void PushBooleanPropToObject(Scope scope, string obj, bool expression, string identifier);
 void PushTruePropToObject(Scope scope, string obj, string identifier);
 void PushFalsePropToObject(Scope scope, string obj, string identifier);
@@ -79,5 +79,8 @@ float GetFloat(Scope scope, int id = -1);
 double GetDouble(Scope scope, int id = -1);
 string GetString(Scope scope, int id = -1);
 void* GetPointer(Scope scope, int id = -1);
+void Get(Scope scope, string identifier);
+bool Eval(Scope scope, string expression);
+void EvalNoResult(Scope scope, string expression);
 
 #endif

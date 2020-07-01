@@ -64,7 +64,7 @@ void PushObjectValue(Scope scope){
     duk_push_global_object(scope);
 }
 
-void PushFunction(Scope scope, Function f, int nargs, string fname) {
+void PushFunction(Scope scope, Function f, string fname, int nargs) {
     duk_push_c_function(scope, f, (Index)nargs);
     duk_put_global_string(scope, fname.c_str());
 }
@@ -116,7 +116,7 @@ void PushObject(Scope scope, string identifier){
     duk_put_global_string(scope, (identifier+"len").c_str());
 }
 
-void PushFunctionPropToObject(Scope scope, string obj, Function f, int nargs, string fname) {
+void PushFunctionPropToObject(Scope scope, string obj, Function f, string fname, int nargs) {
     duk_get_global_string(scope, obj.c_str());
     duk_push_c_function(scope, f, nargs);
     duk_put_prop_string(scope, -2, fname.c_str());
@@ -223,4 +223,17 @@ string GetString(Scope scope, int id){
 
 void* GetPointer(Scope scope, int id){
     return (void *)duk_to_pointer(scope, (Index)id);
+}
+
+void Get(Scope scope, string identifier){
+    Eval(scope, identifier);
+}
+
+bool Eval(Scope scope, string expression){
+    PushStringValue(scope, expression);
+    return duk_peval(scope)==0;
+}
+
+void EvalNoResult(Scope scope, string expression){
+    duk_eval_string_noresult(scope, expression.c_str());
 }
