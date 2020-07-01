@@ -75,7 +75,7 @@ class DefaultRoleManager : public RoleManager {
         // e.BuildRoleLinks must be called after AddMatchingFunc().
         //
         // example: e.GetRoleManager().(*defaultrolemanager.RoleManager).AddMatchingFunc('matcher', util.KeyMatch)
-        void AddMatchingFunc(string name, MatchingFunc fn);
+        void AddMatchingFunc(MatchingFunc fn);
 
         /**
          * clear clears all stored data and resets the role manager to the initial state.

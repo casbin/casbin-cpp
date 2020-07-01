@@ -38,13 +38,13 @@ void Role :: AddRole(Role* role) {
 
 void Role :: DeleteRole(Role* role) {
     for (int i = 0; i < roles.size();i++) {
-        if (!roles[i]->name.compare(role->name))
+        if (roles[i]->name == role->name)
             roles.erase(roles.begin()+i);
     }
 }
 
 bool Role :: HasRole(string name, int hierarchy_level) {
-    if (!this->name.compare(name))
+    if (this->name == name)
         return true;
 
     if (hierarchy_level <= 0)
@@ -60,7 +60,7 @@ bool Role :: HasRole(string name, int hierarchy_level) {
 
 bool Role :: HasDirectRole(string name) {
     for(int i = 0 ; i < roles.size() ; i++){
-        if (!roles[i]->name.compare(name))
+        if (roles[i]->name == name)
             return true;
     }
 
@@ -68,15 +68,24 @@ bool Role :: HasDirectRole(string name) {
 }
 
 string Role :: ToString() {
+    if(this->roles.size()==0)
+        return "";
+
     string names = "";
+    if(this->roles.size() != 1)
+        names += "(";
+
     for (int i = 0; i < roles.size(); i ++) {
         Role* role = roles[i];
-        if (i == 0) {
-            names.append(role->name);
-        } else {
-            names.append(", " + role->name);
-        }
+        if (i == 0)
+            names += role->name;
+        else
+            names += ", " + role->name;
     }
+
+    if(this->roles.size() != 1)
+        names += ")";
+
     return name + " < " + names;
 }
 
@@ -116,7 +125,7 @@ Role* DefaultRoleManager :: CreateRole(string name) {
             if (this->matching_func(name, it->first) && name!=it->first) {
                 Role* role1;
                 bool ok1 = this->all_roles.find(it->first) != this->all_roles.end();
-                if (!ok) {
+                if (!ok1) {
                     all_roles[it->first] = Role :: NewRole(it->first);
                     role1 = all_roles[it->first];
                 } else
@@ -145,11 +154,10 @@ DefaultRoleManager* DefaultRoleManager :: NewRoleManager(int max_hierarchy_level
 // e.BuildRoleLinks must be called after AddMatchingFunc().
 //
 // example: e.GetRoleManager().(*defaultrolemanager.RoleManager).AddMatchingFunc('matcher', util.KeyMatch)
-void DefaultRoleManager :: AddMatchingFunc(string name, MatchingFunc fn) {
+void DefaultRoleManager :: AddMatchingFunc(MatchingFunc fn) {
     this->has_pattern = true;
     this->matching_func = fn;
 }
-
 
 /**
  * clear clears all stored data and resets the role manager to the initial state.
@@ -208,7 +216,6 @@ bool DefaultRoleManager :: HasLink(string name1, string name2, vector<string> do
 
     if (!name1.compare(name2))
         return true;
-
     if (!HasRole(name1) || !HasRole(name2))
         return false;
 
