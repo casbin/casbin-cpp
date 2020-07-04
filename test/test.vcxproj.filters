@@ -36,6 +36,9 @@
     <ClCompile Include="test_model_enforcer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_enforcer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

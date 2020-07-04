@@ -444,6 +444,40 @@ bool Enforcer :: Enforce(Scope scope) {
     return this->enforce("", scope);
 }
 
+// Enforce with two params, decides whether a "subject" can do the operation "action", input parameters are usually: (sub, act).
+bool Enforcer::Enforce(string sub, string act) {
+    return Enforce({ sub,act });
+}
+
+// Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
+bool Enforcer::Enforce(string sub, string obj, string act) {
+    return Enforce({sub,obj,act});
+}
+
+// Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
+bool Enforcer::Enforce(string sub, string dom, string obj, string act) {
+    return Enforce({ sub,dom,obj,act });
+}
+
+// Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
+bool Enforcer::Enforce(vector<string> params) {
+    vector <string> r_tokens = this->model->m["r"].assertion_map["r"]->tokens;
+
+    int r_cnt = r_tokens.size();
+    int cnt = params.size();
+
+    if (cnt != r_cnt)
+        return false;
+
+    Scope scope = InitializeScope();
+    PushObject(scope, "r");
+    for (int i = 0; i < cnt; i++) {
+        PushStringPropToObject(scope, "r", params[i] , r_tokens[i].substr(2,r_tokens[i].size()-2));
+    }
+
+    return this->enforce("", scope);
+}
+
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool Enforcer :: EnforceWithMatcher(string matcher, Scope scope) {
     return this->enforce(matcher, scope);
