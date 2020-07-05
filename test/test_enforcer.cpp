@@ -56,6 +56,10 @@ namespace test_enforcer
             Assert::AreEqual(res, e->Enforce(params));
         }
 
+        void TestEnforce(Enforcer* e, unordered_map<string,string> params, bool res) {
+            Assert::AreEqual(res, e->Enforce(params));
+        }
+
 
         TEST_METHOD(TestFourParams) {
             string model = filePath("../examples/rbac_with_domains_model.conf");
@@ -77,14 +81,14 @@ namespace test_enforcer
             string policy = filePath("../examples/basic_policy.csv");
             Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
-            TestEnforce(e, "alice", "data1", "read", true);
-            TestEnforce(e, "alice", "data1", "write", false);
-            TestEnforce(e, "alice", "data2", "read", false);
-            TestEnforce(e, "alice", "data2", "write", false);
-            TestEnforce(e, "bob", "data1", "read", false);
-            TestEnforce(e, "bob", "data1", "write", false);
-            TestEnforce(e, "bob", "data2", "read", false);
-            TestEnforce(e, "bob", "data2", "write", true);
+            TestEnforce(e, { "alice", "data1", "read" }, true);
+            TestEnforce(e, { "alice", "data1", "write" }, false);
+            TestEnforce(e, { "alice", "data2", "read" }, false);
+            TestEnforce(e, { "alice", "data2", "write" }, false);
+            TestEnforce(e, { "bob", "data1", "read" }, false);
+            TestEnforce(e, { "bob", "data1", "write" }, false);
+            TestEnforce(e, { "bob", "data2", "read" }, false);
+            TestEnforce(e, { "bob", "data2", "write" }, true);
         }
 
         TEST_METHOD(TestTwoParams) {
@@ -111,6 +115,36 @@ namespace test_enforcer
             TestEnforce(e, {"bob", "data1", "write" }, false);
             TestEnforce(e, {"bob", "data2", "read" }, false);
             TestEnforce(e, {"bob", "data2", "write" }, true);
+        }
+
+        TEST_METHOD(TestMapParams) {
+            string model = filePath("../examples/basic_model_without_spaces.conf");
+            string policy = filePath("../examples/basic_policy.csv");
+            Enforcer* e = Enforcer::NewEnforcer(model, policy);
+
+            unordered_map<string, string> params = { {"sub","alice"},{"obj","data1"},{"act","read"} };
+            TestEnforce(e, params, true);
+
+            params = { {"sub","alice"},{"obj","data1"},{"act","write"} };
+            TestEnforce(e, params, false);
+
+            params = { {"sub","alice"},{"obj","data2"},{"act","read"} };
+            TestEnforce(e, params, false);
+
+            params = { {"sub","alice"},{"obj","data2"},{"act","write"} };
+            TestEnforce(e, params, false);
+
+            params = { {"sub","bob"},{"obj","data1"},{"act","read"} };
+            TestEnforce(e, params, false);
+
+            params = { {"sub","bob"},{"obj","data1"},{"act","write"} };
+            TestEnforce(e, params, false);
+
+            params = { {"sub","bob"},{"obj","data2"},{"act","read"} };
+            TestEnforce(e, params, false);
+
+            params = { {"sub","bob"},{"obj","data2"},{"act","write"} };
+            TestEnforce(e, params, true);
         }
     };
 }

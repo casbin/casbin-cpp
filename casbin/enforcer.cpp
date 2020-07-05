@@ -446,7 +446,8 @@ bool Enforcer :: Enforce(Scope scope) {
 
 // Enforce with two params, decides whether a "subject" can do the operation "action", input parameters are usually: (sub, act).
 bool Enforcer::Enforce(string sub, string act) {
-    return Enforce({ sub,act });
+    vector<string> v = { sub, act };
+    return Enforce(v);
 }
 
 // Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
@@ -461,6 +462,20 @@ bool Enforcer::Enforce(string sub, string dom, string obj, string act) {
 
 // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
 bool Enforcer::Enforce(vector<string> params) {
+    return this->EnforceWithMatcher("", params);
+}
+
+// Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
+bool Enforcer::Enforce(unordered_map<string, string> params) {
+    return this->EnforceWithMatcher("", params);
+}
+
+// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
+bool Enforcer :: EnforceWithMatcher(string matcher, Scope scope) {
+    return this->enforce(matcher, scope);
+}
+// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
+bool Enforcer::EnforceWithMatcher(string matcher, vector<string> params) {
     vector <string> r_tokens = this->model->m["r"].assertion_map["r"]->tokens;
 
     int r_cnt = r_tokens.size();
@@ -471,14 +486,21 @@ bool Enforcer::Enforce(vector<string> params) {
 
     Scope scope = InitializeScope();
     PushObject(scope, "r");
+
     for (int i = 0; i < cnt; i++) {
-        PushStringPropToObject(scope, "r", params[i] , r_tokens[i].substr(2,r_tokens[i].size()-2));
+        PushStringPropToObject(scope, "r", params[i], r_tokens[i].substr(2, r_tokens[i].size() - 2));
     }
 
-    return this->enforce("", scope);
+    return this->enforce(matcher, scope);
 }
-
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer :: EnforceWithMatcher(string matcher, Scope scope) {
+bool Enforcer::EnforceWithMatcher(string matcher, unordered_map<string, string> params) {
+    Scope scope = InitializeScope();
+    PushObject(scope, "r");
+
+    for (auto r : params) {
+        PushStringPropToObject(scope, "r", r.second, r.first);
+    }
+
     return this->enforce(matcher, scope);
 }

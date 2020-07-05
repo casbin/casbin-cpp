@@ -154,9 +154,15 @@ class Enforcer : public IEnforcer{
         // Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
         bool Enforce(string sub, string dom, string obj, string act);
         // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(vector<string> params);
+        bool Enforce(vector<string> params);        
+        // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
+        bool Enforce(unordered_map<string,string> params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
         bool EnforceWithMatcher(string matcher, Scope scope);
+        // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
+        bool EnforceWithMatcher(string matcher, vector<string> params);
+        // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
+        bool EnforceWithMatcher(string matcher, unordered_map<string, string> params);
        
         /*Management API member functions.*/
         vector<string> GetAllSubjects();
