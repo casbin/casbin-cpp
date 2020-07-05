@@ -147,8 +147,6 @@ class Enforcer : public IEnforcer{
         void BuildIncrementalRoleLinks(policy_op op, string p_type, vector<vector<string>> rules);
         // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(Scope scope);
-        // Enforce with two params, decides whether a "subject" can do the operation "action", input parameters are usually: (sub, act).
-        bool Enforce(string sub, string act);
         // Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(string sub, string obj, string act);
         // Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
@@ -159,6 +157,10 @@ class Enforcer : public IEnforcer{
         bool Enforce(unordered_map<string,string> params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
         bool EnforceWithMatcher(string matcher, Scope scope);
+        // Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
+        bool EnforceWithMatcher(string matcher, string sub, string obj, string act);
+        // Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
+        bool EnforceWithMatcher(string matcher, string sub, string dom, string obj, string act);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
         bool EnforceWithMatcher(string matcher, vector<string> params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".

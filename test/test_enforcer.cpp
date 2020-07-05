@@ -48,10 +48,6 @@ namespace test_enforcer
             Assert::AreEqual(res, e->Enforce(sub, obj, act));
         }
 
-        void TestEnforce(Enforcer* e, string sub, string act, bool res) {
-            Assert::AreEqual(res, e->Enforce(sub, act));
-        }
-
         void TestEnforce(Enforcer* e, vector<string> params, bool res) {
             Assert::AreEqual(res, e->Enforce(params));
         }
@@ -89,17 +85,6 @@ namespace test_enforcer
             TestEnforce(e, { "bob", "data1", "write" }, false);
             TestEnforce(e, { "bob", "data2", "read" }, false);
             TestEnforce(e, { "bob", "data2", "write" }, true);
-        }
-
-        TEST_METHOD(TestTwoParams) {
-            string model = filePath("../examples/basic_without_users_model.conf");
-            string policy = filePath("../examples/basic_without_users_policy.csv");
-            Enforcer* e = Enforcer::NewEnforcer(model, policy);
-
-            TestEnforce(e, "data1", "read", true);
-            TestEnforce(e, "data1", "write", false);
-            TestEnforce(e, "data2", "read", false);
-            TestEnforce(e, "data2", "write", true);
         }
         
         TEST_METHOD(TestVectorParams) {
