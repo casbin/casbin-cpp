@@ -167,6 +167,7 @@
     </ClCompile>
     <ClCompile Include="test_built_in_functions.cpp" />
     <ClCompile Include="test_config.cpp" />
+    <ClCompile Include="test_enforcer.cpp" />
     <ClCompile Include="test_model.cpp" />
     <ClCompile Include="test_model_enforcer.cpp" />
     <ClCompile Include="test_role_manager.cpp" />
