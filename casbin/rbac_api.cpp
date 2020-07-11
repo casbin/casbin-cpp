@@ -23,22 +23,21 @@
 #include "./util/util.h"
 
 // GetRolesForUser gets the roles that a user has.
-vector<string> Enforcer :: GetRolesForUser(string name) {
-    vector<string> domain;
+vector<string> Enforcer :: GetRolesForUser(string name, vector<string> domain) {
     vector<string> res = this->model->m["g"].assertion_map["g"]->rm->GetRoles(name, domain);
     return res;
 }
 
 // GetUsersForRole gets the users that has a role.
-vector<string> Enforcer :: GetUsersForRole(string name) {
-    vector<string> domain;
+vector<string> Enforcer :: GetUsersForRole(string name, vector<string> domain) {
     vector<string> res = this->model->m["g"].assertion_map["g"]->rm->GetUsers(name, domain);
     return res;
 }
 
 // HasRoleForUser determines whether a user has a role.
 bool Enforcer :: HasRoleForUser(string name, string role) {
-    vector<string> roles = this->GetRolesForUser(name);
+    vector<string> domain;
+    vector<string> roles = this->GetRolesForUser(name, domain);
 
     bool has_role = false;
     for (int i = 0 ; i < roles.size() ; i++) {

@@ -210,8 +210,8 @@ class Enforcer : public IEnforcer{
         void AddFunction(string name, Function function, Index nargs);
 
         /*RBAC API member functions.*/
-        vector<string> GetRolesForUser(string name);
-        vector<string> GetUsersForRole(string name);
+        vector<string> GetRolesForUser(string name, vector<string> domain);
+        vector<string> GetUsersForRole(string name, vector<string> domain);
         bool HasRoleForUser(string name, string role);
         bool AddRoleForUser(string user, string role);
         bool AddPermissionForUser(string user, vector<string> permission);

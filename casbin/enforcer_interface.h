@@ -60,8 +60,8 @@ class IEnforcer {
         virtual bool EnforceWithMatcher(string matcher, Scope scope) = 0;
 
         /* RBAC API */
-        virtual vector<string> GetRolesForUser(string name) = 0;
-        virtual vector<string> GetUsersForRole(string name) = 0;
+        virtual vector<string> GetRolesForUser(string name, vector<string> domain) = 0;
+        virtual vector<string> GetUsersForRole(string name, vector<string> domain) = 0;
         virtual bool HasRoleForUser(string name, string role) = 0;
         virtual bool AddRoleForUser(string user, string role) = 0;
         virtual bool AddPermissionForUser(string user, vector<string> permission) = 0;
