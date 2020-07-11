@@ -254,7 +254,7 @@ vector<string> DefaultRoleManager :: GetUsers(string name, vector<string> domain
     else if (domain.size() > 1)
         throw CasbinRBACException("error: domain should be 1 parameter");
 
-    if (this->HasRole(name))
+    if (!this->HasRole(name))
         throw CasbinRBACException("error: name does not exist");
 
     vector<string> names;
