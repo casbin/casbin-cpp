@@ -20,39 +20,9 @@ namespace test_management_api
     {
         public:
 
-            string basic_example;
-            Config* basic_config;
-
-            TEST_METHOD_INITIALIZE(InitializeBasicConfig) {
-                basic_example = filePath("../examples/basic_model.conf");
-                basic_config = Config::NewConfig(basic_example);
-            }
-
-            string filePath(string filepath) {
-                char* root = _getcwd(NULL, 0);
-                string rootStr = string(root);
-
-                vector <string> directories = Split(rootStr, "\\", -1);
-                vector<string>::iterator it = find(directories.begin(), directories.end(), "x64");
-                vector <string> left{ *(it - 1) };
-                it = find_end(directories.begin(), directories.end(), left.begin(), left.end());
-                int index = int(directories.size() + (it - directories.end()));
-
-                vector <string> finalDirectories(directories.begin(), directories.begin() + index + 1);
-
-                vector<string> userD = Split(filepath, "/", -1);
-                for (int i = 1; i < userD.size(); i++)
-                    finalDirectories.push_back(userD[i]);
-
-                string filepath1 = finalDirectories[0];
-                for (int i = 1; i < finalDirectories.size(); i++)
-                    filepath1 = filepath1 + "/" + finalDirectories[i];
-                return filepath1;
-            }
-
             TEST_METHOD(TestGetList) {
-                string model = filePath("../examples/rbac_model.conf");
-                string policy = filePath("../examples/rbac_policy.csv");
+                string model = "../../examples/rbac_model.conf";
+                string policy = "../../examples/rbac_policy.csv";
                 Enforcer* e = Enforcer :: NewEnforcer(model, policy);
 
                 Assert::IsTrue(ArrayEquals(vector<string>{ "alice", "bob", "data2_admin" }, e->GetAllSubjects()));
@@ -111,8 +81,8 @@ namespace test_management_api
             }
 
             TEST_METHOD(TestGetPolicyAPI) {
-                string model = filePath("../examples/rbac_model.conf");
-                string policy = filePath("../examples/rbac_policy.csv");
+                string model = "../../examples/rbac_model.conf";
+                string policy = "../../examples/rbac_policy.csv";
                 Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
                 TestGetPolicy(e, vector<vector<string>>{
@@ -154,8 +124,8 @@ namespace test_management_api
 
 
             TEST_METHOD(TestModifyPolicyAPI) {
-                string model = filePath("../examples/rbac_model.conf");
-                string policy = filePath("../examples/rbac_policy.csv");
+                string model = "../../examples/rbac_model.conf";
+                string policy = "../../examples/rbac_policy.csv";
                 Adapter* adapter = BatchFileAdapter::NewAdapter(policy);
                 Enforcer* e = Enforcer::NewEnforcer(model, adapter);
 
@@ -208,8 +178,8 @@ namespace test_management_api
             }
 
             TEST_METHOD(TestModifyGroupingPolicyAPI) {
-                string model = filePath("../examples/rbac_model.conf");
-                string policy = filePath("../examples/rbac_policy.csv");
+                string model = "../../examples/rbac_model.conf";
+                string policy = "../../examples/rbac_policy.csv";
                 Adapter* adapter = BatchFileAdapter::NewAdapter(policy);
                 Enforcer* e = Enforcer::NewEnforcer(model, adapter);
 

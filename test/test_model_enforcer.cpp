@@ -18,28 +18,6 @@ namespace test_model_enforcer
     {
         public:
 
-            string filePath(string filepath) {
-                char* root = _getcwd(NULL, 0);
-                string rootStr = string(root);
-
-                vector <string> directories = Split(rootStr, "\\", -1);
-                vector<string>::iterator it = find(directories.begin(), directories.end(), "x64");
-                vector <string> left{ *(it - 1) };
-                it = find_end(directories.begin(), directories.end(), left.begin(), left.end());
-                int index = int(directories.size() + (it - directories.end()));
-
-                vector <string> finalDirectories(directories.begin(), directories.begin() + index + 1);
-
-                vector<string> userD = Split(filepath, "/", -1);
-                for (int i = 1; i < userD.size(); i++)
-                    finalDirectories.push_back(userD[i]);
-
-                string filepath1 = finalDirectories[0];
-                for (int i = 1; i < finalDirectories.size(); i++)
-                    filepath1 = filepath1 + "/" + finalDirectories[i];
-                return filepath1;
-            }
-
             Scope InitializeParams(string sub, string obj, string act) {
                 Scope scope = InitializeScope();
                 PushObject(scope, "r");
@@ -83,8 +61,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestBasicModel) {
-                string model = filePath("../examples/basic_model.conf");
-                string policy = filePath("../examples/basic_policy.csv");
+                string model = "../../examples/basic_model.conf";
+                string policy = "../../examples/basic_policy.csv";
                 Enforcer* e = Enforcer :: NewEnforcer(model, policy);
 
                 Scope scope;
@@ -108,8 +86,8 @@ namespace test_model_enforcer
             }
             
             TEST_METHOD(TestBasicModelWithoutSpaces) {
-                string model = filePath("../examples/basic_model_without_spaces.conf");
-                string policy = filePath("../examples/basic_policy.csv");
+                string model = "../../examples/basic_model_without_spaces.conf";
+                string policy = "../../examples/basic_policy.csv";
                 Enforcer* e = Enforcer :: NewEnforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
@@ -131,7 +109,7 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestBasicModelNoPolicy) {
-                string model = filePath("../examples/basic_model.conf");
+                string model = "../../examples/basic_model.conf";
                 Enforcer* e = Enforcer :: NewEnforcer(model);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
@@ -153,8 +131,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestBasicModelWithRoot) {
-                string model = filePath("../examples/basic_with_root_model.conf");
-                string policy = filePath("../examples/basic_policy.csv");
+                string model = "../../examples/basic_with_root_model.conf";
+                string policy = "../../examples/basic_policy.csv";
                 Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
@@ -184,7 +162,7 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestBasicModelWithRootNoPolicy) {
-                string model = filePath("../examples/basic_with_root_model.conf");
+                string model = "../../examples/basic_with_root_model.conf";
                 Enforcer* e = Enforcer::NewEnforcer(model);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
@@ -214,8 +192,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestBasicModelWithoutUsers) {
-                string model = filePath("../examples/basic_without_users_model.conf");
-                string policy = filePath("../examples/basic_without_users_policy.csv");
+                string model = "../../examples/basic_without_users_model.conf";
+                string policy = "../../examples/basic_without_users_policy.csv";
                 Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
                 Scope scope = InitializeParamsWithoutUsers("data1", "read");
@@ -229,8 +207,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestBasicModelWithoutResources) {
-                string model = filePath("../examples/basic_without_resources_model.conf");
-                string policy = filePath("../examples/basic_without_resources_policy.csv");
+                string model = "../../examples/basic_without_resources_model.conf";
+                string policy = "../../examples/basic_without_resources_policy.csv";
                 Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
                 Scope scope = InitializeParamsWithoutResources("alice", "read");
@@ -244,8 +222,8 @@ namespace test_model_enforcer
             }
             
             TEST_METHOD(TestRBACModel) {
-                string model = filePath("../examples/rbac_model.conf");
-                string policy = filePath("../examples/rbac_policy.csv");
+                string model = "../../examples/rbac_model.conf";
+                string policy = "../../examples/rbac_policy.csv";
                 Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
@@ -267,8 +245,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestRBACModelWithResourceRoles) {
-                string model = filePath("../examples/rbac_with_resource_roles_model.conf");
-                string policy = filePath("../examples/rbac_with_resource_roles_policy.csv");
+                string model = "../../examples/rbac_with_resource_roles_model.conf";
+                string policy = "../../examples/rbac_with_resource_roles_policy.csv";
                 Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
@@ -290,8 +268,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestRBACModelWithDomains) {
-                string model = filePath("../examples/rbac_with_domains_model.conf");
-                string policy = filePath("../examples/rbac_with_domains_policy.csv");
+                string model = "../../examples/rbac_with_domains_model.conf";
+                string policy = "../../examples/rbac_with_domains_policy.csv";
                 Enforcer* e = Enforcer :: NewEnforcer(model, policy);
                 
                 Scope scope = InitializeParamsWithDomains("alice", "domain1", "data1", "read");
@@ -313,7 +291,7 @@ namespace test_model_enforcer
             }
             
             TEST_METHOD(TestRBACModelWithDomainsAtRuntime) {
-                string model = filePath("../examples/rbac_with_domains_model.conf");
+                string model = "../../examples/rbac_with_domains_model.conf";
                 Enforcer* e = Enforcer::NewEnforcer(model);
 
                 vector<string> params{ "admin", "domain1", "data1", "read" };
@@ -391,8 +369,8 @@ namespace test_model_enforcer
             }
             
             TEST_METHOD(TestRBACModelWithDomainsAtRuntimeMockAdapter) {
-                string model = filePath("../examples/rbac_with_domains_model.conf");
-                string policy = filePath("../examples/rbac_with_domains_policy.csv");
+                string model = "../../examples/rbac_with_domains_model.conf";
+                string policy = "../../examples/rbac_with_domains_policy.csv";
                 Adapter* adapter = FileAdapter :: NewAdapter(policy);
                 Enforcer* e = Enforcer :: NewEnforcer(model, adapter);
 
@@ -420,8 +398,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestRBACModelWithDeny) {
-                string model = filePath("../examples/rbac_with_deny_model.conf");
-                string policy = filePath("../examples/rbac_with_deny_policy.csv");
+                string model = "../../examples/rbac_with_deny_model.conf";
+                string policy = "../../examples/rbac_with_deny_policy.csv";
                 Enforcer* e = Enforcer :: NewEnforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
@@ -443,8 +421,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestRBACModelWithOnlyDeny) {
-                string model = filePath("../examples/rbac_with_not_deny_model.conf");
-                string policy = filePath("../examples/rbac_with_deny_policy.csv");
+                string model = "../../examples/rbac_with_not_deny_model.conf";
+                string policy = "../../examples/rbac_with_deny_policy.csv";
                 Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data2", "write");
@@ -452,8 +430,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestRBACModelWithCustomData) {
-                string model = filePath("../examples/rbac_model.conf");
-                string policy = filePath("../examples/rbac_policy.csv");
+                string model = "../../examples/rbac_model.conf";
+                string policy = "../../examples/rbac_policy.csv";
                 Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
                 // You can add custom data to a grouping policy, Casbin will ignore it. It is only meaningful to the caller.
@@ -504,8 +482,8 @@ namespace test_model_enforcer
             }
 
             TEST_METHOD(TestRBACModelWithPattern) {
-                string model = filePath("../examples/rbac_with_pattern_model.conf");
-                string policy = filePath("../examples/rbac_with_pattern_policy.csv");
+                string model = "../../examples/rbac_with_pattern_model.conf";
+                string policy = "../../examples/rbac_with_pattern_policy.csv";
                 Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
                 // Here's a little confusing: the matching function here is not the custom function used in matcher.

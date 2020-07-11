@@ -18,28 +18,6 @@ namespace test_enforcer
     {
     public:
 
-        string filePath(string filepath) {
-            char* root = _getcwd(NULL, 0);
-            string rootStr = string(root);
-
-            vector <string> directories = Split(rootStr, "\\", -1);
-            vector<string>::iterator it = find(directories.begin(), directories.end(), "x64");
-            vector <string> left{ *(it - 1) };
-            it = find_end(directories.begin(), directories.end(), left.begin(), left.end());
-            int index = int(directories.size() + (it - directories.end()));
-
-            vector <string> finalDirectories(directories.begin(), directories.begin() + index + 1);
-
-            vector<string> userD = Split(filepath, "/", -1);
-            for (int i = 1; i < userD.size(); i++)
-                finalDirectories.push_back(userD[i]);
-
-            string filepath1 = finalDirectories[0];
-            for (int i = 1; i < finalDirectories.size(); i++)
-                filepath1 = filepath1 + "/" + finalDirectories[i];
-            return filepath1;
-        }
-
         void TestEnforce(Enforcer* e, string sub, string dom, string obj, string act, bool res) {
             Assert::AreEqual(res, e->Enforce(sub, dom, obj, act));
         }
@@ -58,8 +36,8 @@ namespace test_enforcer
 
 
         TEST_METHOD(TestFourParams) {
-            string model = filePath("../examples/rbac_with_domains_model.conf");
-            string policy = filePath("../examples/rbac_with_domains_policy.csv");
+            string model = "../../examples/rbac_with_domains_model.conf";
+            string policy = "../../examples/rbac_with_domains_policy.csv";
             Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
             TestEnforce(e, "alice", "domain1", "data1", "read", true);
@@ -73,8 +51,8 @@ namespace test_enforcer
         }
 
         TEST_METHOD(TestThreeParams) {
-            string model = filePath("../examples/basic_model_without_spaces.conf");
-            string policy = filePath("../examples/basic_policy.csv");
+            string model = "../../examples/basic_model_without_spaces.conf";
+            string policy = "../../examples/basic_policy.csv";
             Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
             TestEnforce(e, { "alice", "data1", "read" }, true);
@@ -88,8 +66,8 @@ namespace test_enforcer
         }
         
         TEST_METHOD(TestVectorParams) {
-            string model = filePath("../examples/basic_model_without_spaces.conf");
-            string policy = filePath("../examples/basic_policy.csv");
+            string model = "../../examples/basic_model_without_spaces.conf";
+            string policy = "../../examples/basic_policy.csv";
             Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
             TestEnforce(e, { "alice", "data1", "read" }, true);
@@ -103,8 +81,8 @@ namespace test_enforcer
         }
 
         TEST_METHOD(TestMapParams) {
-            string model = filePath("../examples/basic_model_without_spaces.conf");
-            string policy = filePath("../examples/basic_policy.csv");
+            string model = "../../examples/basic_model_without_spaces.conf";
+            string policy = "../../examples/basic_policy.csv";
             Enforcer* e = Enforcer::NewEnforcer(model, policy);
 
             unordered_map<string, string> params = { {"sub","alice"},{"obj","data1"},{"act","read"} };
