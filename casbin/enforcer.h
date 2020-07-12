@@ -214,6 +214,7 @@ class Enforcer : public IEnforcer{
         vector<string> GetUsersForRole(string name, vector<string> domain);
         bool HasRoleForUser(string name, string role);
         bool AddRoleForUser(string user, string role);
+        bool AddRolesForUser(string user, vector<string> roles);
         bool AddPermissionForUser(string user, vector<string> permission);
         bool DeletePermissionForUser(string user, vector<string> permission);
         bool DeletePermissionsForUser(string user);

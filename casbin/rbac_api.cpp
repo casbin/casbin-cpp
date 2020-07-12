@@ -57,6 +57,18 @@ bool Enforcer :: AddRoleForUser(string user, string role) {
     return this->AddGroupingPolicy(params);
 }
 
+// AddRolesForUser adds roles for a user.
+// Returns false if the user already has the roles (aka not affected).
+bool Enforcer :: AddRolesForUser(string user, vector<string> roles) {
+    bool f = false;
+    for(int i=0;i<roles.size();i++) {
+        bool b = this->AddGroupingPolicy({user, roles[i]});
+        if(b)
+            f = true;
+    }
+    return f;
+}
+
 // DeleteRoleForUser deletes a role for a user.
 // Returns false if the user does not have the role (aka not affected).
 bool Enforcer :: DeleteRoleForUser(string user, string role) {
@@ -210,24 +222,23 @@ vector<vector<string>> Enforcer :: GetImplicitPermissionsForUser(string user, ve
 // GetImplicitUsersForPermission("data1", "read") will get: ["alice", "bob"].
 // Note: only users will be returned, roles (2nd arg in "g") will be excluded.
 vector<string> Enforcer :: GetImplicitUsersForPermission(vector<string> permission) {
-    vector<string> subjects = this->GetAllSubjects();
-    vector<string> roles = this->GetAllRoles();
+    vector<string> p_subjects = this->GetAllSubjects();
+    vector<string> g_inherit = this->model->GetValuesForFieldInPolicyAllTypes("g", 1);
+    vector<string> g_subjects = this->model->GetValuesForFieldInPolicyAllTypes("g", 0);
 
-    vector<string> users = SetSubtract(subjects, roles);
+    vector<string> subjects(p_subjects);
+    subjects.insert(subjects.end(), g_subjects.begin(), g_subjects.end());
+    ArrayRemoveDuplicates(subjects);
 
     vector<string> res;
-    for (int i = 0 ; i < users.size() ; i++) {
-        Scope scope = InitializeScope();
-        PushObject(scope);
-        PushStringPropToObject(scope, "r", users[i], "sub");
-        PushStringPropToObject(scope, "r", permission[0], "obj");
-        PushStringPropToObject(scope, "r", permission[1], "act");
-        
-        bool allowed = this->Enforce(scope);
+    for(int i=0;i<subjects.size();i++) {
+        bool allowed = this->Enforce({subjects[i], permission[0], permission[1]});
 
-        if (allowed)
-            res.push_back(users[i]);
+        if(allowed) {
+            res.push_back(subjects[i]);
+        }
     }
 
+    res = SetSubtract(res, g_inherit);
     return res;
 }
