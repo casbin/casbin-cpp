@@ -42,6 +42,9 @@
     <ClCompile Include="test_management_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_rbac_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

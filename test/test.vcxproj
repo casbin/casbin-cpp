@@ -171,6 +171,7 @@
     <ClCompile Include="test_management_api.cpp" />
     <ClCompile Include="test_model.cpp" />
     <ClCompile Include="test_model_enforcer.cpp" />
+    <ClCompile Include="test_rbac_api.cpp" />
     <ClCompile Include="test_role_manager.cpp" />
     <ClCompile Include="test_util.cpp" />
   </ItemGroup>
