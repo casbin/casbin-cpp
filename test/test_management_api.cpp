@@ -2,10 +2,6 @@
 
 #include "pch.h"
 
-#include <direct.h>
-#include <algorithm>
-#include <fstream>
-
 #include <enforcer.h>
 #include <persist.h>
 #include <config.h>

@@ -2,9 +2,6 @@
 
 #include "pch.h"
 
-#include <direct.h>
-#include <algorithm>
-
 #include <enforcer.h>
 #include <persist.h>
 #include <rbac.h>

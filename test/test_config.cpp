@@ -2,9 +2,6 @@
 
 #include "pch.h"
 
-#include <direct.h>
-#include <algorithm>
-
 #include <config.h>
 #include <util.h>
 

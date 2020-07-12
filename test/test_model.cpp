@@ -2,8 +2,6 @@
 
 #include "pch.h"
 
-#include <direct.h>
-#include <algorithm>
 #include <fstream>
 
 #include <util.h>
