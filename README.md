@@ -8,6 +8,13 @@ Casbin-CPP
 
 **News**: Are you still worried about how to write the correct Casbin policy? ``Casbin online editor`` is coming to help! Try it at: http://casbin.org/editor/
 
+## Build Availability on Platforms:
+Operating Systems | Availability status
+----------------- | -------------------
+Windows (VS C++)  | :heavy_check_mark: Available
+Linux and MacOS   | :wrench: Under-Development
+
+
 ![casbin Logo](casbin-logo.png)
 
 ## All the languages supported by Casbin:
@@ -99,6 +106,36 @@ You can also use the online editor (https://casbin.org/editor/) to write your Ca
 ## Tutorials
 
 https://casbin.org/docs/en/tutorials
+
+## Get started
+
+1. New a Casbin enforcer with a model file and a policy file:
+
+    ```c++
+    Enforcer* e = Enforcer :: NewEnforcer("<path to model.conf>", "<path to policy.csv>");
+    ```
+
+Note: you can also initialize an enforcer with policy in DB instead of file, see [Policy-persistence](#policy-persistence) section for details.
+
+2. Add an enforcement hook into your code right before the access happens:
+
+    ```c++
+    string sub = "alice"; // the user that wants to access a resource.
+    string obj = "data1"; // the resource that is going to be accessed.
+    string act = "read"; // the operation that the user performs on the resource.
+
+    if(e->Enforce({ sub, obj, act })) {
+        // permit alice to read data1
+    } else {
+        // deny the request, show an error
+    }
+    ```
+
+3. Besides the static policy file, Casbin also provides API for permission management at run-time. For example, You can get all the roles assigned to a user as below:
+
+    ```c++
+    vector<string> roles( e->GetImplicitRolesForUser(sub) );
+    ```
 
 ## Policy management
 
