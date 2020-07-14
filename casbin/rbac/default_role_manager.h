@@ -85,28 +85,28 @@ class DefaultRoleManager : public RoleManager {
         // AddLink adds the inheritance link between role: name1 and role: name2.
         // aka role: name1 inherits role: name2.
         // domain is a prefix to the roles.
-        void AddLink(string name1, string name2, vector<string> domain = vector<string>{});
+        void AddLink(string name1, string name2, vector<string> domain = {});
 
         /**
          * deleteLink deletes the inheritance link between role: name1 and role: name2.
          * aka role: name1 does not inherit role: name2 any more.
          * domain is a prefix to the roles.
          */
-        void DeleteLink(string name1, string name2, vector<string> domain = vector<string>{});
+        void DeleteLink(string name1, string name2, vector<string> domain = {});
 
         /**
          * hasLink determines whether role: name1 inherits role: name2.
          * domain is a prefix to the roles.
          */
-        bool HasLink(string name1, string name2, vector<string> domain = vector<string>{});
+        bool HasLink(string name1, string name2, vector<string> domain = {});
 
         /**
          * getRoles gets the roles that a subject inherits.
          * domain is a prefix to the roles.
          */
-        vector <string> GetRoles(string name, vector<string> domain = vector<string>{});
+        vector <string> GetRoles(string name, vector<string> domain = {});
 
-        vector<string> GetUsers(string name, vector<string> domain = vector<string>{});
+        vector<string> GetUsers(string name, vector<string> domain = {});
 
         /**
          * printRoles prints all the roles to log.

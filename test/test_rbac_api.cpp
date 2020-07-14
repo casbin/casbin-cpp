@@ -17,38 +17,38 @@ namespace test_rbac_api
             TEST_METHOD(TestRoleAPI) {
                 Enforcer* e = Enforcer::NewEnforcer("../../examples/rbac_model.conf", "../../examples/rbac_policy.csv");
 
-                Assert::IsTrue(ArrayEquals(vector<string>{ "data2_admin" }, e->GetRolesForUser("alice", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("non_exist", vector<string>{})));
+                Assert::IsTrue(ArrayEquals(vector<string>{ "data2_admin" }, e->GetRolesForUser("alice")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("non_exist")));
 
                 Assert::IsFalse(e->HasRoleForUser("alice", "data1_admin"));
                 Assert::IsTrue(e->HasRoleForUser("alice", "data2_admin"));
 
                 e->AddRoleForUser("alice", "data1_admin");
 
-                Assert::IsTrue(ArrayEquals(vector<string>{ "data1_admin", "data2_admin" }, e->GetRolesForUser("alice", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin", vector<string>{})));
+                Assert::IsTrue(ArrayEquals(vector<string>{ "data1_admin", "data2_admin" }, e->GetRolesForUser("alice")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin")));
 
                 e->DeleteRoleForUser("alice", "data1_admin");
 
-                Assert::IsTrue(ArrayEquals(vector<string>{ "data2_admin" }, e->GetRolesForUser("alice", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin", vector<string>{})));
+                Assert::IsTrue(ArrayEquals(vector<string>{ "data2_admin" }, e->GetRolesForUser("alice")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin")));
 
                 e->DeleteRolesForUser("alice");
 
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("alice", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin", vector<string>{})));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("alice")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin")));
 
                 e->AddRoleForUser("alice", "data1_admin");
                 e->DeleteUser("alice");
 
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("alice", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob", vector<string>{})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin", vector<string>{})));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("alice")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("bob")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetRolesForUser("data2_admin")));
 
                 e->AddRoleForUser("alice", "data2_admin");
 
@@ -77,7 +77,7 @@ namespace test_rbac_api
                 Enforcer* e = Enforcer::NewEnforcer("../../examples/rbac_model.conf", "../../examples/rbac_policy.csv");
 
                 e->AddRolesForUser("alice", vector<string>{ "data1_admin", "data2_admin", "data3_admin" });
-                Assert::IsTrue(ArrayEquals(vector<string>{ "data1_admin", "data2_admin", "data3_admin" }, e->GetRolesForUser("alice", vector<string>{})));
+                Assert::IsTrue(ArrayEquals(vector<string>{ "data1_admin", "data2_admin", "data3_admin" }, e->GetRolesForUser("alice")));
 
                 Assert::IsTrue(e->Enforce({ "alice", "data1", "read" }));
                 Assert::IsTrue(e->Enforce({ "alice", "data2", "read" }));
@@ -151,19 +151,19 @@ namespace test_rbac_api
                 TestGetPermissions(e, "alice", vector<vector<string>>{ {"alice", "data1", "read"} });
                 TestGetPermissions(e, "bob", vector<vector<string>>{ {"bob", "data2", "write"} });
 
-                Assert::IsTrue(ArrayEquals(vector<string>{ "admin", "data1_admin", "data2_admin" }, e->GetImplicitRolesForUser("alice", {})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetImplicitRolesForUser("bob", {})));
+                Assert::IsTrue(ArrayEquals(vector<string>{ "admin", "data1_admin", "data2_admin" }, e->GetImplicitRolesForUser("alice")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ }, e->GetImplicitRolesForUser("bob")));
 
                 e = Enforcer::NewEnforcer("../../examples/rbac_with_pattern_model.conf", "../../examples/rbac_with_pattern_policy.csv");
 
                 dynamic_cast<DefaultRoleManager*>(e->GetRoleManager())->AddMatchingFunc(KeyMatch);
 
-                Assert::IsTrue(ArrayEquals(vector<string>{ "/book/1/2/3/4/5", "pen_admin", "/book/*", "book_group" }, e->GetImplicitRolesForUser("cathy", {})));
-                Assert::IsTrue(ArrayEquals(vector<string>{ "/book/1/2/3/4/5", "pen_admin" }, e->GetRolesForUser("cathy", vector<string>{})));
+                Assert::IsTrue(ArrayEquals(vector<string>{ "/book/1/2/3/4/5", "pen_admin", "/book/*", "book_group" }, e->GetImplicitRolesForUser("cathy")));
+                Assert::IsTrue(ArrayEquals(vector<string>{ "/book/1/2/3/4/5", "pen_admin" }, e->GetRolesForUser("cathy")));
             }
 
             void TestGetImplicitPermissions(Enforcer* e, string name, vector<vector<string>> res) {
-                vector<vector<string>> my_res = e->GetImplicitPermissionsForUser(name, {});
+                vector<vector<string>> my_res = e->GetImplicitPermissionsForUser(name);
 
                 int count = 0;
                 for (int i = 0; i < my_res.size(); i++) {

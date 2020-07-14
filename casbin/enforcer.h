@@ -210,8 +210,8 @@ class Enforcer : public IEnforcer{
         void AddFunction(string name, Function function, Index nargs);
 
         /*RBAC API member functions.*/
-        vector<string> GetRolesForUser(string name, vector<string> domain);
-        vector<string> GetUsersForRole(string name, vector<string> domain);
+        vector<string> GetRolesForUser(string name, vector<string> domain = {});
+        vector<string> GetUsersForRole(string name, vector<string> domain = {});
         bool HasRoleForUser(string name, string role);
         bool AddRoleForUser(string user, string role);
         bool AddRolesForUser(string user, vector<string> roles);
@@ -220,8 +220,8 @@ class Enforcer : public IEnforcer{
         bool DeletePermissionsForUser(string user);
         vector<vector<string>> GetPermissionsForUser(string user);
         bool HasPermissionForUser(string user, vector<string> permission);
-        vector<string> GetImplicitRolesForUser(string name, vector<string> domain);
-        vector<vector<string>> GetImplicitPermissionsForUser(string user, vector<string> domain);
+        vector<string> GetImplicitRolesForUser(string name, vector<string> domain = {});
+        vector<vector<string>> GetImplicitPermissionsForUser(string user, vector<string> domain = {});
         vector<string> GetImplicitUsersForPermission(vector<string> permission);
         bool DeleteRoleForUser(string user, string role);
         bool DeleteRolesForUser(string user);
@@ -237,11 +237,11 @@ class Enforcer : public IEnforcer{
         bool removeFilteredPolicy(string sec , string ptype , int fieldIndex , vector<string> fieldValues);
 
         /* RBAC API with domains.*/
-        vector<string> GetUsersForRoleInDomain(string name, string domain);
-        vector<string> GetRolesForUserInDomain(string name, string domain);
-        vector<vector<string>> GetPermissionsForUserInDomain(string user, string domain);
-        bool AddRoleForUserInDomain(string user, string role, string domain);
-        bool DeleteRoleForUserInDomain(string user, string role, string domain);
+        vector<string> GetUsersForRoleInDomain(string name, string domain = {});
+        vector<string> GetRolesForUserInDomain(string name, string domain = {});
+        vector<vector<string>> GetPermissionsForUserInDomain(string user, string domain = {});
+        bool AddRoleForUserInDomain(string user, string role, string domain = {});
+        bool DeleteRoleForUserInDomain(string user, string role, string domain = {});
 
 };
 
