@@ -8,6 +8,13 @@ Casbin-CPP
 
 **News**: Are you still worried about how to write the correct Casbin policy? ``Casbin online editor`` is coming to help! Try it at: http://casbin.org/editor/
 
+## Build Availability on Platforms:
+Operating Systems | Availability status
+----------------- | -------------------
+Windows (VS C++)  | :heavy_check_mark: Available
+Linux and MacOS   | :wrench: Under-Development
+
+
 ![casbin Logo](casbin-logo.png)
 
 ## All the languages supported by Casbin:
@@ -129,7 +136,6 @@ Note: you can also initialize an enforcer with policy in DB instead of file, see
     ```c++
     vector<string> roles( e->GetImplicitRolesForUser(sub) );
     ```
-
 
 ## Policy management
 
