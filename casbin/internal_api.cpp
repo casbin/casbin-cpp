@@ -120,7 +120,7 @@ bool Enforcer :: removePolicies(string sec, string p_type, vector<vector<string>
 
     if (this->adapter != NULL && this->auto_save) {
         try{
-        dynamic_cast<BatchAdapter*>(this->adapter)->RemovePolicies(sec, p_type, rules);
+            dynamic_cast<BatchAdapter*>(this->adapter)->RemovePolicies(sec, p_type, rules);
         }
         catch(UnsupportedOperationException e){
         }

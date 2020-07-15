@@ -77,5 +77,5 @@ void Assertion :: BuildRoleLinks(RoleManager* rm) {
 
     // LogUtil :: LogPrint("Role links for: " + Key);
 
-    //this->rm->PrintRoles();
+    // this->rm->PrintRoles();
 }
