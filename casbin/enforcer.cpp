@@ -483,8 +483,8 @@ bool Enforcer::EnforceWithMatcher(string matcher, string sub, string dom, string
 bool Enforcer::EnforceWithMatcher(string matcher, vector<string> params) {
     vector <string> r_tokens = this->model->m["r"].assertion_map["r"]->tokens;
 
-    int r_cnt = r_tokens.size();
-    int cnt = params.size();
+    int r_cnt = int(r_tokens.size());
+    int cnt = int(params.size());
 
     if (cnt != r_cnt)
         return false;

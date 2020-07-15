@@ -18,6 +18,8 @@
 
 #include "pch.h"
 
+#include <algorithm>
+
 #include "./util.h"
 
 using namespace std;
@@ -28,6 +30,8 @@ bool ArrayEquals(vector<string> a, vector<string> b) {
         return false;
     }
 
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end());
     for (int i = 0 ; i < a.size() ; i++) {
         if (a[i] != b[i]) {
             return false;

@@ -168,8 +168,11 @@
     <ClCompile Include="test_built_in_functions.cpp" />
     <ClCompile Include="test_config.cpp" />
     <ClCompile Include="test_enforcer.cpp" />
+    <ClCompile Include="test_management_api.cpp" />
     <ClCompile Include="test_model.cpp" />
     <ClCompile Include="test_model_enforcer.cpp" />
+    <ClCompile Include="test_rbac_api.cpp" />
+    <ClCompile Include="test_rbac_api_with_domains.cpp" />
     <ClCompile Include="test_role_manager.cpp" />
     <ClCompile Include="test_util.cpp" />
   </ItemGroup>

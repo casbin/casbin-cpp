@@ -54,7 +54,7 @@ namespace test_util
             TEST_METHOD(TestArrayEquals) {
                 TestArrayEquals(vector<string> {"a", "b", "c"}, vector<string> {"a", "b", "c"}, true);
                 TestArrayEquals(vector<string> {"a", "b", "c"}, vector<string> {"a", "b"}, false);
-                TestArrayEquals(vector<string> {"a", "b", "c"}, vector<string> {"a", "c", "b"}, false);
+                TestArrayEquals(vector<string> {"a", "b", "c"}, vector<string> {"a", "c", "b"}, true);
                 TestArrayEquals(vector<string> {"a", "b", "c"}, vector<string> {}, false);
             }
     };

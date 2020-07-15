@@ -65,8 +65,11 @@ bool Enforcer :: addPolicies(string sec, string p_type, vector<vector<string>> r
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
 
     if (this->adapter != NULL && this->auto_save) {
-        void* adapter = this->adapter;
-        ((BatchAdapter *)adapter)->AddPolicies(sec, p_type, rules);
+        try {
+            dynamic_cast<BatchAdapter*>(this->adapter)->AddPolicies(sec, p_type, rules);
+        }
+        catch(UnsupportedOperationException e) {
+        }
     }
 
     if (this->watcher != NULL && this->auto_notify_watcher)
@@ -116,8 +119,11 @@ bool Enforcer :: removePolicies(string sec, string p_type, vector<vector<string>
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
 
     if (this->adapter != NULL && this->auto_save) {
-        void* adapter = this->adapter;
-        ((BatchAdapter *)adapter)->RemovePolicies(sec, p_type, rules);
+        try{
+            dynamic_cast<BatchAdapter*>(this->adapter)->RemovePolicies(sec, p_type, rules);
+        }
+        catch(UnsupportedOperationException e){
+        }
     }
 
     if (this->watcher != NULL && this->auto_notify_watcher)

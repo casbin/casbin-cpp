@@ -209,8 +209,8 @@ vector<vector<string>> Model :: GetFilteredPolicy(string sec, string p_type, int
     vector<vector<string>> policy(m[sec].assertion_map[p_type]->policy);
     for(int i = 0 ; i < policy.size() ; i++){
         bool matched = true;
-        for(int i = 0 ; i < field_values.size() ; i++){
-            if(field_values[i] != "" && (policy[i])[field_index + i] != field_values[i] ){
+        for(int j = 0 ; j < field_values.size() ; j++){
+            if(field_values[j] != "" && (policy[i])[field_index + j] != field_values[j] ){
                 matched = false;
                 break;
             }
