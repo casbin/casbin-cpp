@@ -29,18 +29,18 @@ class IEnforcer {
 
         /* Enforcer API */
         virtual void InitWithFile(string modelPath, string policyPath) = 0;
-        virtual void InitWithAdapter(string modelPath, Adapter* adapter) = 0;
-        virtual void InitWithModelAndAdapter(Model* m, Adapter* adapter) = 0;
+        virtual void InitWithAdapter(string modelPath, shared_ptr<Adapter> adapter) = 0;
+        virtual void InitWithModelAndAdapter(shared_ptr<Model> m, shared_ptr<Adapter> adapter) = 0;
         virtual void Initialize() = 0;
         virtual void LoadModel() = 0;
-        virtual Model* GetModel() = 0;
-        virtual void SetModel(Model* m) = 0;
-        virtual Adapter* GetAdapter() = 0;
-        virtual void SetAdapter(Adapter* adapter) = 0;
-        virtual void SetWatcher(Watcher* watcher) = 0;
-        virtual RoleManager* GetRoleManager() = 0;
-        virtual void SetRoleManager(RoleManager* rm) = 0;
-        virtual void SetEffector(Effector* eft) = 0;
+        virtual shared_ptr<Model> GetModel() = 0;
+        virtual void SetModel(shared_ptr<Model> m) = 0;
+        virtual shared_ptr<Adapter> GetAdapter() = 0;
+        virtual void SetAdapter(shared_ptr<Adapter> adapter) = 0;
+        virtual void SetWatcher(shared_ptr<Watcher> watcher) = 0;
+        virtual shared_ptr<RoleManager> GetRoleManager() = 0;
+        virtual void SetRoleManager(shared_ptr<RoleManager> rm) = 0;
+        virtual void SetEffector(shared_ptr<Effector> eft) = 0;
         virtual void ClearPolicy() = 0;
         virtual void LoadPolicy() = 0;
 

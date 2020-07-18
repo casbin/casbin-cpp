@@ -15,27 +15,28 @@ namespace test_enforcer
     {
     public:
 
-        void TestEnforce(Enforcer* e, string sub, string dom, string obj, string act, bool res) {
-            Assert::AreEqual(res, e->Enforce(sub, dom, obj, act));
+        void TestEnforce(unique_ptr<Enforcer>& e, string sub, string dom, string obj, string act, bool res) {
+            Assert::AreEqual(res, e->Enforce({sub, dom, obj, act}));
         }
 
-        void TestEnforce(Enforcer* e, string sub, string obj, string act, bool res) {
-            Assert::AreEqual(res, e->Enforce(sub, obj, act));
+        void TestEnforce(unique_ptr<Enforcer>& e, string sub, string obj, string act, bool res) {
+            Assert::AreEqual(res, e->Enforce({sub, obj, act}));
         }
 
-        void TestEnforce(Enforcer* e, vector<string> params, bool res) {
+        void TestEnforce(unique_ptr<Enforcer>& e, vector<string> params, bool res) {
             Assert::AreEqual(res, e->Enforce(params));
         }
 
-        void TestEnforce(Enforcer* e, unordered_map<string,string> params, bool res) {
+        void TestEnforce(unique_ptr<Enforcer>& e, unordered_map<string,string> params, bool res) {
             Assert::AreEqual(res, e->Enforce(params));
         }
 
 
         TEST_METHOD(TestFourParams) {
+
             string model = "../../examples/rbac_with_domains_model.conf";
             string policy = "../../examples/rbac_with_domains_policy.csv";
-            Enforcer* e = Enforcer::NewEnforcer(model, policy);
+            unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
 
             TestEnforce(e, "alice", "domain1", "data1", "read", true);
             TestEnforce(e, "alice", "domain1", "data1", "write", true);
@@ -50,7 +51,7 @@ namespace test_enforcer
         TEST_METHOD(TestThreeParams) {
             string model = "../../examples/basic_model_without_spaces.conf";
             string policy = "../../examples/basic_policy.csv";
-            Enforcer* e = Enforcer::NewEnforcer(model, policy);
+            unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
 
             TestEnforce(e, { "alice", "data1", "read" }, true);
             TestEnforce(e, { "alice", "data1", "write" }, false);
@@ -65,7 +66,7 @@ namespace test_enforcer
         TEST_METHOD(TestVectorParams) {
             string model = "../../examples/basic_model_without_spaces.conf";
             string policy = "../../examples/basic_policy.csv";
-            Enforcer* e = Enforcer::NewEnforcer(model, policy);
+            unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
 
             TestEnforce(e, { "alice", "data1", "read" }, true);
             TestEnforce(e, { "alice", "data1", "write" }, false);
@@ -80,7 +81,7 @@ namespace test_enforcer
         TEST_METHOD(TestMapParams) {
             string model = "../../examples/basic_model_without_spaces.conf";
             string policy = "../../examples/basic_policy.csv";
-            Enforcer* e = Enforcer::NewEnforcer(model, policy);
+            unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
 
             unordered_map<string, string> params = { {"sub","alice"},{"obj","data1"},{"act","read"} };
             TestEnforce(e, params, true);

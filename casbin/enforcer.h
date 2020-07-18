@@ -17,6 +17,7 @@
 #ifndef CASBIN_CPP_ENFORCER
 #define CASBIN_CPP_ENFORCER
 
+#include<memory>
 #include "./rbac/role_manager.h"
 #include "./model/function.h"
 #include "./enforcer_interface.h"
@@ -27,12 +28,12 @@ class Enforcer : public IEnforcer{
     private:
 
         string model_path;
-        Model* model;
+        shared_ptr<Model> model;
         FunctionMap func_map;
-        Effector* eft;
+        shared_ptr<Effector> eft;
 
-        Adapter* adapter;
-        Watcher* watcher;
+        shared_ptr<Adapter> adapter;
+        shared_ptr<Watcher> watcher;
 
         bool enabled;
         bool auto_save;
@@ -44,45 +45,45 @@ class Enforcer : public IEnforcer{
 
     public:
 
-        RoleManager* rm;
+        shared_ptr<RoleManager> rm;
 
         /**
          * Enforcer is the default constructor.
          */
-        static Enforcer* NewEnforcer();
+        static unique_ptr<Enforcer> NewEnforcer();
         /**
          * Enforcer initializes an enforcer with a model file and a policy file.
          *
          * @param model_path the path of the model file.
          * @param policyFile the path of the policy file.
          */
-        static Enforcer* NewEnforcer(string model_path, string policyFile);
+        static unique_ptr<Enforcer> NewEnforcer(string model_path, string policyFile);
         /**
          * Enforcer initializes an enforcer with a database adapter.
          *
          * @param model_path the path of the model file.
          * @param adapter the adapter.
          */
-        static Enforcer* NewEnforcer(string model_path, Adapter* adapter);
+        static unique_ptr<Enforcer> NewEnforcer(string model_path, shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model and a database adapter.
          *
          * @param m the model.
          * @param adapter the adapter.
          */
-        static Enforcer* NewEnforcer(Model* m, Adapter* adapter);
+        static unique_ptr<Enforcer> NewEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model.
          *
          * @param m the model.
          */
-        static Enforcer* NewEnforcer(Model* m);
+        static unique_ptr<Enforcer> NewEnforcer(shared_ptr<Model> m);
         /**
          * Enforcer initializes an enforcer with a model file.
          *
          * @param model_path the path of the model file.
          */
-        static Enforcer* NewEnforcer(string model_path);
+        static unique_ptr<Enforcer> NewEnforcer(string model_path);
         /**
          * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
          *
@@ -90,33 +91,33 @@ class Enforcer : public IEnforcer{
          * @param policyFile the path of the policy file.
          * @param enableLog whether to enable Casbin's log.
          */
-        static Enforcer* NewEnforcer(string model_path, string policyFile, bool enableLog);
+        static unique_ptr<Enforcer> NewEnforcer(string model_path, string policyFile, bool enableLog);
         // InitWithFile initializes an enforcer with a model file and a policy file.
         void InitWithFile(string model_path, string policyPath);
         // InitWithAdapter initializes an enforcer with a database adapter.
-        void InitWithAdapter(string model_path, Adapter* adapter);
+        void InitWithAdapter(string model_path, shared_ptr<Adapter> adapter);
         // InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.
-        void InitWithModelAndAdapter(Model* m, Adapter* adapter);
+        void InitWithModelAndAdapter(shared_ptr<Model> m, shared_ptr<Adapter> adapter);
         void Initialize();
         // LoadModel reloads the model from the model CONF file.
         // Because the policy is attached to a model, so the policy is invalidated and needs to be reloaded by calling LoadPolicy().
         void LoadModel();
         // GetModel gets the current model.
-        Model* GetModel();
+        shared_ptr<Model> GetModel();
         // SetModel sets the current model.
-        void SetModel(Model* m);
+        void SetModel(shared_ptr<Model> m);
         // GetAdapter gets the current adapter.
-        Adapter* GetAdapter();
+        shared_ptr<Adapter> GetAdapter();
         // SetAdapter sets the current adapter.
-        void SetAdapter(Adapter* adapter);
+        void SetAdapter(shared_ptr<Adapter> adapter);
         // SetWatcher sets the current watcher.
-        void SetWatcher(Watcher* watcher);
+        void SetWatcher(shared_ptr<Watcher> watcher);
         // GetRoleManager gets the current role manager.
-        RoleManager* GetRoleManager();
+        shared_ptr<RoleManager> GetRoleManager();
         // SetRoleManager sets the current role manager.
-        void SetRoleManager(RoleManager* rm);
+        void SetRoleManager(shared_ptr <RoleManager> rm);
         // SetEffector sets the current effector.
-        void SetEffector(Effector* eft);
+        void SetEffector(shared_ptr<Effector> eft);
         // ClearPolicy clears all policy.
         void ClearPolicy();
         // LoadPolicy reloads the policy from file/database.
@@ -147,20 +148,12 @@ class Enforcer : public IEnforcer{
         void BuildIncrementalRoleLinks(policy_op op, string p_type, vector<vector<string>> rules);
         // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(Scope scope);
-        // Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(string sub, string obj, string act);
-        // Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
-        bool Enforce(string sub, string dom, string obj, string act);
         // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(vector<string> params);        
         // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(unordered_map<string,string> params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
         bool EnforceWithMatcher(string matcher, Scope scope);
-        // Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool EnforceWithMatcher(string matcher, string sub, string obj, string act);
-        // Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
-        bool EnforceWithMatcher(string matcher, string sub, string dom, string obj, string act);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
         bool EnforceWithMatcher(string matcher, vector<string> params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".

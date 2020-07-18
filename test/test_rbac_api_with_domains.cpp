@@ -16,7 +16,7 @@ namespace test_rbac_api_with_domains
         public:
 
             TEST_METHOD(TestGetImplicitRolesForDomainUser) {
-                Enforcer* e = Enforcer::NewEnforcer("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_hierarchy_with_domains_policy.csv");
+                unique_ptr<Enforcer> e = Enforcer::NewEnforcer("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_hierarchy_with_domains_policy.csv");
 
                 // This is only able to retrieve the first level of roles.
                 Assert::IsTrue(ArrayEquals({ "role:global_admin" }, e->GetRolesForUserInDomain("alice", { "domain1" })));
@@ -27,7 +27,7 @@ namespace test_rbac_api_with_domains
 
             // TestUserAPIWithDomains: Add by Gordon
             TEST_METHOD(TestUserAPIWithDomains) {
-                Enforcer* e = Enforcer::NewEnforcer("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_domains_policy.csv");
+                unique_ptr<Enforcer> e = Enforcer::NewEnforcer("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_domains_policy.csv");
 
                 Assert::IsTrue(ArrayEquals({ "alice" }, e->GetUsersForRole("admin", { "domain1" })));
                 Assert::IsTrue(ArrayEquals({ "alice" }, e->GetUsersForRoleInDomain("admin", { "domain1" })));
@@ -98,7 +98,7 @@ namespace test_rbac_api_with_domains
             }
 
             TEST_METHOD(TestRoleAPIWithDomains) {
-                Enforcer* e = Enforcer::NewEnforcer("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_domains_policy.csv");
+                unique_ptr<Enforcer> e = Enforcer::NewEnforcer("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_domains_policy.csv");
                 
                 Assert::IsTrue(ArrayEquals({ "admin" }, e->GetRolesForUser("alice", { "domain1" })));
                 Assert::IsTrue(ArrayEquals({ "admin" }, e->GetRolesForUserInDomain("alice", { "domain1" })));
@@ -152,7 +152,7 @@ namespace test_rbac_api_with_domains
                 Assert::IsTrue(ArrayEquals({ }, e->GetRolesForUserInDomain("non_exist", { "domain2" })));
             }
 
-            void TestGetPermissionsInDomain(Enforcer* e, string name, string domain, vector<vector<string>> res) {
+            void TestGetPermissionsInDomain(unique_ptr<Enforcer>& e, string name, string domain, vector<vector<string>> res) {
                 vector<vector<string>> my_res = e->GetPermissionsForUserInDomain(name, { domain });
 
                 int count = 0;
@@ -169,7 +169,7 @@ namespace test_rbac_api_with_domains
             }
 
             TEST_METHOD(TestPermissionAPIInDomain) {
-                Enforcer* e = Enforcer::NewEnforcer("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_domains_policy.csv");
+                unique_ptr<Enforcer> e = Enforcer::NewEnforcer("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_domains_policy.csv");
 
                 TestGetPermissionsInDomain(e, "alice", "domain1", {});
                 TestGetPermissionsInDomain(e, "bob", "domain1", {});

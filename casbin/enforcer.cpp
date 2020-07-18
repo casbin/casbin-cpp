@@ -162,9 +162,9 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
 /**
  * Enforcer is the default constructor.
  */
-Enforcer* Enforcer :: NewEnforcer() {
-    Enforcer* e = new Enforcer;
-    return e;
+unique_ptr<Enforcer> Enforcer ::NewEnforcer() {
+    unique_ptr<Enforcer> e = unique_ptr<Enforcer>(new Enforcer());
+    return move(e);
 }
 
 /**
@@ -173,8 +173,8 @@ Enforcer* Enforcer :: NewEnforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-Enforcer* Enforcer :: NewEnforcer(string model_path, string policyFile) {
-    return NewEnforcer(model_path, FileAdapter :: NewAdapter(policyFile));
+unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFile) {
+    return move(NewEnforcer(model_path, shared_ptr<FileAdapter>(FileAdapter :: NewAdapter(policyFile))));
 }
 
 /**
@@ -183,10 +183,10 @@ Enforcer* Enforcer :: NewEnforcer(string model_path, string policyFile) {
  * @param model_path the path of the model file.
  * @param adapter the adapter.
  */
-Enforcer* Enforcer :: NewEnforcer(string model_path, Adapter* adapter) {
-    Enforcer* e = NewEnforcer(Model :: NewModelFromFile(model_path), adapter);
+unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, shared_ptr<Adapter> adapter) {
+    unique_ptr<Enforcer> e = NewEnforcer(shared_ptr<Model>(Model :: NewModelFromFile(model_path)), adapter);
     e->model_path = model_path;
-    return e;
+    return move(e);
 }
 
 /**
@@ -195,8 +195,8 @@ Enforcer* Enforcer :: NewEnforcer(string model_path, Adapter* adapter) {
  * @param m the model.
  * @param adapter the adapter.
  */
-Enforcer* Enforcer :: NewEnforcer(Model* m, Adapter* adapter) {
-    Enforcer* e = new Enforcer;
+unique_ptr<Enforcer> Enforcer :: NewEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
+  unique_ptr<Enforcer> e = unique_ptr<Enforcer>(new Enforcer());
     e->adapter = adapter;
     e->watcher = NULL;
 
@@ -209,7 +209,7 @@ Enforcer* Enforcer :: NewEnforcer(Model* m, Adapter* adapter) {
     if (e->adapter->file_path != "") {
         e->LoadPolicy();
     }
-    return e;
+    return move(e);
 }
 
 /**
@@ -217,8 +217,8 @@ Enforcer* Enforcer :: NewEnforcer(Model* m, Adapter* adapter) {
  *
  * @param m the model.
  */
-Enforcer* Enforcer :: NewEnforcer(Model* m) {
-    return NewEnforcer(m, NULL);
+unique_ptr<Enforcer> Enforcer ::NewEnforcer(shared_ptr<Model> m) {
+    return move(NewEnforcer(m, NULL));
 }
 
 /**
@@ -226,8 +226,8 @@ Enforcer* Enforcer :: NewEnforcer(Model* m) {
  *
  * @param model_path the path of the model file.
  */
-Enforcer* Enforcer :: NewEnforcer(string model_path) {
-    return NewEnforcer(model_path, "");
+unique_ptr<Enforcer> Enforcer ::NewEnforcer(string model_path) {
+    return move(NewEnforcer(model_path, ""));
 }
 
 /**
@@ -237,22 +237,22 @@ Enforcer* Enforcer :: NewEnforcer(string model_path) {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-Enforcer* Enforcer :: NewEnforcer(string model_path, string policyFile, bool enableLog) {
-    Enforcer* e = NewEnforcer(model_path, FileAdapter :: NewAdapter(policyFile));
+unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFile, bool enableLog) {
+    unique_ptr<Enforcer> e = NewEnforcer(model_path, shared_ptr<FileAdapter>(FileAdapter :: NewAdapter(policyFile)));
     // e.EnableLog(enableLog);
-    return e;
+    return move(e);
 }
 
 
 // InitWithFile initializes an enforcer with a model file and a policy file.
 void Enforcer :: InitWithFile(string model_path, string policyPath) {
-    Adapter* a = FileAdapter::NewAdapter(policyPath);
+    shared_ptr<Adapter> a = shared_ptr<FileAdapter>(FileAdapter::NewAdapter(policyPath));
     this->InitWithAdapter(model_path, a);
 }
 
 // InitWithAdapter initializes an enforcer with a database adapter.
-void Enforcer :: InitWithAdapter(string model_path, Adapter* adapter) {
-    Model* m = Model :: NewModelFromFile(model_path);
+void Enforcer :: InitWithAdapter(string model_path, shared_ptr<Adapter> adapter) {
+    shared_ptr<Model> m =shared_ptr<Model>(Model :: NewModelFromFile(model_path));
 
     this->InitWithModelAndAdapter(m, adapter);
 
@@ -260,7 +260,7 @@ void Enforcer :: InitWithAdapter(string model_path, Adapter* adapter) {
 }
 
 // InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.
-void Enforcer :: InitWithModelAndAdapter(Model* m, Adapter* adapter) {
+void Enforcer :: InitWithModelAndAdapter(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
     this->adapter = adapter;
 
     this->model = m;
@@ -275,8 +275,8 @@ void Enforcer :: InitWithModelAndAdapter(Model* m, Adapter* adapter) {
 }
 
 void Enforcer :: Initialize() {
-    this->rm = DefaultRoleManager :: NewRoleManager(10);
-    this->eft = DefaultEffector :: NewDefaultEffector();
+    this->rm = shared_ptr<DefaultRoleManager>(DefaultRoleManager :: NewRoleManager(10));
+    this->eft = shared_ptr<DefaultEffector>(DefaultEffector :: NewDefaultEffector());
     this->watcher = NULL;
 
     this->enabled = true;
@@ -288,7 +288,7 @@ void Enforcer :: Initialize() {
 // LoadModel reloads the model from the model CONF file.
 // Because the policy is attached to a model, so the policy is invalidated and needs to be reloaded by calling LoadPolicy().
 void Enforcer :: LoadModel() {
-    this->model = Model :: NewModelFromFile(this->model_path);
+    this->model = shared_ptr<Model>(Model ::NewModelFromFile(this->model_path));
 
     this->model->PrintModel();
     this->func_map.LoadFunctionMap();
@@ -297,12 +297,12 @@ void Enforcer :: LoadModel() {
 }
 
 // GetModel gets the current model.
-Model* Enforcer :: GetModel() {
+shared_ptr<Model> Enforcer :: GetModel() {
     return this->model;
 }
 
 // SetModel sets the current model.
-void Enforcer :: SetModel(Model* m) {
+void Enforcer :: SetModel(shared_ptr<Model> m) {
     this->model = m;
     this->func_map.LoadFunctionMap();
 
@@ -310,17 +310,17 @@ void Enforcer :: SetModel(Model* m) {
 }
 
 // GetAdapter gets the current adapter.
-Adapter* Enforcer :: GetAdapter() {
+shared_ptr<Adapter> Enforcer::GetAdapter() {
     return this->adapter;
 }
 
 // SetAdapter sets the current adapter.
-void Enforcer :: SetAdapter(Adapter* adapter) {
+void Enforcer::SetAdapter(shared_ptr<Adapter> adapter) {
     this->adapter = adapter;
 }
 
 // SetWatcher sets the current watcher.
-void Enforcer :: SetWatcher(Watcher* watcher) {
+void Enforcer :: SetWatcher(shared_ptr<Watcher> watcher) {
     this->watcher = watcher;
     auto func = [&, this](string str) {
         this->LoadPolicy();
@@ -329,17 +329,17 @@ void Enforcer :: SetWatcher(Watcher* watcher) {
 }
 
 // GetRoleManager gets the current role manager.
-RoleManager* Enforcer :: GetRoleManager() {
+shared_ptr<RoleManager> Enforcer ::GetRoleManager() {
     return this->rm;
 }
 
 // SetRoleManager sets the current role manager.
-void Enforcer :: SetRoleManager(RoleManager* rm) {
+void Enforcer :: SetRoleManager(shared_ptr<RoleManager> rm) {
     this->rm = rm;
 }
 
 // SetEffector sets the current effector.
-void Enforcer :: SetEffector(Effector* eft) {
+void Enforcer :: SetEffector(shared_ptr<Effector> eft) {
     this->eft = eft;
 }
 
@@ -351,7 +351,7 @@ void Enforcer :: ClearPolicy() {
 // LoadPolicy reloads the policy from file/database.
 void Enforcer :: LoadPolicy() {
     this->model->ClearPolicy();
-    this->adapter->LoadPolicy(this->model);
+    this->adapter->LoadPolicy(this->model.get());
     this->model->PrintPolicy();
 
     if(this->auto_build_role_links) {
@@ -367,7 +367,7 @@ void Enforcer :: LoadFilteredPolicy(Filter filter) {
     FilteredAdapter* filteredAdapter;
 
     if (this->adapter->IsFiltered()) {
-        void* adapter = this->adapter;
+        void* adapter = this->adapter.get();
         filteredAdapter = (FilteredAdapter*)adapter;
     }
     else
@@ -390,12 +390,12 @@ void Enforcer :: SavePolicy() {
     if(this->IsFiltered())
         throw CasbinEnforcerException("cannot save a filtered policy");
 
-    this->adapter->SavePolicy(this->model);
+    this->adapter->SavePolicy(this->model.get());
 
     if(this->watcher != NULL){
-        if (IsInstanceOf<WatcherEx>(this->watcher)) {
-            void* watcher = this->watcher;
-            ((WatcherEx*)watcher)->UpdateForSavePolicy(this->model);
+        if (IsInstanceOf<WatcherEx>(this->watcher.get())) {
+            void* watcher = this->watcher.get();
+            ((WatcherEx*)watcher)->UpdateForSavePolicy(this->model.get());
         }
         else
             return this->watcher->Update();
@@ -431,27 +431,17 @@ void Enforcer :: EnableAutoBuildRoleLinks(bool auto_build_role_links) {
 void Enforcer :: BuildRoleLinks() {
     this->rm->Clear();
 
-    this->model->BuildRoleLinks(this->rm);
+    this->model->BuildRoleLinks(this->rm.get());
 }
 
 // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
 void Enforcer :: BuildIncrementalRoleLinks(policy_op op, string p_type, vector<vector<string>> rules) {
-    return this->model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
+    return this->model->BuildIncrementalRoleLinks(this->rm.get(), op, "g", p_type, rules);
 }
 
 // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
 bool Enforcer :: Enforce(Scope scope) {
     return this->EnforceWithMatcher("", scope);
-}
-
-// Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-bool Enforcer::Enforce(string sub, string obj, string act) {
-    return EnforceWithMatcher("", sub, obj, act);
-}
-
-// Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
-bool Enforcer::Enforce(string sub, string dom, string obj, string act) {
-    return EnforceWithMatcher("", sub, dom, obj, act);
 }
 
 // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
@@ -467,16 +457,6 @@ bool Enforcer::Enforce(unordered_map<string, string> params) {
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool Enforcer :: EnforceWithMatcher(string matcher, Scope scope) {
     return this->enforce(matcher, scope);
-}
-
-// Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-bool Enforcer::EnforceWithMatcher(string matcher, string sub, string obj, string act) {
-    return this->EnforceWithMatcher(matcher, { sub,obj,act });
-}
-
-// Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
-bool Enforcer::EnforceWithMatcher(string matcher, string sub, string dom, string obj, string act) {
-    return this->EnforceWithMatcher(matcher, { sub,dom,obj,act });
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".

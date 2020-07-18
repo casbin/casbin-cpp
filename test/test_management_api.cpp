@@ -19,7 +19,7 @@ namespace test_management_api
             TEST_METHOD(TestGetList) {
                 string model = "../../examples/rbac_model.conf";
                 string policy = "../../examples/rbac_policy.csv";
-                Enforcer* e = Enforcer :: NewEnforcer(model, policy);
+                shared_ptr<Enforcer> e = Enforcer :: NewEnforcer(model, policy);
 
                 Assert::IsTrue(ArrayEquals(vector<string>{ "alice", "bob", "data2_admin" }, e->GetAllSubjects()));
                 Assert::IsTrue(ArrayEquals(vector<string>{ "data1", "data2" }, e->GetAllObjects()));
@@ -27,7 +27,7 @@ namespace test_management_api
                 Assert::IsTrue(ArrayEquals(vector<string>{ "data2_admin" }, e->GetAllRoles()));
             }
 
-            void TestGetPolicy(Enforcer* e, vector<vector<string>> res) {
+            void TestGetPolicy(shared_ptr<Enforcer> e, vector<vector<string>> res) {
                 vector<vector<string>> my_res;
                 my_res = e->GetPolicy();
 
@@ -43,14 +43,14 @@ namespace test_management_api
                     Assert::IsTrue(true);
             }
 
-            void TestGetFilteredPolicy(Enforcer* e, int field_index, vector<vector<string>> res, vector<string> field_values) {
+            void TestGetFilteredPolicy(shared_ptr<Enforcer> e, int field_index, vector<vector<string>> res, vector<string> field_values) {
                 vector<vector<string>> my_res = e->GetFilteredPolicy(field_index, field_values);
                 for (int i = 0; i < res.size(); i++) {
                     Assert::IsTrue(ArrayEquals(my_res[i], res[i]));
                 }
             }
 
-            void TestGetGroupingPolicy(Enforcer* e, vector<vector<string>> res) {
+            void TestGetGroupingPolicy(shared_ptr<Enforcer> e, vector<vector<string>> res) {
                 vector<vector<string>> my_res = e->GetGroupingPolicy();
 
                 for (int i = 0; i < my_res.size(); i++) {
@@ -58,7 +58,7 @@ namespace test_management_api
                 }
             }
 
-            void TestGetFilteredGroupingPolicy(Enforcer* e, int field_index, vector<vector<string>> res, vector<string> field_values) {
+            void TestGetFilteredGroupingPolicy(shared_ptr<Enforcer> e, int field_index, vector<vector<string>> res, vector<string> field_values) {
                 vector<vector<string>> my_res = e->GetFilteredGroupingPolicy(field_index, field_values);
 
                 for (int i = 0; i < my_res.size(); i++) {
@@ -66,12 +66,12 @@ namespace test_management_api
                 }
             }
 
-            void TestHasPolicy(Enforcer* e, vector<string> policy, bool res) {
+            void TestHasPolicy(shared_ptr<Enforcer> e, vector<string> policy, bool res) {
                 bool my_res = e->HasPolicy(policy);
                 Assert::AreEqual(res, my_res);
             }
 
-            void TestHasGroupingPolicy(Enforcer* e, vector<string> policy, bool res) {
+            void TestHasGroupingPolicy(shared_ptr<Enforcer> e, vector<string> policy, bool res) {
                 bool my_res = e->HasGroupingPolicy(policy);
                 Assert::AreEqual(res, my_res);
             }
@@ -79,7 +79,7 @@ namespace test_management_api
             TEST_METHOD(TestGetPolicyAPI) {
                 string model = "../../examples/rbac_model.conf";
                 string policy = "../../examples/rbac_policy.csv";
-                Enforcer* e = Enforcer::NewEnforcer(model, policy);
+                shared_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
 
                 TestGetPolicy(e, vector<vector<string>>{
                     {"alice", "data1", "read"},
@@ -122,8 +122,8 @@ namespace test_management_api
             TEST_METHOD(TestModifyPolicyAPI) {
                 string model = "../../examples/rbac_model.conf";
                 string policy = "../../examples/rbac_policy.csv";
-                Adapter* adapter = BatchFileAdapter::NewAdapter(policy);
-                Enforcer* e = Enforcer::NewEnforcer(model, adapter);
+                shared_ptr<Adapter> adapter = shared_ptr<Adapter>(BatchFileAdapter::NewAdapter(policy));
+                shared_ptr<Enforcer> e = Enforcer::NewEnforcer(model, adapter);
 
                 TestGetPolicy(e, vector<vector<string>>{
                     {"alice", "data1", "read"},
@@ -176,8 +176,8 @@ namespace test_management_api
             TEST_METHOD(TestModifyGroupingPolicyAPI) {
                 string model = "../../examples/rbac_model.conf";
                 string policy = "../../examples/rbac_policy.csv";
-                Adapter* adapter = BatchFileAdapter::NewAdapter(policy);
-                Enforcer* e = Enforcer::NewEnforcer(model, adapter);
+                shared_ptr<Adapter> adapter = shared_ptr<Adapter>(BatchFileAdapter::NewAdapter(policy));
+                shared_ptr<Enforcer> e = Enforcer::NewEnforcer(model, adapter);
 
                 Assert::IsTrue(ArrayEquals(vector<string>{"data2_admin"}, e->GetRolesForUser("alice")));
                 Assert::IsTrue(ArrayEquals(vector<string>{}, e->GetRolesForUser("bob")));
