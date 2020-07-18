@@ -162,9 +162,9 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
 /**
  * Enforcer is the default constructor.
  */
-shared_ptr<Enforcer> Enforcer :: NewEnforcer() {
-    shared_ptr<Enforcer> e = shared_ptr<Enforcer>(new Enforcer());
-    return e;
+unique_ptr<Enforcer> Enforcer ::NewEnforcer() {
+    unique_ptr<Enforcer> e = unique_ptr<Enforcer>(new Enforcer());
+    return move(e);
 }
 
 /**
@@ -173,8 +173,8 @@ shared_ptr<Enforcer> Enforcer :: NewEnforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-shared_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFile) {
-    return NewEnforcer(model_path, shared_ptr<FileAdapter>(FileAdapter :: NewAdapter(policyFile)));
+unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFile) {
+    return move(NewEnforcer(model_path, shared_ptr<FileAdapter>(FileAdapter :: NewAdapter(policyFile))));
 }
 
 /**
@@ -183,10 +183,10 @@ shared_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFil
  * @param model_path the path of the model file.
  * @param adapter the adapter.
  */
-shared_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, shared_ptr<Adapter> adapter) {
-    shared_ptr<Enforcer> e = NewEnforcer(shared_ptr<Model>(Model :: NewModelFromFile(model_path)), adapter);
+unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, shared_ptr<Adapter> adapter) {
+    unique_ptr<Enforcer> e = NewEnforcer(shared_ptr<Model>(Model :: NewModelFromFile(model_path)), adapter);
     e->model_path = model_path;
-    return e;
+    return move(e);
 }
 
 /**
@@ -195,8 +195,8 @@ shared_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, shared_ptr<Adapt
  * @param m the model.
  * @param adapter the adapter.
  */
-shared_ptr<Enforcer> Enforcer :: NewEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
-    shared_ptr<Enforcer> e = shared_ptr<Enforcer>(new Enforcer());
+unique_ptr<Enforcer> Enforcer :: NewEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
+  unique_ptr<Enforcer> e = unique_ptr<Enforcer>(new Enforcer());
     e->adapter = adapter;
     e->watcher = NULL;
 
@@ -209,7 +209,7 @@ shared_ptr<Enforcer> Enforcer :: NewEnforcer(shared_ptr<Model> m, shared_ptr<Ada
     if (e->adapter->file_path != "") {
         e->LoadPolicy();
     }
-    return e;
+    return move(e);
 }
 
 /**
@@ -217,8 +217,8 @@ shared_ptr<Enforcer> Enforcer :: NewEnforcer(shared_ptr<Model> m, shared_ptr<Ada
  *
  * @param m the model.
  */
-shared_ptr<Enforcer> Enforcer :: NewEnforcer(shared_ptr<Model> m) {
-    return NewEnforcer(m, NULL);
+unique_ptr<Enforcer> Enforcer ::NewEnforcer(shared_ptr<Model> m) {
+    return move(NewEnforcer(m, NULL));
 }
 
 /**
@@ -226,8 +226,8 @@ shared_ptr<Enforcer> Enforcer :: NewEnforcer(shared_ptr<Model> m) {
  *
  * @param model_path the path of the model file.
  */
-shared_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path) {
-    return NewEnforcer(model_path, "");
+unique_ptr<Enforcer> Enforcer ::NewEnforcer(string model_path) {
+    return move(NewEnforcer(model_path, ""));
 }
 
 /**
@@ -237,10 +237,10 @@ shared_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path) {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-shared_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFile, bool enableLog) {
-    shared_ptr<Enforcer> e = NewEnforcer(model_path, shared_ptr<FileAdapter>(FileAdapter :: NewAdapter(policyFile)));
+unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFile, bool enableLog) {
+    unique_ptr<Enforcer> e = NewEnforcer(model_path, shared_ptr<FileAdapter>(FileAdapter :: NewAdapter(policyFile)));
     // e.EnableLog(enableLog);
-    return e;
+    return move(e);
 }
 
 
@@ -444,16 +444,6 @@ bool Enforcer :: Enforce(Scope scope) {
     return this->EnforceWithMatcher("", scope);
 }
 
-// Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-bool Enforcer::Enforce(string sub, string obj, string act) {
-    return EnforceWithMatcher("", sub, obj, act);
-}
-
-// Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
-bool Enforcer::Enforce(string sub, string dom, string obj, string act) {
-    return EnforceWithMatcher("", sub, dom, obj, act);
-}
-
 // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
 bool Enforcer::Enforce(vector<string> params) {
     return this->EnforceWithMatcher("", params);
@@ -467,16 +457,6 @@ bool Enforcer::Enforce(unordered_map<string, string> params) {
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool Enforcer :: EnforceWithMatcher(string matcher, Scope scope) {
     return this->enforce(matcher, scope);
-}
-
-// Enforce with three params, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-bool Enforcer::EnforceWithMatcher(string matcher, string sub, string obj, string act) {
-    return this->EnforceWithMatcher(matcher, { sub,obj,act });
-}
-
-// Enforce with four params, decides whether a "subject" can access a "object" with the operation "action" in the domain "dom", input parameters are usually: (sub, dom, obj,act).
-bool Enforcer::EnforceWithMatcher(string matcher, string sub, string dom, string obj, string act) {
-    return this->EnforceWithMatcher(matcher, { sub,dom,obj,act });
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
