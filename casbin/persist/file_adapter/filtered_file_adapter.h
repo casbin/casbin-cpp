@@ -16,7 +16,7 @@ class FilteredFileAdapter : public FileAdapter, public FilteredAdapter {
     public:
 
         // NewFilteredAdapter is the constructor for FilteredAdapter.
-        static FilteredFileAdapter* NewFilteredAdapter(string file_path);
+        FilteredFileAdapter(string file_path);
 
         // LoadPolicy loads all policy rules from the storage.
         void LoadPolicy(Model* model);

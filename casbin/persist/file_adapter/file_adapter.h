@@ -9,7 +9,7 @@ class FileAdapter : virtual public Adapter {
     public:
 
         // NewAdapter is the constructor for Adapter.
-        static FileAdapter* NewAdapter(string file_path);
+        FileAdapter(string file_path);
 
         // LoadPolicy loads all policy rules from the storage.
         void LoadPolicy(Model* model);

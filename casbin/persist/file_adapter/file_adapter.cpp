@@ -11,11 +11,9 @@
 #include "../../exception/casbin_adapter_exception.h"
 
 // NewAdapter is the constructor for Adapter.
-FileAdapter* FileAdapter :: NewAdapter(string file_path) {
-    FileAdapter* adapter = new FileAdapter;
-    adapter->file_path = file_path;
-    adapter->filtered = false;
-    return adapter;
+FileAdapter :: FileAdapter(string file_path) {
+    this->file_path = file_path;
+    this->filtered = false;
 }
 
 // LoadPolicy loads all policy rules from the storage.
@@ -34,7 +32,7 @@ void FileAdapter :: SavePolicy(Model* model) {
 
     string tmp;
 
-    for (unordered_map<string, Assertion*> :: iterator it = model->m["p"].assertion_map.begin() ; it != model->m["p"].assertion_map.begin() ; it++){
+    for (unordered_map<string, shared_ptr<Assertion>> :: iterator it = model->m["p"].assertion_map.begin() ; it != model->m["p"].assertion_map.begin() ; it++){
         for (int i = 0 ; i < it->second->policy.size() ; i++){
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
@@ -42,7 +40,7 @@ void FileAdapter :: SavePolicy(Model* model) {
         }
     }
 
-    for (unordered_map <string, Assertion*> :: iterator it = model->m["g"].assertion_map.begin() ; it != model->m["g"].assertion_map.begin() ; it++){
+    for (unordered_map <string, shared_ptr<Assertion>> :: iterator it = model->m["g"].assertion_map.begin() ; it != model->m["g"].assertion_map.begin() ; it++){
         for (int i = 0 ; i < it->second->policy.size() ; i++){
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
