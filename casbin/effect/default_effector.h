@@ -25,9 +25,6 @@
 class DefaultEffector : public Effector{
     public:
 
-        // NewDefaultEffector is the constructor for DefaultEffector.
-        static DefaultEffector* NewDefaultEffector();
-
         /**
          * MergeEffects merges all matching results collected by the enforcer into a single decision.
          */
