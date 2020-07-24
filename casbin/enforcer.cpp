@@ -54,17 +54,17 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
         exp_string = matcher;
 
 
-    unordered_map <string, RoleManager*> rm_map;
+    unordered_map <string, shared_ptr<RoleManager>> rm_map;
     bool ok = this->model->m.find("g") != this->model->m.end();
 
     if(ok) {
-        for(unordered_map <string, Assertion*> :: iterator it = this->model->m["g"].assertion_map.begin() ; it != this->model->m["g"].assertion_map.end() ; it++){
-            RoleManager* rm = it->second->rm;
+        for(unordered_map <string, shared_ptr<Assertion>> :: iterator it = this->model->m["g"].assertion_map.begin() ; it != this->model->m["g"].assertion_map.end() ; it++){
+            shared_ptr<RoleManager> rm = it->second->rm;
             int char_count = int(count(it->second->value.begin(), it->second->value.end(), '_'));
             int index = int(exp_string.find((it->first)+"("));
             if(index != string::npos)
                 exp_string.insert(index+(it->first+"(").length(), "rm, ");
-            PushPointer(this->func_map.scope, (void *)rm, "rm");
+            PushPointer(this->func_map.scope, (void *)rm.get(), "rm");
             this->func_map.AddFunction(it->first, GFunction, char_count + 1);
         }
     }
@@ -162,9 +162,7 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
 /**
  * Enforcer is the default constructor.
  */
-unique_ptr<Enforcer> Enforcer ::NewEnforcer() {
-    unique_ptr<Enforcer> e = unique_ptr<Enforcer>(new Enforcer());
-    return move(e);
+Enforcer ::Enforcer() {
 }
 
 /**
@@ -173,8 +171,7 @@ unique_ptr<Enforcer> Enforcer ::NewEnforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFile) {
-    return move(NewEnforcer(model_path, shared_ptr<FileAdapter>(FileAdapter :: NewAdapter(policyFile))));
+Enforcer :: Enforcer(string model_path, string policyFile): Enforcer(model_path, shared_ptr<FileAdapter>(new FileAdapter(policyFile))) {
 }
 
 /**
@@ -183,10 +180,8 @@ unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFil
  * @param model_path the path of the model file.
  * @param adapter the adapter.
  */
-unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, shared_ptr<Adapter> adapter) {
-    unique_ptr<Enforcer> e = NewEnforcer(shared_ptr<Model>(Model :: NewModelFromFile(model_path)), adapter);
-    e->model_path = model_path;
-    return move(e);
+Enforcer :: Enforcer(string model_path, shared_ptr<Adapter> adapter): Enforcer(shared_ptr<Model>(new Model(model_path)), adapter) {
+    this->model_path = model_path;
 }
 
 /**
@@ -195,21 +190,19 @@ unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, shared_ptr<Adapt
  * @param m the model.
  * @param adapter the adapter.
  */
-unique_ptr<Enforcer> Enforcer :: NewEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
-  unique_ptr<Enforcer> e = unique_ptr<Enforcer>(new Enforcer());
-    e->adapter = adapter;
-    e->watcher = NULL;
+Enforcer :: Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
+    this->adapter = adapter;
+    this->watcher = NULL;
 
-    e->model = m;
-    e->model->PrintModel();
-    e->func_map.LoadFunctionMap();
+    this->model = m;
+    this->model->PrintModel();
+    this->func_map.LoadFunctionMap();
 
-    e->Initialize();
+    this->Initialize();
 
-    if (e->adapter->file_path != "") {
-        e->LoadPolicy();
+    if (this->adapter->file_path != "") {
+        this->LoadPolicy();
     }
-    return move(e);
 }
 
 /**
@@ -217,8 +210,7 @@ unique_ptr<Enforcer> Enforcer :: NewEnforcer(shared_ptr<Model> m, shared_ptr<Ada
  *
  * @param m the model.
  */
-unique_ptr<Enforcer> Enforcer ::NewEnforcer(shared_ptr<Model> m) {
-    return move(NewEnforcer(m, NULL));
+Enforcer ::Enforcer(shared_ptr<Model> m): Enforcer(m, NULL) {
 }
 
 /**
@@ -226,8 +218,7 @@ unique_ptr<Enforcer> Enforcer ::NewEnforcer(shared_ptr<Model> m) {
  *
  * @param model_path the path of the model file.
  */
-unique_ptr<Enforcer> Enforcer ::NewEnforcer(string model_path) {
-    return move(NewEnforcer(model_path, ""));
+Enforcer ::Enforcer(string model_path): Enforcer(model_path, "") {
 }
 
 /**
@@ -237,16 +228,14 @@ unique_ptr<Enforcer> Enforcer ::NewEnforcer(string model_path) {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-unique_ptr<Enforcer> Enforcer :: NewEnforcer(string model_path, string policyFile, bool enableLog) {
-    unique_ptr<Enforcer> e = NewEnforcer(model_path, shared_ptr<FileAdapter>(FileAdapter :: NewAdapter(policyFile)));
+Enforcer :: Enforcer(string model_path, string policyFile, bool enableLog): Enforcer(model_path, shared_ptr<FileAdapter>(new FileAdapter(policyFile))) {
     // e.EnableLog(enableLog);
-    return move(e);
 }
 
 
 // InitWithFile initializes an enforcer with a model file and a policy file.
 void Enforcer :: InitWithFile(string model_path, string policyPath) {
-    shared_ptr<Adapter> a = shared_ptr<FileAdapter>(FileAdapter::NewAdapter(policyPath));
+    shared_ptr<Adapter> a = shared_ptr<FileAdapter>(new FileAdapter(policyPath));
     this->InitWithAdapter(model_path, a);
 }
 
@@ -275,8 +264,8 @@ void Enforcer :: InitWithModelAndAdapter(shared_ptr<Model> m, shared_ptr<Adapter
 }
 
 void Enforcer :: Initialize() {
-    this->rm = shared_ptr<DefaultRoleManager>(DefaultRoleManager :: NewRoleManager(10));
-    this->eft = shared_ptr<DefaultEffector>(DefaultEffector :: NewDefaultEffector());
+    this->rm = shared_ptr<DefaultRoleManager>(new DefaultRoleManager(10));
+    this->eft = shared_ptr<DefaultEffector>(new DefaultEffector());
     this->watcher = NULL;
 
     this->enabled = true;
@@ -350,7 +339,7 @@ void Enforcer :: ClearPolicy() {
 
 // LoadPolicy reloads the policy from file/database.
 void Enforcer :: LoadPolicy() {
-    this->model->ClearPolicy();
+    this->ClearPolicy();
     this->adapter->LoadPolicy(this->model.get());
     this->model->PrintPolicy();
 
@@ -362,13 +351,12 @@ void Enforcer :: LoadPolicy() {
 //LoadFilteredPolicy reloads a filtered policy from file/database.
 template<typename Filter>
 void Enforcer :: LoadFilteredPolicy(Filter filter) {
-    this->model->ClearPolicy();
+    this->ClearPolicy();
 
-    FilteredAdapter* filteredAdapter;
+    shared_ptr<FilteredAdapter> filteredAdapter;
 
     if (this->adapter->IsFiltered()) {
-        void* adapter = this->adapter.get();
-        filteredAdapter = (FilteredAdapter*)adapter;
+        filteredAdapter = dynamic_pointer_cast<FilteredAdapter>(this->adapter);
     }
     else
         throw CasbinAdapterException("filtered policies are not supported by this adapter");
@@ -431,12 +419,12 @@ void Enforcer :: EnableAutoBuildRoleLinks(bool auto_build_role_links) {
 void Enforcer :: BuildRoleLinks() {
     this->rm->Clear();
 
-    this->model->BuildRoleLinks(this->rm.get());
+    this->model->BuildRoleLinks(this->rm);
 }
 
 // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
 void Enforcer :: BuildIncrementalRoleLinks(policy_op op, string p_type, vector<vector<string>> rules) {
-    return this->model->BuildIncrementalRoleLinks(this->rm.get(), op, "g", p_type, rules);
+    return this->model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
 }
 
 // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).

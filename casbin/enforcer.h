@@ -50,40 +50,40 @@ class Enforcer : public IEnforcer{
         /**
          * Enforcer is the default constructor.
          */
-        static unique_ptr<Enforcer> NewEnforcer();
+        Enforcer();
         /**
          * Enforcer initializes an enforcer with a model file and a policy file.
          *
          * @param model_path the path of the model file.
          * @param policyFile the path of the policy file.
          */
-        static unique_ptr<Enforcer> NewEnforcer(string model_path, string policyFile);
+        Enforcer(string model_path, string policyFile);
         /**
          * Enforcer initializes an enforcer with a database adapter.
          *
          * @param model_path the path of the model file.
          * @param adapter the adapter.
          */
-        static unique_ptr<Enforcer> NewEnforcer(string model_path, shared_ptr<Adapter> adapter);
+        Enforcer(string model_path, shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model and a database adapter.
          *
          * @param m the model.
          * @param adapter the adapter.
          */
-        static unique_ptr<Enforcer> NewEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter);
+        Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model.
          *
          * @param m the model.
          */
-        static unique_ptr<Enforcer> NewEnforcer(shared_ptr<Model> m);
+        Enforcer(shared_ptr<Model> m);
         /**
          * Enforcer initializes an enforcer with a model file.
          *
          * @param model_path the path of the model file.
          */
-        static unique_ptr<Enforcer> NewEnforcer(string model_path);
+        Enforcer(string model_path);
         /**
          * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
          *
@@ -91,7 +91,7 @@ class Enforcer : public IEnforcer{
          * @param policyFile the path of the policy file.
          * @param enableLog whether to enable Casbin's log.
          */
-        static unique_ptr<Enforcer> NewEnforcer(string model_path, string policyFile, bool enableLog);
+        Enforcer(string model_path, string policyFile, bool enableLog);
         // InitWithFile initializes an enforcer with a model file and a policy file.
         void InitWithFile(string model_path, string policyPath);
         // InitWithAdapter initializes an enforcer with a database adapter.
