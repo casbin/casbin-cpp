@@ -17,6 +17,8 @@
 #ifndef CASBIN_CPP_MODEL_ASSERTION
 #define CASBIN_CPP_MODEL_ASSERTION
 
+#include <memory>
+
 #include "../rbac/role_manager.h"
 
 enum policy_op{
@@ -34,11 +36,11 @@ class Assertion {
         string value;
         vector<string> tokens;
         vector<vector<string>> policy;
-        RoleManager* rm;
+        shared_ptr<RoleManager> rm;
 
-        void BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, vector<vector<string>> rules);
+        void BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_op op, vector<vector<string>> rules);
 
-        void BuildRoleLinks(RoleManager* rm);
+        void BuildRoleLinks(shared_ptr<RoleManager> rm);
 };
 
 #endif

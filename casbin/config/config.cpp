@@ -97,8 +97,8 @@ void Config :: ParseBuffer(istream* buf){
  * @param confName the path of the model file.
  * @return the constructor of Config.
  */
-Config* Config :: NewConfig(string conf_name) {
-    Config* c = new Config;
+shared_ptr<Config> Config :: NewConfig(string conf_name) {
+    shared_ptr<Config> c(new Config);
     c->Parse(conf_name);
     return c;
 }
@@ -109,8 +109,8 @@ Config* Config :: NewConfig(string conf_name) {
  * @param text the model text.
  * @return the constructor of Config.
  */
-Config* Config :: NewConfigFromText(string text) {
-    Config *c = new Config;
+shared_ptr<Config> Config :: NewConfigFromText(string text) {
+    shared_ptr<Config> c(new Config);
     stringstream stream(text);
     c->ParseBuffer(&stream);
     return c;
