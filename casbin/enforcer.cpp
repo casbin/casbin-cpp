@@ -171,7 +171,7 @@ Enforcer ::Enforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-Enforcer :: Enforcer(string model_path, string policyFile): Enforcer(model_path, shared_ptr<FileAdapter>(new FileAdapter(policyFile))) {
+Enforcer :: Enforcer(string model_path, string policy_file): Enforcer(model_path, shared_ptr<FileAdapter>(new FileAdapter(policy_file))) {
 }
 
 /**
@@ -228,14 +228,14 @@ Enforcer ::Enforcer(string model_path): Enforcer(model_path, "") {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-Enforcer :: Enforcer(string model_path, string policyFile, bool enableLog): Enforcer(model_path, shared_ptr<FileAdapter>(new FileAdapter(policyFile))) {
-    // e.EnableLog(enableLog);
+Enforcer :: Enforcer(string model_path, string policy_file, bool enable_log): Enforcer(model_path, shared_ptr<FileAdapter>(new FileAdapter(policy_file))) {
+    // e.EnableLog(enable_log);
 }
 
 
 // InitWithFile initializes an enforcer with a model file and a policy file.
-void Enforcer :: InitWithFile(string model_path, string policyPath) {
-    shared_ptr<Adapter> a = shared_ptr<FileAdapter>(new FileAdapter(policyPath));
+void Enforcer :: InitWithFile(string model_path, string policy_path) {
+    shared_ptr<Adapter> a = shared_ptr<FileAdapter>(new FileAdapter(policy_path));
     this->InitWithAdapter(model_path, a);
 }
 
@@ -353,15 +353,15 @@ template<typename Filter>
 void Enforcer :: LoadFilteredPolicy(Filter filter) {
     this->ClearPolicy();
 
-    shared_ptr<FilteredAdapter> filteredAdapter;
+    shared_ptr<FilteredAdapter> filtered_adapter;
 
     if (this->adapter->IsFiltered()) {
-        filteredAdapter = dynamic_pointer_cast<FilteredAdapter>(this->adapter);
+        filtered_adapter = dynamic_pointer_cast<FilteredAdapter>(this->adapter);
     }
     else
         throw CasbinAdapterException("filtered policies are not supported by this adapter");
 
-    filteredAdapter->LoadFilteredPolicy(this->model, filter);
+    filtered_adapter->LoadFilteredPolicy(this->model, filter);
 
     this->model->PrintPolicy();
     if(this->auto_build_role_links)
