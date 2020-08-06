@@ -154,7 +154,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="config\config.cpp" />
-    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="duktape\duktape.cpp" />
     <ClCompile Include="effect\default_effector.cpp" />
     <ClCompile Include="enforcer.cpp" />
