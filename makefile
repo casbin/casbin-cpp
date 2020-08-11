@@ -5,6 +5,7 @@ AR := ar
 #Define compiler flags
 OBJ_FLAG := -c
 FILE_FLAG :=  -o
+STD_FLAG := -std=c++11
 
 #Define archive flags
 AR_FLAG := crv
@@ -35,7 +36,7 @@ object:
 		$(MKDIR_P) $(OBJ_DIR);\
 	)
 	$(foreach SRC_FILE, $(SRC_FILES),\
-		$(CXX) $(OBJ_FLAG) $(FILE_FLAG) $(SRC_FILE:$(SRC_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/$(SRC_DIR)/%.$(OBJ_EXT)) $(SRC_FILE);\
+		$(CXX) $(STD_FLAG) $(OBJ_FLAG) $(FILE_FLAG) $(SRC_FILE:$(SRC_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/$(SRC_DIR)/%.$(OBJ_EXT)) $(SRC_FILE);\
 	)
 
 #Get object files
