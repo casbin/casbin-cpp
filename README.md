@@ -2,6 +2,7 @@ Casbin-CPP
 ====
 
 [![Build Status](https://dev.azure.com/Casbin/casbin/_apis/build/status/casbin.casbin-cpp?branchName=master)](https://dev.azure.com/Casbin/casbin/_build?definitionId=2&branchName=master)
+[![Build Status](https://travis-ci.org/casbin/casbin-cpp.svg?branch=master)](https://travis-ci.org/casbin/casbin-cpp)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/casbin/casbin-cpp)](https://github.com/casbin/casbin-cpp/releases/latest)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
@@ -12,7 +13,7 @@ Casbin-CPP
 Operating Systems | Availability status
 ----------------- | -------------------
 Windows (VS C++)  | :heavy_check_mark: Available
-Linux and MacOS   | :wrench: Under-Development
+Linux and MacOS   | :heavy_check_mark: Available
 
 
 ![casbin Logo](casbin-logo.png)
@@ -106,6 +107,27 @@ You can also use the online editor (https://casbin.org/editor/) to write your Ca
 ## Tutorials
 
 https://casbin.org/docs/en/tutorials
+
+## Installation and Set-Up
+
+#### Windows (Microsoft Visual Studio 2019)
+- `Clone` the repository in your target client project
+- Open the project solution and `build` the solution
+- To use the `casbin-cpp` project in your client project add the path to the static library `casbin.lib` file to your client project properties under `VC++ Directories` > `Library Directories` and also add the path of `casbin` directory to your client project properties under `VC++ Directories` > `Include Directories`
+- Add the static library file name `casbin.lib` to the properties under `Linker` > `Input` > `Additional Dependencies`
+
+#### Unix
+- `Clone` the repository in your target client project
+- Change the current working directory to the `casbin-cpp` directory and build the library through following commands:
+    ```shell
+        $ make
+        $ make library
+    ```
+- To get rid of intermediate files generated during building of library:
+    ```shell
+        $ make clean
+    ```
+- Now, you can use the file present in `lib` directory, created through `archiver`, as a static library
 
 ## Get started
 
