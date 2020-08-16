@@ -352,3 +352,6 @@ MigrationBackup/
 
 .idea/
 *.iml
+
+# CMake work directory
+cmake-build/
