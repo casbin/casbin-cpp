@@ -119,13 +119,18 @@ https://casbin.org/docs/en/tutorials
 #### Unix
 - `Clone` the repository in your target client project
 - Change the current working directory to the `casbin-cpp` directory and build the library through following commands:
+    - ***Make***
     ```shell
-        $ make
-        $ make library
+    $ make
+    $ make library
+    ```
+    - ***CMake***
+    ```shell
+    $ make build
     ```
 - To get rid of intermediate files generated during building of library:
     ```shell
-        $ make clean
+    $ make clean
     ```
 - Now, you can use the file present in `lib` directory, created through `archiver`, as a static library
 
