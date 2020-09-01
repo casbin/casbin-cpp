@@ -17,6 +17,7 @@
 #ifndef CASBIN_CPP_CONFIG_CONFIG
 #define CASBIN_CPP_CONFIG_CONFIG
 
+#include <memory>
 #include <unordered_map>
 #include <mutex>
 
@@ -51,7 +52,7 @@ class Config : public ConfigInterface {
          * @param confName the path of the model file.
          * @return the constructor of Config.
          */
-        static Config* NewConfig(string conf_name);
+        static shared_ptr<Config> NewConfig(string conf_name);
 
         /**
          * newConfigFromText create an empty configuration representation from text.
@@ -59,7 +60,7 @@ class Config : public ConfigInterface {
          * @param text the model text.
          * @return the constructor of Config.
          */
-        static Config* NewConfigFromText(string text);
+        static shared_ptr<Config> NewConfigFromText(string text);
 
         bool GetBool(string key);
 

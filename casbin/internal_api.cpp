@@ -45,8 +45,7 @@ bool Enforcer :: addPolicy(string sec, string p_type, vector<string> rule) {
 
     if (this->watcher && this->auto_notify_watcher) {
         if (IsInstanceOf<WatcherEx>(this->watcher.get())) {
-            void* watcher = this->watcher.get();
-            ((WatcherEx*)watcher)->UpdateForAddPolicy(rule);
+            dynamic_pointer_cast<WatcherEx>(this->watcher)->UpdateForAddPolicy(rule);
         }
         else
             this->watcher->Update();
@@ -67,7 +66,7 @@ bool Enforcer :: addPolicies(string sec, string p_type, vector<vector<string>> r
 
     if (this->adapter && this->auto_save) {
         try {
-            dynamic_cast<BatchAdapter*>(this->adapter.get())->AddPolicies(sec, p_type, rules);
+            dynamic_pointer_cast<BatchAdapter>(this->adapter)->AddPolicies(sec, p_type, rules);
         }
         catch(UnsupportedOperationException e) {
         }
@@ -100,8 +99,7 @@ bool Enforcer :: removePolicy(string sec, string p_type, vector<string> rule) {
 
     if(this->watcher && this->auto_notify_watcher){
         if (IsInstanceOf<WatcherEx>(this->watcher.get())) {
-            void* watcher = this->watcher.get();
-            ((WatcherEx*)watcher)->UpdateForRemovePolicy(rule);
+            dynamic_pointer_cast<WatcherEx>(watcher)->UpdateForRemovePolicy(rule);
         }
         else
             this->watcher->Update();
@@ -121,7 +119,7 @@ bool Enforcer :: removePolicies(string sec, string p_type, vector<vector<string>
 
     if (this->adapter && this->auto_save) {
         try{
-            dynamic_cast<BatchAdapter*>(this->adapter.get())->RemovePolicies(sec, p_type, rules);
+            dynamic_pointer_cast<BatchAdapter>(this->adapter)->RemovePolicies(sec, p_type, rules);
         }
         catch(UnsupportedOperationException e){
         }
@@ -155,8 +153,7 @@ bool Enforcer :: removeFilteredPolicy(string sec, string p_type, int field_index
 
     if (this->watcher && this->auto_notify_watcher) {
         if (IsInstanceOf<WatcherEx>(this->watcher.get())) {
-            void* watcher = this->watcher.get();
-            ((WatcherEx*)watcher)->UpdateForRemoveFilteredPolicy(field_index, field_values);
+            dynamic_pointer_cast<WatcherEx>(this->watcher)->UpdateForRemoveFilteredPolicy(field_index, field_values);
         }
         else
             this->watcher->Update();

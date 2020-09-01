@@ -28,7 +28,7 @@ using namespace std;
 class AssertionMap {
     public:
 
-        unordered_map<string, Assertion*> assertion_map;
+        unordered_map<string, shared_ptr<Assertion>> assertion_map;
 };
 
 // Model represents the whole access control model.
@@ -37,13 +37,17 @@ class Model{
 
         static unordered_map<string, string> section_name_map;
 
-        static void LoadSection(Model* model, ConfigInterface* cfg, string sec);
+        static void LoadSection(Model* model, shared_ptr<ConfigInterface> cfg, string sec);
 
         static string GetKeySuffix(int i);
 
-        static bool LoadAssertion(Model* model, ConfigInterface* cfg, string sec, string key);
+        static bool LoadAssertion(Model* model, shared_ptr<ConfigInterface> cfg, string sec, string key);
 
     public:
+
+        Model();
+
+        Model(string path);
 
         unordered_map<string, AssertionMap> m;
 
@@ -61,7 +65,7 @@ class Model{
         // LoadModelFromText loads the model from the text.
         void LoadModelFromText(string text);
 
-        void LoadModelFromConfig(ConfigInterface *cfg);
+        void LoadModelFromConfig(shared_ptr<ConfigInterface> cfg);
 
         // PrintModel prints the model to the log.
         void PrintModel();
@@ -75,10 +79,10 @@ class Model{
         // NewModel creates a model from a string which contains model text.
         static Model* NewModelFromString(string text);
 
-        void BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, string sec, string p_type, vector<vector<string>> rules);
+        void BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_op op, string sec, string p_type, vector<vector<string>> rules);
 
         // BuildRoleLinks initializes the roles in RBAC.
-        void BuildRoleLinks(RoleManager* rm);
+        void BuildRoleLinks(shared_ptr<RoleManager> rm);
 
         // PrintPolicy prints the policy to log.
         void PrintPolicy();

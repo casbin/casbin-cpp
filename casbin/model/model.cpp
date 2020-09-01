@@ -37,7 +37,7 @@ unordered_map<string, string> Model :: section_name_map = {
 
 vector<string> Model :: required_sections{"r","p","e","m"};
 
-void Model :: LoadModelFromConfig(ConfigInterface *cfg) {
+void Model :: LoadModelFromConfig(shared_ptr<ConfigInterface> cfg) {
     for(unordered_map <string, string> :: iterator it = section_name_map.begin() ; it != section_name_map.end() ; it++)
         LoadSection(this, cfg, it->first);
 
@@ -54,7 +54,7 @@ bool Model :: HasSection(string sec) {
     return this->m.find(sec) != this->m.end();
 }
 
-void Model :: LoadSection(Model* model, ConfigInterface* cfg, string sec) {
+void Model :: LoadSection(Model* model, shared_ptr<ConfigInterface> cfg, string sec) {
     int i = 1;
     while(true) {
         if (!LoadAssertion(model, cfg, sec, sec+GetKeySuffix(i))){
@@ -75,7 +75,7 @@ string Model :: GetKeySuffix(int i) {
     return s;
 }
 
-bool Model :: LoadAssertion(Model* model, ConfigInterface* cfg, string sec, string key) {
+bool Model :: LoadAssertion(Model* model, shared_ptr<ConfigInterface> cfg, string sec, string key) {
     string value = cfg->GetString(section_name_map[sec] + "::" + key);
     return model->AddDef(sec, key, value);
 }
@@ -85,7 +85,7 @@ bool Model :: AddDef(string sec, string key, string value) {
     if(value == "")
         return false;
 
-    Assertion* ast = new Assertion;
+    shared_ptr<Assertion> ast(new Assertion());
     ast->key = key;
     ast->value = value;
     if (sec == "r" || sec == "p") {
@@ -107,13 +107,13 @@ bool Model :: AddDef(string sec, string key, string value) {
 
 // LoadModel loads the model from model CONF file.
 void Model :: LoadModel(string path) {
-    Config* cfg = Config::NewConfig(path);
+    shared_ptr<Config> cfg = Config::NewConfig(path);
     LoadModelFromConfig(cfg);
 }
 
 // LoadModelFromText loads the model from the text.
 void Model :: LoadModelFromText(string text) {
-    Config* cfg = Config::NewConfigFromText(text);
+    shared_ptr<Config> cfg = Config::NewConfigFromText(text);
     LoadModelFromConfig(cfg);
 }
 
@@ -133,36 +133,40 @@ void Model :: PrintModel() {
     // }
 }
 
+Model :: Model(){
+}
+
+Model :: Model(string path){
+    LoadModel(path);
+}
+
 // NewModel creates an empty model.
 Model* Model :: NewModel() {
-    Model *m = new Model;
-    return m;
+    return new Model();
 }
 
 // NewModel creates a model from a .CONF file.
 Model* Model :: NewModelFromFile(string path) {
-    Model* m;
-    m = NewModel();
+    Model* m = NewModel();
     m->LoadModel(path);
     return m;
 }
 
 // NewModel creates a model from a string which contains model text.
 Model* Model :: NewModelFromString(string text) {
-    Model* m;
-    m = NewModel();
+    Model* m = NewModel();
     m->LoadModelFromText(text);
     return m;
 }
 
-void Model :: BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, string sec, string p_type, vector<vector<string>> rules) {
+void Model :: BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_op op, string sec, string p_type, vector<vector<string>> rules) {
     if (sec == "g")
         this->m[sec].assertion_map[p_type]->BuildIncrementalRoleLinks(rm, op, rules);
 }
 
 // BuildRoleLinks initializes the roles in RBAC.
-void Model :: BuildRoleLinks(RoleManager* rm) {
-    for (unordered_map<string, Assertion*> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++)
+void Model :: BuildRoleLinks(shared_ptr<RoleManager> rm) {
+    for (unordered_map<string, shared_ptr<Assertion>> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++)
         (it->second)->BuildRoleLinks(rm);
 }
 
@@ -187,12 +191,12 @@ void Model :: PrintPolicy() {
 
 // ClearPolicy clears all current policy.
 void Model :: ClearPolicy() {
-    for (unordered_map<string, Assertion*> :: iterator it = this->m["p"].assertion_map.begin() ; it != this->m["p"].assertion_map.end() ; it++){
+    for (unordered_map<string, shared_ptr<Assertion>> :: iterator it = this->m["p"].assertion_map.begin() ; it != this->m["p"].assertion_map.end() ; it++){
         if((it->second)->policy.size() > 0)
             (it->second)->policy.clear();
     }
 
-    for (unordered_map<string, Assertion*> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++){
+    for (unordered_map<string, shared_ptr<Assertion>> :: iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++){
         if((it->second)->policy.size() > 0)
             (it->second)->policy.clear();
     }
@@ -329,7 +333,7 @@ vector<string> Model :: GetValuesForFieldInPolicy(string sec, string p_type, int
 vector<string> Model :: GetValuesForFieldInPolicyAllTypes(string sec, int field_index) {
     vector<string> values;
 
-    for (unordered_map<string, Assertion*> :: iterator it = m[sec].assertion_map.begin() ; it != m[sec].assertion_map.end() ; it++) {
+    for (unordered_map<string, shared_ptr<Assertion>> :: iterator it = m[sec].assertion_map.begin() ; it != m[sec].assertion_map.end() ; it++) {
         vector<string> values_for_field(this->GetValuesForFieldInPolicy(sec, it->first, field_index));
         for(int i = 0 ; i < values_for_field.size() ; i++)
             values.push_back(values_for_field[i]);

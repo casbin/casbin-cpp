@@ -66,11 +66,8 @@ void FilteredFileAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter,
 }
 
 // NewFilteredAdapter is the constructor for FilteredAdapter.
-FilteredFileAdapter* FilteredFileAdapter :: NewFilteredAdapter(string file_path) {
-    FilteredFileAdapter* a = new FilteredFileAdapter;
-    a->filtered = true;
-    a->file_path = file_path;
-    return a;
+FilteredFileAdapter :: FilteredFileAdapter(string file_path): FileAdapter(file_path) {
+    this->filtered = true;
 }
 
 // LoadPolicy loads all policy rules from the storage.

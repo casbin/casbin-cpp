@@ -18,7 +18,7 @@ namespace test_model
         public:
 
             string basic_example;
-            Config* basic_config;
+            shared_ptr<Config> basic_config;
 
             TEST_METHOD_INITIALIZE(InitializeBasicConfig) {
                 basic_example = "../../examples/basic_model.conf";
@@ -50,7 +50,7 @@ namespace test_model
                 model->LoadModelFromConfig(basic_config);
 
                 model = Model::NewModel();
-                Config* config = Config::NewConfigFromText("");
+                shared_ptr<Config> config = Config::NewConfigFromText("");
                 try {
                     model->LoadModelFromConfig(config);
                     Assert::Fail();
@@ -68,7 +68,7 @@ namespace test_model
                 }
 
                 model = Model::NewModel();
-                Config* config = Config::NewConfigFromText("");
+                shared_ptr<Config> config = Config::NewConfigFromText("");
                 try {
                     model->LoadModelFromConfig(config);
                     Assert::Fail();

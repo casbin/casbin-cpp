@@ -21,12 +21,6 @@
 #include "./default_effector.h"
 #include "../exception/unsupported_operation_exception.h"
 
-// NewDefaultEffector is the constructor for DefaultEffector.
-DefaultEffector* DefaultEffector :: NewDefaultEffector(){
-    DefaultEffector* e = new DefaultEffector;
-    return e;
-}
-
 /**
  * MergeEffects merges all matching results collected by the enforcer into a single decision.
  */

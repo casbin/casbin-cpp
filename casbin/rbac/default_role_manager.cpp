@@ -144,11 +144,9 @@ Role* DefaultRoleManager :: CreateRole(string name) {
  *
  * @param max_hierarchy_level the maximized allowed RBAC hierarchy level.
  */
-DefaultRoleManager* DefaultRoleManager :: NewRoleManager(int max_hierarchy_level) {
-    DefaultRoleManager* rm = new DefaultRoleManager;
-    rm->max_hierarchy_level = max_hierarchy_level;
-    rm->has_pattern = false;
-    return rm;
+DefaultRoleManager :: DefaultRoleManager(int max_hierarchy_level) {
+    this->max_hierarchy_level = max_hierarchy_level;
+    this->has_pattern = false;
 }
 
 // e.BuildRoleLinks must be called after AddMatchingFunc().

@@ -50,50 +50,50 @@ class Enforcer : public IEnforcer{
         /**
          * Enforcer is the default constructor.
          */
-        static unique_ptr<Enforcer> NewEnforcer();
+        Enforcer();
         /**
          * Enforcer initializes an enforcer with a model file and a policy file.
          *
          * @param model_path the path of the model file.
-         * @param policyFile the path of the policy file.
+         * @param policy_file the path of the policy file.
          */
-        static unique_ptr<Enforcer> NewEnforcer(string model_path, string policyFile);
+        Enforcer(string model_path, string policy_file);
         /**
          * Enforcer initializes an enforcer with a database adapter.
          *
          * @param model_path the path of the model file.
          * @param adapter the adapter.
          */
-        static unique_ptr<Enforcer> NewEnforcer(string model_path, shared_ptr<Adapter> adapter);
+        Enforcer(string model_path, shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model and a database adapter.
          *
          * @param m the model.
          * @param adapter the adapter.
          */
-        static unique_ptr<Enforcer> NewEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter);
+        Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model.
          *
          * @param m the model.
          */
-        static unique_ptr<Enforcer> NewEnforcer(shared_ptr<Model> m);
+        Enforcer(shared_ptr<Model> m);
         /**
          * Enforcer initializes an enforcer with a model file.
          *
          * @param model_path the path of the model file.
          */
-        static unique_ptr<Enforcer> NewEnforcer(string model_path);
+        Enforcer(string model_path);
         /**
          * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
          *
          * @param model_path the path of the model file.
-         * @param policyFile the path of the policy file.
-         * @param enableLog whether to enable Casbin's log.
+         * @param policy_file the path of the policy file.
+         * @param enable_log whether to enable Casbin's log.
          */
-        static unique_ptr<Enforcer> NewEnforcer(string model_path, string policyFile, bool enableLog);
+        Enforcer(string model_path, string policy_file, bool enable_log);
         // InitWithFile initializes an enforcer with a model file and a policy file.
-        void InitWithFile(string model_path, string policyPath);
+        void InitWithFile(string model_path, string policy_path);
         // InitWithAdapter initializes an enforcer with a database adapter.
         void InitWithAdapter(string model_path, shared_ptr<Adapter> adapter);
         // InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.
@@ -161,45 +161,45 @@ class Enforcer : public IEnforcer{
        
         /*Management API member functions.*/
         vector<string> GetAllSubjects();
-        vector<string> GetAllNamedSubjects(string ptype);
+        vector<string> GetAllNamedSubjects(string p_type);
         vector<string> GetAllObjects();
-        vector<string> GetAllNamedObjects(string ptype);
+        vector<string> GetAllNamedObjects(string p_type);
         vector<string> GetAllActions();
-        vector<string> GetAllNamedActions(string ptype);
+        vector<string> GetAllNamedActions(string p_type);
         vector<string> GetAllRoles();
-        vector<string> GetAllNamedRoles(string ptype);
+        vector<string> GetAllNamedRoles(string p_type);
         vector<vector<string>> GetPolicy();
         vector<vector<string>> GetFilteredPolicy(int field_index, vector<string> field_values);
-        vector<vector<string>> GetNamedPolicy(string ptype);
-        vector<vector<string>> GetFilteredNamedPolicy(string ptype, int field_index, vector<string> field_values);
+        vector<vector<string>> GetNamedPolicy(string p_type);
+        vector<vector<string>> GetFilteredNamedPolicy(string p_type, int field_index, vector<string> field_values);
         vector<vector<string>> GetGroupingPolicy();
         vector<vector<string>> GetFilteredGroupingPolicy(int field_index, vector<string> field_values);
-        vector<vector<string>> GetNamedGroupingPolicy(string ptype);
-        vector<vector<string>> GetFilteredNamedGroupingPolicy(string ptype, int field_index, vector<string> field_values);
+        vector<vector<string>> GetNamedGroupingPolicy(string p_type);
+        vector<vector<string>> GetFilteredNamedGroupingPolicy(string p_type, int field_index, vector<string> field_values);
         bool HasPolicy(vector<string> params);
-        bool HasNamedPolicy(string ptype, vector<string> params);
+        bool HasNamedPolicy(string p_type, vector<string> params);
         bool AddPolicy(vector<string> params);
         bool  AddPolicies(vector<vector<string>> rules);
-        bool AddNamedPolicy(string ptype, vector<string> params);
+        bool AddNamedPolicy(string p_type, vector<string> params);
         bool AddNamedPolicies(string p_type, vector<vector<string>> rules);
         bool RemovePolicy(vector<string> params);
         bool RemovePolicies(vector<vector<string>> rules);
         bool RemoveFilteredPolicy(int field_index, vector<string> field_values);
-        bool RemoveNamedPolicy(string ptype, vector<string> params);
+        bool RemoveNamedPolicy(string p_type, vector<string> params);
         bool RemoveNamedPolicies(string p_type, vector<vector<string>> rules);
-        bool RemoveFilteredNamedPolicy(string ptype, int field_index, vector<string> field_values);
+        bool RemoveFilteredNamedPolicy(string p_type, int field_index, vector<string> field_values);
         bool HasGroupingPolicy(vector<string> params);
-        bool HasNamedGroupingPolicy(string ptype, vector<string> params);
+        bool HasNamedGroupingPolicy(string p_type, vector<string> params);
         bool AddGroupingPolicy(vector<string> params);
         bool AddGroupingPolicies(vector<vector<string>> rules);
-        bool AddNamedGroupingPolicy(string ptype, vector<string> params);
+        bool AddNamedGroupingPolicy(string p_type, vector<string> params);
         bool AddNamedGroupingPolicies(string p_type, vector<vector<string>> rules);
         bool RemoveGroupingPolicy(vector<string> params);
         bool RemoveGroupingPolicies(vector<vector<string>> rules);
         bool RemoveFilteredGroupingPolicy(int field_index, vector<string> field_values);
-        bool RemoveNamedGroupingPolicy(string ptype, vector<string> params);
+        bool RemoveNamedGroupingPolicy(string p_type, vector<string> params);
         bool RemoveNamedGroupingPolicies(string p_type, vector<vector<string>> rules);
-        bool RemoveFilteredNamedGroupingPolicy(string ptype, int field_index, vector<string> field_values);
+        bool RemoveFilteredNamedGroupingPolicy(string p_type, int field_index, vector<string> field_values);
         void AddFunction(string name, Function function, Index nargs);
 
         /*RBAC API member functions.*/
@@ -223,11 +223,11 @@ class Enforcer : public IEnforcer{
         bool DeletePermission(vector<string> permission);
 
         /* Internal API member functions */
-        bool addPolicy(string sec, string ptype, vector<string> rule);
+        bool addPolicy(string sec, string p_type, vector<string> rule);
         bool addPolicies(string sec, string p_type, vector<vector<string>> rules);
-        bool removePolicy(string sec , string ptype , vector<string> rule);
+        bool removePolicy(string sec , string p_type , vector<string> rule);
         bool removePolicies(string sec, string p_type, vector<vector<string>> rules);
-        bool removeFilteredPolicy(string sec , string ptype , int fieldIndex , vector<string> fieldValues);
+        bool removeFilteredPolicy(string sec , string p_type , int field_index , vector<string> field_values);
 
         /* RBAC API with domains.*/
         vector<string> GetUsersForRoleInDomain(string name, string domain = {});

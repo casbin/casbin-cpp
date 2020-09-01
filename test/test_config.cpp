@@ -13,7 +13,7 @@ namespace test_config
     {
         public:
 
-            Config* config;
+            shared_ptr<Config> config;
 
             TEST_METHOD_INITIALIZE(InitializeConfig) {
                 string filepath = "../../casbin/config/testdata/testini.ini";

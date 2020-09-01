@@ -70,7 +70,7 @@ class DefaultRoleManager : public RoleManager {
          *
          * @param max_hierarchy_level the maximized allowed RBAC hierarchy level.
          */
-        static DefaultRoleManager* NewRoleManager(int max_hierarchy_level);
+        DefaultRoleManager(int max_hierarchy_level);
 
         // e.BuildRoleLinks must be called after AddMatchingFunc().
         //

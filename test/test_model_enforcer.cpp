@@ -53,14 +53,14 @@ namespace test_model_enforcer
                 return scope;
             }
 
-            void TestEnforce(unique_ptr<Enforcer>& e, Scope scope, bool res) {
-                Assert::AreEqual(res, e->Enforce(scope));
+            void TestEnforce(Enforcer e, Scope scope, bool res) {
+                Assert::AreEqual(res, e.Enforce(scope));
             }
 
             TEST_METHOD(TestBasicModel) {
                 string model = "../../examples/basic_model.conf";
                 string policy = "../../examples/basic_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer ::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 Scope scope;
 
@@ -85,7 +85,7 @@ namespace test_model_enforcer
             TEST_METHOD(TestBasicModelWithoutSpaces) {
                 string model = "../../examples/basic_model_without_spaces.conf";
                 string policy = "../../examples/basic_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer ::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -107,7 +107,7 @@ namespace test_model_enforcer
 
             TEST_METHOD(TestBasicModelNoPolicy) {
                 string model = "../../examples/basic_model.conf";
-                unique_ptr<Enforcer> e = Enforcer :: NewEnforcer(model);
+                Enforcer e = Enforcer(model);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
                 TestEnforce(e, scope, false);
@@ -130,7 +130,7 @@ namespace test_model_enforcer
             TEST_METHOD(TestBasicModelWithRoot) {
                 string model = "../../examples/basic_with_root_model.conf";
                 string policy = "../../examples/basic_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -160,7 +160,7 @@ namespace test_model_enforcer
 
             TEST_METHOD(TestBasicModelWithRootNoPolicy) {
                 string model = "../../examples/basic_with_root_model.conf";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model);
+                Enforcer e = Enforcer(model);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
                 TestEnforce(e, scope, false);
@@ -191,7 +191,7 @@ namespace test_model_enforcer
             TEST_METHOD(TestBasicModelWithoutUsers) {
                 string model = "../../examples/basic_without_users_model.conf";
                 string policy = "../../examples/basic_without_users_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 Scope scope = InitializeParamsWithoutUsers("data1", "read");
                 TestEnforce(e, scope, true);
@@ -206,7 +206,7 @@ namespace test_model_enforcer
             TEST_METHOD(TestBasicModelWithoutResources) {
                 string model = "../../examples/basic_without_resources_model.conf";
                 string policy = "../../examples/basic_without_resources_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 Scope scope = InitializeParamsWithoutResources("alice", "read");
                 TestEnforce(e, scope, true);
@@ -221,7 +221,7 @@ namespace test_model_enforcer
             TEST_METHOD(TestRBACModel) {
                 string model = "../../examples/rbac_model.conf";
                 string policy = "../../examples/rbac_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -244,7 +244,7 @@ namespace test_model_enforcer
             TEST_METHOD(TestRBACModelWithResourceRoles) {
                 string model = "../../examples/rbac_with_resource_roles_model.conf";
                 string policy = "../../examples/rbac_with_resource_roles_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -267,7 +267,7 @@ namespace test_model_enforcer
             TEST_METHOD(TestRBACModelWithDomains) {
                 string model = "../../examples/rbac_with_domains_model.conf";
                 string policy = "../../examples/rbac_with_domains_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer :: NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
                 
                 Scope scope = InitializeParamsWithDomains("alice", "domain1", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -289,21 +289,21 @@ namespace test_model_enforcer
             
             TEST_METHOD(TestRBACModelWithDomainsAtRuntime) {
                 string model = "../../examples/rbac_with_domains_model.conf";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model);
+                Enforcer e = Enforcer(model);
 
                 vector<string> params{ "admin", "domain1", "data1", "read" };
-                e->AddPolicy(params);
+                e.AddPolicy(params);
                 params = vector<string>{ "admin", "domain1", "data1", "write" };
-                e->AddPolicy(params);
+                e.AddPolicy(params);
                 params = vector<string>{ "admin", "domain2", "data2", "read" };
-                e->AddPolicy(params);
+                e.AddPolicy(params);
                 params = vector<string>{ "admin", "domain2", "data2", "write" };
-                e->AddPolicy(params);
+                e.AddPolicy(params);
 
                 params = vector<string>{ "alice", "admin", "domain1" };
-                e->AddGroupingPolicy(params);
+                e.AddGroupingPolicy(params);
                 params = vector<string>{ "bob", "admin", "domain2" };
-                e->AddGroupingPolicy(params);
+                e.AddGroupingPolicy(params);
 
                 Scope scope = InitializeParamsWithDomains("alice", "domain1", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -324,7 +324,7 @@ namespace test_model_enforcer
 
                 // Remove all policy rules related to domain1 and data1.
                 params = vector<string>{ "domain1", "data1" };
-                e->RemoveFilteredPolicy(1, params);
+                e.RemoveFilteredPolicy(1, params);
 
                 scope = InitializeParamsWithDomains("alice", "domain1", "data1", "read");
                 TestEnforce(e, scope, false);
@@ -345,7 +345,7 @@ namespace test_model_enforcer
 
                 // Remove the specified policy rule.
                 params = vector<string>{ "admin", "domain2", "data2", "read" };
-                e->RemovePolicy(params);
+                e.RemovePolicy(params);
 
                 scope = InitializeParamsWithDomains("alice", "domain1", "data1", "read");
                 TestEnforce(e, scope, false);
@@ -368,13 +368,13 @@ namespace test_model_enforcer
             TEST_METHOD(TestRBACModelWithDomainsAtRuntimeMockAdapter) {
                 string model = "../../examples/rbac_with_domains_model.conf";
                 string policy = "../../examples/rbac_with_domains_policy.csv";
-                shared_ptr<Adapter> adapter = shared_ptr<FileAdapter>(FileAdapter ::NewAdapter(policy));
-                unique_ptr<Enforcer> e = Enforcer :: NewEnforcer(model, adapter);
+                shared_ptr<Adapter> adapter = shared_ptr<FileAdapter>(new FileAdapter(policy));
+                Enforcer e = Enforcer(model, adapter);
 
                 vector<string> params{ "admin", "domain3", "data1", "read" };
-                e->AddPolicy(params);
+                e.AddPolicy(params);
                 params = vector<string>{ "alice", "admin", "domain3" };
-                e->AddGroupingPolicy(params);
+                e.AddGroupingPolicy(params);
 
                 Scope scope = InitializeParamsWithDomains("alice", "domain3", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -382,14 +382,14 @@ namespace test_model_enforcer
                 scope = InitializeParamsWithDomains("alice", "domain1", "data1", "read");
                 TestEnforce(e, scope, true);
                 params = vector<string>{ "domain1", "data1" };
-                e->RemoveFilteredPolicy(1, params);
+                e.RemoveFilteredPolicy(1, params);
                 scope = InitializeParamsWithDomains("alice", "domain1", "data1", "read");
                 TestEnforce(e, scope, false);
 
                 scope = InitializeParamsWithDomains("bob", "domain2", "data2", "read");
                 TestEnforce(e, scope, true);
                 params = vector<string>{ "admin", "domain2", "data2", "read" };
-                e->RemovePolicy(params);
+                e.RemovePolicy(params);
                 scope = InitializeParamsWithDomains("bob", "domain2", "data2", "read");
                 TestEnforce(e, scope, false);
             }
@@ -397,7 +397,7 @@ namespace test_model_enforcer
             TEST_METHOD(TestRBACModelWithDeny) {
                 string model = "../../examples/rbac_with_deny_model.conf";
                 string policy = "../../examples/rbac_with_deny_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer :: NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -420,7 +420,7 @@ namespace test_model_enforcer
             TEST_METHOD(TestRBACModelWithOnlyDeny) {
                 string model = "../../examples/rbac_with_not_deny_model.conf";
                 string policy = "../../examples/rbac_with_deny_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 Scope scope = InitializeParams("alice", "data2", "write");
                 TestEnforce(e, scope, false);
@@ -429,13 +429,13 @@ namespace test_model_enforcer
             TEST_METHOD(TestRBACModelWithCustomData) {
                 string model = "../../examples/rbac_model.conf";
                 string policy = "../../examples/rbac_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 // You can add custom data to a grouping policy, Casbin will ignore it. It is only meaningful to the caller.
                 // This feature can be used to store information like whether "bob" is an end user (so no subject will inherit "bob")
                 // For Casbin, it is equivalent to: e.AddGroupingPolicy("bob", "data2_admin")
                 vector<string> params{ "bob", "data2_admin", "custom_data" };
-                e->AddGroupingPolicy(params);
+                e.AddGroupingPolicy(params);
 
                 Scope scope = InitializeParams("alice", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -458,7 +458,7 @@ namespace test_model_enforcer
                 // e.RemoveGroupingPolicy("bob", "data2_admin") won't work.
                 // Or you can remove it by using RemoveFilteredGroupingPolicy().
                 params = vector<string>{ "bob", "data2_admin", "custom_data" };
-                e->RemoveGroupingPolicy(params);
+                e.RemoveGroupingPolicy(params);
 
                 scope = InitializeParams("alice", "data1", "read");
                 TestEnforce(e, scope, true);
@@ -481,14 +481,14 @@ namespace test_model_enforcer
             TEST_METHOD(TestRBACModelWithPattern) {
                 string model = "../../examples/rbac_with_pattern_model.conf";
                 string policy = "../../examples/rbac_with_pattern_policy.csv";
-                unique_ptr<Enforcer> e = Enforcer::NewEnforcer(model, policy);
+                Enforcer e = Enforcer(model, policy);
 
                 // Here's a little confusing: the matching function here is not the custom function used in matcher.
                 // It is the matching function used by "g" (and "g2", "g3" if any..)
                 // You can see in policy that: "g2, /book/:id, book_group", so in "g2()" function in the matcher, instead
                 // of checking whether "/book/:id" equals the obj: "/book/1", it checks whether the pattern matches.
                 // You can see it as normal RBAC: "/book/:id" == "/book/1" becomes KeyMatch2("/book/:id", "/book/1")
-                DefaultRoleManager* rm_tmp = (DefaultRoleManager*)e->rm.get();
+                DefaultRoleManager* rm_tmp = (DefaultRoleManager*)e.rm.get();
                 rm_tmp->AddMatchingFunc(KeyMatch2);
                 Scope scope = InitializeParams("alice", "/book/1", "GET");
                 TestEnforce(e, scope, true);

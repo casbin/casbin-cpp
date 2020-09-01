@@ -23,7 +23,7 @@
 #include "./assertion.h"
 #include "../exception/illegal_argument_exception.h"
 
-void Assertion :: BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, vector<vector<string>> rules) {
+void Assertion :: BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_op op, vector<vector<string>> rules) {
     this->rm = rm;
     int char_count = int(count(this->value.begin(), this->value.end(), '_'));
 
@@ -50,7 +50,7 @@ void Assertion :: BuildIncrementalRoleLinks(RoleManager* rm, policy_op op, vecto
     }
 }
 
-void Assertion :: BuildRoleLinks(RoleManager* rm) {
+void Assertion :: BuildRoleLinks(shared_ptr<RoleManager> rm) {
     this->rm = rm;
     int char_count = int(count(this->value.begin(), this->value.end(), '_'));
 
