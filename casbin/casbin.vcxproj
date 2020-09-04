@@ -157,6 +157,7 @@
     <ClCompile Include="duktape\duktape.cpp" />
     <ClCompile Include="effect\default_effector.cpp" />
     <ClCompile Include="enforcer.cpp" />
+    <ClCompile Include="enforcer_cached.cpp" />
     <ClCompile Include="exception\casbin_adapter_exception.cpp" />
     <ClCompile Include="exception\casbin_enforcer_exception.cpp" />
     <ClCompile Include="exception\casbin_rbac_exception.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="effect\effector.h" />
     <ClInclude Include="effect\pch.h" />
     <ClInclude Include="enforcer.h" />
+    <ClInclude Include="enforcer_cached.h" />
     <ClInclude Include="enforcer_interface.h" />
     <ClInclude Include="exception.h" />
     <ClInclude Include="exception\casbin_adapter_exception.h" />
@@ -285,6 +287,9 @@
     <ClInclude Include="util\built_in_functions.h" />
     <ClInclude Include="util\pch.h" />
     <ClInclude Include="util\util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

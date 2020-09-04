@@ -168,6 +168,7 @@
     <ClCompile Include="test_built_in_functions.cpp" />
     <ClCompile Include="test_config.cpp" />
     <ClCompile Include="test_enforcer.cpp" />
+    <ClCompile Include="test_enforcer_cached.cpp" />
     <ClCompile Include="test_management_api.cpp" />
     <ClCompile Include="test_model.cpp" />
     <ClCompile Include="test_model_enforcer.cpp" />
@@ -178,6 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
