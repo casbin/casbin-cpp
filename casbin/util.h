@@ -19,5 +19,6 @@
 
 #include "./util/built_in_functions.h"
 #include "./util/util.h"
+#include "./util/channel.h"
 
 #endif

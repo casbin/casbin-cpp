@@ -255,6 +255,9 @@
     <ClCompile Include="enforcer_cached.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="util\channel.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config\config_interface.h">
@@ -469,6 +472,9 @@
     </ClInclude>
     <ClInclude Include="enforcer_cached.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\channel.h">
+      <Filter>Header Files\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

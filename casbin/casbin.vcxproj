@@ -204,6 +204,7 @@
     <ClCompile Include="util\array_remove_duplicates.cpp" />
     <ClCompile Include="util\array_to_string.cpp" />
     <ClCompile Include="util\built_in_functions.cpp" />
+    <ClCompile Include="util\channel.cpp" />
     <ClCompile Include="util\ends_with.cpp" />
     <ClCompile Include="util\escape_assertion.cpp" />
     <ClCompile Include="util\find_all_occurences.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="rbac\role_manager.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="util\built_in_functions.h" />
+    <ClInclude Include="util\channel.h" />
     <ClInclude Include="util\pch.h" />
     <ClInclude Include="util\util.h" />
   </ItemGroup>
