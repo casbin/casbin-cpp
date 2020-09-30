@@ -176,6 +176,7 @@
     <ClCompile Include="test_rbac_api_with_domains.cpp" />
     <ClCompile Include="test_role_manager.cpp" />
     <ClCompile Include="test_util.cpp" />
+    <ClCompile Include="test_util_channel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

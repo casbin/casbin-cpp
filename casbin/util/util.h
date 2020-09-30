@@ -19,6 +19,8 @@
 
 #include <vector>
 #include <string>
+#include <mutex>
+#include <string>
 
 using namespace std;
 
@@ -62,5 +64,9 @@ string& LTrim(string& str, const string& chars = "\t\n\v\f\r ");
 string& RTrim(string& str, const string& chars = "\t\n\v\f\r ");
  
 string Trim(string& str, const string& chars = "\t\n\v\f\r ");
+
+
+
+
 
 #endif
