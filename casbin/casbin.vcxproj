@@ -159,6 +159,7 @@
     <ClCompile Include="effect\default_effector.cpp" />
     <ClCompile Include="enforcer.cpp" />
     <ClCompile Include="enforcer_cached.cpp" />
+    <ClCompile Include="enforcer_synced.cpp" />
     <ClCompile Include="exception\casbin_adapter_exception.cpp" />
     <ClCompile Include="exception\casbin_enforcer_exception.cpp" />
     <ClCompile Include="exception\casbin_rbac_exception.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="enforcer.h" />
     <ClInclude Include="enforcer_cached.h" />
     <ClInclude Include="enforcer_interface.h" />
+    <ClInclude Include="enforcer_synced.h" />
     <ClInclude Include="exception.h" />
     <ClInclude Include="exception\casbin_adapter_exception.h" />
     <ClInclude Include="exception\casbin_enforcer_exception.h" />

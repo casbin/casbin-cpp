@@ -25,7 +25,7 @@
 
 // Enforcer is the main interface for authorization enforcement and policy management.
 class Enforcer : public IEnforcer{
-    private:
+    public:
 
         string model_path;
         shared_ptr<Model> model;

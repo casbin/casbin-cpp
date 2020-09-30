@@ -75,6 +75,7 @@ class Channel {
 public:
   shared_ptr<Internal_Channel<T>> ptr;
 
+  Channel<T>();
   Channel<T>(const int& bufsize);
 
   T recv(void);
@@ -207,5 +208,32 @@ public:
     void run();
 };
 
+template <class T>
+class TickerGuard;
+
+template <class T>
+class Ticker {
+public:
+    TickerGuard<T> tickerGuard;
+    Channel<T> c;
+    T signal;
+    chrono::duration<int, milli> duration;
+    Ticker(chrono::duration<int, milli> duration);
+    Ticker(chrono::duration<int, milli> duration,T signal);
+    ~Ticker();
+    void setSignal(T signal);
+    void stop();
+    void send();
+};
+
+template <class T>
+class TickerGuard {
+public:
+    Ticker<T>* ticker;
+    thread* p_thread;
+    TickerGuard();
+    void startTimer(Ticker<T>* ticker);
+    void stopTimer();
+};
 
 #endif

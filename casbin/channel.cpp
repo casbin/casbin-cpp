@@ -179,6 +179,11 @@ shared_ptr<Sudog<T>> Sudog<T>::getsudog(void) {
 }
 
 template <class T>
+Channel<T>::Channel<T>(){
+  ptr = shared_ptr<Internal_Channel<T>>(new Internal_Channel<T>(0));
+}
+
+template <class T>
 Channel<T>::Channel<T>(const int& bufsize){
   ptr = shared_ptr<Internal_Channel<T>>(new Internal_Channel<T>(bufsize));
 }
@@ -715,4 +720,92 @@ void f9() {
                 s.def([&i]() { i = 30; });
                 s.run();
 
+}
+
+
+
+
+template <class T>
+Ticker<T>::Ticker(chrono::duration<int, milli> duration) {
+    this->tickerGuard = TickerGuard<T>();
+    this->duration=duration;
+    this->signal=signal;
+    this->c = Channel<T>(1);
+    tickerGuard.startTimer(this);
+}
+
+template <class T>
+Ticker<T>::Ticker(chrono::duration<int, milli> duration, T signal) {
+    this->tickerGuard = TickerGuard<T>();
+    tickerGuard.startTimer(this);
+    this->duration=duration;
+    this->signal=signal;
+    this->c = Channel<T>(1);
+    tickerGuard.startTimer(this);
+}
+
+template <class T>
+Ticker<T>::~Ticker() {
+    stop();
+}
+
+template <class T>
+void Ticker<T>::setSignal(T signal) {
+    this->signal = signal;
+}
+
+template <class T>
+void Ticker<T>::stop() {
+    tickerGuard.stopTimer();
+}
+
+template <class T>
+void Ticker<T>::send() {
+
+}
+
+template <class T>
+TickerGuard<T>::TickerGuard() {
+
+}
+
+template <class T>
+void tickerFunc(Ticker<T>* ticker) {
+    try {
+        while (ticker!=NULL) {
+        Select<T> sc = Select<T>();
+        sc.send(ticker->c, ticker->signal, []() {});
+        sc.def([]() {});
+        sc.run();
+        this_thread::sleep_for(ticker->duration);
+        }
+    }
+    catch (exception &e){
+
+    }
+    return;
+}
+
+template <class T>
+void TickerGuard<T>::startTimer(Ticker<T>* ticker) {
+    if (ticker != NULL) {
+        this->ticker = ticker;
+        thread t(tickerFunc,ticker);
+        t.detach();
+        this->p_thread = &t;
+    }
+}
+
+template <class T>
+void TickerGuard<T>::stopTimer() {
+    try {
+        if (ticker != NULL && p_thread!=NULL) {
+            p_thread->~thread();
+        }
+    }
+    catch (exception& e) {
+
+    }
+   
+    return;
 }
