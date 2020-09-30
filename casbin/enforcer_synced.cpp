@@ -78,7 +78,7 @@ SyncedEnforcer ::SyncedEnforcer(string model_path)
 SyncedEnforcer ::SyncedEnforcer(string model_path, string policy_file, bool enable_log)
     : Enforcer(model_path, policy_file, enable_log) {
     stopAutoLoad = Channel<int>(1);
-    autoLoadRunning = 0;
+    autoLoadRunning.store(0);
 }
 
 SyncedEnforcer::SyncedEnforcer(SyncedEnforcer&& se) {
@@ -95,25 +95,53 @@ void SyncedEnforcer::StartAutoLoadPolicy(chrono::duration<int, milli> duration) 
         return;
     }
     autoLoadRunning.store(1);
-    Ticker<int> ticker = Ticker<int>(duration,1);
+    LoadPolicy();
+    //Ticker<int> ticker = Ticker<int>(duration,1);
+    /*
+    Channel<int> c = Channel<int>(1);
+    bool ticker = true;
+    auto lambda1 = [c, &duration,&ticker](void)->void {
+        while (ticker) {
+            Select<int> sc = Select<int>();
+            sc.send(c, 1, []() {});
+            sc.def([]() {});
+            sc.run();
+            this_thread::sleep_for(duration);
+        }
+    };
+
     int n = 1;
     bool flag = true;
-    while (flag) {
 
-        Select<int> s;
-        int i;
-        s.recv(ticker.c, i, [&n, this]() {
-            this->LoadPolicy();
-            n++;
-        });
-        s.recv(this->stopAutoLoad, i, [&flag] { flag = false; });
-    }
+
+    auto lambda2 = [c, &ticker, &n, &flag, this](void) -> void {
+        while (flag) {
+            Select<int> s;
+            int i;
+            s.recv(c, i, [&n, this]() {
+                this->LoadPolicy();
+                n++;
+            });
+            s.recv(this->stopAutoLoad, i, [&flag, &ticker] {
+                flag = false;
+                ticker = false;
+            });
+        }
+    };
+
+    thread f1(lambda1);
+    thread f2(lambda2);
+    
+    f1.join();
+    f2.join();
+    */
     return;
 }
 
 void SyncedEnforcer::StopAutoLoadPolicy() {
     if (IsAutoLoadingRunning()) {
-        stopAutoLoad.send(1);
+        //stopAutoLoad.send(1);
+        autoLoadRunning.store(0);
     }
 }
 

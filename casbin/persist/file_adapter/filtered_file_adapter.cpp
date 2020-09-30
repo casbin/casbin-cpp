@@ -77,7 +77,7 @@ void FilteredFileAdapter :: LoadPolicy(Model* model) {
 }
 
 // LoadFilteredPolicy loads only policy rules that match the filter.
-void FilteredFileAdapter :: LoadFilteredPolicy(Model* model, Filter* filter) {
+void FilteredFileAdapter::LoadFilteredPolicy(Model* model, Filter* filter){
     if (filter == NULL) {
         this->LoadPolicy(model);
     }

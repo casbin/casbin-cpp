@@ -22,6 +22,7 @@
 #include "./persist/default_watcher.h"
 #include "./effect/effector.h"
 #include "./model/scope_config.h"
+#include "./persist/filtered_adapter.h"
 
 // IEnforcer is the API interface of Enforcer
 class IEnforcer {
@@ -44,8 +45,7 @@ class IEnforcer {
         virtual void ClearPolicy() = 0;
         virtual void LoadPolicy() = 0;
 
-        template<typename Filter>
-        void LoadFilteredPolicy(Filter filter);
+        virtual void LoadFilteredPolicy(Filter filter) = 0;
 
         virtual bool IsFiltered() = 0;
         virtual void SavePolicy() = 0;

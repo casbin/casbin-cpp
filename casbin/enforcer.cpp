@@ -349,7 +349,6 @@ void Enforcer :: LoadPolicy() {
 }
 
 //LoadFilteredPolicy reloads a filtered policy from file/database.
-template<typename Filter>
 void Enforcer :: LoadFilteredPolicy(Filter filter) {
     this->ClearPolicy();
 
@@ -361,7 +360,7 @@ void Enforcer :: LoadFilteredPolicy(Filter filter) {
     else
         throw CasbinAdapterException("filtered policies are not supported by this adapter");
 
-    filtered_adapter->LoadFilteredPolicy(this->model, filter);
+    filtered_adapter->LoadFilteredPolicy(this->model.get(), &filter);
 
     this->model->PrintPolicy();
     if(this->auto_build_role_links)

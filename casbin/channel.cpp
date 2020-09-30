@@ -187,6 +187,23 @@ template <class T>
 Channel<T>::Channel<T>(const int& bufsize){
   ptr = shared_ptr<Internal_Channel<T>>(new Internal_Channel<T>(bufsize));
 }
+/*
+template <class T>
+Channel<T>& Channel<T>::operator=(const Channel<T>& c) {
+    this->ptr = c.ptr;
+    return *this;
+}
+
+template <class T>
+Channel<T>& Channel<T>::operator=(Channel<T>&& c) {
+    this->ptr = move(c.ptr);
+    return *this;
+}
+
+template <class T>
+Channel<T>::Channel<T>(const Channel<T>& c) {
+    this->ptr = c.ptr;
+}*/
 
 template <class T>
 T Channel<T>::recv(void) {
@@ -487,19 +504,13 @@ void Sudog_List<T>::push_back(const shared_ptr<Sudog<T>>& sg) {
 }
 
 template <class T> 
-SCase_Send<T>::SCase_Send<T>(const Channel<T>& c, T&& elem, function<void(void)> f) {
+SCase_Send<T>::SCase_Send<T>(const Channel<T>& c, T&& elem, function<void(void)> f):SCase<T>(c,f),elem(move(elem)) {
     this->ct = SEND;
-    this->c = c;
-    this->elem = move(elem);
-    this->f = f;
 }
 
 template <class T> 
-SCase_Send<T>::SCase_Send<T>(const Channel<T>& c, const T& elem, function<void(void)> f) {
+SCase_Send<T>::SCase_Send<T>(const Channel<T>& c, const T& elem, function<void(void)> f):SCase<T>(c,f),elem(elem) {
     this->ct = SEND;
-    this->c = c;
-    this->elem = elem;
-    this->f = f;
 }
 
 template <class T> 
@@ -701,8 +712,10 @@ void f8()
 }
 
 void f9() {
-    Channel<char> c1 = Channel<char> (1);
+                Channel<char> c1 = Channel<char> (1);
                 Channel<char> c2 = Channel<char> (1);
+                Channel<int> c3 = Channel<int> (1);
+                Channel<int> c4 = Channel<int> (1);
                 
                 Select<char> s;
                 char ch = 'S';
@@ -719,6 +732,13 @@ void f9() {
                 s.recv(c2, ch, [&i]() { i = 20; });
                 s.def([&i]() { i = 30; });
                 s.run();
+                Ticker<int> t = Ticker<int>(chrono::milliseconds(20), 10);
+                Select<int> s2;
+                s2.recv(c3, i, []() {});
+                s2.recv(c4, i, []() {});
+                s2.send(c3, 10, []() {});
+                s2.def([]() { });
+                s2.run();
 
 }
 
@@ -769,6 +789,7 @@ TickerGuard<T>::TickerGuard() {
 
 }
 
+/*
 template <class T>
 void tickerFunc(Ticker<T>* ticker) {
     try {
@@ -784,13 +805,17 @@ void tickerFunc(Ticker<T>* ticker) {
 
     }
     return;
+}*/
+
+void tickerFunc(int i) {
+    
 }
 
 template <class T>
 void TickerGuard<T>::startTimer(Ticker<T>* ticker) {
     if (ticker != NULL) {
         this->ticker = ticker;
-        thread t(tickerFunc,ticker);
+        thread t(tickerFunc,10);
         t.detach();
         this->p_thread = &t;
     }

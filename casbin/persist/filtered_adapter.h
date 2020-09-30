@@ -32,7 +32,7 @@ class FilteredAdapter : virtual public Adapter {
     public:
 
         // LoadFilteredPolicy loads only policy rules that match the filter.
-        void LoadFilteredPolicy(Model* model, Filter* filter);
+        virtual void LoadFilteredPolicy(Model* model, Filter* filter)=0;
         // IsFiltered returns true if the loaded policy has been filtered.
         virtual bool IsFiltered() = 0;
 };

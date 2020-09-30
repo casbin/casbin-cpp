@@ -77,6 +77,9 @@ public:
 
   Channel<T>();
   Channel<T>(const int& bufsize);
+  //Channel<T>(const Channel<T>& c);
+  //Channel<T>& operator=(const Channel<T>& c);
+  //Channel<T>& operator=(Channel<T>&& c);
 
   T recv(void);
   void recv(T &elem);

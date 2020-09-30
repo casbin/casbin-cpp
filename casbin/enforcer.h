@@ -123,7 +123,6 @@ class Enforcer : public IEnforcer{
         // LoadPolicy reloads the policy from file/database.
         void LoadPolicy();
         //LoadFilteredPolicy reloads a filtered policy from file/database.
-        template<typename Filter>
         void LoadFilteredPolicy(Filter filter);
         // IsFiltered returns true if the loaded policy has been filtered.
         bool IsFiltered();
