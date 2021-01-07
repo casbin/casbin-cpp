@@ -67,7 +67,7 @@
     <Filter Include="Source Files\ip_parser\parser">
       <UniqueIdentifier>{deb02d53-9580-4fb9-b666-6b3a2713d286}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ip_parser\exceptions">
+    <Filter Include="Source Files\ip_parser\exception">
       <UniqueIdentifier>{c1a83ec0-b3e2-4b46-9755-6e20d8f26356}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\persist">
@@ -243,9 +243,6 @@
     <ClCompile Include="rbac_api_with_domains.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ip_parser\exception\ParserException.cpp">
-      <Filter>Source Files\ip_parser\exceptions</Filter>
-    </ClCompile>
     <ClCompile Include="ip_parser\parser\parseIPv4.cpp">
       <Filter>Source Files\ip_parser\parser</Filter>
     </ClCompile>
@@ -260,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="enforcer_synced.cpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClCompile Include="ip_parser\exception\parser_exception.cpp">
+      <Filter>Source Files\ip_parser\exception</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -353,10 +353,7 @@
     <ClInclude Include="exception\unsupported_operation_exception.h">
       <Filter>Header Files\exception</Filter>
     </ClInclude>
-    <ClInclude Include="ip_parser\exceptions\ParserException.h">
-      <Filter>Header Files\ip_parser\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="ip_parser\exceptions\pch.h">
+    <ClInclude Include="ip_parser\exception\pch.h">
       <Filter>Header Files\ip_parser\exception</Filter>
     </ClInclude>
     <ClInclude Include="ip_parser\parser\allFF.h">
@@ -481,6 +478,9 @@
     </ClInclude>
     <ClInclude Include="enforcer_synced.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ip_parser\exception\parser_exception.h">
+      <Filter>Header Files\ip_parser\exception</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

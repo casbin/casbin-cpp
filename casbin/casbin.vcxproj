@@ -168,7 +168,7 @@
     <ClCompile Include="exception\missing_required_sections.cpp" />
     <ClCompile Include="exception\unsupported_operation_exception.cpp" />
     <ClCompile Include="internal_api.cpp" />
-    <ClCompile Include="ip_parser\exception\ParserException.cpp" />
+    <ClCompile Include="ip_parser\exception\parser_exception.cpp" />
     <ClCompile Include="ip_parser\parser\allFF.cpp" />
     <ClCompile Include="ip_parser\parser\CIDRMask.cpp" />
     <ClCompile Include="ip_parser\parser\dtoi.cpp" />
@@ -245,8 +245,8 @@
     <ClInclude Include="exception\missing_required_sections.h" />
     <ClInclude Include="exception\pch.h" />
     <ClInclude Include="exception\unsupported_operation_exception.h" />
-    <ClInclude Include="ip_parser\exceptions\ParserException.h" />
-    <ClInclude Include="ip_parser\exceptions\pch.h" />
+    <ClInclude Include="ip_parser\exception\parser_exception.h" />
+    <ClInclude Include="ip_parser\exception\pch.h" />
     <ClInclude Include="ip_parser\parser\allFF.h" />
     <ClInclude Include="ip_parser\parser\byte.h" />
     <ClInclude Include="ip_parser\parser\CIDR.h" />
