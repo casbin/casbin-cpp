@@ -26,7 +26,7 @@ FunctionMap :: FunctionMap(){
 }
 
 void FunctionMap :: ProcessFunctions(string expression){
-    for(unordered_map<string, Function> :: iterator it = this->func_map.begin() ; it != this->func_map.end() ; it++){
+    for(unordered_map<string, pair<Function, Index>> :: iterator it = func_map.begin() ; it != func_map.end() ; it++){
         int index = int(expression.find((it->first)+"("));
 
         if(index != string::npos){
@@ -70,8 +70,7 @@ bool FunctionMap :: GetBooleanResult(){
 
 // AddFunction adds an expression function.
 void FunctionMap :: AddFunction(string func_name, Function f, Index nargs) {
-    func_map[func_name] = f;
-    PushFunction(this->scope, f, func_name, nargs);
+    func_map[func_name] = make_pair(f, nargs);
 }
 
 void FunctionMap :: AddFunctionPropToR(string identifier, Function func, Index nargs){
@@ -121,4 +120,11 @@ void FunctionMap :: LoadFunctionMap() {
     AddFunction("keyMatch3", KeyMatch3, 2);
     AddFunction("regexMatch", RegexMatch, 2);
     AddFunction("ipMatch", IPMatch, 2);
+}
+
+// LoadFunctionMap loads an initial function map.
+void FunctionMap :: ApplyFunctionMap() {
+    for(unordered_map<string, pair<Function, Index>> :: iterator it = func_map.begin() ; it != func_map.end() ; it++){
+        PushFunction(scope, it->second.first, it->first, it->second.second);
+    }
 }

@@ -39,7 +39,6 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
     // }()
 
     this->func_map.scope = scope;
-    this->func_map.LoadFunctionMap();
 
     if(!this->enabled)
         return true;
@@ -69,6 +68,8 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
         }
     }
 
+    this->func_map.ApplyFunctionMap();
+
     unordered_map <string, int> p_int_tokens;
     for(int i = 0 ; i < this->model->m["p"].assertion_map["p"]->tokens.size() ; i++)
         p_int_tokens[this->model->m["p"].assertion_map["p"]->tokens[i]] = i;
@@ -78,7 +79,7 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
     int policy_len = int(this->model->m["p"].assertion_map["p"]->policy.size());
 
     vector <Effect> policy_effects(policy_len, Effect :: Indeterminate);
-    vector <float> matcher_results(policy_len);
+    vector <float> matcher_results(policy_len, 0.0);
 
     if(policy_len != 0) {
         if(this->model->m["r"].assertion_map["r"]->tokens.size() != this->func_map.GetRLen())
