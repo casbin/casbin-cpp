@@ -78,7 +78,7 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
     int policy_len = int(this->model->m["p"].assertion_map["p"]->policy.size());
 
     vector <Effect> policy_effects(policy_len, Effect :: Indeterminate);
-    vector <float> matcher_results;
+    vector <float> matcher_results(policy_len);
 
     if(policy_len != 0) {
         if(this->model->m["r"].assertion_map["r"]->tokens.size() != this->func_map.GetRLen())
@@ -110,8 +110,8 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
                 }
             }
             else if(CheckType(this->func_map.scope) == Type :: Float){
-                bool result = GetFloat(this->func_map.scope);
-                if(result == 0) {
+                float result = GetFloat(this->func_map.scope);
+                if(result == 0.0) {
                     policy_effects[i] = Effect :: Indeterminate;
                     continue;
                 } else
