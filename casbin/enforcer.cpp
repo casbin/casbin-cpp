@@ -200,7 +200,7 @@ Enforcer :: Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
 
     this->Initialize();
 
-    if (this->adapter->file_path != "") {
+    if (this->adapter && this->adapter->file_path != "") {
         this->LoadPolicy();
     }
 }
