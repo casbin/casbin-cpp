@@ -17,7 +17,7 @@
 #ifndef CASBIN_CPP_MODEL_FUNCTION
 #define CASBIN_CPP_MODEL_FUNCTION
 
-#include <unordered_map>
+#include <list>
 
 #include "../util/built_in_functions.h"
 
@@ -26,7 +26,7 @@ using namespace std;
 class FunctionMap {
     public:
         Scope scope;
-        unordered_map <string, Function> func_map;
+        list <string> func_list;
 
         FunctionMap();
 

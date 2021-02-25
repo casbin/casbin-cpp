@@ -305,5 +305,5 @@ bool Enforcer :: RemoveFilteredNamedGroupingPolicy(string p_type, int field_inde
 
 // AddFunction adds a customized function.
 void Enforcer :: AddFunction(string name, Function function, Index nargs) {
-    this->func_map.AddFunction(name, function, nargs);
+    user_func_list.push_back(make_tuple(name, function, nargs));
 }

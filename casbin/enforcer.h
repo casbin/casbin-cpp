@@ -17,7 +17,8 @@
 #ifndef CASBIN_CPP_ENFORCER
 #define CASBIN_CPP_ENFORCER
 
-#include<memory>
+#include <tuple>
+#include <vector>
 #include "./rbac/role_manager.h"
 #include "./model/function.h"
 #include "./enforcer_interface.h"
@@ -30,6 +31,7 @@ class Enforcer : public IEnforcer{
         string model_path;
         shared_ptr<Model> model;
         FunctionMap func_map;
+        vector <tuple<string, Function, Index>> user_func_list;
         shared_ptr<Effector> eft;
 
         shared_ptr<Adapter> adapter;

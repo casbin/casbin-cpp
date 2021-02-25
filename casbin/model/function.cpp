@@ -26,15 +26,15 @@ FunctionMap :: FunctionMap(){
 }
 
 void FunctionMap :: ProcessFunctions(string expression){
-    for(unordered_map<string, Function> :: iterator it = this->func_map.begin() ; it != this->func_map.end() ; it++){
-        int index = int(expression.find((it->first)+"("));
+    for(auto func: func_list){
+        int index = int(expression.find(func+"("));
 
         if(index != string::npos){
             int close_index = int(expression.find(")", index));
-            int start = index + int(((it->first)+"(").length());
+            int start = index + int((func+"(").length());
 
             string function_params = expression.substr(start, close_index-start);
-            FetchIdentifier(this->scope, it->first);
+            FetchIdentifier(this->scope, func);
             vector<string> params = Split(function_params, ",");
 
             for(int i=0;i<params.size();i++){
@@ -70,8 +70,8 @@ bool FunctionMap :: GetBooleanResult(){
 
 // AddFunction adds an expression function.
 void FunctionMap :: AddFunction(string func_name, Function f, Index nargs) {
-    func_map[func_name] = f;
-    PushFunction(this->scope, f, func_name, nargs);
+    func_list.push_back(func_name);
+    PushFunction(scope, f, func_name, nargs);
 }
 
 void FunctionMap :: AddFunctionPropToR(string identifier, Function func, Index nargs){
