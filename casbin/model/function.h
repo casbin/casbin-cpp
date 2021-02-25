@@ -17,8 +17,7 @@
 #ifndef CASBIN_CPP_MODEL_FUNCTION
 #define CASBIN_CPP_MODEL_FUNCTION
 
-#include <utility>
-#include <unordered_map>
+#include <list>
 
 #include "../util/built_in_functions.h"
 
@@ -27,7 +26,7 @@ using namespace std;
 class FunctionMap {
     public:
         Scope scope;
-        unordered_map <string, pair<Function, Index>> func_map;
+        list <string> func_list;
 
         FunctionMap();
 
@@ -64,9 +63,6 @@ class FunctionMap {
 
         // LoadFunctionMap loads an initial function map.
         void LoadFunctionMap();
-
-        // ApplyFunctionMap push function in func_map to current scope.
-        void ApplyFunctionMap();
 
 };
 

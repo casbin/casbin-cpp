@@ -68,7 +68,10 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
         }
     }
 
-    this->func_map.ApplyFunctionMap();
+    // apply function map to current scope.
+    for(auto func: user_func_list){
+        this->func_map.AddFunction(get<0>(func), get<1>(func), get<2>(func));
+    }
 
     unordered_map <string, int> p_int_tokens;
     for(int i = 0 ; i < this->model->m["p"].assertion_map["p"]->tokens.size() ; i++)
