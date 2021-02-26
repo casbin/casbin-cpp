@@ -200,7 +200,6 @@ Enforcer :: Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
 
     this->model = m;
     this->model->PrintModel();
-    this->func_map.LoadFunctionMap();
 
     this->Initialize();
 
