@@ -22,7 +22,7 @@
 #include "../util/util.h"
 
 FunctionMap :: FunctionMap(){
-    scope = InitializeScope();
+    scope = NULL;
 }
 
 void FunctionMap :: ProcessFunctions(string expression){

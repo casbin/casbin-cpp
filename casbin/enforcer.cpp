@@ -200,7 +200,6 @@ Enforcer :: Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
 
     this->model = m;
     this->model->PrintModel();
-    this->func_map.LoadFunctionMap();
 
     this->Initialize();
 
@@ -468,7 +467,9 @@ bool Enforcer::EnforceWithMatcher(string matcher, vector<string> params) {
         PushStringPropToObject(scope, "r", params[i], r_tokens[i].substr(2, r_tokens[i].size() - 2));
     }
 
-    return this->enforce(matcher, scope);
+    bool result = this->enforce(matcher, scope);
+    DeinitializeScope(scope);
+    return result;
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
@@ -480,5 +481,7 @@ bool Enforcer::EnforceWithMatcher(string matcher, unordered_map<string, string> 
         PushStringPropToObject(scope, "r", r.second, r.first);
     }
 
-    return this->enforce(matcher, scope);
+    bool result = this->enforce(matcher, scope);
+    DeinitializeScope(scope);
+    return result;
 }
