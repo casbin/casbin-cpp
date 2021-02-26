@@ -24,6 +24,10 @@ Scope InitializeScope() {
     return duk_create_heap_default();
 }
 
+void DeinitializeScope(Scope scope) {
+    duk_destroy_heap(scope);
+}
+
 void PushFunctionValue(Scope scope, Function f, int nargs){
     duk_push_c_function(scope, f, (Index)nargs);
 }
