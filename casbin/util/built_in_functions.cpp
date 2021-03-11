@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef BUILT_IN_FUNCTIONS_CPP
+#define BUILT_IN_FUNCTIONS_CPP
+
 
 #include <regex>
 
@@ -227,3 +229,5 @@ ReturnType GFunction(Scope scope) {
 
     return RETURN_RESULT;
 }
+
+#endif // BUILT_IN_FUNCTIONS_CPP

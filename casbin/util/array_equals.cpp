@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef ARRAY_EQUALS_CPP
+#define ARRAY_EQUALS_CPP
+
 
 #include <algorithm>
 
@@ -39,3 +41,5 @@ bool ArrayEquals(vector<string> a, vector<string> b) {
     }
     return true;
 }
+
+#endif // ARRAY_EQUALS_CPP

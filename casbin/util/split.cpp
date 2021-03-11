@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef SPLIT_CPP
+#define SPLIT_CPP
+
 
 #include <string.h>
 
@@ -44,3 +46,5 @@ vector<string> Split(string str, string del, int limit){
 
     return tokens;
 }
+
+#endif // SPLIT_CPP

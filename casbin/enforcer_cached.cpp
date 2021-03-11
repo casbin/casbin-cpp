@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef ENFORCER_CACHED_CPP
+#define ENFORCER_CACHED_CPP
+
 
 #include "./enforcer_cached.h"
 #include "./persist/watcher_ex.h"
@@ -211,3 +213,5 @@ bool CachedEnforcer::EnforceWithMatcher(string matcher, unordered_map<string, st
   setCachedResult(key, res);
   return res;
 }
+
+#endif // ENFORCER_CACHED_CPP

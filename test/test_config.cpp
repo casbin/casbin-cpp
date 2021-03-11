@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_CONFIG_CPP
+#define TEST_CONFIG_CPP
+
 
 #include <config.h>
 #include <util.h>
@@ -60,3 +62,5 @@ namespace test_config
             }
     };
 }
+
+#endif // TEST_CONFIG_CPP

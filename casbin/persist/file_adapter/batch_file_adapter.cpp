@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef BATCH_FILE_ADAPTER_CPP
+#define BATCH_FILE_ADAPTER_CPP
+
 
 #include "./batch_file_adapter.h"
 #include "../../exception/unsupported_operation_exception.h"
@@ -16,3 +18,5 @@ void BatchFileAdapter :: AddPolicies(string sec, string p_type, vector<vector<st
 void BatchFileAdapter :: RemovePolicies(string sec, string p_type, vector<vector<string>> rules) {
     throw UnsupportedOperationException("not implemented");
 }
+
+#endif // BATCH_FILE_ADAPTER_CPP

@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef PARSEIP_CPP
+#define PARSEIP_CPP
+
 
 #include "./parseIP.h"
 
@@ -17,3 +19,5 @@ IP parseIP(string s) {
     p.isLegal = false;
     return p;
 }
+
+#endif // PARSEIP_CPP

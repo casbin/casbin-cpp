@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef FILTERED_FILE_ADAPTER_CPP
+#define FILTERED_FILE_ADAPTER_CPP
+
 
 #include <fstream>
 
@@ -102,3 +104,5 @@ void FilteredFileAdapter :: SavePolicy(Model* model) {
     }
     this->SavePolicy(model);
 }
+
+#endif // FILTERED_FILE_ADAPTER_CPP

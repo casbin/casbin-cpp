@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef ASSERTION_CPP
+#define ASSERTION_CPP
+
 
 #include <algorithm>
 
@@ -79,3 +81,5 @@ void Assertion :: BuildRoleLinks(shared_ptr<RoleManager> rm) {
 
     // this->rm->PrintRoles();
 }
+
+#endif // ASSERTION_CPP

@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_BUILT_IN_FUNCTIONS_CPP
+#define TEST_BUILT_IN_FUNCTIONS_CPP
+
 
 #include <util.h>
 
@@ -159,3 +161,5 @@ namespace test_built_in_functions
             }
     };
 }
+
+#endif // TEST_BUILT_IN_FUNCTIONS_CPP

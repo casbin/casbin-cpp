@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef JOIN_CPP
+#define JOIN_CPP
+
 
 #include "./util.h"
 
@@ -28,3 +30,5 @@ string Join(vector<string> vos, string sep){
         fs += sep + vos[i];
     return fs;
 }
+
+#endif // JOIN_CPP

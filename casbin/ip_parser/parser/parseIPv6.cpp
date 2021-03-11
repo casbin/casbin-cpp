@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef PARSEIPV6_CPP
+#define PARSEIPV6_CPP
+
 
 #include "./parseIPv6.h"
 
@@ -113,3 +115,5 @@ IP parseIPv6(string s) {
     }
     return ipv6;
 }
+
+#endif // PARSEIPV6_CPP

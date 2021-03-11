@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef RBAC_API_WITH_DOMAINS_CPP
+#define RBAC_API_WITH_DOMAINS_CPP
+
 
 #include "./enforcer.h"
 
@@ -53,3 +55,5 @@ bool Enforcer :: DeleteRoleForUserInDomain(string user, string role, string doma
     vector<string> params{user, role, domain};
 	return this->RemoveGroupingPolicy(params);
 }
+
+#endif // RBAC_API_WITH_DOMAINS_CPP

@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef IPNET_CPP
+#define IPNET_CPP
+
 
 #include "./IPNet.h"
 
@@ -84,3 +86,5 @@ pair<IP, IPMask> IPNet :: networkNumberAndMask(IPNet n) {
     }
     return p;
 }
+
+#endif // IPNET_CPP

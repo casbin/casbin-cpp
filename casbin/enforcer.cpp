@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef ENFORCER_CPP
+#define ENFORCER_CPP
+
 
 #include <algorithm>
 
@@ -485,3 +487,5 @@ bool Enforcer::EnforceWithMatcher(string matcher, unordered_map<string, string> 
     DeinitializeScope(scope);
     return result;
 }
+
+#endif // ENFORCER_CPP

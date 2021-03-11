@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef XTOI_CPP
+#define XTOI_CPP
+
 
 #include "./xtoi.h"
 
@@ -36,3 +38,5 @@ pair<int, int> xtoi(string s) {
     p.second = i;
     return p;
 }
+
+#endif // XTOI_CPP

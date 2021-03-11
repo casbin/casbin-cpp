@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef DTOI_CPP
+#define DTOI_CPP
+
 
 #include "./dtoi.h"
 
@@ -27,3 +29,5 @@ pair<int, int> dtoi(string s) {
     p.second = i;
     return p;
 }
+
+#endif // DTOI_CPP

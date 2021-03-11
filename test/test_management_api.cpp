@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_MANAGEMENT_API_CPP
+#define TEST_MANAGEMENT_API_CPP
+
 
 #include <enforcer.h>
 #include <persist.h>
@@ -249,3 +251,5 @@ namespace test_management_api
             }
     };
 }
+
+#endif // TEST_MANAGEMENT_API_CPP

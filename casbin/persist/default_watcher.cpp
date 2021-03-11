@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef DEFAULT_WATCHER_CPP
+#define DEFAULT_WATCHER_CPP
+
 
 #include "./default_watcher.h"
 
@@ -32,3 +34,5 @@ void DefaultWatcher :: Update() {
 void DefaultWatcher :: Close() {
     return;
 }
+
+#endif // DEFAULT_WATCHER_CPP

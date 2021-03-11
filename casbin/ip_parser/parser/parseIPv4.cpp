@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef PARSEIPV4_CPP
+#define PARSEIPV4_CPP
+
 
 #include "./parseIPv4.h"
 
@@ -34,3 +36,5 @@ IP parseIPv4(string s) {
     }
     return IPv4(pb[0], pb[1], pb[2], pb[3]);
 }
+
+#endif // PARSEIPV4_CPP

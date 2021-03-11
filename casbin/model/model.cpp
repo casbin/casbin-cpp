@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef MODEL_CPP
+#define MODEL_CPP
+
 
 #include <sstream>
 
@@ -343,3 +345,5 @@ vector<string> Model :: GetValuesForFieldInPolicyAllTypes(string sec, int field_
 
     return values;
 }
+
+#endif // MODEL_CPP

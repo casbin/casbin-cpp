@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef SET_SUBSTRACT_CPP
+#define SET_SUBSTRACT_CPP
+
 
 #include <unordered_map>
 
@@ -37,3 +39,5 @@ vector<string> SetSubtract(vector<string> a, vector<string> b) {
             diff.push_back(a[i]);
     return diff;
 }
+
+#endif // SET_SUBSTRACT_CPP

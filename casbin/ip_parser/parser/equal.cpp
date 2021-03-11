@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef EQUAL_CPP
+#define EQUAL_CPP
+
 
 #include "./equal.h"
 
@@ -13,3 +15,5 @@ bool equal(IPMask m1, IPMask m2) {
     }
     return true;
 }
+
+#endif // EQUAL_CPP

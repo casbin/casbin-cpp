@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef IPV4_CPP
+#define IPV4_CPP
+
 
 #include "./IPv4.h"
 
@@ -15,3 +17,5 @@ IP IPv4(byte a, byte b, byte c, byte d) {
     p.isLegal = true;
     return p;
 }
+
+#endif // IPV4_CPP

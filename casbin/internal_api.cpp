@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef INTERNAL_API_CPP
+#define INTERNAL_API_CPP
+
 
 #include "./enforcer.h"
 #include "./persist/batch_adapter.h"
@@ -161,3 +163,5 @@ bool Enforcer :: removeFilteredPolicy(string sec, string p_type, int field_index
 
     return rule_removed;
 }
+
+#endif // INTERNAL_API_CPP

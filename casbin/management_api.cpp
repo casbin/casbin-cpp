@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef MANAGEMENT_API_CPP
+#define MANAGEMENT_API_CPP
+
 
 #include "./enforcer.h"
 
@@ -307,3 +309,5 @@ bool Enforcer :: RemoveFilteredNamedGroupingPolicy(string p_type, int field_inde
 void Enforcer :: AddFunction(string name, Function function, Index nargs) {
     user_func_list.push_back(make_tuple(name, function, nargs));
 }
+
+#endif // MANAGEMENT_API_CPP

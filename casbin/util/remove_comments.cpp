@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef REMOVE_COMMENTS_CPP
+#define REMOVE_COMMENTS_CPP
+
 
 #include "./util.h"
 
@@ -30,3 +32,5 @@ string RemoveComments(string s) {
     string fin_str = s.substr(0, pos);
     return Trim(fin_str);
 }
+
+#endif // REMOVE_COMMENTS_CPP

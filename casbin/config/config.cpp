@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef CONFIG_CPP
+#define CONFIG_CPP
+
 
 #include <fstream>
 #include <sstream>
@@ -181,3 +183,5 @@ string Config :: Get(string key) {
         return data[section][option];
     return "";
 }
+
+#endif // CONFIG_CPP

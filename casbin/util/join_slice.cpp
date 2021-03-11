@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef JOIN_SLICE_CPP
+#define JOIN_SLICE_CPP
+
 
 #include "./util.h"
 
@@ -28,3 +30,5 @@ vector<string> JoinSlice(string a, vector<string> slice) {
         result.push_back(slice[i]);
     return result;
 }
+
+#endif // JOIN_SLICE_CPP

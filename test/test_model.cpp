@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_MODEL_CPP
+#define TEST_MODEL_CPP
+
 
 #include <fstream>
 
@@ -94,3 +96,5 @@ namespace test_model
             }
     };
 }
+
+#endif // TEST_MODEL_CPP

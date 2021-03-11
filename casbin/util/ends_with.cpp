@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef ENDS_WITH_CPP
+#define ENDS_WITH_CPP
+
 
 #include "./util.h"
 
@@ -27,3 +29,5 @@ bool EndsWith(string base, string suffix){
     int suffix_len = int(suffix.length());
     return base.substr(base_len-suffix_len, suffix_len).compare(suffix) == 0;
 }
+
+#endif // ENDS_WITH_CPP

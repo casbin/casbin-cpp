@@ -151,9 +151,12 @@
 *  If you are accidentally missing from this list, send me an e-mail
 *  (``sami.vaarala@iki.fi``) and I'll fix the omission.
 */
-#pragma once
 
 #include "pch.h"
+
+#ifndef DUKTAPE_CPP
+#define DUKTAPE_CPP
+
 
 // #include "duk_config.h"
 
@@ -99759,3 +99762,5 @@ DUK_INTERNAL duk_double_t duk_util_tinyrandom_get_double(duk_hthread *thr) {
 #undef DUK__RANDOM_XOROSHIRO128PLUS
 #undef DUK__RND_BIT
 #undef DUK__UPDATE_RND
+
+#endif // DUKTAPE_CPP

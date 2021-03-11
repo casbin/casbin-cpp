@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef ADAPTER_CPP
+#define ADAPTER_CPP
+
 
 #include "./adapter.h"
 #include "../util/util.h"
@@ -39,3 +41,5 @@ void LoadPolicyLine(string line, Model* model) {
 
     (model->m[sec].assertion_map[key]->policy).push_back(new_tokens);
 }
+
+#endif // ADAPTER_CPP
