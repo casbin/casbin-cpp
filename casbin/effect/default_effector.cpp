@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef DEFAULT_EFFECTOR_CPP
+#define DEFAULT_EFFECTOR_CPP
+
 
 #include "./default_effector.h"
 #include "../exception/unsupported_operation_exception.h"
@@ -71,3 +73,5 @@ bool DefaultEffector :: MergeEffects(string expr, vector<Effect> effects, vector
 
     return result;
 }
+
+#endif // DEFAULT_EFFECTOR_CPP

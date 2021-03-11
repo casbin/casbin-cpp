@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef ARRAY_TO_STRING_CPP
+#define ARRAY_TO_STRING_CPP
+
 
 #include "./util.h"
 
@@ -28,3 +30,5 @@ string ArrayToString(vector<string> arr){
         res += ", " + arr[i];
     return res;
 }
+
+#endif // ARRAY_TO_STRING_CPP

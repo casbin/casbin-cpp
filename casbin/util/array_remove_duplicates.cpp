@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef ARRAY_REMOVE_DUPLICATES_CPP
+#define ARRAY_REMOVE_DUPLICATES_CPP
+
 
 #include <unordered_map>
 
@@ -37,3 +39,5 @@ void ArrayRemoveDuplicates(vector<string> &s) {
     }
     s = vector<string> (s.begin(), s.begin()+j);
 }
+
+#endif // ARRAY_REMOVE_DUPLICATES_CPP

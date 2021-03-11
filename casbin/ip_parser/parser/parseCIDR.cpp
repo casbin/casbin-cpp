@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef PARSECIDR_CPP
+#define PARSECIDR_CPP
+
 
 #include "./parseCIDR.h"
 
@@ -30,3 +32,5 @@ CIDR parseCIDR(string s) {
 
     return cidr_addr;
 }
+
+#endif // PARSECIDR_CPP

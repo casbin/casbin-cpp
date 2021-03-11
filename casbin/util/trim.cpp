@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef TRIM_CPP
+#define TRIM_CPP
+
 
 #include "./util.h"
 
@@ -35,3 +37,5 @@ string& RTrim(string& str, const string& chars) {
 string Trim(string& str, const string& chars) {
     return LTrim(RTrim(str, chars), chars);
 }
+
+#endif // TRIM_CPP

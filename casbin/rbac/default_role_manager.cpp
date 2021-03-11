@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef DEFAULT_ROLE_MANAGER_CPP
+#define DEFAULT_ROLE_MANAGER_CPP
+
 
 #include "./default_role_manager.h"
 #include "../exception/casbin_rbac_exception.h"
@@ -287,3 +289,5 @@ void DefaultRoleManager :: PrintRoles() {
         text += ", " + it->second->ToString();
     // LogUtil::LogPrint(text);
 }
+
+#endif // DEFAULT_ROLE_MANAGER_CPP

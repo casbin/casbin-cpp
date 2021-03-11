@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_UTIL_CPP
+#define TEST_UTIL_CPP
+
 
 #include <util.h>
 
@@ -59,3 +61,5 @@ namespace test_util
             }
     };
 }
+
+#endif // TEST_UTIL_CPP

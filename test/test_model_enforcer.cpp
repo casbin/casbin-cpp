@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_MODEL_ENFORCER_CPP
+#define TEST_MODEL_ENFORCER_CPP
+
 
 #include <enforcer.h>
 #include <persist.h>
@@ -789,3 +791,5 @@ namespace test_model_enforcer
             */
     };
 }
+
+#endif // TEST_MODEL_ENFORCER_CPP

@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_ENFORCER_CACHED_CPP
+#define TEST_ENFORCER_CACHED_CPP
+
 
 #include <enforcer_cached.h>
 
@@ -46,3 +48,5 @@ namespace test_enforcer_cached
 
     };
 }
+
+#endif // TEST_ENFORCER_CACHED_CPP

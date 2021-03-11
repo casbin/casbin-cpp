@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_ENFORCER_CPP
+#define TEST_ENFORCER_CPP
+
 
 #include <enforcer.h>
 #include <persist.h>
@@ -109,3 +111,5 @@ namespace test_enforcer
         }
     };
 }
+
+#endif // TEST_ENFORCER_CPP

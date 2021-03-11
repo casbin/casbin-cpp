@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_RBAC_API_WITH_DOMAINS_CPP
+#define TEST_RBAC_API_WITH_DOMAINS_CPP
+
 
 #include <enforcer.h>
 #include <exception.h>
@@ -183,3 +185,5 @@ namespace test_rbac_api_with_domains
             }
     };
 }
+
+#endif // TEST_RBAC_API_WITH_DOMAINS_CPP

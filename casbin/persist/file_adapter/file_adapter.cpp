@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef FILE_ADAPTER_CPP
+#define FILE_ADAPTER_CPP
+
 
 #include <fstream>
 
@@ -101,3 +103,5 @@ void FileAdapter :: RemoveFilteredPolicy(string sec, string p_type, int field_in
 bool FileAdapter :: IsFiltered() {
     return this->filtered;
 }
+
+#endif // FILE_ADAPTER_CPP

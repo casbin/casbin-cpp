@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef ESCAPE_ASSERTION_CPP
+#define ESCAPE_ASSERTION_CPP
+
 
 #include <regex>
 
@@ -48,3 +50,5 @@ string EscapeAssertion(string s) {
 
     return s;
 }
+
+#endif // ESCAPE_ASSERTION_CPP

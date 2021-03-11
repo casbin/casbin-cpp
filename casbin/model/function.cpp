@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef FUNCTION_CPP
+#define FUNCTION_CPP
+
 
 #include "./function.h"
 #include "../util/util.h"
@@ -122,3 +124,5 @@ void FunctionMap :: LoadFunctionMap() {
     AddFunction("regexMatch", RegexMatch, 2);
     AddFunction("ipMatch", IPMatch, 2);
 }
+
+#endif // FUNCTION_CPP

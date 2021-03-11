@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef ALLFF_CPP
+#define ALLFF_CPP
+
 
 #include "./allFF.h"
 
@@ -12,3 +14,5 @@ bool allFF(vector<byte> b) {
     }
     return true;
 }
+
+#endif // ALLFF_CPP

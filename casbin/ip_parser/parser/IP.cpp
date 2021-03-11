@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef IP_CPP
+#define IP_CPP
+
 
 #include "./IP.h"
 
@@ -102,3 +104,5 @@ bool IP :: isZeros(IP p) {
     }
     return true;
 }
+
+#endif // IP_CPP

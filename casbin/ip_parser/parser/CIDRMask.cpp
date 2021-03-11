@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef CIDRMASK_CPP
+#define CIDRMASK_CPP
+
 
 #include "./CIDRMask.h"
 
@@ -27,3 +29,5 @@ IPMask CIDRMask(int ones, int bits) {
     }
     return mask;
 }
+
+#endif // CIDRMASK_CPP

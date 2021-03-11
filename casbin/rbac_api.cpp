@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef RBAC_API_CPP
+#define RBAC_API_CPP
+
 
 #include "./enforcer.h"
 #include "./exception/casbin_enforcer_exception.h"
@@ -242,3 +244,5 @@ vector<string> Enforcer :: GetImplicitUsersForPermission(vector<string> permissi
     res = SetSubtract(res, g_inherit);
     return res;
 }
+
+#endif // RBAC_API_CPP

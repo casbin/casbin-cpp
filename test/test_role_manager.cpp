@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_ROLE_MANAGER_CPP
+#define TEST_ROLE_MANAGER_CPP
+
 
 #include <rbac.h>
 
@@ -182,3 +184,5 @@ namespace test_role_manager
             }
     };
 }
+
+#endif // TEST_ROLE_MANAGER_CPP

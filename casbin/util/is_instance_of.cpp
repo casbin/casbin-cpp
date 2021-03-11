@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef IS_INSTANCE_OF_CPP
+#define IS_INSTANCE_OF_CPP
+
 
 #include "./util.h"
 #include "../persist/watcher_ex.h"
@@ -29,3 +31,5 @@ bool IsInstanceOf(const T*) {
 }
 
 template bool IsInstanceOf<class WatcherEx, class Watcher>(class Watcher const*);
+
+#endif //IS_INSTANCE_OF_CPP

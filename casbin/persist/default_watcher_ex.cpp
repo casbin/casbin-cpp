@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef DEFAULT_WATCHER_EX_CPP
+#define DEFAULT_WATCHER_EX_CPP
+
 
 #include "./default_watcher_ex.h"
 
@@ -35,3 +37,5 @@ void DefaultWatcherEx :: UpdateForRemoveFilteredPolicy(int field_index, vector<s
 void DefaultWatcherEx :: UpdateForSavePolicy(Model* model) {
     return;
 }
+
+#endif // DEFAULT_WATCHER_EX_CPP

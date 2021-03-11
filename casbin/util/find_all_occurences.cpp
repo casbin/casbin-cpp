@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef FIND_ADD_OCCURENCES_CPP
+#define FIND_ADD_OCCURENCES_CPP
+
 
 #include "./util.h"
 
@@ -38,3 +40,5 @@ vector <size_t> FindAllOccurences(string data, string toSearch){
     }
     return vec;
 }
+
+#endif // FIND_ADD_OCCURENCES_CPP

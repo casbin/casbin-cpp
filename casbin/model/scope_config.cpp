@@ -14,9 +14,11 @@
 * limitations under the License.
 */
 
-#pragma once
-
 #include "pch.h"
+
+#ifndef SCOPE_CONFIG_CPP
+#define SCOPE_CONFIG_CPP
+
 
 #include "./scope_config.h"
 
@@ -241,3 +243,5 @@ bool Eval(Scope scope, string expression){
 void EvalNoResult(Scope scope, string expression){
     duk_eval_string_noresult(scope, expression.c_str());
 }
+
+#endif // SCOPE_CONFIG_CPP

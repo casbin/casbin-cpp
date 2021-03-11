@@ -1,6 +1,8 @@
-#pragma once
-
 #include "pch.h"
+
+#ifndef TEST_RBAC_API_CPP
+#define TEST_RBAC_API_CPP
+
 
 #include <enforcer.h>
 #include <rbac.h>
@@ -225,3 +227,5 @@ namespace test_rbac_api
             }
     };
 }
+
+#endif // TEST_RBAC_API_CPP
