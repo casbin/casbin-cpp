@@ -356,3 +356,6 @@ MigrationBackup/
 
 # CMake work directory
 cmake-build/
+
+# Visual Studio Code
+.vscode

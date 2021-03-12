@@ -19,6 +19,7 @@
 #ifndef ENFORCER_CACHED_CPP
 #define ENFORCER_CACHED_CPP
 
+#include <mutex>
 
 #include "./enforcer_cached.h"
 #include "./persist/watcher_ex.h"
@@ -113,26 +114,25 @@ void CachedEnforcer::EnableCache(const bool& enableCache) {
 }
 
 pair<bool, bool> CachedEnforcer::getCachedResult(const string& key) {
-  locker.lock();
+  lock_guard<mutex> lock(locker); // RAII
   bool ok = m.count(key);
-  if (!ok) {
-    locker.unlock();
+  if (!ok)
     return pair<bool, bool>(false, false);
-  }
 
   pair<bool, bool> res_ok(m[key], ok);
-  locker.unlock();
   return res_ok;
 }
 
+// Feeds data into the cache
 void CachedEnforcer::setCachedResult(const string& key, const bool& res) {
-  locker.lock();
+  lock_guard<mutex> lock(locker); // RAII
   m[key] = res;
-  locker.unlock();
 }
 
+// InvalidateCache deletes all the existing cached decisions.
 void CachedEnforcer::InvalidateCache() {
-   m.clear(); 
+  lock_guard<mutex> lock(locker); // RAII
+  m.clear();
 }
 
 // Enforce decides whether a "subject" can access a "object" with the operation
@@ -169,10 +169,9 @@ bool CachedEnforcer::EnforceWithMatcher(string matcher, vector<string> params) {
   }
 
   string key;
-  for (auto r : params) {
-    key += r;
-    key += "$$";
-  }
+  for (auto r : params)
+    key += r + "$$";
+
   key += matcher;
   key += "$";
 
@@ -196,18 +195,15 @@ bool CachedEnforcer::EnforceWithMatcher(string matcher, unordered_map<string, st
   }
 
   string key;
-  for (auto r : params) {
-    key += r.second;
-    key += "$$";
-  }
+  for (auto r : params)
+    key += r.second + "$$";
   key += matcher;
   key += "$";
 
   pair<bool, bool> res_ok = getCachedResult(key);
 
-  if (res_ok.second) {
+  if (res_ok.second)
     return res_ok.first;
-  }
 
   bool res = Enforcer::EnforceWithMatcher(matcher,params);
   setCachedResult(key, res);
