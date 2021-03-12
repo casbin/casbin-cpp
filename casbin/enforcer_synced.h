@@ -81,7 +81,7 @@ public:
     SyncedEnforcer(string model_path, string policy_file, bool enable_log);
 
     // StartAutoLoadPolicy starts a thread that will go through every specified duration call LoadPolicy
-    void StartAutoLoadPolicy(clock_t);
+    void StartAutoLoadPolicy(chrono::duration<int, ratio<1, 1000>> t);
 
     // IsAutoLoadingRunning check if SyncedEnforcer is auto loading policies
     bool IsAutoLoadingRunning();
