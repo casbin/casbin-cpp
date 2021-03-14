@@ -26,7 +26,9 @@ Ticker::Ticker(std::function<void()> onTick, std::chrono::duration<int64_t, std:
     , _tickInterval (tickInterval)
     , _running (false) {}
 
-Ticker::~Ticker () {}
+Ticker::~Ticker () {
+    stop();
+}
 
 void Ticker::start() {
     if (_running) return;
@@ -34,13 +36,11 @@ void Ticker::start() {
     _futures1.push_back(std::async(std::launch::async, &Ticker::timer_loop, this));
 }
 
-void Ticker::stop() 
-{ 
+void Ticker::stop() { 
     _running = false; 
 }
 
-void Ticker::setDuration(std::chrono::duration<int64_t, std::nano> tickInterval)
-{
+void Ticker::setDuration(std::chrono::duration<int64_t, std::nano> tickInterval) {
     std::lock_guard<std::mutex> lock(_tickIntervalMutex);
     _tickInterval = tickInterval;
 }

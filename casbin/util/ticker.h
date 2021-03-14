@@ -34,6 +34,7 @@ public:
     typedef std::vector<std::future<void>> future_vec;
 
     Ticker(std::function<void()> onTick, std::chrono::duration<int64_t, std::nano> tickInterval);
+    ~Ticker();
 
     void start();
 

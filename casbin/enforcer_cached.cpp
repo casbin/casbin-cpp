@@ -35,9 +35,9 @@ using namespace std;
 /**
  * Enforcer is the default constructor.
  */
-CachedEnforcer ::CachedEnforcer() {
-    this->enableCache = true;
-}
+CachedEnforcer ::CachedEnforcer() 
+  : enableCache(true)
+{}
 
 /**
  * Enforcer initializes an enforcer with a model file and a policy file.
@@ -45,9 +45,9 @@ CachedEnforcer ::CachedEnforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-CachedEnforcer ::CachedEnforcer(string model_path, string policy_file): Enforcer(model_path, policy_file) {
-    this->enableCache = true;
-}
+CachedEnforcer ::CachedEnforcer(string model_path, string policy_file)
+  : Enforcer(model_path, policy_file), enableCache(true)
+{}
 
 /**
  * Enforcer initializes an enforcer with a database adapter.
@@ -55,9 +55,9 @@ CachedEnforcer ::CachedEnforcer(string model_path, string policy_file): Enforcer
  * @param model_path the path of the model file.
  * @param adapter the adapter.
  */
-CachedEnforcer ::CachedEnforcer(string model_path, shared_ptr<Adapter> adapter): Enforcer(model_path,adapter) {
-    this->enableCache = true;
-}
+CachedEnforcer ::CachedEnforcer(string model_path, shared_ptr<Adapter> adapter)
+  : Enforcer(model_path,adapter), enableCache(true)
+{}
 
 /**
  * Enforcer initializes an enforcer with a model and a database adapter.
@@ -65,27 +65,27 @@ CachedEnforcer ::CachedEnforcer(string model_path, shared_ptr<Adapter> adapter):
  * @param m the model.
  * @param adapter the adapter.
  */
-CachedEnforcer :: CachedEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter): Enforcer(m,adapter) {
-    this->enableCache = true;
-}
+CachedEnforcer :: CachedEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter)
+  : Enforcer(m, adapter), enableCache(true)
+{}
 
 /**
  * Enforcer initializes an enforcer with a model.
  *
  * @param m the model.
  */
-CachedEnforcer ::CachedEnforcer(shared_ptr<Model> m): Enforcer(m) {
-    this->enableCache = true;
-}
+CachedEnforcer ::CachedEnforcer(shared_ptr<Model> m)
+  : Enforcer(m), enableCache(true)
+{}
 
 /**
  * Enforcer initializes an enforcer with a model file.
  *
  * @param model_path the path of the model file.
  */
-CachedEnforcer ::CachedEnforcer(string model_path): Enforcer(model_path) {
-    this->enableCache = true;
-}
+CachedEnforcer ::CachedEnforcer(string model_path)
+  : Enforcer(model_path), enableCache(true)
+{}
 
 /**
  * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
@@ -94,20 +94,17 @@ CachedEnforcer ::CachedEnforcer(string model_path): Enforcer(model_path) {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-CachedEnforcer :: CachedEnforcer(string model_path, string policy_file, bool enable_log): Enforcer(model_path,policy_file,enable_log) {
-   this->enableCache = true;
-}
+CachedEnforcer :: CachedEnforcer(string model_path, string policy_file, bool enable_log)
+  : Enforcer(model_path, policy_file, enable_log), enableCache(true) 
+{}
 
-CachedEnforcer::CachedEnforcer(const CachedEnforcer& ce):Enforcer(ce){
-   this->m = ce.m;
-   this->enableCache = ce.enableCache;
-}
+CachedEnforcer::CachedEnforcer(const CachedEnforcer& ce)
+  : Enforcer(ce), m(ce.m), enableCache(ce.enableCache)
+{}
 
-CachedEnforcer::CachedEnforcer(CachedEnforcer&& ce):Enforcer(ce){
-   this->m = move(ce.m);
-   this->enableCache = ce.enableCache;
-}
-
+CachedEnforcer::CachedEnforcer(CachedEnforcer&& ce)
+  :Enforcer(ce), m(move(ce.m)), enableCache(ce.enableCache)
+{}
 
 void CachedEnforcer::EnableCache(const bool& enableCache) {
   this->enableCache = enableCache;

@@ -171,6 +171,9 @@
     <ClCompile Include="util\array_equals.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
+    <ClCompile Include="util\timer.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
     <ClCompile Include="util\array_remove_duplicates.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>

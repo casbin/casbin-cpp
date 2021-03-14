@@ -201,6 +201,7 @@
     <ClCompile Include="rbac_api.cpp" />
     <ClCompile Include="rbac_api_with_domains.cpp" />
     <ClCompile Include="util\array_equals.cpp" />
+    <ClCompile Include="util\timer.cpp" />
     <ClCompile Include="util\array_remove_duplicates.cpp" />
     <ClCompile Include="util\array_to_string.cpp" />
     <ClCompile Include="util\built_in_functions.cpp" />

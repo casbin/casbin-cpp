@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-#ifndef CASBIN_CPP_ENFORCER_SYNC
-#define CASBIN_CPP_ENFORCER_SYNC
+#ifndef CASBIN_H_ENFORCER_SYNC
+#define CASBIN_H_ENFORCER_SYNC
 
 #include <mutex>
 #include <atomic>
+#include <memory>
 
 #include "./enforcer.h"
 #include "./persist/watcher.h"
+#include "./util/ticker.h"
 
 class SyncedEnforcer : public Enforcer {
-    mutex mutex;
-    int autoLoadRunning;
+    mutex policyMutex;
+    atomic_bool autoLoadRunning;
+    atomic_int n;
+    shared_ptr<Watcher> watcher;
+    unique_ptr<Ticker> ticker;
 
 public:
     /**
@@ -81,13 +86,18 @@ public:
     SyncedEnforcer(string model_path, string policy_file, bool enable_log);
 
     // StartAutoLoadPolicy starts a thread that will go through every specified duration call LoadPolicy
-    void StartAutoLoadPolicy(chrono::duration<int, ratio<1, 1000>> t);
+    void StartAutoLoadPolicy(std::chrono::duration<int64_t, std::nano> t);
 
     // IsAutoLoadingRunning check if SyncedEnforcer is auto loading policies
-    bool IsAutoLoadingRunning();
+    inline bool IsAutoLoadingRunning();
+
+    // StopAutoLoadPolicy causes the thread to exit
+    void StopAutoLoadPolicy();
+
+    string UpdateWrapper();
 
     // SetWatcher sets the current watcher.
-    void SetWatcher(Watcher&);
+    void SetWatcher(shared_ptr<Watcher> w);
 
     // LoadModel reloads the model from the model CONF file.
     void LoadModel();
@@ -98,11 +108,13 @@ public:
     // LoadPolicy reloads the policy from file/database.
     void LoadPolicy();
 
+    void LoadPolicyWrapper();
+
     // LoadFilteredPolicy reloads a filtered policy from file/database.
-    void LoadFilteredPolicy();
+    void LoadFilteredPolicy(Filter);
 
     // LoadIncrementalFilteredPolicy reloads a filtered policy from file/database.
-    void LoadIncrementalFilteredPolicy(Filter&);
+    void LoadIncrementalFilteredPolicy(Filter);
 
     // SavePolicy saves the current policy (usually after changed with Casbin API) back to file/database.
     void SavePolicy();
@@ -138,7 +150,7 @@ public:
     vector<string> GetAllObjects();
 
     // GetAllNamedObjects gets the list of objects that show up in the current named policy.
-    vector<string> GetAllNamedObjects();
+    vector<string> GetAllNamedObjects(string ptype);
 
     // GetAllNamedActions gets the list of actions that show up in the current named policy.
     vector<string> GetAllNamedActions(string ptype);
@@ -273,8 +285,7 @@ public:
     bool RemoveFilteredNamedGroupingPolicy(string ptype, int fieldIndex, vector<string> fieldValues);
 
     // AddFunction adds a customized function.
-    // void AddFunction(name string, function govaluate.ExpressionFunction);
-
+    void AddFunction(string name, Function function, Index nargs);
 };
 
 #endif // CASBIN_CPP_ENFORCER_SYNC
