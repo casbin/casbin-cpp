@@ -171,7 +171,7 @@
     <ClCompile Include="util\array_equals.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="util\timer.cpp">
+    <ClCompile Include="util\ticker.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
     <ClCompile Include="util\array_remove_duplicates.cpp">
