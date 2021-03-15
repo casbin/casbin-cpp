@@ -1,7 +1,7 @@
 #include "pch.h"
 
-#ifndef TEST_ENFORCER_CACHED_CPP
-#define TEST_ENFORCER_CACHED_CPP
+#ifndef TEST_ENFORCER_SYNCED_CPP
+#define TEST_ENFORCER_SYNCED_CPP
 
 #include <enforcer_synced.h>
 
@@ -13,7 +13,11 @@ TEST_CLASS(TestEnforcerSynced){
 
         void testEnforceSync(SyncedEnforcer & e, string sub, string obj, string act, bool res){
             Assert::AreEqual(res, e.Enforce({sub, obj, act}));
-}
+        }
+
+        void testAutoLoadRunning(bool test, bool control) {
+            Assert::AreEqual(test, control);
+        }
 
 TEST_METHOD(TestSync) {
     string model = "../../examples/basic_model.conf";
@@ -45,9 +49,7 @@ TEST_METHOD(TestStopLoadPolicy) {
 
     e.StartAutoLoadPolicy(t);
 
-    if (!e.IsAutoLoadingRunning()) {
-        cerr << "AutoLoad is not running!\n";
-    }
+    testAutoLoadRunning(e.IsAutoLoadingRunning(), true);
 
     testEnforceSync(e, "alice", "data1", "read", true);
     testEnforceSync(e, "alice", "data1", "write", false);
@@ -61,12 +63,11 @@ TEST_METHOD(TestStopLoadPolicy) {
     e.StopAutoLoadPolicy();
     this_thread::sleep_for(10ms);
 
-    if (e.IsAutoLoadingRunning()) {
-        cerr << "AutoLoad is still running!\n";
-    }
+    testAutoLoadRunning(e.IsAutoLoadingRunning(), false);
+
 }
 }
 ;
 }
 
-#endif // TEST_ENFORCER_CACHED_CPP
+#endif // TEST_ENFORCER_SYNCED_CPP
