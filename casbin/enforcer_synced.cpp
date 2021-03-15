@@ -23,7 +23,6 @@
 #include <atomic>
 #include <memory>
 
-#include "./enforcer_synced.h"
 #include "./persist/watcher.h"
 #include "./enforcer_synced.h"
 #include "./util/ticker.h"
@@ -109,15 +108,15 @@ void SyncedEnforcer ::LoadPolicyWrapper() {
 }
 
 // StartAutoLoadPolicy starts a thread that will go through every specified duration call LoadPolicy
-void SyncedEnforcer ::StartAutoLoadPolicy(std::chrono::duration<int64_t, std::nano> t) {
+void SyncedEnforcer ::StartAutoLoadPolicy(chrono::duration<int64_t, std::nano> t) {
   if(IsAutoLoadingRunning())
     return;
   autoLoadRunning = true;
-  std::function<void()> onTick = [this]() {
+  function<void()> onTick = [this]() {
     Enforcer::LoadPolicy();
     ++n;
   };
-  ticker = std::unique_ptr<Ticker>(new Ticker(onTick, t));
+  ticker = unique_ptr<Ticker>(new Ticker(onTick, t));
   n = 1;
   ticker->start();
 }
@@ -130,6 +129,7 @@ inline bool SyncedEnforcer ::IsAutoLoadingRunning() {
 // StopAutoLoadPolicy causes the thread to exit
 void SyncedEnforcer ::StopAutoLoadPolicy() {
   ticker->stop();
+  autoLoadRunning = false;
 }
 
 string SyncedEnforcer ::UpdateWrapper() {
@@ -162,6 +162,7 @@ void SyncedEnforcer ::LoadPolicy() {
 }
 
 // LoadFilteredPolicy reloads a filtered policy from file/database.
+template<typename Filter>
 void SyncedEnforcer ::LoadFilteredPolicy(Filter f) {
   lock_guard<mutex> lock(policyMutex);
   Enforcer::LoadFilteredPolicy(f);

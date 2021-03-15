@@ -111,6 +111,7 @@ public:
     void LoadPolicyWrapper();
 
     // LoadFilteredPolicy reloads a filtered policy from file/database.
+    template <typename Filter>
     void LoadFilteredPolicy(Filter);
 
     // LoadIncrementalFilteredPolicy reloads a filtered policy from file/database.
