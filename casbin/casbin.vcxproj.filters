@@ -479,6 +479,9 @@
     <ClInclude Include="enforcer_synced.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="util\ticker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

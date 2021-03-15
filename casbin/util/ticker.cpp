@@ -40,36 +40,15 @@ void Ticker::stop() {
     _running = false; 
 }
 
-void Ticker::setDuration(std::chrono::duration<int64_t, std::nano> tickInterval) {
-    std::lock_guard<std::mutex> lock(_tickIntervalMutex);
-    _tickInterval = tickInterval;
-}
-
 void Ticker::timer_loop()
 {
     while (_running) {
-        _futures2.push_back(std::async(std::launch::async, _onTick));
         {
             std::lock_guard<std::mutex> lock(_tickIntervalMutex);
-            tick_interval_t tickInterval = _tickInterval;
-            std::this_thread::sleep_for( tickInterval );
+            _futures2.push_back(std::async(std::launch::async, _onTick));
+            std::this_thread::sleep_for( _tickInterval );
         }
     }
 }
-// int main()
-// {
-//     std::chrono::duration<int, std::milli> timer_duration1(1000);
-//     std::chrono::duration<int, std::milli> timer_duration2(500);
-//     std::chrono::duration<int> main_wait(5);
-//     std::chrono::duration<int> main_wait2(6);
-
-//     Ticker ticker(std::function<void()>(tick), timer_duration1);
-//     ticker.start();
-
-//     std::this_thread::sleep_for(main_wait);
-//     ticker.setDuration(timer_duration2);
-//     std::this_thread::sleep_for(main_wait2);
-//     ticker.stop();
-// }
 
 #endif // TICKER_CPP

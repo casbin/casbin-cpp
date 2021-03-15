@@ -289,6 +289,7 @@
     <ClInclude Include="util.h" />
     <ClInclude Include="util\built_in_functions.h" />
     <ClInclude Include="util\pch.h" />
+    <ClInclude Include="util\ticker.h" />
     <ClInclude Include="util\util.h" />
   </ItemGroup>
   <ItemGroup>
