@@ -41,7 +41,7 @@ bool Enforcer :: addPolicy(string sec, string p_type, vector<string> rule) {
         try {
             this->adapter->AddPolicy(sec, p_type, rule);
         }
-        catch(UnsupportedOperationException e) {
+        catch(UnsupportedOperationException& e) {
         }
     }
 
@@ -70,7 +70,7 @@ bool Enforcer :: addPolicies(string sec, string p_type, vector<vector<string>> r
         try {
             dynamic_pointer_cast<BatchAdapter>(this->adapter)->AddPolicies(sec, p_type, rules);
         }
-        catch(UnsupportedOperationException e) {
+        catch(UnsupportedOperationException& e) {
         }
     }
 
@@ -95,7 +95,7 @@ bool Enforcer :: removePolicy(string sec, string p_type, vector<string> rule) {
         try {
             this->adapter->RemovePolicy(sec, p_type, rule);
         }
-        catch (UnsupportedOperationException e) {
+        catch (UnsupportedOperationException& e) {
         }
     }
 
@@ -123,7 +123,7 @@ bool Enforcer :: removePolicies(string sec, string p_type, vector<vector<string>
         try{
             dynamic_pointer_cast<BatchAdapter>(this->adapter)->RemovePolicies(sec, p_type, rules);
         }
-        catch(UnsupportedOperationException e){
+        catch(UnsupportedOperationException& e){
         }
     }
 
@@ -149,7 +149,7 @@ bool Enforcer :: removeFilteredPolicy(string sec, string p_type, int field_index
         try {
             this->adapter->RemoveFilteredPolicy(sec, p_type, field_index, field_values); \
         }
-        catch (UnsupportedOperationException e) {
+        catch (UnsupportedOperationException& e) {
         }
     }
 

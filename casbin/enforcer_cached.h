@@ -26,6 +26,10 @@ public:
     unordered_map<string, bool> m;
     bool enableCache;
     mutex locker;
+    string model_path;
+    string policy_path;
+    shared_ptr<Adapter> adapter;
+    shared_ptr<Model> model;
 
     CachedEnforcer(const CachedEnforcer& ce);
     CachedEnforcer(CachedEnforcer&& ce);
@@ -46,14 +50,14 @@ public:
          * @param model_path the path of the model file.
          * @param policy_file the path of the policy file.
          */
-    CachedEnforcer(string model_path, string policy_file);
+    CachedEnforcer(string& model_path, string& policy_file);
     /**
          * Enforcer initializes an enforcer with a database adapter.
          *
          * @param model_path the path of the model file.
          * @param adapter the adapter.
          */
-    CachedEnforcer(string model_path, shared_ptr<Adapter> adapter);
+    CachedEnforcer(string& model_path, shared_ptr<Adapter> adapter);
     /**
          * Enforcer initializes an enforcer with a model and a database adapter.
          *
@@ -66,13 +70,13 @@ public:
          *
          * @param m the model.
          */
-    CachedEnforcer(shared_ptr<Model> m);
+    explicit CachedEnforcer(shared_ptr<Model> m);
     /**
          * Enforcer initializes an enforcer with a model file.
          *
          * @param model_path the path of the model file.
          */
-    CachedEnforcer(string model_path);
+    explicit CachedEnforcer(string& model_path);
     /**
          * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
          *
@@ -80,16 +84,16 @@ public:
          * @param policy_file the path of the policy file.
          * @param enable_log whether to enable Casbin's log.
          */
-    CachedEnforcer(string model_path, string policy_file, bool enable_log);
+    CachedEnforcer(string& model_path, string& policy_file, bool enable_log);
 
     bool Enforce(Scope scope);
     // Enforce with a vector param,decides whether a "subject" can access a
     // "object" with the operation "action", input parameters are usually: (sub,
     // obj, act).
-    bool Enforce(vector<string> params);
+    bool Enforce(vector<string>& params);
     // Enforce with a map param,decides whether a "subject" can access a "object"
     // with the operation "action", input parameters are usually: (sub, obj, act).
-    bool Enforce(unordered_map<string, string> params);
+    bool Enforce(unordered_map<string, string>& params);
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
     // access a "object" with the operation "action", input parameters are
     // usually: (matcher, sub, obj, act), use model matcher by default when

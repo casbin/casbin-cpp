@@ -34,8 +34,8 @@ using namespace std;
 /**
  * Enforcer is the default constructor.
  */
-CachedEnforcer ::CachedEnforcer() {
-    this->enableCache = true;
+CachedEnforcer ::CachedEnforcer()
+                :enableCache(true) {
 }
 
 /**
@@ -44,8 +44,8 @@ CachedEnforcer ::CachedEnforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-CachedEnforcer ::CachedEnforcer(string model_path, string policy_file): Enforcer(model_path, policy_file) {
-    this->enableCache = true;
+CachedEnforcer ::CachedEnforcer(string& model_path, string& policy_file)
+                               :model_path(model_path), policy_path(policy_file), enableCache(true) {
 }
 
 /**
@@ -54,8 +54,8 @@ CachedEnforcer ::CachedEnforcer(string model_path, string policy_file): Enforcer
  * @param model_path the path of the model file.
  * @param adapter the adapter.
  */
-CachedEnforcer ::CachedEnforcer(string model_path, shared_ptr<Adapter> adapter): Enforcer(model_path,adapter) {
-    this->enableCache = true;
+CachedEnforcer ::CachedEnforcer(string& model_path, shared_ptr<Adapter> adapter)
+                               :model_path(model_path), adapter(adapter), enableCache(true) {
 }
 
 /**
@@ -64,8 +64,8 @@ CachedEnforcer ::CachedEnforcer(string model_path, shared_ptr<Adapter> adapter):
  * @param m the model.
  * @param adapter the adapter.
  */
-CachedEnforcer :: CachedEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter): Enforcer(m,adapter) {
-    this->enableCache = true;
+CachedEnforcer :: CachedEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter)
+                                :model(m), adapter(adapter), enableCache(true) {
 }
 
 /**
@@ -73,8 +73,8 @@ CachedEnforcer :: CachedEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapte
  *
  * @param m the model.
  */
-CachedEnforcer ::CachedEnforcer(shared_ptr<Model> m): Enforcer(m) {
-    this->enableCache = true;
+CachedEnforcer ::CachedEnforcer(shared_ptr<Model> m)
+                               :model(m), enableCache(true) {
 }
 
 /**
@@ -82,8 +82,8 @@ CachedEnforcer ::CachedEnforcer(shared_ptr<Model> m): Enforcer(m) {
  *
  * @param model_path the path of the model file.
  */
-CachedEnforcer ::CachedEnforcer(string model_path): Enforcer(model_path) {
-    this->enableCache = true;
+CachedEnforcer ::CachedEnforcer(string& model_path)
+                               :model_path(model_path), enableCache(true) {
 }
 
 /**
@@ -93,18 +93,15 @@ CachedEnforcer ::CachedEnforcer(string model_path): Enforcer(model_path) {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-CachedEnforcer :: CachedEnforcer(string model_path, string policy_file, bool enable_log): Enforcer(model_path,policy_file,enable_log) {
-   this->enableCache = true;
+CachedEnforcer :: CachedEnforcer(string& model_path, string& policy_file, bool enable_log)
+                                :Enforcer(model_path,policy_file,enable_log)
+                                ,enableCache(true) {
 }
 
-CachedEnforcer::CachedEnforcer(const CachedEnforcer& ce):Enforcer(ce){
-   this->m = ce.m;
-   this->enableCache = ce.enableCache;
+CachedEnforcer::CachedEnforcer(const CachedEnforcer& ce):Enforcer(ce), m(ce.m), enableCache(ce.enableCache) {
 }
 
-CachedEnforcer::CachedEnforcer(CachedEnforcer&& ce):Enforcer(ce){
-   this->m = move(ce.m);
-   this->enableCache = ce.enableCache;
+CachedEnforcer::CachedEnforcer(CachedEnforcer&& ce):Enforcer(ce), m(move(ce.m)), enableCache(ce.enableCache) {
 }
 
 
@@ -143,13 +140,13 @@ bool CachedEnforcer ::Enforce(Scope scope) {
 
 // Enforce with a vector param,decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (sub, obj, act).
-bool CachedEnforcer::Enforce(vector<string> params) {
+bool CachedEnforcer::Enforce(vector<string>& params) {
   return EnforceWithMatcher("", params);
 }
 
 // Enforce with a map param,decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (sub, obj, act).
-bool CachedEnforcer::Enforce(unordered_map<string, string> params) {
+bool CachedEnforcer::Enforce(unordered_map<string, string>& params) {
   return EnforceWithMatcher("", params);
 }
 

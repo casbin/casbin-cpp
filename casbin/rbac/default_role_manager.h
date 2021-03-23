@@ -18,7 +18,6 @@
 #define CASBIN_CPP_RBAC_DEFAULT_ROLE_MANAGER
 
 #include <unordered_map>
-
 #include "./role_manager.h"
 
 using namespace std;
@@ -36,7 +35,7 @@ class Role {
     public:
         string name;
 
-        static Role* NewRole(string name);
+        static Role* NewRole(const string& name);
         
         void AddRole(Role* role);
 
@@ -44,7 +43,7 @@ class Role {
 
         bool HasRole(string name, int hierarchy_level);
 
-        bool HasDirectRole(string name);
+        bool HasDirectRole(string& name);
 
         string ToString();
 
@@ -70,7 +69,7 @@ class DefaultRoleManager : public RoleManager {
          *
          * @param max_hierarchy_level the maximized allowed RBAC hierarchy level.
          */
-        DefaultRoleManager(int max_hierarchy_level);
+        explicit DefaultRoleManager(int max_hierarchy_level);
 
         // e.BuildRoleLinks must be called after AddMatchingFunc().
         //

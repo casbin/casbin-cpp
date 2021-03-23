@@ -62,22 +62,22 @@ class IEnforcer {
         /* RBAC API */
         virtual vector<string> GetRolesForUser(string name, vector<string> domain = {}) = 0;
         virtual vector<string> GetUsersForRole(string name, vector<string> domain = {}) = 0;
-        virtual bool HasRoleForUser(string name, string role) = 0;
-        virtual bool AddRoleForUser(string user, string role) = 0;
-        virtual bool AddRolesForUser(string user, vector<string> roles) = 0;
-        virtual bool AddPermissionForUser(string user, vector<string> permission) = 0;
-        virtual bool DeletePermissionForUser(string user, vector<string> permission) = 0;
-        virtual bool DeletePermissionsForUser(string user) = 0;
-        virtual vector<vector<string>> GetPermissionsForUser(string user) = 0;
-        virtual bool HasPermissionForUser(string user, vector<string> permission) = 0;
+        virtual bool HasRoleForUser(string name, string& role) = 0;
+        virtual bool AddRoleForUser(string& user, string& role) = 0;
+        virtual bool AddRolesForUser(string& user, vector<string> roles) = 0;
+        virtual bool AddPermissionForUser(string& user, vector<string>& permission) = 0;
+        virtual bool DeletePermissionForUser(string user, vector<string>& permission) = 0;
+        virtual bool DeletePermissionsForUser(string& user) = 0;
+        virtual vector<vector<string>> GetPermissionsForUser(string& user) = 0;
+        virtual bool HasPermissionForUser(string& user, vector<string>& permission) = 0;
         virtual vector<string> GetImplicitRolesForUser(string name, vector<string> domain = {}) = 0;
         virtual vector<vector<string>> GetImplicitPermissionsForUser(string user, vector<string> domain = {}) = 0;
         virtual vector<string> GetImplicitUsersForPermission(vector<string> permission) = 0;
-        virtual bool DeleteRoleForUser(string user, string role) = 0;
-        virtual bool DeleteRolesForUser(string user) = 0;
-        virtual bool DeleteUser(string user) = 0;
-        virtual bool DeleteRole(string role) = 0;
-        virtual bool DeletePermission(vector<string> permission) = 0;
+        virtual bool DeleteRoleForUser(string& user, string& role) = 0;
+        virtual bool DeleteRolesForUser(string& user) = 0;
+        virtual bool DeleteUser(string& user) = 0;
+        virtual bool DeleteRole(string& role) = 0;
+        virtual bool DeletePermission(vector<string>& permission) = 0;
 
         /* Management API */
         virtual vector<string> GetAllSubjects() = 0;
@@ -99,7 +99,7 @@ class IEnforcer {
         virtual bool HasPolicy(vector<string> params) = 0;
         virtual bool HasNamedPolicy(string p_type, vector<string> params) = 0;
         virtual bool AddPolicy(vector<string> params) = 0;
-        virtual bool  AddPolicies(vector<vector<string>> rules) = 0;
+        virtual bool AddPolicies(vector<vector<string>> rules) = 0;
         virtual bool AddNamedPolicy(string p_type, vector<string> params) = 0;
         virtual bool AddNamedPolicies(string p_type, vector<vector<string>> rules) = 0;
         virtual bool RemovePolicy(vector<string> params) = 0;
@@ -130,11 +130,11 @@ class IEnforcer {
         virtual bool removeFilteredPolicy(string sec , string p_type , int field_index , vector<string> field_values) = 0;
 
         /* RBAC API with domains.*/
-        virtual vector<string> GetUsersForRoleInDomain(string name, string domain) = 0;
-        virtual vector<string> GetRolesForUserInDomain(string name, string domain) = 0;
-        virtual vector<vector<string>> GetPermissionsForUserInDomain(string user, string domain) = 0;
-        virtual bool AddRoleForUserInDomain(string user, string role, string domain) = 0;
-        virtual bool DeleteRoleForUserInDomain(string user, string role, string domain) = 0;
+        virtual vector<string> GetUsersForRoleInDomain(string name, string& domain) = 0;
+        virtual vector<string> GetRolesForUserInDomain(string name, string& domain) = 0;
+        virtual vector<vector<string>> GetPermissionsForUserInDomain(string& user, string& domain) = 0;
+        virtual bool AddRoleForUserInDomain(string& user, string& role, string& domain) = 0;
+        virtual bool DeleteRoleForUserInDomain(string& user, string& role, string& domain) = 0;
 };
 
 #endif
