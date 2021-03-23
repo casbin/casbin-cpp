@@ -29,7 +29,7 @@
 using namespace std;
 
 
-vector<string> Split(const string& src,const string& del) {
+vector<string> Split(string src,string del) {
     string::size_type start=src.find_first_not_of(del,0);
     string::size_type pos=src.find_first_of(del,start);
     vector<string> dest;
