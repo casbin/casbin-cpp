@@ -23,12 +23,14 @@
 #include "./model/function.h"
 #include "./enforcer_interface.h"
 #include "./persist/filtered_adapter.h"
+#include "./persist/file_adapter/file_adapter.h"
 
 // Enforcer is the main interface for authorization enforcement and policy management.
 class Enforcer : public IEnforcer{
     private:
 
         string model_path;
+        string policy_file;
         shared_ptr<Model> model;
         FunctionMap func_map;
         vector <tuple<string, Function, Index>> user_func_list;
@@ -36,6 +38,7 @@ class Enforcer : public IEnforcer{
 
         shared_ptr<Adapter> adapter;
         shared_ptr<Watcher> watcher;
+        shared_ptr<FileAdapter> fileAdapter;
 
         bool enabled;
         bool auto_save;
@@ -43,7 +46,7 @@ class Enforcer : public IEnforcer{
         bool auto_notify_watcher;
 
         // enforce use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool enforce(string matcher, Scope scope);
+        bool enforce(string& matcher, Scope scope);
 
     public:
 
@@ -52,21 +55,21 @@ class Enforcer : public IEnforcer{
         /**
          * Enforcer is the default constructor.
          */
-        Enforcer();
+        Enforcer() = default;
         /**
          * Enforcer initializes an enforcer with a model file and a policy file.
          *
          * @param model_path the path of the model file.
          * @param policy_file the path of the policy file.
          */
-        Enforcer(string model_path, string policy_file);
+        Enforcer(string& model_path, string& policy_file);
         /**
          * Enforcer initializes an enforcer with a database adapter.
          *
          * @param model_path the path of the model file.
          * @param adapter the adapter.
          */
-        Enforcer(string model_path, shared_ptr<Adapter> adapter);
+        Enforcer(string& model_path, shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model and a database adapter.
          *
@@ -79,13 +82,13 @@ class Enforcer : public IEnforcer{
          *
          * @param m the model.
          */
-        Enforcer(shared_ptr<Model> m);
+        explicit Enforcer(shared_ptr<Model> m);
         /**
          * Enforcer initializes an enforcer with a model file.
          *
          * @param model_path the path of the model file.
          */
-        Enforcer(string model_path);
+        explicit Enforcer(string& model_path);
         /**
          * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
          *
@@ -93,7 +96,7 @@ class Enforcer : public IEnforcer{
          * @param policy_file the path of the policy file.
          * @param enable_log whether to enable Casbin's log.
          */
-        Enforcer(string model_path, string policy_file, bool enable_log);
+        Enforcer(string& model_path, string& policy_file, bool enable_log);
         // InitWithFile initializes an enforcer with a model file and a policy file.
         void InitWithFile(string model_path, string policy_path);
         // InitWithAdapter initializes an enforcer with a database adapter.
@@ -181,7 +184,7 @@ class Enforcer : public IEnforcer{
         bool HasPolicy(vector<string> params);
         bool HasNamedPolicy(string p_type, vector<string> params);
         bool AddPolicy(vector<string> params);
-        bool  AddPolicies(vector<vector<string>> rules);
+        bool AddPolicies(vector<vector<string>> rules);
         bool AddNamedPolicy(string p_type, vector<string> params);
         bool AddNamedPolicies(string p_type, vector<vector<string>> rules);
         bool RemovePolicy(vector<string> params);
@@ -207,22 +210,22 @@ class Enforcer : public IEnforcer{
         /*RBAC API member functions.*/
         vector<string> GetRolesForUser(string name, vector<string> domain = {});
         vector<string> GetUsersForRole(string name, vector<string> domain = {});
-        bool HasRoleForUser(string name, string role);
-        bool AddRoleForUser(string user, string role);
-        bool AddRolesForUser(string user, vector<string> roles);
-        bool AddPermissionForUser(string user, vector<string> permission);
-        bool DeletePermissionForUser(string user, vector<string> permission);
-        bool DeletePermissionsForUser(string user);
-        vector<vector<string>> GetPermissionsForUser(string user);
-        bool HasPermissionForUser(string user, vector<string> permission);
+        bool HasRoleForUser(string name, string& role);
+        bool AddRoleForUser(string& user, string& role);
+        bool AddRolesForUser(string& user, vector<string> roles);
+        bool AddPermissionForUser(string& user, vector<string>& permission);
+        bool DeletePermissionForUser(string user, vector<string>& permission);
+        bool DeletePermissionsForUser(string& user);
+        vector<vector<string>> GetPermissionsForUser(string& user);
+        bool HasPermissionForUser(string& user, vector<string>& permission);
         vector<string> GetImplicitRolesForUser(string name, vector<string> domain = {});
         vector<vector<string>> GetImplicitPermissionsForUser(string user, vector<string> domain = {});
         vector<string> GetImplicitUsersForPermission(vector<string> permission);
-        bool DeleteRoleForUser(string user, string role);
-        bool DeleteRolesForUser(string user);
-        bool DeleteUser(string user);
-        bool DeleteRole(string role);
-        bool DeletePermission(vector<string> permission);
+        bool DeleteRoleForUser(string& user, string& role);
+        bool DeleteRolesForUser(string& user);
+        bool DeleteUser(string& user);
+        bool DeleteRole(string& role);
+        bool DeletePermission(vector<string>& permission);
 
         /* Internal API member functions */
         bool addPolicy(string sec, string p_type, vector<string> rule);
@@ -232,11 +235,11 @@ class Enforcer : public IEnforcer{
         bool removeFilteredPolicy(string sec , string p_type , int field_index , vector<string> field_values);
 
         /* RBAC API with domains.*/
-        vector<string> GetUsersForRoleInDomain(string name, string domain = {});
-        vector<string> GetRolesForUserInDomain(string name, string domain = {});
-        vector<vector<string>> GetPermissionsForUserInDomain(string user, string domain = {});
-        bool AddRoleForUserInDomain(string user, string role, string domain = {});
-        bool DeleteRoleForUserInDomain(string user, string role, string domain = {});
+        vector<string> GetUsersForRoleInDomain(string name, string& domain);
+        vector<string> GetRolesForUserInDomain(string name, string& domain);
+        vector<vector<string>> GetPermissionsForUserInDomain(string& user, string& domain);
+        bool AddRoleForUserInDomain(string& user, string& role, string& domain);
+        bool DeleteRoleForUserInDomain(string& user, string& role, string& domain);
 
 };
 

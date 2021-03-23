@@ -32,7 +32,7 @@
 #include "./util/util.h"
 
 // enforce use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer :: enforce(string matcher, Scope scope) {
+bool Enforcer :: enforce(string& matcher, Scope scope) {
     // TODO
     // defer func() {
     // 	if err := recover(); err != nil {
@@ -59,13 +59,13 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
     bool ok = this->model->m.find("g") != this->model->m.end();
 
     if(ok) {
-        for(unordered_map <string, shared_ptr<Assertion>> :: iterator it = this->model->m["g"].assertion_map.begin() ; it != this->model->m["g"].assertion_map.end() ; it++){
+        for(unordered_map <string, shared_ptr<Assertion>> :: iterator it = this->model->m["g"].assertion_map.begin() ; it != this->model->m["g"].assertion_map.end() ; ++it){
             shared_ptr<RoleManager> rm = it->second->rm;
             int char_count = int(count(it->second->value.begin(), it->second->value.end(), '_'));
             int index = int(exp_string.find((it->first)+"("));
             if(index != string::npos)
                 exp_string.insert(index+(it->first+"(").length(), "rm, ");
-            PushPointer(this->func_map.scope, (void *)rm.get(), "rm");
+            PushPointer(this->func_map.scope, static_cast<void*>(rm.get()), "rm");
             this->func_map.AddFunction(it->first, GFunction, char_count + 1);
         }
     }
@@ -168,8 +168,8 @@ bool Enforcer :: enforce(string matcher, Scope scope) {
 /**
  * Enforcer is the default constructor.
  */
-Enforcer ::Enforcer() {
-}
+/*Enforcer ::Enforcer() {
+}*/
 
 /**
  * Enforcer initializes an enforcer with a model file and a policy file.
@@ -177,7 +177,9 @@ Enforcer ::Enforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-Enforcer :: Enforcer(string model_path, string policy_file): Enforcer(model_path, shared_ptr<FileAdapter>(new FileAdapter(policy_file))) {
+Enforcer :: Enforcer(string& model_path, string& policy_file)
+                    :model_path(model_path), fileAdapter(make_shared<FileAdapter>(policy_file))
+                    ,enabled(true), auto_save(true), auto_build_role_links(true), auto_notify_watcher(true) {
 }
 
 /**
@@ -186,8 +188,9 @@ Enforcer :: Enforcer(string model_path, string policy_file): Enforcer(model_path
  * @param model_path the path of the model file.
  * @param adapter the adapter.
  */
-Enforcer :: Enforcer(string model_path, shared_ptr<Adapter> adapter): Enforcer(shared_ptr<Model>(new Model(model_path)), adapter) {
-    this->model_path = model_path;
+Enforcer :: Enforcer(string& model_path, shared_ptr<Adapter> adapter)
+                    :model_path(model_path), model(make_shared<Model>(model_path)), adapter(adapter)
+                    ,enabled(true), auto_save(true), auto_build_role_links(true), auto_notify_watcher(true) {
 }
 
 /**
@@ -196,11 +199,10 @@ Enforcer :: Enforcer(string model_path, shared_ptr<Adapter> adapter): Enforcer(s
  * @param m the model.
  * @param adapter the adapter.
  */
-Enforcer :: Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
-    this->adapter = adapter;
-    this->watcher = NULL;
+Enforcer :: Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter)
+                    :model(m), watcher(nullptr), adapter(adapter)
+                    ,enabled(true), auto_save(true), auto_build_role_links(true), auto_notify_watcher(true) {
 
-    this->model = m;
     this->model->PrintModel();
 
     this->Initialize();
@@ -215,7 +217,9 @@ Enforcer :: Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter) {
  *
  * @param m the model.
  */
-Enforcer ::Enforcer(shared_ptr<Model> m): Enforcer(m, NULL) {
+Enforcer ::Enforcer(shared_ptr<Model> m)
+                   :model(m), adapter(nullptr)
+                   ,enabled(true), auto_save(true), auto_build_role_links(true), auto_notify_watcher(true) {
 }
 
 /**
@@ -223,7 +227,9 @@ Enforcer ::Enforcer(shared_ptr<Model> m): Enforcer(m, NULL) {
  *
  * @param model_path the path of the model file.
  */
-Enforcer ::Enforcer(string model_path): Enforcer(model_path, "") {
+Enforcer ::Enforcer(string& model_path)
+                   :model_path(model_path), policy_file("")
+                   ,enabled(true), auto_save(true), auto_build_role_links(true), auto_notify_watcher(true) {
 }
 
 /**
@@ -233,7 +239,9 @@ Enforcer ::Enforcer(string model_path): Enforcer(model_path, "") {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-Enforcer :: Enforcer(string model_path, string policy_file, bool enable_log): Enforcer(model_path, shared_ptr<FileAdapter>(new FileAdapter(policy_file))) {
+Enforcer :: Enforcer(string& model_path, string& policy_file, bool enable_log)
+                    :model_path(model_path), fileAdapter(make_shared<FileAdapter>(policy_file))
+                    ,enabled(true), auto_save(true), auto_build_role_links(true), auto_notify_watcher(true) {
     // e.EnableLog(enable_log);
 }
 
@@ -264,19 +272,14 @@ void Enforcer :: InitWithModelAndAdapter(shared_ptr<Model> m, shared_ptr<Adapter
     this->Initialize();
 
     // Do not initialize the full policy when using a filtered adapter
-    if(this->adapter != NULL && !this->adapter->IsFiltered()) 
+    if(this->adapter != nullptr && !this->adapter->IsFiltered())
         this->LoadPolicy();
 }
 
 void Enforcer :: Initialize() {
-    this->rm = shared_ptr<DefaultRoleManager>(new DefaultRoleManager(10));
+    this->rm = make_shared<DefaultRoleManager>(10);
     this->eft = shared_ptr<DefaultEffector>(new DefaultEffector());
-    this->watcher = NULL;
-
-    this->enabled = true;
-    this->auto_save = true;
-    this->auto_build_role_links = true;
-    this->auto_notify_watcher = true;
+    this->watcher = nullptr;
 }
 
 // LoadModel reloads the model from the model CONF file.
@@ -387,8 +390,9 @@ void Enforcer :: SavePolicy() {
 
     if(this->watcher != NULL){
         if (IsInstanceOf<WatcherEx>(this->watcher.get())) {
-            void* watcher = this->watcher.get();
-            ((WatcherEx*)watcher)->UpdateForSavePolicy(this->model.get());
+            //void* watcher = this->watcher.get();
+            //((WatcherEx*)watcher)->UpdateForSavePolicy(this->model.get());
+            static_cast<WatcherEx*>(this->watcher.get())->UpdateForSavePolicy(this->model.get());
         }
         else
             return this->watcher->Update();
@@ -428,7 +432,7 @@ void Enforcer :: BuildRoleLinks() {
 }
 
 // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
-void Enforcer :: BuildIncrementalRoleLinks(policy_op op, string p_type, vector<vector<string>> rules) {
+void Enforcer :: BuildIncrementalRoleLinks(policy_op op,string p_type, vector<vector<string>> rules) {
     return this->model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
 }
 

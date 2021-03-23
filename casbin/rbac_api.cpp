@@ -37,7 +37,7 @@ vector<string> Enforcer :: GetUsersForRole(string name, vector<string> domain) {
 }
 
 // HasRoleForUser determines whether a user has a role.
-bool Enforcer :: HasRoleForUser(string name, string role) {
+bool Enforcer :: HasRoleForUser(string name, string& role) {
     vector<string> domain;
     vector<string> roles = this->GetRolesForUser(name, domain);
 
@@ -54,14 +54,14 @@ bool Enforcer :: HasRoleForUser(string name, string role) {
 
 // AddRoleForUser adds a role for a user.
 // Returns false if the user already has the role (aka not affected).
-bool Enforcer :: AddRoleForUser(string user, string role) {
+bool Enforcer :: AddRoleForUser(string& user, string& role) {
     vector<string> params{user, role};
     return this->AddGroupingPolicy(params);
 }
 
 // AddRolesForUser adds roles for a user.
 // Returns false if the user already has the roles (aka not affected).
-bool Enforcer :: AddRolesForUser(string user, vector<string> roles) {
+bool Enforcer :: AddRolesForUser(string& user, vector<string> roles) {
     bool f = false;
     for(int i=0;i<roles.size();i++) {
         bool b = this->AddGroupingPolicy({user, roles[i]});
@@ -73,21 +73,21 @@ bool Enforcer :: AddRolesForUser(string user, vector<string> roles) {
 
 // DeleteRoleForUser deletes a role for a user.
 // Returns false if the user does not have the role (aka not affected).
-bool Enforcer :: DeleteRoleForUser(string user, string role) {
+bool Enforcer :: DeleteRoleForUser(string& user, string& role) {
     vector<string> params{user, role};
     return this->RemoveGroupingPolicy(params);
 }
 
 // DeleteRolesForUser deletes all roles for a user.
 // Returns false if the user does not have any roles (aka not affected).
-bool Enforcer :: DeleteRolesForUser(string user) {
+bool Enforcer :: DeleteRolesForUser(string& user) {
     vector<string> field_values{user};
     return this->RemoveFilteredGroupingPolicy(0, field_values);
 }
 
 // DeleteUser deletes a user.
 // Returns false if the user does not exist (aka not affected).
-bool Enforcer :: DeleteUser(string user) {
+bool Enforcer :: DeleteUser(string& user) {
     vector<string> field_values{user};
 
     bool res1 = this->RemoveFilteredGroupingPolicy(0, field_values);
@@ -99,7 +99,7 @@ bool Enforcer :: DeleteUser(string user) {
 
 // DeleteRole deletes a role.
 // Returns false if the role does not exist (aka not affected).
-bool Enforcer :: DeleteRole(string role) {
+bool Enforcer :: DeleteRole(string& role) {
     vector<string> field_values{role};
 
     bool res1 = this->RemoveFilteredGroupingPolicy(1, field_values);
@@ -111,38 +111,38 @@ bool Enforcer :: DeleteRole(string role) {
 
 // DeletePermission deletes a permission.
 // Returns false if the permission does not exist (aka not affected).
-bool Enforcer :: DeletePermission(vector<string> permission) {
+bool Enforcer :: DeletePermission(vector<string>& permission) {
     vector<string> field_values{permission};
     return this->RemoveFilteredPolicy(1, field_values);
 }
 
 // AddPermissionForUser adds a permission for a user or role.
 // Returns false if the user or role already has the permission (aka not affected).
-bool Enforcer :: AddPermissionForUser(string user, vector<string> permission) {
+bool Enforcer :: AddPermissionForUser(string& user, vector<string>& permission) {
     return this->AddPolicy(JoinSlice(user, permission));
 }
 
 // DeletePermissionForUser deletes a permission for a user or role.
 // Returns false if the user or role does not have the permission (aka not affected).
-bool Enforcer :: DeletePermissionForUser(string user, vector<string> permission) {
+bool Enforcer :: DeletePermissionForUser(string user, vector<string>& permission) {
     return this->RemovePolicy(JoinSlice(user, permission));
 }
 
 // DeletePermissionsForUser deletes permissions for a user or role.
 // Returns false if the user or role does not have any permissions (aka not affected).
-bool Enforcer :: DeletePermissionsForUser(string user) {
+bool Enforcer :: DeletePermissionsForUser(string& user) {
     vector<string> field_values{user};
     return this->RemoveFilteredPolicy(0, field_values);
 }
 
 // GetPermissionsForUser gets permissions for a user or role.
-vector<vector<string>> Enforcer :: GetPermissionsForUser(string user) {
+vector<vector<string>> Enforcer :: GetPermissionsForUser(string& user) {
     vector<string> field_values{user};
     return this->GetFilteredPolicy(0, field_values);
 }
 
 // HasPermissionForUser determines whether a user has a permission.
-bool Enforcer :: HasPermissionForUser(string user, vector<string> permission) {
+bool Enforcer :: HasPermissionForUser(string& user, vector<string>& permission) {
     return this->HasPolicy(JoinSlice(user, permission));
 }
 
