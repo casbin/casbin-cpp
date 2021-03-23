@@ -68,8 +68,8 @@ pair<IP, IPMask> IPNet :: networkNumberAndMask(IPNet n) {
     }
     IPMask m = n.mask;
     p.second = m;
-    const byte ipv4len = IP :: IPv4len;
-    const byte ipv6len = IP :: IPv6len;
+    const Byte ipv4len = IP :: IPv4len;
+    const Byte ipv6len = IP :: IPv6len;
     if(m.size() == ipv4len){
         if(newIp.ip.size() != IP :: IPv4len) {
             p.first.isLegal = false;

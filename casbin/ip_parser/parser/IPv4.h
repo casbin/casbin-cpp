@@ -4,6 +4,6 @@
 #include "./IP.h"
 #include "./byte.h"
 
-IP IPv4(byte a, byte b, byte c, byte d);
+IP IPv4(Byte a, Byte b, Byte c, Byte d);
 
 #endif

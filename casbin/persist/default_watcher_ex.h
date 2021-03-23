@@ -21,7 +21,7 @@
 
 class DefaultWatcherEx: public WatcherEx {
     public:
-
+        ~DefaultWatcherEx()=default;
         void UpdateForAddPolicy(vector<string> params);
 
         void UpdateForRemovePolicy(vector<string> params);

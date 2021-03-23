@@ -36,12 +36,14 @@ class Adapter {
         string  file_path;
         bool filtered;
 
+
         /**
          * LoadPolicy loads all policy rules from the storage.
          *
          * @param model the model.
          */
         virtual void LoadPolicy(Model* model) = 0;
+
 
         /**
          * SavePolicy saves all policy rules to the storage.

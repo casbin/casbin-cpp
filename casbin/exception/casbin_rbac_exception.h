@@ -9,7 +9,8 @@ using namespace std;
 class CasbinRBACException{
     string error_message;
     public:
-        CasbinRBACException(string error_message);
+        explicit CasbinRBACException(string& error_message);
+        explicit CasbinRBACException(const char* error_message);
 };
 
 #endif

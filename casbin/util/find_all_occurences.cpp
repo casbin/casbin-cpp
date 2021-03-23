@@ -26,7 +26,7 @@ using namespace std;
 
 vector <size_t> FindAllOccurences(string data, string toSearch){
     // Get the first occurrence
-    size_t pos = data.find(toSearch);
+    auto pos = data.find(toSearch);
 
     vector<size_t> vec;
 

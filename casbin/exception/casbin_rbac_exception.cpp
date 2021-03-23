@@ -6,8 +6,11 @@
 
 #include "./casbin_rbac_exception.h"
 
-CasbinRBACException :: CasbinRBACException(string error_message){
-    this->error_message = error_message;
+CasbinRBACException :: CasbinRBACException(string& error_message):error_message(error_message) {
+}
+
+CasbinRBACException ::CasbinRBACException(const char *error_message):error_message(error_message) {
+
 }
 
 #endif // CASBIN_RBAC_EXCEPTION_CPP

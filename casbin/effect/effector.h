@@ -38,6 +38,7 @@ class Effector{
          * @return the final effect.
          */
         virtual bool MergeEffects(string expr, vector<Effect> effects, vector<float> results) = 0;
+        virtual ~Effector()=0;
 };
 
 #endif

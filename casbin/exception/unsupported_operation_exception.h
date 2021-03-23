@@ -9,7 +9,8 @@ using namespace std;
 class UnsupportedOperationException{
     string error_message;
     public:
-        UnsupportedOperationException(string error_message);
+        explicit UnsupportedOperationException(string& error_message);
+        explicit UnsupportedOperationException(const char* error_message);
 };
 
 #endif

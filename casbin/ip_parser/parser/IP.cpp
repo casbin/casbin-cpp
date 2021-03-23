@@ -6,8 +6,8 @@
 
 #include "./IP.h"
 
-byte IP :: IPv4len = 4;
-byte IP :: IPv6len = 16;
+Byte IP :: IPv4len = 4;
+Byte IP :: IPv6len = 16;
 IPMask IP :: v4InV6Prefix{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff};
 
 IP :: IP() {
@@ -29,17 +29,17 @@ IP IP :: Mask(IPMask mask) {
             ip = ip_3;
         }
     }
-    unsigned int n = int(ip.size());
+    unsigned int n = static_cast<int>(ip.size());
     if(n != mask.size()) {
         IP ip_mask;
         ip_mask.isLegal = false;
         return ip_mask;
     }
     IP out;
-    vector <byte> outNew(n, 0);
+    vector <Byte> outNew(n, 0);
     out.ip = outNew;
     out.isLegal = true;
-    for(int i = 0; i < int(n); i++) {
+    for(int i = 0; i < static_cast<int>(n); i++) {
         out.ip[i] = ip[i] & mask[i];
     }
     return out;
@@ -50,13 +50,13 @@ bool IP :: Equal(IP x) {
         return equal(ip, x.ip);
     }
     if(ip.size() == IPv4len && x.ip.size() == IPv6len) {
-        vector <byte> xNew1(x.ip.begin(), x.ip.begin() + 12);
-        vector <byte> xNew2(x.ip.begin() + 12, x.ip.end());
+        vector <Byte> xNew1(x.ip.begin(), x.ip.begin() + 12);
+        vector <Byte> xNew2(x.ip.begin() + 12, x.ip.end());
         return equal(xNew1, v4InV6Prefix) && equal(ip, xNew2);
     }
     if(ip.size() == IPv6len && x.ip.size() == IPv4len) {
-        vector <byte> ipNew1(ip.begin(), ip.begin() + 12);
-        vector <byte> ipNew2(ip.begin() + 12, ip.end());
+        vector <Byte> ipNew1(ip.begin(), ip.begin() + 12);
+        vector <Byte> ipNew2(ip.begin() + 12, ip.end());
         return equal(ipNew1, v4InV6Prefix) && equal(ipNew2, x.ip);
     }
     return false;
@@ -83,11 +83,11 @@ IP IP :: To4() {
         return *this;
     }
     IP ipNew;
-    vector <byte> ipN (ip.begin(), ip.begin() + 10);
+    vector <Byte> ipN (ip.begin(), ip.begin() + 10);
     ipNew.ip = ipN;
     if(ip.size() == IPv6len && isZeros(ipNew) && ip[10] == 0xff && ip[11] == 0xff) {
         IP ipNew2;
-        vector <byte> ipN(ip.begin() + 12, ip.begin() + 16);
+        vector <Byte> ipN(ip.begin() + 12, ip.begin() + 16);
         ipNew2.ip = ipN;
         return ipNew2;
     }
@@ -97,7 +97,7 @@ IP IP :: To4() {
 
 // Is p all zeros?
 bool IP :: isZeros(IP p) {
-    for(int i = 0 ; i < p.ip.size() ; i++ ) {
+    for(auto i = 0 ; i < p.ip.size() ; i++ ) {
         if(p.ip[i] != 0) {
             return false;
         }

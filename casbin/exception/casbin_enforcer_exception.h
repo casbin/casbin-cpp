@@ -9,7 +9,8 @@ using namespace std;
 class CasbinEnforcerException{
     string error_message;
     public:
-        CasbinEnforcerException(string error_message);
+        explicit CasbinEnforcerException(string& error_message);
+        explicit CasbinEnforcerException(const char* error_message);
 };
 
 #endif

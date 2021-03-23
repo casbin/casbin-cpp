@@ -6,8 +6,15 @@
 
 #include "./parser_exception.h"
 
-ParserException :: ParserException(string error_message){
-    this->error_message = error_message;
+ParserException :: ParserException(string& error_message):error_message(error_message) {
+}
+
+ParserException ::ParserException(const char *error_message):error_message(error_message) {
+
+}
+
+ParserException ::ParserException(const string &error_message):error_message(error_message) {
+
 }
 
 #endif // PARSER_EXCEPTION_CPP

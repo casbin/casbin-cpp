@@ -47,7 +47,7 @@ bool IsInstanceOf(const T*);
 
 vector<string> JoinSlice(string a, vector<string> slice);
 
-string Join(vector<string> vos, string sep = " ");
+string Join(vector<string> vos,string sep = " ");
 
 // RemoveComments removes the comments starting with # in the text.
 string RemoveComments(string s);
@@ -55,7 +55,8 @@ string RemoveComments(string s);
 // SetSubtract returns the elements in `a` that aren't in `b`.
 vector<string> SetSubtract(vector<string> a, vector<string> b);
 
-vector<string> Split(string str, string del, int limit = 0);
+//vector<string> Split(string str, string del, int limit = 0);
+vector<string> Split(const string& src,const string& del);
 
 string& LTrim(string& str, const string& chars = "\t\n\v\f\r ");
  

@@ -34,16 +34,16 @@ void FileAdapter :: SavePolicy(Model* model) {
 
     string tmp;
 
-    for (unordered_map<string, shared_ptr<Assertion>> :: iterator it = model->m["p"].assertion_map.begin() ; it != model->m["p"].assertion_map.begin() ; it++){
-        for (int i = 0 ; i < it->second->policy.size() ; i++){
+    for (unordered_map<string, shared_ptr<Assertion>> :: iterator it = model->m["p"].assertion_map.begin() ; it != model->m["p"].assertion_map.begin() ; ++it){
+        for (auto i = 0 ; i < it->second->policy.size() ; i++){
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
             tmp += "\n";
         }
     }
 
-    for (unordered_map <string, shared_ptr<Assertion>> :: iterator it = model->m["g"].assertion_map.begin() ; it != model->m["g"].assertion_map.begin() ; it++){
-        for (int i = 0 ; i < it->second->policy.size() ; i++){
+    for (unordered_map <string, shared_ptr<Assertion>> :: iterator it = model->m["g"].assertion_map.begin() ; it != model->m["g"].assertion_map.begin() ; ++it){
+        for (auto i = 0 ; i < it->second->policy.size() ; i++){
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
             tmp += "\n";
@@ -57,7 +57,7 @@ void FileAdapter :: LoadPolicyFile(Model* model, void (*handler)(string, Model*)
     ifstream in_file;
     try {
         in_file.open(this->file_path);
-    } catch (const ifstream::failure e) {
+    } catch (const ifstream::failure& e) {
         throw IOException("Cannot open file.");
     }
 
@@ -75,7 +75,7 @@ void FileAdapter :: SavePolicyFile(string text) {
     out_file.open(this->file_path,ios::out);
     try {
         out_file.open(this->file_path,ios::out);
-    } catch (const ifstream::failure e) {
+    } catch (const ifstream::failure& e) {
         throw IOException("Cannot open file.");
     }
 

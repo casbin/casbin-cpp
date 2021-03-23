@@ -30,7 +30,7 @@ Role* Role :: NewRole(string name) {
 }
 
 void Role :: AddRole(Role* role) {
-    for (int i = 0 ; i < this->roles.size() ; i++) {
+    for (auto i = 0 ; i < this->roles.size() ; i++) {
         if (this->roles[i]->name == role->name)
             return;
     }
@@ -39,7 +39,7 @@ void Role :: AddRole(Role* role) {
 }
 
 void Role :: DeleteRole(Role* role) {
-    for (int i = 0; i < roles.size();i++) {
+    for (auto i = 0; i < roles.size();i++) {
         if (roles[i]->name == role->name)
             roles.erase(roles.begin()+i);
     }
@@ -61,7 +61,7 @@ bool Role :: HasRole(string name, int hierarchy_level) {
 }
 
 bool Role :: HasDirectRole(string name) {
-    for(int i = 0 ; i < roles.size() ; i++){
+    for(auto i = 0 ; i < roles.size() ; i++){
         if (roles[i]->name == name)
             return true;
     }
@@ -93,7 +93,7 @@ string Role :: ToString() {
 
 vector<string> Role :: GetRoles() {
     vector<string> names;
-    for(int i = 0 ; i < roles.size() ; i++)
+    for(auto i = 0 ; i < roles.size() ; i++)
         names.push_back(roles[i]->name);
 
     return names;
@@ -102,7 +102,7 @@ vector<string> Role :: GetRoles() {
 bool DefaultRoleManager :: HasRole(string name) {
     bool ok = false;
     if (this->has_pattern){
-        for (unordered_map<string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
+        for (unordered_map<string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; ++it){
             if (this->matching_func(name, it->first))
                 ok = true;
         }
@@ -123,7 +123,7 @@ Role* DefaultRoleManager :: CreateRole(string name) {
         role = all_roles[name];
 
     if (this->has_pattern) {
-        for (unordered_map<string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
+        for (unordered_map<string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; ++it){
             if (this->matching_func(name, it->first) && name!=it->first) {
                 Role* role1;
                 bool ok1 = this->all_roles.find(it->first) != this->all_roles.end();
@@ -187,7 +187,7 @@ void DefaultRoleManager :: AddLink(string name1, string name2, vector<string> do
  * domain is a prefix to the roles.
  */
 void DefaultRoleManager :: DeleteLink(string name1, string name2, vector<string> domain) {
-    unsigned int domain_length = int(domain.size());
+    auto domain_length = domain.size();
     if (domain_length == 1) {
         name1 = domain[0] + "::" + name1;
         name2 = domain[0] + "::" + name2;
@@ -207,7 +207,7 @@ void DefaultRoleManager :: DeleteLink(string name1, string name2, vector<string>
  * domain is a prefix to the roles.
  */
 bool DefaultRoleManager :: HasLink(string name1, string name2, vector<string> domain) {
-    unsigned int domain_length = int(domain.size());
+    auto domain_length = domain.size();
     if (domain_length == 1) {
         name1 = domain[0] + "::" + name1;
         name2 = domain[0] + "::" + name2;
@@ -228,7 +228,7 @@ bool DefaultRoleManager :: HasLink(string name1, string name2, vector<string> do
  * domain is a prefix to the roles.
  */
 vector<string> DefaultRoleManager :: GetRoles(string name, vector<string> domain) {
-    unsigned int domain_length = int(domain.size());
+    auto domain_length = domain.size();
     if (domain_length == 1)
         name = domain[0] + "::" + name;
     else if (domain_length > 1)
@@ -241,7 +241,7 @@ vector<string> DefaultRoleManager :: GetRoles(string name, vector<string> domain
 
     vector<string> roles = this->CreateRole(name)->GetRoles();
     if (domain_length == 1){
-        for (int i = 0; i < roles.size(); i ++)
+        for (auto i = 0; i < roles.size(); i ++)
             roles[i] = roles[i].substr(domain[0].length() + 2, roles[i].length() - domain[0].length() - 2);
     }
 
@@ -258,14 +258,14 @@ vector<string> DefaultRoleManager :: GetUsers(string name, vector<string> domain
         throw CasbinRBACException("error: name does not exist");
 
     vector<string> names;
-    for (unordered_map <string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
+    for (unordered_map <string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; ++it){
         Role* role = it->second;
         if (role->HasDirectRole(name))
             names.push_back(role->name);
     }
 
     if (domain.size() == 1){
-        for (int i = 0 ; i < names.size() ; i++)
+        for (auto i = 0 ; i < names.size() ; i++)
             names[i] = names[i].substr(domain[0].length() + 2, names[i].length() - domain[0].length() - 2);
     }
 

@@ -30,13 +30,13 @@ using namespace std;
 vector<string> SetSubtract(vector<string> a, vector<string> b) {
     unordered_map<string, bool> mb;
 
-    for (int i = 0 ; i < b.size() ; i++)
+    for (auto i = 0 ; i < b.size() ; i++)
         mb[b[i]] = true;
 
     vector<string> diff;
-    for (int i = 0 ; i < a.size() ; i++)
+    for (auto i = 0 ; i < a.size() ; i++)
         if (!mb[a[i]])
-            diff.push_back(a[i]);
+            diff.emplace_back(a[i]);
     return diff;
 }
 

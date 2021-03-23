@@ -28,9 +28,8 @@ class Filter{
 };
 
 // FilteredAdapter is the interface for Casbin adapters supporting filtered policies.
-class FilteredAdapter : virtual public Adapter {
+class FilteredAdapter :virtual public Adapter {
     public:
-
         // LoadFilteredPolicy loads only policy rules that match the filter.
         void LoadFilteredPolicy(Model* model, Filter* filter);
         // IsFiltered returns true if the loaded policy has been filtered.

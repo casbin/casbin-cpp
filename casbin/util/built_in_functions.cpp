@@ -45,7 +45,7 @@ ReturnType KeyMatch(Scope scope) {
 }
 
 bool KeyMatch(string key1, string key2) {
-    size_t pos = key2.find("*");
+    auto pos = key2.find("*");
 
     if (pos == string :: npos)
         return key1 == key2;
@@ -71,14 +71,14 @@ bool KeyMatch2(string key1, string key2) {
     vector<string> key2_arr = Split(key2, "/");
 
     bool res = true;
-    for(int i=0;i<key2_arr.size();i++){
+    for(auto i=0;i<key2_arr.size();i++){
         if(i >= key1_arr.size()){
             res = false;
             break;
         }
         if(key1_arr[i] != key2_arr[i]){
-            int index1 = int(key2_arr[i].find("*"));
-            int index2 = int(key2_arr[i].find(":"));
+            auto index1 = key2_arr[i].find("*");
+            auto index2 = key2_arr[i].find(":");
             if(index1 != string::npos){
                 if(index1==0){
                     res = true;
@@ -125,15 +125,15 @@ bool KeyMatch3(string key1, string key2) {
     vector<string> key2_arr = Split(key2, "/");
 
     bool res = true;
-    for(int i=0;i<key2_arr.size();i++){
+    for(auto i=0;i<key2_arr.size();i++){
         if(i >= key1_arr.size()){
             res = false;
             break;
         }
         if(key1_arr[i] != key2_arr[i]){
-            int index1 = int(key2_arr[i].find("*"));
-            int index2 = int(key2_arr[i].find("{"));
-            int index3 = int(key2_arr[i].find("}"));
+            auto index1 = key2_arr[i].find("*");
+            auto index2 = key2_arr[i].find("{");
+            auto index3 = key2_arr[i].find("}");
             if(index1 != string::npos){
                 if(index1==0){
                     res = true;
@@ -209,11 +209,11 @@ bool IPMatch(string ip1, string ip2) {
 // GFunction is the method of the g(_, _) function.
 ReturnType GFunction(Scope scope) {
     RoleManager* rm;
-    rm = (RoleManager*)GetPointer(scope, 0);
+    rm = static_cast<RoleManager*>(GetPointer(scope, 0));
     string name1 = GetString(scope, 1);
     string name2 = GetString(scope, 2);
 
-    int len = Size(scope);
+    auto len = Size(scope);
 
     if(rm == NULL)
         PushBooleanValue(scope, name1 == name2);

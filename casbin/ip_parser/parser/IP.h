@@ -13,10 +13,10 @@ using namespace std;
 
 class IP {
     public:
-        vector <byte> ip;
+        vector <Byte> ip;
         bool isLegal;
-        static byte IPv4len;
-        static byte IPv6len;
+        static Byte IPv4len;
+        static Byte IPv6len;
         static IPMask v4InV6Prefix;
 
         IP();

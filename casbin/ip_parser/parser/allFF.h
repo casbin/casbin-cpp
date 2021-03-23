@@ -7,6 +7,6 @@
 
 using namespace std;
 
-bool allFF(vector<byte> b);
+bool allFF(vector<Byte> b);
 
 #endif

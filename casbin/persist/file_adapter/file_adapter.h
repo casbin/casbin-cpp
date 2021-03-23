@@ -5,11 +5,13 @@
 
 // Adapter is the file adapter for Casbin.
 // It can load policy from file or save policy to file.
-class FileAdapter : virtual public Adapter {
+class FileAdapter :virtual public Adapter {
     public:
 
         // NewAdapter is the constructor for Adapter.
-        FileAdapter(string file_path);
+        explicit FileAdapter(string file_path);
+
+        ~FileAdapter()=default;
 
         // LoadPolicy loads all policy rules from the storage.
         void LoadPolicy(Model* model);

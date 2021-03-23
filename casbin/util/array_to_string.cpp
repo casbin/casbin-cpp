@@ -26,7 +26,7 @@ using namespace std;
 
 string ArrayToString(vector<string> arr){
     string res = arr[0];
-    for (int i = 0 ; i < arr.size() ; i++)
+    for (auto i = 0 ; i < arr.size() ; i++)
         res += ", " + arr[i];
     return res;
 }

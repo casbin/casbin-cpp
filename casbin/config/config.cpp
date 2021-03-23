@@ -51,7 +51,7 @@ void Config :: Parse(string f_name) {
     ifstream infile;
     try {
         infile.open(f_name);
-    } catch (const ifstream::failure e) {
+    } catch (const ifstream::failure& e) {
         mtx_lock.unlock();
         throw IOException("Cannot open file.");
     }
@@ -77,14 +77,15 @@ void Config :: ParseBuffer(istream* buf){
             continue;
         else if (line.find(DEFAULT_COMMENT_SEM)==0)
             continue;
-        else if (line.find("[")==0 && EndsWith(line, string("]")))
+        else if (line.find("[")==0 && EndsWith(line, "]"))
             section = line.substr(1, line.length() - 2);
         else {
-            vector<string> option_val = Split(line, string("="), 2);
+            vector<string> option_val = Split(line, "=");
             if (option_val.size() != 2) {
-                char* error = new char;
-                sprintf(error, "parse the content error : line %d , %s = ? ", line_num, option_val[0].c_str());
-                throw IllegalArgumentException(string(error));
+                //char* error = new char;
+                string error;
+                sprintf(const_cast<char*>(error.data()), "parse the content error : line %d , %s = ? ", line_num, option_val[0].c_str());
+                throw IllegalArgumentException(error);
             }
             string option = Trim(option_val[0]);
             string value = Trim(option_val[1]);

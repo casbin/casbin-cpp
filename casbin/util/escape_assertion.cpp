@@ -41,7 +41,7 @@ string EscapeAssertion(string s) {
     for (sregex_iterator k = words_begin ; k != words_end ; ++k) {
         smatch match = *k;
         string match_str = match.str();
-        int pos = int(match_str.find("."));
+        auto pos = match_str.find(".");
         if(pos!=-1){
             string new_str = match_str.replace(pos, 1, "_");
             s = s.replace(match.position(), match.str().length(), new_str);

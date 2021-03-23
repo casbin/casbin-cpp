@@ -9,7 +9,11 @@ using namespace std;
 class IllegalArgumentException{
     string error_message;
     public:
-        IllegalArgumentException(string error_message);
+        //explicit IllegalArgumentException(string error_message);
+        explicit IllegalArgumentException(string& error_message);
+        explicit IllegalArgumentException(const char* error_message);
+        explicit IllegalArgumentException(const string& error_message);
+        
 };
 
 #endif

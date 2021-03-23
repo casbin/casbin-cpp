@@ -10,11 +10,18 @@ class Error{
         static Error NIL;
         string err;
 
-        Error(string error_message){
-            err = error_message;
+        explicit Error(string& error_message):err(error_message) {
         }
 
-        string toString(){
+        explicit Error(const char* error_message):err(error_message) {
+
+        }
+
+        explicit Error(const string& error_message):err(error_message) {
+
+        }
+
+        string toString() {
             return err;
         }
 };
