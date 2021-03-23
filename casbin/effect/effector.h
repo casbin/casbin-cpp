@@ -37,7 +37,8 @@ class Effector{
          * @param results the matcher results of all matched rules.
          * @return the final effect.
          */
-        virtual bool MergeEffects(string expr, vector<Effect> effects, vector<float> results) = 0;
+        virtual bool MergeEffects(string expr, vector<Effect>& effects, vector<float>& results) = 0;
+        virtual ~Effector()=0;
 };
 
 #endif

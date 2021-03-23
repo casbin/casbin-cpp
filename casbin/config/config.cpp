@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <cstdio>
 
+
 #include "./config.h"
 #include "../exception/io_exception.h"
 #include "../exception/illegal_argument_exception.h"
@@ -38,7 +39,7 @@ mutex Config::mtx_lock;
 /**
  * addConfig adds a new section->key:value to the configuration.
  */
-bool Config :: AddConfig(string section, string option, string value) {
+bool Config :: AddConfig(string section, string& option, string& value) {
     if (!section.compare(""))
         section = DEFAULT_SECTION;
     bool ok = data[section].find(option) != data[section].end();
@@ -46,12 +47,12 @@ bool Config :: AddConfig(string section, string option, string value) {
     return !ok;
 }
 
-void Config :: Parse(string f_name) {
+void Config :: Parse(string& f_name) {
     mtx_lock.lock();
     ifstream infile;
     try {
         infile.open(f_name);
-    } catch (const ifstream::failure e) {
+    } catch (const ifstream::failure& e) {
         mtx_lock.unlock();
         throw IOException("Cannot open file.");
     }
@@ -73,18 +74,19 @@ void Config :: ParseBuffer(istream* buf){
         else
             break;
         line = Trim(line);
-        if (line.find(DEFAULT_COMMENT)==0)
+        if (line.compare(DEFAULT_COMMENT)==0)
             continue;
-        else if (line.find(DEFAULT_COMMENT_SEM)==0)
+        else if (line.compare(DEFAULT_COMMENT_SEM)==0)
             continue;
-        else if (line.find("[")==0 && EndsWith(line, string("]")))
+        else if (line.compare("[")==0 && EndsWith(line, string("]")))
             section = line.substr(1, line.length() - 2);
         else {
-            vector<string> option_val = Split(line, string("="), 2);
+            vector<string> option_val = Split(line, string("="));
             if (option_val.size() != 2) {
-                char* error = new char;
-                sprintf(error, "parse the content error : line %d , %s = ? ", line_num, option_val[0].c_str());
-                throw IllegalArgumentException(string(error));
+                //char* error = new char;
+                string error;
+                sprintf(const_cast<char*>( error.data() ), "parse the content error : line %d , %s = ? ", line_num, option_val[0].c_str());
+                throw IllegalArgumentException(error);
             }
             string option = Trim(option_val[0]);
             string value = Trim(option_val[1]);
@@ -111,30 +113,31 @@ shared_ptr<Config> Config :: NewConfig(string conf_name) {
  * @param text the model text.
  * @return the constructor of Config.
  */
-shared_ptr<Config> Config :: NewConfigFromText(string text) {
+shared_ptr<Config> Config :: NewConfigFromText(string& text) {
     shared_ptr<Config> c(new Config);
     stringstream stream(text);
     c->ParseBuffer(&stream);
     return c;
 }
 
-bool Config :: GetBool(string key) {
+bool Config :: GetBool(string& key) {
     return Get(key).compare("true")==0;
 }
 
-int Config :: GetInt(string key) {
+int Config :: GetInt(string& key) {
     return atoi(Get(key).c_str());
 }
 
-float Config :: GetFloat(string key) {
-    return float(atof(Get(key).c_str()));
+float Config :: GetFloat(string& key) {
+    return static_cast<float >( atof(Get(key).c_str()) );
 }
 
-string Config :: GetString(string key) {
+
+string Config :: GetString(const string& key) {
     return Get(key);
 }
 
-vector<string> Config :: GetStrings(string key) {
+vector<string> Config :: GetStrings(string& key) {
     string v = Get(key);
     if (!v.compare("")) {
         vector<string> empty;
@@ -143,7 +146,7 @@ vector<string> Config :: GetStrings(string key) {
     return Split(v,string(","));
 }
 
-void Config :: Set(string key, string value) {
+void Config :: Set(string key, string& value) {
     mtx_lock.lock();
     if (key.length() == 0) {
         mtx_lock.unlock();
@@ -165,6 +168,7 @@ void Config :: Set(string key, string value) {
     AddConfig(section, option, value);
     mtx_lock.unlock();
 }
+
 
 string Config :: Get(string key) {
     string section;

@@ -7,7 +7,7 @@
 #include "./parseIPv4.h"
 
 IP parseIPv4(string s) {
-    vector <byte> pb(IP :: IPv4len, 0);
+    vector <Byte> pb(IP :: IPv4len, 0);
     IP ipv4;
     for(int i = 0; i < IP :: IPv4len ; i++) {
         if(s.length() == 0) {

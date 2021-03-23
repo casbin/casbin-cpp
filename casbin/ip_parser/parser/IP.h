@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-03-23 07:30:29
+ * @LastEditTime: 2021-03-23 13:37:19
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /casbin/casbin/ip_parser/parser/IP.h
+ */
 #ifndef IP_PARSER_PARSER_IP
 #define IP_PARSER_PARSER_IP
 
@@ -13,10 +21,10 @@ using namespace std;
 
 class IP {
     public:
-        vector <byte> ip;
+        vector <Byte> ip;
         bool isLegal;
-        static byte IPv4len;
-        static byte IPv6len;
+        static Byte IPv4len;
+        static Byte IPv6len;
         static IPMask v4InV6Prefix;
 
         IP();

@@ -9,7 +9,8 @@ using namespace std;
 class IOException{
     string error_message;
     public:
-        IOException(string error_message);
+        explicit IOException(string& error_message);
+        explicit IOException(const char* erro_message);
 };
 
 #endif

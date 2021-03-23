@@ -9,7 +9,9 @@ using namespace std;
 class MissingRequiredSections{
     string error_message;
     public:
-        MissingRequiredSections(string error_message);
+        explicit MissingRequiredSections(string& error_message);
+        explicit MissingRequiredSections(const char* error_message);
+        explicit MissingRequiredSections(const string& erro_message);
 };
 
 #endif

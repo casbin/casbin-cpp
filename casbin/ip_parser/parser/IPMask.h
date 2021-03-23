@@ -7,6 +7,6 @@
 
 using namespace std;
 
-typedef vector < byte > IPMask;
+typedef vector < Byte > IPMask;
 
 #endif

@@ -24,14 +24,14 @@ using namespace std;
 
 class ConfigInterface {
     public:
+        virtual ~ConfigInterface()=0;
 
-        virtual string GetString(string key) = 0;
-        virtual vector <string> GetStrings(string key) = 0;
-        virtual bool GetBool(string key) = 0;
-        virtual int GetInt(string key) = 0;
-        virtual float GetFloat(string key) = 0;
-        virtual void Set(string key, string value) = 0;
-
+        virtual string GetString(const string& key) = 0;
+        virtual vector <string> GetStrings(string& key) = 0;
+        virtual bool GetBool(string& key) = 0;
+        virtual int GetInt(string& key) = 0;
+        virtual float GetFloat(string& key) = 0;
+        virtual void Set(string key, string& value) = 0;
 };
 
 #endif

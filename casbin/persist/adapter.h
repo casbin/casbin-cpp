@@ -36,12 +36,14 @@ class Adapter {
         string  file_path;
         bool filtered;
 
+
         /**
          * LoadPolicy loads all policy rules from the storage.
          *
          * @param model the model.
          */
         virtual void LoadPolicy(Model* model) = 0;
+
 
         /**
          * SavePolicy saves all policy rules to the storage.
@@ -58,7 +60,7 @@ class Adapter {
          * @param p_type the policy type, "p", "p2", .. or "g", "g2", ..
          * @param rule the rule, like (sub, obj, act).
          */
-        virtual void AddPolicy(string sec, string p_type, vector<string> rule) = 0;
+        virtual void AddPolicy(string& sec, string& p_type, vector<string>& rule) = 0;
 
         /**
          * RemovePolicy removes a policy rule from the storage.
@@ -68,7 +70,7 @@ class Adapter {
          * @param p_type the policy type, "p", "p2", .. or "g", "g2", ..
          * @param rule the rule, like (sub, obj, act).
          */
-        virtual void RemovePolicy(string sec, string p_type, vector<string> rule) = 0;
+        virtual void RemovePolicy(string& sec, string& p_type, vector<string>& rule) = 0;
 
         /**
          * RemoveFilteredPolicy removes policy rules that match the filter from the storage.
@@ -80,7 +82,7 @@ class Adapter {
          * @param field_values the field values to be matched, value ""
          *                    means not to match this field.
          */
-        virtual void RemoveFilteredPolicy(string sec, string ptype, int field_index, vector<string> field_values) = 0;
+        virtual void RemoveFilteredPolicy(string& sec, string& ptype, int field_index, vector<string>& field_values) = 0;
 
         virtual bool IsFiltered() = 0;
 };

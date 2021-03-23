@@ -23,13 +23,14 @@
 // WatcherEx is the strengthen for Casbin watchers.
 class WatcherEx: public Watcher {
     public:
+        ~WatcherEx()=default;
         // UpdateForAddPolicy calls the update callback of other instances to synchronize their policy.
         // It is called after Enforcer.AddPolicy()
-        virtual void UpdateForAddPolicy(vector<string> params) = 0;
+        virtual void UpdateForAddPolicy(vector<string>& params) = 0;
 
         // UPdateForRemovePolicy calls the update callback of other instances to synchronize their policy.
         // It is called after Enforcer.RemovePolicy()
-        virtual void UpdateForRemovePolicy(vector<string> params) = 0;
+        virtual void UpdateForRemovePolicy(vector<string>& params) = 0;
 
         // UpdateForRemoveFilteredPolicy calls the update callback of other instances to synchronize their policy.
         // It is called after Enforcer.RemoveFilteredNamedGroupingPolicy()

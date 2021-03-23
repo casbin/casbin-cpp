@@ -34,7 +34,7 @@ string& RTrim(string& str, const string& chars) {
     return str;
 }
  
-string Trim(string& str, const string& chars) {
+const string& Trim(string& str, const string& chars) {
     return LTrim(RTrim(str, chars), chars);
 }
 

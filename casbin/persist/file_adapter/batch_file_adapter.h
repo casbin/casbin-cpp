@@ -8,11 +8,11 @@ class BatchFileAdapter: public BatchAdapter, public FileAdapter {
     public:
 
         // NewAdapter is the constructor for Adapter.
-        BatchFileAdapter(string file_path);
+        explicit BatchFileAdapter(string& file_path);
 
-        void AddPolicies(string sec, string p_type, vector<vector<string>> rules);
+        void AddPolicies(string& sec, string& p_type, vector<vector<string>>& rules);
 
-        void RemovePolicies(string sec, string p_type, vector<vector<string>> rules);
+        void RemovePolicies(string& sec, string& p_type, vector<vector<string>>& rules);
 };
 
 #endif

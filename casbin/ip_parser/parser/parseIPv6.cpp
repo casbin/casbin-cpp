@@ -8,7 +8,7 @@
 
 IP parseIPv6(string s) {
     IP ipv6;
-    vector <byte> newIP(IP :: IPv6len, 0);
+    vector <Byte> newIP(IP :: IPv6len, 0);
     ipv6.ip = newIP;
     int ellipsis = -1; // position of ellipsis in ip
 
@@ -58,8 +58,8 @@ IP parseIPv6(string s) {
         }
 
         // Save this 16-bit chunk.
-        ipv6.ip[i] = byte(p.first >> 8);
-        ipv6.ip[i+1] = byte(p.first);
+        ipv6.ip[i] = Byte(p.first >> 8);
+        ipv6.ip[i+1] = Byte(p.first);
         i += 2;
 
         // Stop at end of string.

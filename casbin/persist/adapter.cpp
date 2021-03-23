@@ -25,11 +25,11 @@
 
 // LoadPolicyLine loads a text line as a policy rule to model.
 void LoadPolicyLine(string line, Model* model) {
-    if(line == "" || line.find("#")==0)
+    if(line == "" || line.compare("#")==0)
         return;
 
-    vector<string> tokens = Split(line, ",", -1);
-    for (int i = 0; i < tokens.size(); i++)
+    vector<string> tokens = Split(line, ",");
+    for (size_t i = 0; i < tokens.size(); i++)
         tokens[i] = Trim(tokens[i]);
 
     string key = tokens[0];
@@ -41,5 +41,6 @@ void LoadPolicyLine(string line, Model* model) {
 
     (model->m[sec].assertion_map[key]->policy).push_back(new_tokens);
 }
+
 
 #endif // ADAPTER_CPP

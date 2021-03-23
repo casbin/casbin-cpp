@@ -9,7 +9,8 @@ using namespace std;
 class CasbinAdapterException{
     string error_message;
     public:
-        CasbinAdapterException(string error_message);
+        explicit CasbinAdapterException(string& error_message);
+        explicit CasbinAdapterException(const char* error_message);
 };
 
 #endif

@@ -20,6 +20,7 @@
 #include <memory>
 #include <unordered_map>
 #include <mutex>
+#include <filesystem>
 
 #include "./config_interface.h"
 
@@ -38,14 +39,14 @@ class Config : public ConfigInterface {
         /**
          * addConfig adds a new section->key:value to the configuration.
          */
-        bool AddConfig(string section, string option, string value);
+        bool AddConfig(string section, string& option, string& value);
 
-        void Parse(string f_name);
+        void Parse(string& f_name);
 
         void ParseBuffer(istream* buf);
 
     public:
-
+        ~Config()=default;
         /**
          * NewConfig create an empty configuration representation from file.
          *
@@ -60,21 +61,21 @@ class Config : public ConfigInterface {
          * @param text the model text.
          * @return the constructor of Config.
          */
-        static shared_ptr<Config> NewConfigFromText(string text);
+        static shared_ptr<Config> NewConfigFromText(string& text);
 
-        bool GetBool(string key);
+        bool GetBool(string& key);
 
-        int GetInt(string key);
+        int GetInt(string& key);
 
-        float GetFloat(string key);
+        float GetFloat(string& key);
 
-        string GetString(string key);
+        string GetString(const string& key);
 
-        vector<string> GetStrings(string key);
+        vector<string> GetStrings(string& key);
 
-        void Set(string key, string value);
+        void Set(string key, string& value);
 
-        string Get(string key);
+        string Get(string k);
 };
 
 #endif

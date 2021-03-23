@@ -34,32 +34,32 @@ class FunctionMap {
 
         int GetRLen();
 
-        bool Evaluate(string expression);
+        bool Evaluate(string& expression);
 
         bool GetBooleanResult();
 
         // AddFunction adds an expression function.
-        void AddFunction(string func_name, Function f, Index nargs);
+        void AddFunction(const string& func_name, Function f, Index nargs);
 
-        void AddFunctionPropToR(string identifier, Function func, Index nargs);
+        void AddFunctionPropToR(string& identifier, Function func, Index nargs);
 
-        void AddBooleanPropToR(string identifier, bool val);
+        void AddBooleanPropToR(string& identifier, bool val);
 
-        void AddTruePropToR(string identifier);
+        void AddTruePropToR(string& identifier);
 
-        void AddFalsePropToR(string identifier);
+        void AddFalsePropToR(string& identifier);
 
-        void AddIntPropToR(string identifier, int val);
+        void AddIntPropToR(string& identifier, int val);
 
-        void AddFloatPropToR(string identifier, float val);
+        void AddFloatPropToR(string& identifier, float val);
 
-        void AddDoublePropToR(string identifier, double val);
+        void AddDoublePropToR(string& identifier, double val);
 
-        void AddStringPropToR(string identifier, string val);
+        void AddStringPropToR(string& identifier, string& val);
 
-        void AddPointerPropToR(string identifier, void* val);
+        void AddPointerPropToR(string& identifier, void* val);
 
-        void AddObjectPropToR(string identifier);
+        void AddObjectPropToR(string& identifier);
 
         // LoadFunctionMap loads an initial function map.
         void LoadFunctionMap();

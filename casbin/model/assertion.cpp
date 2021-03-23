@@ -27,12 +27,12 @@
 
 void Assertion :: BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_op op, vector<vector<string>> rules) {
     this->rm = rm;
-    int char_count = int(count(this->value.begin(), this->value.end(), '_'));
+    int char_count = static_cast<int>(count(this->value.begin(), this->value.end(), '_'));
 
     if (char_count < 2)
         throw IllegalArgumentException("the number of \"_\" in role definition should be at least 2");
 
-    for(int i = 0 ; i < rules.size() ; i++){
+    for(auto i = 0 ; i < rules.size() ; i++){
         vector<string> rule = rules[i];
 
         if (rule.size() < char_count)
@@ -54,7 +54,7 @@ void Assertion :: BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_o
 
 void Assertion :: BuildRoleLinks(shared_ptr<RoleManager> rm) {
     this->rm = rm;
-    int char_count = int(count(this->value.begin(), this->value.end(), '_'));
+    int char_count = static_cast<int>(count(this->value.begin(), this->value.end(), '_'));
 
     if (char_count < 2)
         throw IllegalArgumentException("the number of \"_\" in role definition should be at least 2");

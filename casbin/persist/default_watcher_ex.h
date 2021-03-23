@@ -21,12 +21,12 @@
 
 class DefaultWatcherEx: public WatcherEx {
     public:
+        ~DefaultWatcherEx()=default;
+        void UpdateForAddPolicy(vector<string>& params);
 
-        void UpdateForAddPolicy(vector<string> params);
+        void UpdateForRemovePolicy(vector<string>& params);
 
-        void UpdateForRemovePolicy(vector<string> params);
-
-        void UpdateForRemoveFilteredPolicy(int field_index, vector<string> field_values);
+        void UpdateForRemoveFilteredPolicy(int field_index, vector<string>& field_values);
 
         void UpdateForSavePolicy(Model* model);
 };

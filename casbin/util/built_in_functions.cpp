@@ -66,19 +66,19 @@ ReturnType KeyMatch2(Scope scope) {
     return RETURN_RESULT;
 }
 
-bool KeyMatch2(string key1, string key2) {
+bool KeyMatch2(string& key1, string& key2) {
     vector<string> key1_arr = Split(key1, "/");
     vector<string> key2_arr = Split(key2, "/");
 
     bool res = true;
-    for(int i=0;i<key2_arr.size();i++){
+    for(size_t i=0;i<key2_arr.size();i++){
         if(i >= key1_arr.size()){
             res = false;
             break;
         }
         if(key1_arr[i] != key2_arr[i]){
-            int index1 = int(key2_arr[i].find("*"));
-            int index2 = int(key2_arr[i].find(":"));
+            size_t index1 = key2_arr[i].find("*");
+            size_t index2 = key2_arr[i].find(":");
             if(index1 != string::npos){
                 if(index1==0){
                     res = true;
@@ -120,7 +120,7 @@ ReturnType KeyMatch3(Scope scope) {
     return RETURN_RESULT;
 }
 
-bool KeyMatch3(string key1, string key2) {
+bool KeyMatch3(string& key1, string& key2) {
     vector<string> key1_arr = Split(key1, "/");
     vector<string> key2_arr = Split(key2, "/");
 
@@ -189,7 +189,7 @@ ReturnType IPMatch(Scope scope) {
     return RETURN_RESULT;
 }
 
-bool IPMatch(string ip1, string ip2) {
+bool IPMatch(string& ip1, string& ip2) {
     IP objIP1 = parseIP(ip1);
     if (objIP1.isLegal == false)
         throw IllegalArgumentException("invalid argument: ip1 in IPMatch() function is not an IP address.");
@@ -209,7 +209,7 @@ bool IPMatch(string ip1, string ip2) {
 // GFunction is the method of the g(_, _) function.
 ReturnType GFunction(Scope scope) {
     RoleManager* rm;
-    rm = (RoleManager*)GetPointer(scope, 0);
+    rm = static_cast<RoleManager*>(GetPointer(scope, 0));
     string name1 = GetString(scope, 1);
     string name2 = GetString(scope, 2);
 

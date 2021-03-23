@@ -37,33 +37,33 @@ class Model{
 
         static unordered_map<string, string> section_name_map;
 
-        static void LoadSection(Model* model, shared_ptr<ConfigInterface> cfg, string sec);
+        static void LoadSection(Model* model, shared_ptr<ConfigInterface> cfg,const string& sec);
 
         static string GetKeySuffix(int i);
 
-        static bool LoadAssertion(Model* model, shared_ptr<ConfigInterface> cfg, string sec, string key);
+        static bool LoadAssertion(Model* model, shared_ptr<ConfigInterface> cfg,const string& sec,const string& key);
 
     public:
 
         Model();
 
-        Model(string path);
+        explicit Model(string& path);
 
         unordered_map<string, AssertionMap> m;
 
         // Minimal required sections for a model to be valid
         static vector<string> required_sections;
 
-        bool HasSection(string sec);
+        bool HasSection(string& sec);
 
         // AddDef adds an assertion to the model.
-        bool AddDef(string sec, string key, string value);
+        bool AddDef(const string& sec,const string& key, string& value);
 
         // LoadModel loads the model from model CONF file.
-        void LoadModel(string path);
+        void LoadModel(string& path);
 
         // LoadModelFromText loads the model from the text.
-        void LoadModelFromText(string text);
+        void LoadModelFromText(string& text);
 
         void LoadModelFromConfig(shared_ptr<ConfigInterface> cfg);
 
@@ -74,12 +74,12 @@ class Model{
         static Model* NewModel();
 
         // NewModel creates a model from a .CONF file.
-        static Model* NewModelFromFile(string path);
+        static Model* NewModelFromFile(string& path);
 
         // NewModel creates a model from a string which contains model text.
-        static Model* NewModelFromString(string text);
+        static Model* NewModelFromString(string& text);
 
-        void BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_op op, string sec, string p_type, vector<vector<string>> rules);
+        void BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_op op,const string& sec, string& p_type, vector<vector<string>> rules);
 
         // BuildRoleLinks initializes the roles in RBAC.
         void BuildRoleLinks(shared_ptr<RoleManager> rm);
@@ -91,34 +91,34 @@ class Model{
         void ClearPolicy();
 
         // GetPolicy gets all rules in a policy.
-        vector<vector<string>> GetPolicy(string sec, string p_type);
+        vector<vector<string>> GetPolicy(const string& sec, string& p_type);
 
         // GetFilteredPolicy gets rules based on field filters from a policy.
-        vector<vector<string>> GetFilteredPolicy(string sec, string p_type, int field_index, vector<string> field_values);
+        vector<vector<string>> GetFilteredPolicy(const string& sec, string& p_type, int field_index, vector<string> field_values);
 
         // HasPolicy determines whether a model has the specified policy rule.
-        bool HasPolicy(string sec, string p_type, vector<string> rule);
+        bool HasPolicy(const string& sec, string& p_type, vector<string>& rule);
 
         // AddPolicy adds a policy rule to the model.
-        bool AddPolicy(string sec, string p_type, vector<string> rule);
+        bool AddPolicy(string& sec, string& p_type, vector<string>& rule);
 
         // AddPolicies adds policy rules to the model.
-        bool AddPolicies(string sec, string p_type, vector<vector<string>> rules);
+        bool AddPolicies(string& sec, string& p_type, vector<vector<string>> rules);
 
         // RemovePolicy removes a policy rule from the model.
-        bool RemovePolicy(string sec, string p_type, vector<string> rule);
+        bool RemovePolicy(string& sec, string& p_type, vector<string>& rule);
 
         // RemovePolicies removes policy rules from the model.
-        bool RemovePolicies(string sec, string p_type, vector<vector<string>> rules);
+        bool RemovePolicies(string& sec, string& p_type, vector<vector<string>> rules);
 
         // RemoveFilteredPolicy removes policy rules based on field filters from the model.
-        pair<bool, vector<vector<string>>> RemoveFilteredPolicy(string sec, string p_type, int field_index, vector<string> field_values);
+        pair<bool, vector<vector<string>>> RemoveFilteredPolicy(string& sec, string& p_type, int field_index, vector<string> field_values);
 
         // GetValuesForFieldInPolicy gets all values for a field for all rules in a policy, duplicated values are removed.
-        vector<string> GetValuesForFieldInPolicy(string sec, string p_type, int field_index);
+        vector<string> GetValuesForFieldInPolicy(const string& sec,const string& p_type, int field_index);
 
         // GetValuesForFieldInPolicyAllTypes gets all values for a field for all rules in a policy of all p_types, duplicated values are removed.
-        vector<string> GetValuesForFieldInPolicyAllTypes(string sec, int field_index);
+        vector<string> GetValuesForFieldInPolicyAllTypes(const string& sec, int field_index);
 };
 
 #endif

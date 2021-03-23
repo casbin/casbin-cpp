@@ -7,7 +7,7 @@
 class FilteredFileAdapter : public FileAdapter, public FilteredAdapter {
     private:
 
-        static bool filterLine(string line, Filter* filter);
+        static bool filterLine(string& line, Filter* filter);
 
         static bool filterWords(vector<string> line, vector<string> filter);
 
@@ -16,7 +16,7 @@ class FilteredFileAdapter : public FileAdapter, public FilteredAdapter {
     public:
 
         // NewFilteredAdapter is the constructor for FilteredAdapter.
-        FilteredFileAdapter(string file_path);
+        explicit FilteredFileAdapter(string& file_path);
 
         // LoadPolicy loads all policy rules from the storage.
         void LoadPolicy(Model* model);

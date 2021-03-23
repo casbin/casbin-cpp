@@ -13,7 +13,7 @@
 
 using namespace std;
 
-bool FilteredFileAdapter :: filterLine(string line, Filter* filter) {
+bool FilteredFileAdapter :: filterLine(string& line, Filter* filter) {
     if (filter == NULL)
         return false;
 
@@ -35,8 +35,8 @@ bool FilteredFileAdapter :: filterWords(vector<string> line, vector<string> filt
     if (line.size() < filter.size()+1)
         return true;
 
-    bool skip_line;
-    for (int i = 0 ; i < filter.size() ; i++) {
+    bool skip_line= false;
+    for (size_t i = 0 ; i < filter.size() ; i++) {
         if (filter[i].length()>0 && Trim(filter[i]) != Trim(line[i+1])) {
             skip_line = true;
             break;
@@ -50,7 +50,7 @@ void FilteredFileAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter,
     ifstream out_file;
     try {
         out_file.open(this->file_path);
-    } catch (const ifstream::failure e) {
+    } catch (const ifstream::failure& e) {
         throw IOException("Cannot open file.");
     }
 
@@ -67,8 +67,9 @@ void FilteredFileAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter,
     out_file.close();
 }
 
+
 // NewFilteredAdapter is the constructor for FilteredAdapter.
-FilteredFileAdapter :: FilteredFileAdapter(string file_path): FileAdapter(file_path) {
+FilteredFileAdapter :: FilteredFileAdapter(string& file_path): FileAdapter(file_path) {
     this->filtered = true;
 }
 
@@ -80,7 +81,7 @@ void FilteredFileAdapter :: LoadPolicy(Model* model) {
 
 // LoadFilteredPolicy loads only policy rules that match the filter.
 void FilteredFileAdapter :: LoadFilteredPolicy(Model* model, Filter* filter) {
-    if (filter == NULL) {
+    if (filter == nullptr) {
         this->LoadPolicy(model);
     }
 
