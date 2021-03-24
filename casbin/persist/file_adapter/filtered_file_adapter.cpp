@@ -35,7 +35,7 @@ bool FilteredFileAdapter :: filterWords(vector<string> line, vector<string> filt
     if (line.size() < filter.size()+1)
         return true;
 
-    bool skip_line= false;
+    bool skip_line;
     for (auto i = 0 ; i < filter.size() ; i++) {
         if (filter[i].length()>0 && Trim(filter[i]) != Trim(line[i+1])) {
             skip_line = true;
@@ -50,7 +50,7 @@ void FilteredFileAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter,
     ifstream out_file;
     try {
         out_file.open(this->file_path);
-    } catch (const ifstream::failure& e) {
+    } catch (const ifstream::failure e) {
         throw IOException("Cannot open file.");
     }
 

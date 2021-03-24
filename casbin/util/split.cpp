@@ -29,16 +29,23 @@
 using namespace std;
 
 
-vector<string> Split(string src,string del) {
-    string::size_type start=src.find_first_not_of(del,0);
-    string::size_type pos=src.find_first_of(del,start);
-    vector<string> dest;
-    while(string::npos != pos || string::npos != start) {
-        dest.emplace_back(src.substr(start,pos-start));
-        start=src.find_first_not_of(del,pos);
-        pos=src.find_first_of(del,start);
+vector<string> Split(string str,string del,int limit) {
+    vector<string> tokens;
+
+    if(limit<=0)
+        limit = LARGE;
+
+    for (int i = 1; i < limit ; i++) {
+        size_t pos = str.find(del);
+        if (pos != string::npos) {
+            tokens.emplace_back(str.substr(0, pos));
+            str = str.substr(pos + del.length());
+        } else
+            break;
     }
-    return dest;
+    tokens.emplace_back(str);
+
+    return tokens;
 }
 
 #endif // SPLIT_CPP

@@ -56,7 +56,7 @@ string RemoveComments(string s);
 vector<string> SetSubtract(vector<string> a, vector<string> b);
 
 //vector<string> Split(string str, string del, int limit = 0);
-vector<string> Split(string src,string del);
+vector<string> Split(string src,string del,int limit=0);
 
 string& LTrim(string& str, const string& chars = "\t\n\v\f\r ");
  

@@ -51,7 +51,7 @@ void Config :: Parse(string f_name) {
     ifstream infile;
     try {
         infile.open(f_name);
-    } catch (const ifstream::failure& e) {
+    } catch (const ifstream::failure e) {
         mtx_lock.unlock();
         throw IOException("Cannot open file.");
     }
@@ -80,7 +80,7 @@ void Config :: ParseBuffer(istream* buf){
         else if (line.find("[")==0 && EndsWith(line, "]"))
             section = line.substr(1, line.length() - 2);
         else {
-            vector<string> option_val = Split(line, "=");
+            vector<string> option_val = Split(line, "=",2);
             if (option_val.size() != 2) {
                 //char* error = new char;
                 string error;

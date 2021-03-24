@@ -27,7 +27,7 @@ using namespace std;
 vector<string> JoinSlice(string a, vector<string> slice) {
     vector<string> result{a};
     for (auto i = 0 ; i < slice.size() ; i++)
-        result.push_back(slice[i]);
+        result.emplace_back(slice[i]);
     return result;
 }
 
