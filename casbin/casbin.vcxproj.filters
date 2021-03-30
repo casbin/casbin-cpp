@@ -171,6 +171,9 @@
     <ClCompile Include="util\array_equals.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
+    <ClCompile Include="util\ticker.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
     <ClCompile Include="util\array_remove_duplicates.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
@@ -472,6 +475,9 @@
     </ClInclude>
     <ClInclude Include="enforcer_synced.h">
        <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\ticker.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
