@@ -470,6 +470,9 @@
     <ClInclude Include="ip_parser\exception\parser_exception.h">
       <Filter>Header Files\ip_parser\exception</Filter>
     </ClInclude>
+    <ClInclude Include="enforcer_synced.h">
+       <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

@@ -233,6 +233,7 @@
     <ClInclude Include="enforcer_cached.h" />
     <ClInclude Include="enforcer_interface.h" />
     <ClInclude Include="exception.h" />
+    <ClInclude Include="enforcer_synced.h" />
     <ClInclude Include="exception\casbin_adapter_exception.h" />
     <ClInclude Include="exception\casbin_enforcer_exception.h" />
     <ClInclude Include="exception\casbin_rbac_exception.h" />
