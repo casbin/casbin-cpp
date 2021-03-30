@@ -353,6 +353,7 @@ MigrationBackup/
 
 .idea/
 *.iml
+.vscode
 
 # CMake work directory
 cmake-build/
