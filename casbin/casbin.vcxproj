@@ -158,6 +158,7 @@
     <ClCompile Include="effect\default_effector.cpp" />
     <ClCompile Include="enforcer.cpp" />
     <ClCompile Include="enforcer_cached.cpp" />
+    <ClCompile Include="util\ticker.cpp" />
     <ClCompile Include="exception\casbin_adapter_exception.cpp" />
     <ClCompile Include="exception\casbin_enforcer_exception.cpp" />
     <ClCompile Include="exception\casbin_rbac_exception.cpp" />
@@ -288,6 +289,7 @@
     <ClInclude Include="util\built_in_functions.h" />
     <ClInclude Include="util\pch.h" />
     <ClInclude Include="util\util.h" />
+    <ClInclude Include="util\ticker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
