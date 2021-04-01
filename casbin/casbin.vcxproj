@@ -158,7 +158,7 @@
     <ClCompile Include="effect\default_effector.cpp" />
     <ClCompile Include="enforcer.cpp" />
     <ClCompile Include="enforcer_cached.cpp" />
-    <ClCompile Include="util\ticker.cpp" />
+    <ClCompile Include="enforcer_synced.cpp" />
     <ClCompile Include="exception\casbin_adapter_exception.cpp" />
     <ClCompile Include="exception\casbin_enforcer_exception.cpp" />
     <ClCompile Include="exception\casbin_rbac_exception.cpp" />
@@ -202,6 +202,7 @@
     <ClCompile Include="rbac_api.cpp" />
     <ClCompile Include="rbac_api_with_domains.cpp" />
     <ClCompile Include="util\array_equals.cpp" />
+    <ClCompile Include="util\ticker.cpp" />
     <ClCompile Include="util\array_remove_duplicates.cpp" />
     <ClCompile Include="util\array_to_string.cpp" />
     <ClCompile Include="util\built_in_functions.cpp" />
@@ -233,8 +234,8 @@
     <ClInclude Include="enforcer.h" />
     <ClInclude Include="enforcer_cached.h" />
     <ClInclude Include="enforcer_interface.h" />
-    <ClInclude Include="exception.h" />
     <ClInclude Include="enforcer_synced.h" />
+    <ClInclude Include="exception.h" />
     <ClInclude Include="exception\casbin_adapter_exception.h" />
     <ClInclude Include="exception\casbin_enforcer_exception.h" />
     <ClInclude Include="exception\casbin_rbac_exception.h" />
@@ -288,8 +289,8 @@
     <ClInclude Include="util.h" />
     <ClInclude Include="util\built_in_functions.h" />
     <ClInclude Include="util\pch.h" />
-    <ClInclude Include="util\util.h" />
     <ClInclude Include="util\ticker.h" />
+    <ClInclude Include="util\util.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
