@@ -113,7 +113,7 @@ void SyncedEnforcer ::StartAutoLoadPolicy(chrono::duration<int64_t, nano> t) {
     return;
   autoLoadRunning = true;
   Ticker::on_tick_t onTick = [this]() {
-    Enforcer::LoadPolicy();
+    SyncedEnforcer::LoadPolicy();
     ++n;
   };
   ticker = unique_ptr<Ticker>(new Ticker(onTick, t));
