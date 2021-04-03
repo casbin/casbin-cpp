@@ -6,6 +6,8 @@
 
 #include "./IP.h"
 
+namespace casbin {
+
 byte IP :: IPv4len = 4;
 byte IP :: IPv6len = 16;
 IPMask IP :: v4InV6Prefix{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff};
@@ -36,7 +38,7 @@ IP IP :: Mask(IPMask mask) {
         return ip_mask;
     }
     IP out;
-    vector <byte> outNew(n, 0);
+    std::vector <byte> outNew(n, 0);
     out.ip = outNew;
     out.isLegal = true;
     for(int i = 0; i < int(n); i++) {
@@ -50,21 +52,21 @@ bool IP :: Equal(IP x) {
         return equal(ip, x.ip);
     }
     if(ip.size() == IPv4len && x.ip.size() == IPv6len) {
-        vector <byte> xNew1(x.ip.begin(), x.ip.begin() + 12);
-        vector <byte> xNew2(x.ip.begin() + 12, x.ip.end());
+        std::vector <byte> xNew1(x.ip.begin(), x.ip.begin() + 12);
+        std::vector <byte> xNew2(x.ip.begin() + 12, x.ip.end());
         return equal(xNew1, v4InV6Prefix) && equal(ip, xNew2);
     }
     if(ip.size() == IPv6len && x.ip.size() == IPv4len) {
-        vector <byte> ipNew1(ip.begin(), ip.begin() + 12);
-        vector <byte> ipNew2(ip.begin() + 12, ip.end());
+        std::vector <byte> ipNew1(ip.begin(), ip.begin() + 12);
+        std::vector <byte> ipNew2(ip.begin() + 12, ip.end());
         return equal(ipNew1, v4InV6Prefix) && equal(ipNew2, x.ip);
     }
     return false;
 }
 
-string IP :: toString() {
-    string ip1, ip2, ip3, ip4;
-    stringstream ss1, ss2, ss3, ss4;
+std::string IP :: toString() {
+    std::string ip1, ip2, ip3, ip4;
+    std::stringstream ss1, ss2, ss3, ss4;
     ss1 << ip[12];
     ss1 >> ip1;
     ss2 << ip[13];
@@ -83,11 +85,11 @@ IP IP :: To4() {
         return *this;
     }
     IP ipNew;
-    vector <byte> ipN (ip.begin(), ip.begin() + 10);
+    std::vector <byte> ipN (ip.begin(), ip.begin() + 10);
     ipNew.ip = ipN;
     if(ip.size() == IPv6len && isZeros(ipNew) && ip[10] == 0xff && ip[11] == 0xff) {
         IP ipNew2;
-        vector <byte> ipN(ip.begin() + 12, ip.begin() + 16);
+        std::vector <byte> ipN(ip.begin() + 12, ip.begin() + 16);
         ipNew2.ip = ipN;
         return ipNew2;
     }
@@ -104,5 +106,7 @@ bool IP :: isZeros(IP p) {
     }
     return true;
 }
+
+} // namespace casbin
 
 #endif // IP_CPP

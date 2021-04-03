@@ -3,11 +3,14 @@
 #ifndef ILLEGAL_ARGUMENT_EXCEPTION_CPP
 #define ILLEGAL_ARGUMENT_EXCEPTION_CPP
 
-
 #include "./illegal_argument_exception.h"
 
-IllegalArgumentException :: IllegalArgumentException(string error_message) {
+namespace casbin {
+
+IllegalArgumentException :: IllegalArgumentException(std::string error_message) {
     this->error_message = error_message;
 }
+
+} // namespace casbin
 
 #endif // ILLEGAL_ARGUMENT_EXCEPTION_CPP

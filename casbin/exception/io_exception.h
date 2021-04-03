@@ -3,13 +3,15 @@
 
 #include <string>
 
-using namespace std;
+namespace casbin {
 
 // Exception class for I/O operations.
 class IOException{
-    string error_message;
+    std::string error_message;
     public:
-        IOException(string error_message);
+        IOException(std::string error_message);
 };
+
+} // namespace casbin
 
 #endif

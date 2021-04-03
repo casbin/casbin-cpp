@@ -22,50 +22,50 @@
 #include "./assertion.h"
 #include "../config/config_interface.h"
 
-using namespace std;
+namespace casbin {
 
 // AssertionMap is the collection of assertions, can be "r", "p", "g", "e", "m".
 class AssertionMap {
     public:
 
-        unordered_map<string, shared_ptr<Assertion>> assertion_map;
+        std::unordered_map<std::string, std::shared_ptr<Assertion>> assertion_map;
 };
 
 // Model represents the whole access control model.
 class Model{
     private:
 
-        static unordered_map<string, string> section_name_map;
+        static std::unordered_map<std::string, std::string> section_name_map;
 
-        static void LoadSection(Model* model, shared_ptr<ConfigInterface> cfg, string sec);
+        static void LoadSection(Model* model, std::shared_ptr<ConfigInterface> cfg, std::string sec);
 
-        static string GetKeySuffix(int i);
+        static std::string GetKeySuffix(int i);
 
-        static bool LoadAssertion(Model* model, shared_ptr<ConfigInterface> cfg, string sec, string key);
+        static bool LoadAssertion(Model* model, std::shared_ptr<ConfigInterface> cfg, std::string sec, std::string key);
 
     public:
 
         Model();
 
-        Model(string path);
+        Model(std::string path);
 
-        unordered_map<string, AssertionMap> m;
+        std::unordered_map<std::string, AssertionMap> m;
 
         // Minimal required sections for a model to be valid
-        static vector<string> required_sections;
+        static std::vector<std::string> required_sections;
 
-        bool HasSection(string sec);
+        bool HasSection(std::string sec);
 
         // AddDef adds an assertion to the model.
-        bool AddDef(string sec, string key, string value);
+        bool AddDef(std::string sec, std::string key, std::string value);
 
         // LoadModel loads the model from model CONF file.
-        void LoadModel(string path);
+        void LoadModel(std::string path);
 
         // LoadModelFromText loads the model from the text.
-        void LoadModelFromText(string text);
+        void LoadModelFromText(std::string text);
 
-        void LoadModelFromConfig(shared_ptr<ConfigInterface> cfg);
+        void LoadModelFromConfig(std::shared_ptr<ConfigInterface> cfg);
 
         // PrintModel prints the model to the log.
         void PrintModel();
@@ -74,15 +74,15 @@ class Model{
         static Model* NewModel();
 
         // NewModel creates a model from a .CONF file.
-        static Model* NewModelFromFile(string path);
+        static Model* NewModelFromFile(std::string path);
 
-        // NewModel creates a model from a string which contains model text.
-        static Model* NewModelFromString(string text);
+        // NewModel creates a model from a std::string which contains model text.
+        static Model* NewModelFromString(std::string text);
 
-        void BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_op op, string sec, string p_type, vector<vector<string>> rules);
+        void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
 
         // BuildRoleLinks initializes the roles in RBAC.
-        void BuildRoleLinks(shared_ptr<RoleManager> rm);
+        void BuildRoleLinks(std::shared_ptr<RoleManager> rm);
 
         // PrintPolicy prints the policy to log.
         void PrintPolicy();
@@ -91,34 +91,36 @@ class Model{
         void ClearPolicy();
 
         // GetPolicy gets all rules in a policy.
-        vector<vector<string>> GetPolicy(string sec, string p_type);
+        std::vector<std::vector<std::string>> GetPolicy(std::string sec, std::string p_type);
 
         // GetFilteredPolicy gets rules based on field filters from a policy.
-        vector<vector<string>> GetFilteredPolicy(string sec, string p_type, int field_index, vector<string> field_values);
+        std::vector<std::vector<std::string>> GetFilteredPolicy(std::string sec, std::string p_type, int field_index, std::vector<std::string> field_values);
 
         // HasPolicy determines whether a model has the specified policy rule.
-        bool HasPolicy(string sec, string p_type, vector<string> rule);
+        bool HasPolicy(std::string sec, std::string p_type, std::vector<std::string> rule);
 
         // AddPolicy adds a policy rule to the model.
-        bool AddPolicy(string sec, string p_type, vector<string> rule);
+        bool AddPolicy(std::string sec, std::string p_type, std::vector<std::string> rule);
 
         // AddPolicies adds policy rules to the model.
-        bool AddPolicies(string sec, string p_type, vector<vector<string>> rules);
+        bool AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
 
         // RemovePolicy removes a policy rule from the model.
-        bool RemovePolicy(string sec, string p_type, vector<string> rule);
+        bool RemovePolicy(std::string sec, std::string p_type, std::vector<std::string> rule);
 
         // RemovePolicies removes policy rules from the model.
-        bool RemovePolicies(string sec, string p_type, vector<vector<string>> rules);
+        bool RemovePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
 
         // RemoveFilteredPolicy removes policy rules based on field filters from the model.
-        pair<bool, vector<vector<string>>> RemoveFilteredPolicy(string sec, string p_type, int field_index, vector<string> field_values);
+        std::pair<bool, std::vector<std::vector<std::string>>> RemoveFilteredPolicy(std::string sec, std::string p_type, int field_index, std::vector<std::string> field_values);
 
         // GetValuesForFieldInPolicy gets all values for a field for all rules in a policy, duplicated values are removed.
-        vector<string> GetValuesForFieldInPolicy(string sec, string p_type, int field_index);
+        std::vector<std::string> GetValuesForFieldInPolicy(std::string sec, std::string p_type, int field_index);
 
         // GetValuesForFieldInPolicyAllTypes gets all values for a field for all rules in a policy of all p_types, duplicated values are removed.
-        vector<string> GetValuesForFieldInPolicyAllTypes(string sec, int field_index);
+        std::vector<std::string> GetValuesForFieldInPolicyAllTypes(std::string sec, int field_index);
 };
+
+};  // namespace casbin
 
 #endif

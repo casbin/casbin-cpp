@@ -3,7 +3,7 @@
 
 #include <string>
 
-using namespace std;
+namespace casbin {
 
 class Logger{
     protected:
@@ -25,9 +25,11 @@ class Logger{
 
         //Printf formats according to a format specifier and logs the message.
         template <typename... Object>
-        void Printf(string, Object... objects){
+        void Printf(std::string, Object... objects){
             return;
         }
 };
+
+} // namespace casbin
 
 #endif

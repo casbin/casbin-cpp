@@ -20,24 +20,28 @@
 #include "../model/model.h"
 #include "./watcher.h"
 
+namespace casbin {
+
 // WatcherEx is the strengthen for Casbin watchers.
 class WatcherEx: public Watcher {
     public:
         // UpdateForAddPolicy calls the update callback of other instances to synchronize their policy.
         // It is called after Enforcer.AddPolicy()
-        virtual void UpdateForAddPolicy(vector<string> params) = 0;
+        virtual void UpdateForAddPolicy(std::vector<std::string> params) = 0;
 
         // UPdateForRemovePolicy calls the update callback of other instances to synchronize their policy.
         // It is called after Enforcer.RemovePolicy()
-        virtual void UpdateForRemovePolicy(vector<string> params) = 0;
+        virtual void UpdateForRemovePolicy(std::vector<std::string> params) = 0;
 
         // UpdateForRemoveFilteredPolicy calls the update callback of other instances to synchronize their policy.
         // It is called after Enforcer.RemoveFilteredNamedGroupingPolicy()
-        virtual void UpdateForRemoveFilteredPolicy(int field_index, vector<string> field_values) = 0;
+        virtual void UpdateForRemoveFilteredPolicy(int field_index, std::vector<std::string> field_values) = 0;
 
         // UpdateForSavePolicy calls the update callback of other instances to synchronize their policy.
         // It is called after Enforcer.RemoveFilteredNamedGroupingPolicy()
         virtual void UpdateForSavePolicy(Model* model) = 0;
 };
+
+};  // namespace casbin
 
 #endif

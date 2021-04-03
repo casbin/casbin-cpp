@@ -3,13 +3,15 @@
 
 #include <string>
 
-using namespace std;
+namespace casbin {
 
 // Exception class for unsupported operations.
 class UnsupportedOperationException{
-    string error_message;
+    std::string error_message;
     public:
-        UnsupportedOperationException(string error_message);
+        UnsupportedOperationException(std::string error_message);
 };
+
+} // namespace casbin
 
 #endif

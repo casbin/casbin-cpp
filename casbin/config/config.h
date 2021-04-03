@@ -23,26 +23,26 @@
 
 #include "./config_interface.h"
 
-using namespace std;
+namespace casbin {
 
 class Config : public ConfigInterface {
     private:
 
-        static const string DEFAULT_SECTION;
-        static const string DEFAULT_COMMENT;
-        static const string DEFAULT_COMMENT_SEM;
-        static mutex mtx_lock;
+        static const std::string DEFAULT_SECTION;
+        static const std::string DEFAULT_COMMENT;
+        static const std::string DEFAULT_COMMENT_SEM;
+        static std::mutex mtx_lock;
 
-        unordered_map<string, unordered_map<string, string>> data;
+        std::unordered_map<std::string, std::unordered_map<std::string, std::string>> data;
 
         /**
          * addConfig adds a new section->key:value to the configuration.
          */
-        bool AddConfig(string section, string option, string value);
+        bool AddConfig(std::string section, std::string option, std::string value);
 
-        void Parse(string f_name);
+        void Parse(std::string f_name);
 
-        void ParseBuffer(istream* buf);
+        void ParseBuffer(std::istream* buf);
 
     public:
 
@@ -52,7 +52,7 @@ class Config : public ConfigInterface {
          * @param confName the path of the model file.
          * @return the constructor of Config.
          */
-        static shared_ptr<Config> NewConfig(string conf_name);
+        static std::shared_ptr<Config> NewConfig(std::string conf_name);
 
         /**
          * newConfigFromText create an empty configuration representation from text.
@@ -60,21 +60,23 @@ class Config : public ConfigInterface {
          * @param text the model text.
          * @return the constructor of Config.
          */
-        static shared_ptr<Config> NewConfigFromText(string text);
+        static std::shared_ptr<Config> NewConfigFromText(std::string text);
 
-        bool GetBool(string key);
+        bool GetBool(std::string key);
 
-        int GetInt(string key);
+        int GetInt(std::string key);
 
-        float GetFloat(string key);
+        float GetFloat(std::string key);
 
-        string GetString(string key);
+        std::string GetString(std::string key);
 
-        vector<string> GetStrings(string key);
+        std::vector<std::string> GetStrings(std::string key);
 
-        void Set(string key, string value);
+        void Set(std::string key, std::string value);
 
-        string Get(string key);
+        std::string Get(std::string key);
 };
+
+} // namespace casbin
 
 #endif

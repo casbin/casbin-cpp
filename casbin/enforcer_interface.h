@@ -23,24 +23,26 @@
 #include "./effect/effector.h"
 #include "./model/scope_config.h"
 
+namespace casbin {
+
 // IEnforcer is the API interface of Enforcer
 class IEnforcer {
     public:
 
         /* Enforcer API */
-        virtual void InitWithFile(string model_path, string policy_path) = 0;
-        virtual void InitWithAdapter(string model_path, shared_ptr<Adapter> adapter) = 0;
-        virtual void InitWithModelAndAdapter(shared_ptr<Model> m, shared_ptr<Adapter> adapter) = 0;
+        virtual void InitWithFile(std::string model_path, std::string policy_path) = 0;
+        virtual void InitWithAdapter(std::string model_path, std::shared_ptr<Adapter> adapter) = 0;
+        virtual void InitWithModelAndAdapter(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter) = 0;
         virtual void Initialize() = 0;
         virtual void LoadModel() = 0;
-        virtual shared_ptr<Model> GetModel() = 0;
-        virtual void SetModel(shared_ptr<Model> m) = 0;
-        virtual shared_ptr<Adapter> GetAdapter() = 0;
-        virtual void SetAdapter(shared_ptr<Adapter> adapter) = 0;
-        virtual void SetWatcher(shared_ptr<Watcher> watcher) = 0;
-        virtual shared_ptr<RoleManager> GetRoleManager() = 0;
-        virtual void SetRoleManager(shared_ptr<RoleManager> rm) = 0;
-        virtual void SetEffector(shared_ptr<Effector> eft) = 0;
+        virtual std::shared_ptr<Model> GetModel() = 0;
+        virtual void SetModel(std::shared_ptr<Model> m) = 0;
+        virtual std::shared_ptr<Adapter> GetAdapter() = 0;
+        virtual void SetAdapter(std::shared_ptr<Adapter> adapter) = 0;
+        virtual void SetWatcher(std::shared_ptr<Watcher> watcher) = 0;
+        virtual std::shared_ptr<RoleManager> GetRoleManager() = 0;
+        virtual void SetRoleManager(std::shared_ptr<RoleManager> rm) = 0;
+        virtual void SetEffector(std::shared_ptr<Effector> eft) = 0;
         virtual void ClearPolicy() = 0;
         virtual void LoadPolicy() = 0;
 
@@ -55,86 +57,88 @@ class IEnforcer {
         virtual void EnableAutoSave(bool auto_save) = 0;
         virtual void EnableAutoBuildRoleLinks(bool auto_build_role_links) = 0;
         virtual void BuildRoleLinks() = 0;
-        virtual bool enforce(string matcher, Scope scope) = 0;
+        virtual bool enforce(std::string matcher, Scope scope) = 0;
         virtual bool Enforce(Scope scope) = 0;
-        virtual bool EnforceWithMatcher(string matcher, Scope scope) = 0;
+        virtual bool EnforceWithMatcher(std::string matcher, Scope scope) = 0;
 
         /* RBAC API */
-        virtual vector<string> GetRolesForUser(string name, vector<string> domain = {}) = 0;
-        virtual vector<string> GetUsersForRole(string name, vector<string> domain = {}) = 0;
-        virtual bool HasRoleForUser(string name, string role) = 0;
-        virtual bool AddRoleForUser(string user, string role) = 0;
-        virtual bool AddRolesForUser(string user, vector<string> roles) = 0;
-        virtual bool AddPermissionForUser(string user, vector<string> permission) = 0;
-        virtual bool DeletePermissionForUser(string user, vector<string> permission) = 0;
-        virtual bool DeletePermissionsForUser(string user) = 0;
-        virtual vector<vector<string>> GetPermissionsForUser(string user) = 0;
-        virtual bool HasPermissionForUser(string user, vector<string> permission) = 0;
-        virtual vector<string> GetImplicitRolesForUser(string name, vector<string> domain = {}) = 0;
-        virtual vector<vector<string>> GetImplicitPermissionsForUser(string user, vector<string> domain = {}) = 0;
-        virtual vector<string> GetImplicitUsersForPermission(vector<string> permission) = 0;
-        virtual bool DeleteRoleForUser(string user, string role) = 0;
-        virtual bool DeleteRolesForUser(string user) = 0;
-        virtual bool DeleteUser(string user) = 0;
-        virtual bool DeleteRole(string role) = 0;
-        virtual bool DeletePermission(vector<string> permission) = 0;
+        virtual std::vector<std::string> GetRolesForUser(std::string name, std::vector<std::string> domain = {}) = 0;
+        virtual std::vector<std::string> GetUsersForRole(std::string name, std::vector<std::string> domain = {}) = 0;
+        virtual bool HasRoleForUser(std::string name, std::string role) = 0;
+        virtual bool AddRoleForUser(std::string user, std::string role) = 0;
+        virtual bool AddRolesForUser(std::string user, std::vector<std::string> roles) = 0;
+        virtual bool AddPermissionForUser(std::string user, std::vector<std::string> permission) = 0;
+        virtual bool DeletePermissionForUser(std::string user, std::vector<std::string> permission) = 0;
+        virtual bool DeletePermissionsForUser(std::string user) = 0;
+        virtual std::vector<std::vector<std::string>> GetPermissionsForUser(std::string user) = 0;
+        virtual bool HasPermissionForUser(std::string user, std::vector<std::string> permission) = 0;
+        virtual std::vector<std::string> GetImplicitRolesForUser(std::string name, std::vector<std::string> domain = {}) = 0;
+        virtual std::vector<std::vector<std::string>> GetImplicitPermissionsForUser(std::string user, std::vector<std::string> domain = {}) = 0;
+        virtual std::vector<std::string> GetImplicitUsersForPermission(std::vector<std::string> permission) = 0;
+        virtual bool DeleteRoleForUser(std::string user, std::string role) = 0;
+        virtual bool DeleteRolesForUser(std::string user) = 0;
+        virtual bool DeleteUser(std::string user) = 0;
+        virtual bool DeleteRole(std::string role) = 0;
+        virtual bool DeletePermission(std::vector<std::string> permission) = 0;
 
         /* Management API */
-        virtual vector<string> GetAllSubjects() = 0;
-        virtual vector<string> GetAllNamedSubjects(string p_type) = 0;
-        virtual vector<string> GetAllObjects() = 0;
-        virtual vector<string> GetAllNamedObjects(string p_type) = 0;
-        virtual vector<string> GetAllActions() = 0;
-        virtual vector<string> GetAllNamedActions(string p_type) = 0;
-        virtual vector<string> GetAllRoles() = 0;
-        virtual vector<string> GetAllNamedRoles(string p_type) = 0;
-        virtual vector<vector<string>> GetPolicy() = 0;
-        virtual vector<vector<string>> GetFilteredPolicy(int field_index, vector<string> field_values) = 0;
-        virtual vector<vector<string>> GetNamedPolicy(string p_type) = 0;
-        virtual vector<vector<string>> GetFilteredNamedPolicy(string p_type, int field_index, vector<string> field_values) = 0;
-        virtual vector<vector<string>> GetGroupingPolicy() = 0;
-        virtual vector<vector<string>> GetFilteredGroupingPolicy(int field_index, vector<string> field_values) = 0;
-        virtual vector<vector<string>> GetNamedGroupingPolicy(string p_type) = 0;
-        virtual vector<vector<string>> GetFilteredNamedGroupingPolicy(string p_type, int field_index, vector<string> field_values) = 0;
-        virtual bool HasPolicy(vector<string> params) = 0;
-        virtual bool HasNamedPolicy(string p_type, vector<string> params) = 0;
-        virtual bool AddPolicy(vector<string> params) = 0;
-        virtual bool  AddPolicies(vector<vector<string>> rules) = 0;
-        virtual bool AddNamedPolicy(string p_type, vector<string> params) = 0;
-        virtual bool AddNamedPolicies(string p_type, vector<vector<string>> rules) = 0;
-        virtual bool RemovePolicy(vector<string> params) = 0;
-        virtual bool RemovePolicies(vector<vector<string>> rules) = 0;
-        virtual bool RemoveFilteredPolicy(int field_index, vector<string> field_values) = 0;
-        virtual bool RemoveNamedPolicy(string p_type, vector<string> params) = 0;
-        virtual bool RemoveNamedPolicies(string p_type, vector<vector<string>> rules) = 0;
-        virtual bool RemoveFilteredNamedPolicy(string p_type, int field_index, vector<string> field_values) = 0;
-        virtual bool HasGroupingPolicy(vector<string> params) = 0;
-        virtual bool HasNamedGroupingPolicy(string p_type, vector<string> params) = 0;
-        virtual bool AddGroupingPolicy(vector<string> params) = 0;
-        virtual bool AddGroupingPolicies(vector<vector<string>> rules) = 0;
-        virtual bool AddNamedGroupingPolicy(string p_type, vector<string> params) = 0;
-        virtual bool AddNamedGroupingPolicies(string p_type, vector<vector<string>> rules) = 0;
-        virtual bool RemoveGroupingPolicy(vector<string> params) = 0;
-        virtual bool RemoveGroupingPolicies(vector<vector<string>> rules) = 0;
-        virtual bool RemoveFilteredGroupingPolicy(int field_index, vector<string> field_values) = 0;
-        virtual bool RemoveNamedGroupingPolicy(string p_type, vector<string> params) = 0;
-        virtual bool RemoveNamedGroupingPolicies(string p_type, vector<vector<string>> rules) = 0;
-        virtual bool RemoveFilteredNamedGroupingPolicy(string p_type, int field_index, vector<string> field_values) = 0;
-        virtual void AddFunction(string name, Function function, Index nargs) = 0;
+        virtual std::vector<std::string> GetAllSubjects() = 0;
+        virtual std::vector<std::string> GetAllNamedSubjects(std::string p_type) = 0;
+        virtual std::vector<std::string> GetAllObjects() = 0;
+        virtual std::vector<std::string> GetAllNamedObjects(std::string p_type) = 0;
+        virtual std::vector<std::string> GetAllActions() = 0;
+        virtual std::vector<std::string> GetAllNamedActions(std::string p_type) = 0;
+        virtual std::vector<std::string> GetAllRoles() = 0;
+        virtual std::vector<std::string> GetAllNamedRoles(std::string p_type) = 0;
+        virtual std::vector<std::vector<std::string>> GetPolicy() = 0;
+        virtual std::vector<std::vector<std::string>> GetFilteredPolicy(int field_index, std::vector<std::string> field_values) = 0;
+        virtual std::vector<std::vector<std::string>> GetNamedPolicy(std::string p_type) = 0;
+        virtual std::vector<std::vector<std::string>> GetFilteredNamedPolicy(std::string p_type, int field_index, std::vector<std::string> field_values) = 0;
+        virtual std::vector<std::vector<std::string>> GetGroupingPolicy() = 0;
+        virtual std::vector<std::vector<std::string>> GetFilteredGroupingPolicy(int field_index, std::vector<std::string> field_values) = 0;
+        virtual std::vector<std::vector<std::string>> GetNamedGroupingPolicy(std::string p_type) = 0;
+        virtual std::vector<std::vector<std::string>> GetFilteredNamedGroupingPolicy(std::string p_type, int field_index, std::vector<std::string> field_values) = 0;
+        virtual bool HasPolicy(std::vector<std::string> params) = 0;
+        virtual bool HasNamedPolicy(std::string p_type, std::vector<std::string> params) = 0;
+        virtual bool AddPolicy(std::vector<std::string> params) = 0;
+        virtual bool  AddPolicies(std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool AddNamedPolicy(std::string p_type, std::vector<std::string> params) = 0;
+        virtual bool AddNamedPolicies(std::string p_type, std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool RemovePolicy(std::vector<std::string> params) = 0;
+        virtual bool RemovePolicies(std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool RemoveFilteredPolicy(int field_index, std::vector<std::string> field_values) = 0;
+        virtual bool RemoveNamedPolicy(std::string p_type, std::vector<std::string> params) = 0;
+        virtual bool RemoveNamedPolicies(std::string p_type, std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool RemoveFilteredNamedPolicy(std::string p_type, int field_index, std::vector<std::string> field_values) = 0;
+        virtual bool HasGroupingPolicy(std::vector<std::string> params) = 0;
+        virtual bool HasNamedGroupingPolicy(std::string p_type, std::vector<std::string> params) = 0;
+        virtual bool AddGroupingPolicy(std::vector<std::string> params) = 0;
+        virtual bool AddGroupingPolicies(std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool AddNamedGroupingPolicy(std::string p_type, std::vector<std::string> params) = 0;
+        virtual bool AddNamedGroupingPolicies(std::string p_type, std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool RemoveGroupingPolicy(std::vector<std::string> params) = 0;
+        virtual bool RemoveGroupingPolicies(std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool RemoveFilteredGroupingPolicy(int field_index, std::vector<std::string> field_values) = 0;
+        virtual bool RemoveNamedGroupingPolicy(std::string p_type, std::vector<std::string> params) = 0;
+        virtual bool RemoveNamedGroupingPolicies(std::string p_type, std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool RemoveFilteredNamedGroupingPolicy(std::string p_type, int field_index, std::vector<std::string> field_values) = 0;
+        virtual void AddFunction(std::string name, Function function, Index nargs) = 0;
 
         /* Internal API member functions */
-        virtual bool addPolicy(string sec, string p_type, vector<string> rule) = 0;
-        virtual bool addPolicies(string sec, string p_type, vector<vector<string>> rules) = 0;
-        virtual bool removePolicy(string sec , string p_type , vector<string> rule) = 0;
-        virtual bool removePolicies(string sec, string p_type, vector<vector<string>> rules) = 0;
-        virtual bool removeFilteredPolicy(string sec , string p_type , int field_index , vector<string> field_values) = 0;
+        virtual bool addPolicy(std::string sec, std::string p_type, std::vector<std::string> rule) = 0;
+        virtual bool addPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool removePolicy(std::string sec , std::string p_type , std::vector<std::string> rule) = 0;
+        virtual bool removePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) = 0;
+        virtual bool removeFilteredPolicy(std::string sec , std::string p_type , int field_index , std::vector<std::string> field_values) = 0;
 
         /* RBAC API with domains.*/
-        virtual vector<string> GetUsersForRoleInDomain(string name, string domain) = 0;
-        virtual vector<string> GetRolesForUserInDomain(string name, string domain) = 0;
-        virtual vector<vector<string>> GetPermissionsForUserInDomain(string user, string domain) = 0;
-        virtual bool AddRoleForUserInDomain(string user, string role, string domain) = 0;
-        virtual bool DeleteRoleForUserInDomain(string user, string role, string domain) = 0;
+        virtual std::vector<std::string> GetUsersForRoleInDomain(std::string name, std::string domain) = 0;
+        virtual std::vector<std::string> GetRolesForUserInDomain(std::string name, std::string domain) = 0;
+        virtual std::vector<std::vector<std::string>> GetPermissionsForUserInDomain(std::string user, std::string domain) = 0;
+        virtual bool AddRoleForUserInDomain(std::string user, std::string role, std::string domain) = 0;
+        virtual bool DeleteRoleForUserInDomain(std::string user, std::string role, std::string domain) = 0;
 };
+
+} // namespace casbin
 
 #endif

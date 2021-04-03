@@ -11,16 +11,16 @@
 #include <config.h>
 #include <exception.h>
 
-using namespace std;
-
 namespace test_model
 {
+    using namespace casbin;
+
     TEST_CLASS(TestModel)
     {
         public:
 
-            string basic_example;
-            shared_ptr<Config> basic_config;
+            std::string basic_example;
+            std::shared_ptr<Config> basic_config;
 
             TEST_METHOD_INITIALIZE(InitializeBasicConfig) {
                 basic_example = "../../examples/basic_model.conf";
@@ -38,10 +38,10 @@ namespace test_model
             }
 
             TEST_METHOD(TestNewModelFromString) {
-                ifstream infile;
+                std::ifstream infile;
                 infile.open(basic_example);
-                string content;
-                getline(infile, content, '\0');
+                std::string content;
+                std::getline(infile, content, '\0');
                 Model* model = Model::NewModelFromString(content);
 
                 Assert::IsNotNull(model);
@@ -52,7 +52,7 @@ namespace test_model
                 model->LoadModelFromConfig(basic_config);
 
                 model = Model::NewModel();
-                shared_ptr<Config> config = Config::NewConfigFromText("");
+                std::shared_ptr<Config> config = Config::NewConfigFromText("");
                 try {
                     model->LoadModelFromConfig(config);
                     Assert::Fail();
@@ -70,7 +70,7 @@ namespace test_model
                 }
 
                 model = Model::NewModel();
-                shared_ptr<Config> config = Config::NewConfigFromText("");
+                std::shared_ptr<Config> config = Config::NewConfigFromText("");
                 try {
                     model->LoadModelFromConfig(config);
                     Assert::Fail();
@@ -85,8 +85,8 @@ namespace test_model
 
             TEST_METHOD(TestModel_AddDef) {
                 Model* model = Model::NewModel();
-                string s = "r";
-                string v = "sub, obj, act";
+                std::string s = "r";
+                std::string v = "sub, obj, act";
 
                 bool ok = model->AddDef(s, s, v);
                 Assert::IsTrue(ok);

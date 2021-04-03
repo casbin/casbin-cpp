@@ -19,15 +19,19 @@
 
 #include "./adapter.h"
 
+namespace casbin {
+
 class BatchAdapter: virtual public Adapter {
     public:
 
         // AddPolicies adds policy rules to the storage.
         // This is part of the Auto-Save feature.
-        virtual void AddPolicies(string sec, string p_type, vector<vector<string>> rules) = 0;
+        virtual void AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) = 0;
         // RemovePolicies removes policy rules from the storage.
         // This is part of the Auto-Save feature.
-        virtual void RemovePolicies(string sec, string p_type, vector<vector<string>> rules) = 0;
+        virtual void RemovePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) = 0;
 };
+
+};  // namespace casbin
 
 #endif

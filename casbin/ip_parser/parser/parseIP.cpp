@@ -6,7 +6,9 @@
 
 #include "./parseIP.h"
 
-IP parseIP(string s) {
+namespace casbin {
+
+IP parseIP(std::string s) {
     for(int i = 0 ; i < s.length() ; i++) {
         switch(s[i]) {
         case '.':
@@ -19,5 +21,7 @@ IP parseIP(string s) {
     p.isLegal = false;
     return p;
 }
+
+} // namespace casbin
 
 #endif // PARSEIP_CPP

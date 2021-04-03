@@ -6,8 +6,12 @@
 
 #include "./casbin_adapter_exception.h"
 
-CasbinAdapterException :: CasbinAdapterException(string error_message) {
+namespace casbin {
+
+CasbinAdapterException :: CasbinAdapterException(std::string error_message) {
     this->error_message = error_message;
 }
+
+} // namespace casbin
 
 #endif // CASBIN_ADAPTER_EXCEPTION_CPP

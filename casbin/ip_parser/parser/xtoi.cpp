@@ -6,10 +6,12 @@
 
 #include "./xtoi.h"
 
-pair<int, int> xtoi(string s) {
+namespace casbin {
+
+std::pair<int, int> xtoi(std::string s) {
     int n = 0;
     int i = 0;
-    pair <int, int> p;
+    std::pair<int, int> p;
     for(i = 0 ; i < s.length() ; i++) {
         if('0' <= s[i] && s[i] <= '9') {
             n *= 16;
@@ -38,5 +40,7 @@ pair<int, int> xtoi(string s) {
     p.second = i;
     return p;
 }
+
+} // namespace casbin
 
 #endif // XTOI_CPP

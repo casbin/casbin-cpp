@@ -24,10 +24,10 @@
 
 #include "./util.h"
 
-using namespace std;
+namespace casbin {
 
-// ArrayEquals determines whether two string arrays are identical.
-bool ArrayEquals(vector<string> a, vector<string> b) {
+// ArrayEquals determines whether two std::string arrays are identical.
+bool ArrayEquals(std::vector<std::string> a, std::vector<std::string> b) {
     if (a.size() != b.size()) {
         return false;
     }
@@ -41,5 +41,7 @@ bool ArrayEquals(vector<string> a, vector<string> b) {
     }
     return true;
 }
+
+} // namespace casbin
 
 #endif // ARRAY_EQUALS_CPP

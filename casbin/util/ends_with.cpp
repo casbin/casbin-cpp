@@ -22,12 +22,14 @@
 
 #include "./util.h"
 
-using namespace std;
+namespace casbin {
 
-bool EndsWith(string base, string suffix){
+bool EndsWith(std::string base, std::string suffix){
     int base_len = int(base.length());
     int suffix_len = int(suffix.length());
     return base.substr(base_len-suffix_len, suffix_len).compare(suffix) == 0;
 }
+
+} // namespace casbin
 
 #endif // ENDS_WITH_CPP

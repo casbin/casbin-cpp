@@ -3,22 +3,24 @@
 
 #include <string>
 
-using namespace std;
+namespace casbin {
 
 class Error{
     public:
         static Error NIL;
-        string err;
+        std::string err;
 
-        Error(string error_message){
+        Error(std::string error_message){
             err = error_message;
         }
 
-        string toString(){
+        std::string toString(){
             return err;
         }
 };
 
 Error Error::NIL = Error("nil");
+
+} // namespace casbin
 
 #endif

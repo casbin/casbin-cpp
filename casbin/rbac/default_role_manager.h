@@ -21,9 +21,9 @@
 
 #include "./role_manager.h"
 
-using namespace std;
+namespace casbin {
 
-typedef bool (*MatchingFunc)(string, string);
+typedef bool (*MatchingFunc)(std::string, std::string);
 
 /**
  * Role represents the data structure for a role in RBAC.
@@ -31,36 +31,36 @@ typedef bool (*MatchingFunc)(string, string);
 class Role {
     
     private:
-        vector <Role*> roles;
+        std::vector<Role*> roles;
 
     public:
-        string name;
+        std::string name;
 
-        static Role* NewRole(string name);
+        static Role* NewRole(std::string name);
         
         void AddRole(Role* role);
 
         void DeleteRole(Role* role);
 
-        bool HasRole(string name, int hierarchy_level);
+        bool HasRole(std::string name, int hierarchy_level);
 
-        bool HasDirectRole(string name);
+        bool HasDirectRole(std::string name);
 
-        string ToString();
+        std::string ToString();
 
-        vector<string> GetRoles();
+        std::vector<std::string> GetRoles();
 };
 
 class DefaultRoleManager : public RoleManager {
     private:
-        unordered_map <string, Role*> all_roles;
+        std::unordered_map<std::string, Role*> all_roles;
         bool has_pattern;
         int max_hierarchy_level;
         MatchingFunc matching_func;
 
-        bool HasRole(string name);
+        bool HasRole(std::string name);
 
-        Role* CreateRole(string name);
+        Role* CreateRole(std::string name);
 
     public:
 
@@ -85,33 +85,35 @@ class DefaultRoleManager : public RoleManager {
         // AddLink adds the inheritance link between role: name1 and role: name2.
         // aka role: name1 inherits role: name2.
         // domain is a prefix to the roles.
-        void AddLink(string name1, string name2, vector<string> domain = {});
+        void AddLink(std::string name1, std::string name2, std::vector<std::string> domain = {});
 
         /**
          * deleteLink deletes the inheritance link between role: name1 and role: name2.
          * aka role: name1 does not inherit role: name2 any more.
          * domain is a prefix to the roles.
          */
-        void DeleteLink(string name1, string name2, vector<string> domain = {});
+        void DeleteLink(std::string name1, std::string name2, std::vector<std::string> domain = {});
 
         /**
          * hasLink determines whether role: name1 inherits role: name2.
          * domain is a prefix to the roles.
          */
-        bool HasLink(string name1, string name2, vector<string> domain = {});
+        bool HasLink(std::string name1, std::string name2, std::vector<std::string> domain = {});
 
         /**
          * getRoles gets the roles that a subject inherits.
          * domain is a prefix to the roles.
          */
-        vector <string> GetRoles(string name, vector<string> domain = {});
+        std::vector<std::string> GetRoles(std::string name, std::vector<std::string> domain = {});
 
-        vector<string> GetUsers(string name, vector<string> domain = {});
+        std::vector<std::string> GetUsers(std::string name, std::vector<std::string> domain = {});
 
         /**
          * printRoles prints all the roles to log.
          */
         void PrintRoles();
 };
+
+};  // namespace casbin
 
 #endif

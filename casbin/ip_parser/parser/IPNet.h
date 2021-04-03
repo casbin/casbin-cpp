@@ -7,20 +7,24 @@
 #include "./IP.h"
 #include "./IPMask.h"
 
+namespace casbin {
+
 class IPNet {
     public:
         IP net_ip;
         IPMask mask;
 
-        string NETIP_toString();
+        std::string NETIP_toString();
 
-        string IPMask_toString();
+        std::string IPMask_toString();
 
         // Contains reports whether the network includes ip.
         bool contains(IP ipNew);
 
-        static pair<IP, IPMask> networkNumberAndMask(IPNet n);
+        static std::pair<IP, IPMask> networkNumberAndMask(IPNet n);
 
 };
+
+} // namespace casbin
 
 #endif

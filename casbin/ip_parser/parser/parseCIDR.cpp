@@ -6,13 +6,15 @@
 
 #include "./parseCIDR.h"
 
-CIDR parseCIDR(string s) {
+namespace casbin {
+
+CIDR parseCIDR(std::string s) {
     size_t pos = s.find("/");
-    if(pos == string :: npos) {
+    if(pos == std::string :: npos) {
         throw ParserException("Illegal CIDR address.");
     }
-    string addr = s.substr(0, pos);
-    string mask = s.substr(pos+1, s.length()-pos-1);
+    std::string addr = s.substr(0, pos);
+    std::string mask = s.substr(pos+1, s.length()-pos-1);
     byte iplen = IP :: IPv4len;
     IP ip;
     ip = parseIPv4(addr);
@@ -20,7 +22,7 @@ CIDR parseCIDR(string s) {
         iplen = IP :: IPv6len;
         ip = parseIPv6(addr);
     }
-    pair<int, int> p = dtoi(mask);
+    std::pair<int, int> p = dtoi(mask);
     if(ip.isLegal == false || (p.first >= big || p.second==0) ||  p.second != mask.length() || p.first < 0 || p.first > 8*iplen) {
         throw ParserException("Illegal CIDR address.");
     }
@@ -32,5 +34,7 @@ CIDR parseCIDR(string s) {
 
     return cidr_addr;
 }
+
+} // namespace casbin
 
 #endif // PARSECIDR_CPP

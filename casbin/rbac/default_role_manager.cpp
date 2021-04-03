@@ -23,7 +23,9 @@
 #include "./default_role_manager.h"
 #include "../exception/casbin_rbac_exception.h"
 
-Role* Role :: NewRole(string name) {
+namespace casbin {
+
+Role* Role :: NewRole(std::string name) {
     Role* role = new Role;
     role->name = name;
     return role;
@@ -45,7 +47,7 @@ void Role :: DeleteRole(Role* role) {
     }
 }
 
-bool Role :: HasRole(string name, int hierarchy_level) {
+bool Role :: HasRole(std::string name, int hierarchy_level) {
     if (this->name == name)
         return true;
 
@@ -60,7 +62,7 @@ bool Role :: HasRole(string name, int hierarchy_level) {
     return false;
 }
 
-bool Role :: HasDirectRole(string name) {
+bool Role :: HasDirectRole(std::string name) {
     for(int i = 0 ; i < roles.size() ; i++){
         if (roles[i]->name == name)
             return true;
@@ -69,11 +71,11 @@ bool Role :: HasDirectRole(string name) {
     return false;
 }
 
-string Role :: ToString() {
+std::string Role :: ToString() {
     if(this->roles.size()==0)
         return "";
 
-    string names = "";
+    std::string names = "";
     if(this->roles.size() != 1)
         names += "(";
 
@@ -91,18 +93,18 @@ string Role :: ToString() {
     return name + " < " + names;
 }
 
-vector<string> Role :: GetRoles() {
-    vector<string> names;
+std::vector<std::string> Role :: GetRoles() {
+    std::vector<std::string> names;
     for(int i = 0 ; i < roles.size() ; i++)
         names.push_back(roles[i]->name);
 
     return names;
 }
 
-bool DefaultRoleManager :: HasRole(string name) {
+bool DefaultRoleManager :: HasRole(std::string name) {
     bool ok = false;
     if (this->has_pattern){
-        for (unordered_map<string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
+        for (std::unordered_map<std::string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
             if (this->matching_func(name, it->first))
                 ok = true;
         }
@@ -113,7 +115,7 @@ bool DefaultRoleManager :: HasRole(string name) {
     return ok;
 }
 
-Role* DefaultRoleManager :: CreateRole(string name) {
+Role* DefaultRoleManager :: CreateRole(std::string name) {
     Role* role;
     bool ok = this->all_roles.find(name) != this->all_roles.end();
     if (!ok) {
@@ -123,7 +125,7 @@ Role* DefaultRoleManager :: CreateRole(string name) {
         role = all_roles[name];
 
     if (this->has_pattern) {
-        for (unordered_map<string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
+        for (std::unordered_map<std::string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
             if (this->matching_func(name, it->first) && name!=it->first) {
                 Role* role1;
                 bool ok1 = this->all_roles.find(it->first) != this->all_roles.end();
@@ -169,7 +171,7 @@ void DefaultRoleManager :: Clear() {
 // AddLink adds the inheritance link between role: name1 and role: name2.
 // aka role: name1 inherits role: name2.
 // domain is a prefix to the roles.
-void DefaultRoleManager :: AddLink(string name1, string name2, vector<string> domain) {
+void DefaultRoleManager :: AddLink(std::string name1, std::string name2, std::vector<std::string> domain) {
     if (domain.size() == 1) {
         name1 = domain[0] + "::" + name1;
         name2 = domain[0] + "::" + name2;
@@ -186,7 +188,7 @@ void DefaultRoleManager :: AddLink(string name1, string name2, vector<string> do
  * aka role: name1 does not inherit role: name2 any more.
  * domain is a prefix to the roles.
  */
-void DefaultRoleManager :: DeleteLink(string name1, string name2, vector<string> domain) {
+void DefaultRoleManager :: DeleteLink(std::string name1, std::string name2, std::vector<std::string> domain) {
     unsigned int domain_length = int(domain.size());
     if (domain_length == 1) {
         name1 = domain[0] + "::" + name1;
@@ -206,7 +208,7 @@ void DefaultRoleManager :: DeleteLink(string name1, string name2, vector<string>
  * hasLink determines whether role: name1 inherits role: name2.
  * domain is a prefix to the roles.
  */
-bool DefaultRoleManager :: HasLink(string name1, string name2, vector<string> domain) {
+bool DefaultRoleManager :: HasLink(std::string name1, std::string name2, std::vector<std::string> domain) {
     unsigned int domain_length = int(domain.size());
     if (domain_length == 1) {
         name1 = domain[0] + "::" + name1;
@@ -227,7 +229,7 @@ bool DefaultRoleManager :: HasLink(string name1, string name2, vector<string> do
  * getRoles gets the roles that a subject inherits.
  * domain is a prefix to the roles.
  */
-vector<string> DefaultRoleManager :: GetRoles(string name, vector<string> domain) {
+std::vector<std::string> DefaultRoleManager :: GetRoles(std::string name, std::vector<std::string> domain) {
     unsigned int domain_length = int(domain.size());
     if (domain_length == 1)
         name = domain[0] + "::" + name;
@@ -235,11 +237,11 @@ vector<string> DefaultRoleManager :: GetRoles(string name, vector<string> domain
         throw CasbinRBACException("error: domain should be 1 parameter");
 
     if (!HasRole(name)) {
-        vector<string> roles;
+        std::vector<std::string> roles;
         return roles;
     }
 
-    vector<string> roles = this->CreateRole(name)->GetRoles();
+    std::vector<std::string> roles = this->CreateRole(name)->GetRoles();
     if (domain_length == 1){
         for (int i = 0; i < roles.size(); i ++)
             roles[i] = roles[i].substr(domain[0].length() + 2, roles[i].length() - domain[0].length() - 2);
@@ -248,7 +250,7 @@ vector<string> DefaultRoleManager :: GetRoles(string name, vector<string> domain
     return roles;
 }
 
-vector<string> DefaultRoleManager :: GetUsers(string name, vector<string> domain) {
+std::vector<std::string> DefaultRoleManager :: GetUsers(std::string name, std::vector<std::string> domain) {
     if (domain.size() == 1)
         name = domain[0] + "::" + name;
     else if (domain.size() > 1)
@@ -257,8 +259,8 @@ vector<string> DefaultRoleManager :: GetUsers(string name, vector<string> domain
     if (!this->HasRole(name))
         throw CasbinRBACException("error: name does not exist");
 
-    vector<string> names;
-    for (unordered_map <string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
+    std::vector<std::string> names;
+    for (std::unordered_map<std::string, Role*>::iterator it = this->all_roles.begin(); it != this->all_roles.end(); it++) {
         Role* role = it->second;
         if (role->HasDirectRole(name))
             names.push_back(role->name);
@@ -282,12 +284,14 @@ void DefaultRoleManager :: PrintRoles() {
     // Logger *logger = &df_logger;
     // LogUtil::SetLogger(*logger);
 
-    string text = this->all_roles.begin()->second->ToString();
-    unordered_map<string, Role*> :: iterator it = this->all_roles.begin();
+    std::string text = this->all_roles.begin()->second->ToString();
+    std::unordered_map<std::string, Role*> :: iterator it = this->all_roles.begin();
     it++;
     for ( ; it != this->all_roles.end() ; it++)
         text += ", " + it->second->ToString();
     // LogUtil::LogPrint(text);
 }
+
+} // namespace casbin
 
 #endif // DEFAULT_ROLE_MANAGER_CPP

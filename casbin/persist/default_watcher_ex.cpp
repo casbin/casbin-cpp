@@ -22,20 +22,24 @@
 
 #include "./default_watcher_ex.h"
 
-void DefaultWatcherEx :: UpdateForAddPolicy(vector<string> params) {
+namespace casbin {
+
+void DefaultWatcherEx :: UpdateForAddPolicy(std::vector<std::string> params) {
     return;
 }
 
-void DefaultWatcherEx :: UpdateForRemovePolicy(vector<string> params) {
+void DefaultWatcherEx :: UpdateForRemovePolicy(std::vector<std::string> params) {
     return;
 }
 
-void DefaultWatcherEx :: UpdateForRemoveFilteredPolicy(int field_index, vector<string> field_values) {
+void DefaultWatcherEx :: UpdateForRemoveFilteredPolicy(int field_index, std::vector<std::string> field_values) {
     return;
 }
 
 void DefaultWatcherEx :: UpdateForSavePolicy(Model* model) {
     return;
 }
+
+} // namespace casbin
 
 #endif // DEFAULT_WATCHER_EX_CPP

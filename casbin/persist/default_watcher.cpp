@@ -22,6 +22,8 @@
 
 #include "./default_watcher.h"
 
+namespace casbin {
+
 template <typename Func>
 void DefaultWatcher :: SetUpdateCallback(Func func) {
     return;
@@ -34,5 +36,7 @@ void DefaultWatcher :: Update() {
 void DefaultWatcher :: Close() {
     return;
 }
+
+} // namespace casbin
 
 #endif // DEFAULT_WATCHER_CPP

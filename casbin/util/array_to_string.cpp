@@ -22,13 +22,15 @@
 
 #include "./util.h"
 
-using namespace std;
+namespace casbin {
 
-string ArrayToString(vector<string> arr){
-    string res = arr[0];
+std::string ArrayToString(std::vector<std::string> arr){
+    std::string res = arr[0];
     for (int i = 0 ; i < arr.size() ; i++)
         res += ", " + arr[i];
     return res;
 }
+
+} // namespace casbin
 
 #endif // ARRAY_TO_STRING_CPP

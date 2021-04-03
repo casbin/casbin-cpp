@@ -20,18 +20,20 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+namespace casbin {
 
 class ConfigInterface {
     public:
 
-        virtual string GetString(string key) = 0;
-        virtual vector <string> GetStrings(string key) = 0;
-        virtual bool GetBool(string key) = 0;
-        virtual int GetInt(string key) = 0;
-        virtual float GetFloat(string key) = 0;
-        virtual void Set(string key, string value) = 0;
+        virtual std::string GetString(std::string key) = 0;
+        virtual std::vector<std::string> GetStrings(std::string key) = 0;
+        virtual bool GetBool(std::string key) = 0;
+        virtual int GetInt(std::string key) = 0;
+        virtual float GetFloat(std::string key) = 0;
+        virtual void Set(std::string key, std::string value) = 0;
 
 };
+
+} // namespace casbin
 
 #endif

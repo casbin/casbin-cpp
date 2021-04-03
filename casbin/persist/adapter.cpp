@@ -23,23 +23,27 @@
 #include "./adapter.h"
 #include "../util/util.h"
 
+namespace casbin {
+
 // LoadPolicyLine loads a text line as a policy rule to model.
-void LoadPolicyLine(string line, Model* model) {
+void LoadPolicyLine(std::string line, Model* model) {
     if(line == "" || line.find("#")==0)
         return;
 
-    vector<string> tokens = Split(line, ",", -1);
+    std::vector<std::string> tokens = Split(line, ",", -1);
     for (int i = 0; i < tokens.size(); i++)
         tokens[i] = Trim(tokens[i]);
 
-    string key = tokens[0];
-    string sec = key.substr(0,1);
-    vector<string> new_tokens(tokens.begin()+1, tokens.end());
+    std::string key = tokens[0];
+    std::string sec = key.substr(0,1);
+    std::vector<std::string> new_tokens(tokens.begin()+1, tokens.end());
 
     if (model->m.find(sec) == model->m.end())
         model->m[sec] = AssertionMap();
 
     (model->m[sec].assertion_map[key]->policy).push_back(new_tokens);
 }
+
+} // namespace casbin
 
 #endif // ADAPTER_CPP

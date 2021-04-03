@@ -3,7 +3,8 @@
 
 #include "DefaultLogger.h"
 
-using namespace std;
+namespace casbin {
+
 
 class LogUtil{
 	private:
@@ -28,9 +29,11 @@ class LogUtil{
 
 		// LogPrintf prints the log with the format.
 		template <typename... Object>
-		static void LogPrintf(string format, Object... objects) {
+		static void LogPrintf(std::string format, Object... objects) {
 			logger.Printf(format, objects...);
 		}
 };
+
+} // namespace casbin
 
 #endif

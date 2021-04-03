@@ -6,21 +6,21 @@
 
 #include <rbac.h>
 
-using namespace std;
-
 namespace test_role_manager
 {
+    using namespace casbin;
+
     TEST_CLASS(TestRoleManager)
     {
         public:
 
-            void TestRole(DefaultRoleManager rm, string name1, string name2, bool res) {
+            void TestRole(DefaultRoleManager rm, std::string name1, std::string name2, bool res) {
                 bool my_res = rm.HasLink(name1, name2);
 
                 Assert::AreEqual(res, my_res);
             }
 
-            void TestDomainRole(DefaultRoleManager rm, string name1, string name2, vector<string> domain, bool res) {
+            void TestDomainRole(DefaultRoleManager rm, std::string name1, std::string name2, std::vector<std::string> domain, bool res) {
                 bool my_res = rm.HasLink(name1, name2, domain);
 
                 Assert::AreEqual(res, my_res);
@@ -81,8 +81,8 @@ namespace test_role_manager
 
             TEST_METHOD(TestDomainRole) {
                 DefaultRoleManager rm = DefaultRoleManager(3);
-                vector<string> domain1{ "domain1" };
-                vector<string> domain2{ "domain2" };
+                std::vector<std::string> domain1{ "domain1" };
+                std::vector<std::string> domain2{ "domain2" };
                 rm.AddLink("u1", "g1", domain1);
                 rm.AddLink("u2", "g1", domain1);
                 rm.AddLink("u3", "admin", domain2);

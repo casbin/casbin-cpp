@@ -30,15 +30,17 @@
 #include "../exception/illegal_argument_exception.h"
 #include "../util/util.h"
 
-const string Config::DEFAULT_SECTION = "default";
-const string Config::DEFAULT_COMMENT = "#";
-const string Config::DEFAULT_COMMENT_SEM = ";";
-mutex Config::mtx_lock;
+namespace casbin {
+
+const std::string Config::DEFAULT_SECTION = "default";
+const std::string Config::DEFAULT_COMMENT = "#";
+const std::string Config::DEFAULT_COMMENT_SEM = ";";
+std::mutex Config::mtx_lock;
 
 /**
  * addConfig adds a new section->key:value to the configuration.
  */
-bool Config :: AddConfig(string section, string option, string value) {
+bool Config :: AddConfig(std::string section, std::string option, std::string value) {
     if (!section.compare(""))
         section = DEFAULT_SECTION;
     bool ok = data[section].find(option) != data[section].end();
@@ -46,12 +48,12 @@ bool Config :: AddConfig(string section, string option, string value) {
     return !ok;
 }
 
-void Config :: Parse(string f_name) {
+void Config :: Parse(std::string f_name) {
     mtx_lock.lock();
-    ifstream infile;
+    std::ifstream infile;
     try {
         infile.open(f_name);
-    } catch (const ifstream::failure e) {
+    } catch (const std::ifstream::failure e) {
         mtx_lock.unlock();
         throw IOException("Cannot open file.");
     }
@@ -60,10 +62,10 @@ void Config :: Parse(string f_name) {
     infile.close();
 }
 
-void Config :: ParseBuffer(istream* buf){
-    string section = "";
+void Config ::ParseBuffer(std::istream * buf) {
+    std::string section = "";
     int line_num = 0;
-    string line;
+    std::string line;
     while (true) {
         line_num++;
         if (getline(*buf, line, '\n')){
@@ -77,17 +79,17 @@ void Config :: ParseBuffer(istream* buf){
             continue;
         else if (line.find(DEFAULT_COMMENT_SEM)==0)
             continue;
-        else if (line.find("[")==0 && EndsWith(line, string("]")))
+        else if (line.find("[")==0 && EndsWith(line, std::string("]")))
             section = line.substr(1, line.length() - 2);
         else {
-            vector<string> option_val = Split(line, string("="), 2);
+            std::vector<std::string> option_val = Split(line, std::string("="), 2);
             if (option_val.size() != 2) {
                 char* error = new char;
                 sprintf(error, "parse the content error : line %d , %s = ? ", line_num, option_val[0].c_str());
-                throw IllegalArgumentException(string(error));
+                throw IllegalArgumentException(std::string(error));
             }
-            string option = Trim(option_val[0]);
-            string value = Trim(option_val[1]);
+            std::string option = Trim(option_val[0]);
+            std::string value = Trim(option_val[1]);
             AddConfig(section, option, value);
         }
     }
@@ -99,8 +101,8 @@ void Config :: ParseBuffer(istream* buf){
  * @param confName the path of the model file.
  * @return the constructor of Config.
  */
-shared_ptr<Config> Config :: NewConfig(string conf_name) {
-    shared_ptr<Config> c(new Config);
+std::shared_ptr<Config> Config :: NewConfig(std::string conf_name) {
+    std::shared_ptr<Config> c(new Config);
     c->Parse(conf_name);
     return c;
 }
@@ -111,50 +113,50 @@ shared_ptr<Config> Config :: NewConfig(string conf_name) {
  * @param text the model text.
  * @return the constructor of Config.
  */
-shared_ptr<Config> Config :: NewConfigFromText(string text) {
-    shared_ptr<Config> c(new Config);
-    stringstream stream(text);
+std::shared_ptr<Config> Config :: NewConfigFromText(std::string text) {
+    std::shared_ptr<Config> c(new Config);
+    std::stringstream stream(text);
     c->ParseBuffer(&stream);
     return c;
 }
 
-bool Config :: GetBool(string key) {
+bool Config :: GetBool(std::string key) {
     return Get(key).compare("true")==0;
 }
 
-int Config :: GetInt(string key) {
+int Config :: GetInt(std::string key) {
     return atoi(Get(key).c_str());
 }
 
-float Config :: GetFloat(string key) {
+float Config :: GetFloat(std::string key) {
     return float(atof(Get(key).c_str()));
 }
 
-string Config :: GetString(string key) {
+std::string Config :: GetString(std::string key) {
     return Get(key);
 }
 
-vector<string> Config :: GetStrings(string key) {
-    string v = Get(key);
+std::vector<std::string> Config :: GetStrings(std::string key) {
+    std::string v = Get(key);
     if (!v.compare("")) {
-        vector<string> empty;
+        std::vector<std::string> empty;
         return empty;
     }
-    return Split(v,string(","));
+    return Split(v,std::string(","));
 }
 
-void Config :: Set(string key, string value) {
+void Config :: Set(std::string key, std::string value) {
     mtx_lock.lock();
     if (key.length() == 0) {
         mtx_lock.unlock();
         throw IllegalArgumentException("key is empty");
     }
 
-    string section = "";
-    string option;
+    std::string section = "";
+    std::string option;
 
     transform(key.begin(), key.end(), key.begin(), ::tolower);
-    vector<string> keys = Split(key, string("::"));
+    std::vector<std::string> keys = Split(key, std::string("::"));
     if (keys.size() >= 2) {
         section = keys[0];
         option = keys[1];
@@ -166,11 +168,11 @@ void Config :: Set(string key, string value) {
     mtx_lock.unlock();
 }
 
-string Config :: Get(string key) {
-    string section;
-    string option;
+std::string Config :: Get(std::string key) {
+    std::string section;
+    std::string option;
     transform(key.begin(), key.end(), key.begin(), ::tolower);
-    vector<string> keys = Split(key, string("::"));
+    std::vector<std::string> keys = Split(key, std::string("::"));
     if (keys.size() >= 2) {
         section = keys[0];
         option = keys[1];
@@ -183,5 +185,7 @@ string Config :: Get(string key) {
         return data[section][option];
     return "";
 }
+
+} // namespace casbin
 
 #endif // CONFIG_CPP

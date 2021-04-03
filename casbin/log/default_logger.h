@@ -4,7 +4,7 @@
 #include "Logger.h"
 #include "Log.h"
 
-using namespace std;
+namespace casbin {
 
 class DefaultLogger : public Logger{
     public:
@@ -25,11 +25,13 @@ class DefaultLogger : public Logger{
         }
 
         template <typename... Object>
-        void Print(string format, Object... objects){
+        void Print(std::string format, Object... objects){
             if (this->enable){
                 Printf(format, objects...);
             }
         }
 };
+
+} // namespace casbin
 
 #endif

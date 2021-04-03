@@ -21,18 +21,20 @@
 
 #include "./enforcer.h"
 
+namespace casbin {
+
 class CachedEnforcer : public Enforcer {
 public:
-    unordered_map<string, bool> m;
+    std::unordered_map<std::string, bool> m;
     bool enableCache;
-    mutex locker;
+    std::mutex locker;
 
     CachedEnforcer(const CachedEnforcer& ce);
     CachedEnforcer(CachedEnforcer&& ce);
 
     void EnableCache(const bool& enableCache);
-    pair<bool, bool> getCachedResult(const string& key);
-    void setCachedResult(const string& key, const bool& res);
+    std::pair<bool, bool> getCachedResult(const std::string& key);
+    void setCachedResult(const std::string& key, const bool& res);
     void InvalidateCache();
 
 public:
@@ -46,33 +48,33 @@ public:
          * @param model_path the path of the model file.
          * @param policy_file the path of the policy file.
          */
-    CachedEnforcer(string model_path, string policy_file);
+    CachedEnforcer(std::string model_path, std::string policy_file);
     /**
          * Enforcer initializes an enforcer with a database adapter.
          *
          * @param model_path the path of the model file.
          * @param adapter the adapter.
          */
-    CachedEnforcer(string model_path, shared_ptr<Adapter> adapter);
+    CachedEnforcer(std::string model_path, std::shared_ptr<Adapter> adapter);
     /**
          * Enforcer initializes an enforcer with a model and a database adapter.
          *
          * @param m the model.
          * @param adapter the adapter.
          */
-    CachedEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter);
+    CachedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
     /**
          * Enforcer initializes an enforcer with a model.
          *
          * @param m the model.
          */
-    CachedEnforcer(shared_ptr<Model> m);
+    CachedEnforcer(std::shared_ptr<Model> m);
     /**
          * Enforcer initializes an enforcer with a model file.
          *
          * @param model_path the path of the model file.
          */
-    CachedEnforcer(string model_path);
+    CachedEnforcer(std::string model_path);
     /**
          * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
          *
@@ -80,30 +82,33 @@ public:
          * @param policy_file the path of the policy file.
          * @param enable_log whether to enable Casbin's log.
          */
-    CachedEnforcer(string model_path, string policy_file, bool enable_log);
+    CachedEnforcer(std::string model_path, std::string policy_file, bool enable_log);
 
     bool Enforce(Scope scope);
     // Enforce with a vector param,decides whether a "subject" can access a
     // "object" with the operation "action", input parameters are usually: (sub,
     // obj, act).
-    bool Enforce(vector<string> params);
+    bool Enforce(std::vector<std::string> params);
     // Enforce with a map param,decides whether a "subject" can access a "object"
     // with the operation "action", input parameters are usually: (sub, obj, act).
-    bool Enforce(unordered_map<string, string> params);
+    bool Enforce(std::unordered_map<std::string, std::string> params);
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
     // access a "object" with the operation "action", input parameters are
     // usually: (matcher, sub, obj, act), use model matcher by default when
     // matcher is "".
-    bool EnforceWithMatcher(string matcher, Scope scope);
+    bool EnforceWithMatcher(std::string matcher, Scope scope);
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
     // access a "object" with the operation "action", input parameters are
     // usually: (matcher, sub, obj, act), use model matcher by default when
     // matcher is "".
-    bool EnforceWithMatcher(string matcher, vector<string> params);
+    bool EnforceWithMatcher(std::string matcher, std::vector<std::string> params);
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
     // access a "object" with the operation "action", input parameters are
     // usually: (matcher, sub, obj, act), use model matcher by default when
     // matcher is "".
-    bool EnforceWithMatcher(string matcher, unordered_map<string, string> params);
+    bool EnforceWithMatcher(std::string matcher, std::unordered_map<std::string, std::string> params);
 };
+
+} // namespace casbin
+
 #endif

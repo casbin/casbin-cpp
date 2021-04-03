@@ -6,9 +6,11 @@
 
 #include "./parseIPv6.h"
 
-IP parseIPv6(string s) {
+namespace casbin {
+
+IP parseIPv6(std::string s) {
     IP ipv6;
-    vector <byte> newIP(IP :: IPv6len, 0);
+    std::vector <byte> newIP(IP :: IPv6len, 0);
     ipv6.ip = newIP;
     int ellipsis = -1; // position of ellipsis in ip
 
@@ -26,7 +28,7 @@ IP parseIPv6(string s) {
     int i = 0;
     for(;i < IP :: IPv6len;) {
         // Hex number.
-        pair <int, int> p = xtoi(s);
+        std::pair<int, int> p = xtoi(s);
         if((p.first >= big || p.second == 0) || p.first > 0xFFFF) {
             ipv6.isLegal = false;
             return ipv6;
@@ -62,7 +64,7 @@ IP parseIPv6(string s) {
         ipv6.ip[i+1] = byte(p.first);
         i += 2;
 
-        // Stop at end of string.
+        // Stop at end of std::string.
         s = s.substr(p.second, s.length() - p.second);
         if(s.length() == 0) {
             break;
@@ -89,7 +91,7 @@ IP parseIPv6(string s) {
         }
     }
 
-    // Must have used entire string.
+    // Must have used entire std::string.
     if(s.length() != 0) {
         ipv6.isLegal = false;
         return ipv6;
@@ -115,5 +117,7 @@ IP parseIPv6(string s) {
     }
     return ipv6;
 }
+
+} // namespace casbin
 
 #endif // PARSEIPV6_CPP

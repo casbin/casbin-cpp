@@ -12,8 +12,10 @@
 #include "../../exception/unsupported_operation_exception.h"
 #include "../../exception/casbin_adapter_exception.h"
 
+namespace casbin {
+
 // NewAdapter is the constructor for Adapter.
-FileAdapter :: FileAdapter(string file_path) {
+FileAdapter :: FileAdapter(std::string file_path) {
     this->file_path = file_path;
     this->filtered = false;
 }
@@ -32,9 +34,9 @@ void FileAdapter :: SavePolicy(Model* model) {
         throw CasbinAdapterException("Invalid file path, file path cannot be empty");
     }
 
-    string tmp;
+    std::string tmp;
 
-    for (unordered_map<string, shared_ptr<Assertion>> :: iterator it = model->m["p"].assertion_map.begin() ; it != model->m["p"].assertion_map.begin() ; it++){
+    for (std::unordered_map<std::string, std::shared_ptr<Assertion>> :: iterator it = model->m["p"].assertion_map.begin() ; it != model->m["p"].assertion_map.begin() ; it++){
         for (int i = 0 ; i < it->second->policy.size() ; i++){
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
@@ -42,7 +44,7 @@ void FileAdapter :: SavePolicy(Model* model) {
         }
     }
 
-    for (unordered_map <string, shared_ptr<Assertion>> :: iterator it = model->m["g"].assertion_map.begin() ; it != model->m["g"].assertion_map.begin() ; it++){
+    for (std::unordered_map <std::string, std::shared_ptr<Assertion>> :: iterator it = model->m["g"].assertion_map.begin() ; it != model->m["g"].assertion_map.begin() ; it++){
         for (int i = 0 ; i < it->second->policy.size() ; i++){
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
@@ -53,15 +55,15 @@ void FileAdapter :: SavePolicy(Model* model) {
     return this->SavePolicyFile(RTrim(tmp, "\n"));
 }
 
-void FileAdapter :: LoadPolicyFile(Model* model, void (*handler)(string, Model*)) {
-    ifstream in_file;
+void FileAdapter :: LoadPolicyFile(Model* model, void (*handler)(std::string, Model*)) {
+    std::ifstream in_file;
     try {
         in_file.open(this->file_path);
-    } catch (const ifstream::failure e) {
+    } catch (const std::ifstream::failure e) {
         throw IOException("Cannot open file.");
     }
 
-    string line;
+    std::string line;
     while(getline(in_file, line, '\n')){
         line = Trim(line);
         handler(line, model);
@@ -70,12 +72,12 @@ void FileAdapter :: LoadPolicyFile(Model* model, void (*handler)(string, Model*)
     in_file.close();
 }
 
-void FileAdapter :: SavePolicyFile(string text) {
-    ofstream out_file;
-    out_file.open(this->file_path,ios::out);
+void FileAdapter :: SavePolicyFile(std::string text) {
+    std::ofstream out_file;
+    out_file.open(this->file_path, std::ios::out);
     try {
-        out_file.open(this->file_path,ios::out);
-    } catch (const ifstream::failure e) {
+        out_file.open(this->file_path, std::ios::out);
+    } catch (const std::ifstream::failure e) {
         throw IOException("Cannot open file.");
     }
 
@@ -85,17 +87,17 @@ void FileAdapter :: SavePolicyFile(string text) {
 }
 
 // AddPolicy adds a policy rule to the storage.
-void FileAdapter :: AddPolicy(string sec, string p_type, vector<string> rule) {
+void FileAdapter :: AddPolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
     throw UnsupportedOperationException("not implemented");
 }
 
 // RemovePolicy removes a policy rule from the storage.
-void FileAdapter :: RemovePolicy(string sec, string p_type, vector<string> rule) {
+void FileAdapter :: RemovePolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
     throw UnsupportedOperationException("not implemented");
 }
 
 // RemoveFilteredPolicy removes policy rules that match the filter from the storage.
-void FileAdapter :: RemoveFilteredPolicy(string sec, string p_type, int field_index, vector<string> field_values) {
+void FileAdapter :: RemoveFilteredPolicy(std::string sec, std::string p_type, int field_index, std::vector<std::string> field_values) {
     throw UnsupportedOperationException("not implemented");
 }
 
@@ -103,5 +105,7 @@ void FileAdapter :: RemoveFilteredPolicy(string sec, string p_type, int field_in
 bool FileAdapter :: IsFiltered() {
     return this->filtered;
 }
+
+} // namespace casbin
 
 #endif // FILE_ADAPTER_CPP

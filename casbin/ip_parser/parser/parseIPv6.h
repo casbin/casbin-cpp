@@ -7,8 +7,10 @@
 #include "./xtoi.h"
 #include "./parseIPv4.h"
 
-using namespace std;
+namespace casbin {
 
-IP parseIPv6(string s);
+IP parseIPv6(std::string s);
+
+} // namespace casbin
 
 #endif

@@ -24,18 +24,20 @@
 #include "./enforcer_interface.h"
 #include "./persist/filtered_adapter.h"
 
+namespace casbin {
+
 // Enforcer is the main interface for authorization enforcement and policy management.
 class Enforcer : public IEnforcer{
     private:
 
-        string model_path;
-        shared_ptr<Model> model;
+        std::string model_path;
+        std::shared_ptr<Model> model;
         FunctionMap func_map;
-        vector <tuple<string, Function, Index>> user_func_list;
-        shared_ptr<Effector> eft;
+        std::vector<std::tuple<std::string, Function, Index>> user_func_list;
+        std::shared_ptr<Effector> eft;
 
-        shared_ptr<Adapter> adapter;
-        shared_ptr<Watcher> watcher;
+        std::shared_ptr<Adapter> adapter;
+        std::shared_ptr<Watcher> watcher;
 
         bool enabled;
         bool auto_save;
@@ -43,11 +45,11 @@ class Enforcer : public IEnforcer{
         bool auto_notify_watcher;
 
         // enforce use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool enforce(string matcher, Scope scope);
+        bool enforce(std::string matcher, Scope scope);
 
     public:
 
-        shared_ptr<RoleManager> rm;
+        std::shared_ptr<RoleManager> rm;
 
         /**
          * Enforcer is the default constructor.
@@ -59,33 +61,33 @@ class Enforcer : public IEnforcer{
          * @param model_path the path of the model file.
          * @param policy_file the path of the policy file.
          */
-        Enforcer(string model_path, string policy_file);
+        Enforcer(std::string model_path, std::string policy_file);
         /**
          * Enforcer initializes an enforcer with a database adapter.
          *
          * @param model_path the path of the model file.
          * @param adapter the adapter.
          */
-        Enforcer(string model_path, shared_ptr<Adapter> adapter);
+        Enforcer(std::string model_path, std::shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model and a database adapter.
          *
          * @param m the model.
          * @param adapter the adapter.
          */
-        Enforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter);
+        Enforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model.
          *
          * @param m the model.
          */
-        Enforcer(shared_ptr<Model> m);
+        Enforcer(std::shared_ptr<Model> m);
         /**
          * Enforcer initializes an enforcer with a model file.
          *
          * @param model_path the path of the model file.
          */
-        Enforcer(string model_path);
+        Enforcer(std::string model_path);
         /**
          * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
          *
@@ -93,33 +95,33 @@ class Enforcer : public IEnforcer{
          * @param policy_file the path of the policy file.
          * @param enable_log whether to enable Casbin's log.
          */
-        Enforcer(string model_path, string policy_file, bool enable_log);
+        Enforcer(std::string model_path, std::string policy_file, bool enable_log);
         // InitWithFile initializes an enforcer with a model file and a policy file.
-        void InitWithFile(string model_path, string policy_path);
+        void InitWithFile(std::string model_path, std::string policy_path);
         // InitWithAdapter initializes an enforcer with a database adapter.
-        void InitWithAdapter(string model_path, shared_ptr<Adapter> adapter);
+        void InitWithAdapter(std::string model_path, std::shared_ptr<Adapter> adapter);
         // InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.
-        void InitWithModelAndAdapter(shared_ptr<Model> m, shared_ptr<Adapter> adapter);
+        void InitWithModelAndAdapter(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
         void Initialize();
         // LoadModel reloads the model from the model CONF file.
         // Because the policy is attached to a model, so the policy is invalidated and needs to be reloaded by calling LoadPolicy().
         void LoadModel();
         // GetModel gets the current model.
-        shared_ptr<Model> GetModel();
+        std::shared_ptr<Model> GetModel();
         // SetModel sets the current model.
-        void SetModel(shared_ptr<Model> m);
+        void SetModel(std::shared_ptr<Model> m);
         // GetAdapter gets the current adapter.
-        shared_ptr<Adapter> GetAdapter();
+        std::shared_ptr<Adapter> GetAdapter();
         // SetAdapter sets the current adapter.
-        void SetAdapter(shared_ptr<Adapter> adapter);
+        void SetAdapter(std::shared_ptr<Adapter> adapter);
         // SetWatcher sets the current watcher.
-        void SetWatcher(shared_ptr<Watcher> watcher);
+        void SetWatcher(std::shared_ptr<Watcher> watcher);
         // GetRoleManager gets the current role manager.
-        shared_ptr<RoleManager> GetRoleManager();
+        std::shared_ptr<RoleManager> GetRoleManager();
         // SetRoleManager sets the current role manager.
-        void SetRoleManager(shared_ptr <RoleManager> rm);
+        void SetRoleManager(std::shared_ptr <RoleManager> rm);
         // SetEffector sets the current effector.
-        void SetEffector(shared_ptr<Effector> eft);
+        void SetEffector(std::shared_ptr<Effector> eft);
         // ClearPolicy clears all policy.
         void ClearPolicy();
         // LoadPolicy reloads the policy from file/database.
@@ -147,97 +149,99 @@ class Enforcer : public IEnforcer{
         // BuildRoleLinks manually rebuild the role inheritance relations.
         void BuildRoleLinks();
         // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
-        void BuildIncrementalRoleLinks(policy_op op, string p_type, vector<vector<string>> rules);
+        void BuildIncrementalRoleLinks(policy_op op, std::string p_type, std::vector<std::vector<std::string>> rules);
         // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(Scope scope);
         // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(vector<string> params);        
+        bool Enforce(std::vector<std::string> params);
         // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(unordered_map<string,string> params);
+        bool Enforce(std::unordered_map<std::string,std::string> params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool EnforceWithMatcher(string matcher, Scope scope);
+        bool EnforceWithMatcher(std::string matcher, Scope scope);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool EnforceWithMatcher(string matcher, vector<string> params);
+        bool EnforceWithMatcher(std::string matcher, std::vector<std::string> params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool EnforceWithMatcher(string matcher, unordered_map<string, string> params);
-       
+        bool EnforceWithMatcher(std::string matcher, std::unordered_map<std::string, std::string> params);
+
         /*Management API member functions.*/
-        vector<string> GetAllSubjects();
-        vector<string> GetAllNamedSubjects(string p_type);
-        vector<string> GetAllObjects();
-        vector<string> GetAllNamedObjects(string p_type);
-        vector<string> GetAllActions();
-        vector<string> GetAllNamedActions(string p_type);
-        vector<string> GetAllRoles();
-        vector<string> GetAllNamedRoles(string p_type);
-        vector<vector<string>> GetPolicy();
-        vector<vector<string>> GetFilteredPolicy(int field_index, vector<string> field_values);
-        vector<vector<string>> GetNamedPolicy(string p_type);
-        vector<vector<string>> GetFilteredNamedPolicy(string p_type, int field_index, vector<string> field_values);
-        vector<vector<string>> GetGroupingPolicy();
-        vector<vector<string>> GetFilteredGroupingPolicy(int field_index, vector<string> field_values);
-        vector<vector<string>> GetNamedGroupingPolicy(string p_type);
-        vector<vector<string>> GetFilteredNamedGroupingPolicy(string p_type, int field_index, vector<string> field_values);
-        bool HasPolicy(vector<string> params);
-        bool HasNamedPolicy(string p_type, vector<string> params);
-        bool AddPolicy(vector<string> params);
-        bool  AddPolicies(vector<vector<string>> rules);
-        bool AddNamedPolicy(string p_type, vector<string> params);
-        bool AddNamedPolicies(string p_type, vector<vector<string>> rules);
-        bool RemovePolicy(vector<string> params);
-        bool RemovePolicies(vector<vector<string>> rules);
-        bool RemoveFilteredPolicy(int field_index, vector<string> field_values);
-        bool RemoveNamedPolicy(string p_type, vector<string> params);
-        bool RemoveNamedPolicies(string p_type, vector<vector<string>> rules);
-        bool RemoveFilteredNamedPolicy(string p_type, int field_index, vector<string> field_values);
-        bool HasGroupingPolicy(vector<string> params);
-        bool HasNamedGroupingPolicy(string p_type, vector<string> params);
-        bool AddGroupingPolicy(vector<string> params);
-        bool AddGroupingPolicies(vector<vector<string>> rules);
-        bool AddNamedGroupingPolicy(string p_type, vector<string> params);
-        bool AddNamedGroupingPolicies(string p_type, vector<vector<string>> rules);
-        bool RemoveGroupingPolicy(vector<string> params);
-        bool RemoveGroupingPolicies(vector<vector<string>> rules);
-        bool RemoveFilteredGroupingPolicy(int field_index, vector<string> field_values);
-        bool RemoveNamedGroupingPolicy(string p_type, vector<string> params);
-        bool RemoveNamedGroupingPolicies(string p_type, vector<vector<string>> rules);
-        bool RemoveFilteredNamedGroupingPolicy(string p_type, int field_index, vector<string> field_values);
-        void AddFunction(string name, Function function, Index nargs);
+        std::vector<std::string> GetAllSubjects();
+        std::vector<std::string> GetAllNamedSubjects(std::string p_type);
+        std::vector<std::string> GetAllObjects();
+        std::vector<std::string> GetAllNamedObjects(std::string p_type);
+        std::vector<std::string> GetAllActions();
+        std::vector<std::string> GetAllNamedActions(std::string p_type);
+        std::vector<std::string> GetAllRoles();
+        std::vector<std::string> GetAllNamedRoles(std::string p_type);
+        std::vector<std::vector<std::string>> GetPolicy();
+        std::vector<std::vector<std::string>> GetFilteredPolicy(int field_index, std::vector<std::string> field_values);
+        std::vector<std::vector<std::string>> GetNamedPolicy(std::string p_type);
+        std::vector<std::vector<std::string>> GetFilteredNamedPolicy(std::string p_type, int field_index, std::vector<std::string> field_values);
+        std::vector<std::vector<std::string>> GetGroupingPolicy();
+        std::vector<std::vector<std::string>> GetFilteredGroupingPolicy(int field_index, std::vector<std::string> field_values);
+        std::vector<std::vector<std::string>> GetNamedGroupingPolicy(std::string p_type);
+        std::vector<std::vector<std::string>> GetFilteredNamedGroupingPolicy(std::string p_type, int field_index, std::vector<std::string> field_values);
+        bool HasPolicy(std::vector<std::string> params);
+        bool HasNamedPolicy(std::string p_type, std::vector<std::string> params);
+        bool AddPolicy(std::vector<std::string> params);
+        bool  AddPolicies(std::vector<std::vector<std::string>> rules);
+        bool AddNamedPolicy(std::string p_type, std::vector<std::string> params);
+        bool AddNamedPolicies(std::string p_type, std::vector<std::vector<std::string>> rules);
+        bool RemovePolicy(std::vector<std::string> params);
+        bool RemovePolicies(std::vector<std::vector<std::string>> rules);
+        bool RemoveFilteredPolicy(int field_index, std::vector<std::string> field_values);
+        bool RemoveNamedPolicy(std::string p_type, std::vector<std::string> params);
+        bool RemoveNamedPolicies(std::string p_type, std::vector<std::vector<std::string>> rules);
+        bool RemoveFilteredNamedPolicy(std::string p_type, int field_index, std::vector<std::string> field_values);
+        bool HasGroupingPolicy(std::vector<std::string> params);
+        bool HasNamedGroupingPolicy(std::string p_type, std::vector<std::string> params);
+        bool AddGroupingPolicy(std::vector<std::string> params);
+        bool AddGroupingPolicies(std::vector<std::vector<std::string>> rules);
+        bool AddNamedGroupingPolicy(std::string p_type, std::vector<std::string> params);
+        bool AddNamedGroupingPolicies(std::string p_type, std::vector<std::vector<std::string>> rules);
+        bool RemoveGroupingPolicy(std::vector<std::string> params);
+        bool RemoveGroupingPolicies(std::vector<std::vector<std::string>> rules);
+        bool RemoveFilteredGroupingPolicy(int field_index, std::vector<std::string> field_values);
+        bool RemoveNamedGroupingPolicy(std::string p_type, std::vector<std::string> params);
+        bool RemoveNamedGroupingPolicies(std::string p_type, std::vector<std::vector<std::string>> rules);
+        bool RemoveFilteredNamedGroupingPolicy(std::string p_type, int field_index, std::vector<std::string> field_values);
+        void AddFunction(std::string name, Function function, Index nargs);
 
         /*RBAC API member functions.*/
-        vector<string> GetRolesForUser(string name, vector<string> domain = {});
-        vector<string> GetUsersForRole(string name, vector<string> domain = {});
-        bool HasRoleForUser(string name, string role);
-        bool AddRoleForUser(string user, string role);
-        bool AddRolesForUser(string user, vector<string> roles);
-        bool AddPermissionForUser(string user, vector<string> permission);
-        bool DeletePermissionForUser(string user, vector<string> permission);
-        bool DeletePermissionsForUser(string user);
-        vector<vector<string>> GetPermissionsForUser(string user);
-        bool HasPermissionForUser(string user, vector<string> permission);
-        vector<string> GetImplicitRolesForUser(string name, vector<string> domain = {});
-        vector<vector<string>> GetImplicitPermissionsForUser(string user, vector<string> domain = {});
-        vector<string> GetImplicitUsersForPermission(vector<string> permission);
-        bool DeleteRoleForUser(string user, string role);
-        bool DeleteRolesForUser(string user);
-        bool DeleteUser(string user);
-        bool DeleteRole(string role);
-        bool DeletePermission(vector<string> permission);
+        std::vector<std::string> GetRolesForUser(std::string name, std::vector<std::string> domain = {});
+        std::vector<std::string> GetUsersForRole(std::string name, std::vector<std::string> domain = {});
+        bool HasRoleForUser(std::string name, std::string role);
+        bool AddRoleForUser(std::string user, std::string role);
+        bool AddRolesForUser(std::string user, std::vector<std::string> roles);
+        bool AddPermissionForUser(std::string user, std::vector<std::string> permission);
+        bool DeletePermissionForUser(std::string user, std::vector<std::string> permission);
+        bool DeletePermissionsForUser(std::string user);
+        std::vector<std::vector<std::string>> GetPermissionsForUser(std::string user);
+        bool HasPermissionForUser(std::string user, std::vector<std::string> permission);
+        std::vector<std::string> GetImplicitRolesForUser(std::string name, std::vector<std::string> domain = {});
+        std::vector<std::vector<std::string>> GetImplicitPermissionsForUser(std::string user, std::vector<std::string> domain = {});
+        std::vector<std::string> GetImplicitUsersForPermission(std::vector<std::string> permission);
+        bool DeleteRoleForUser(std::string user, std::string role);
+        bool DeleteRolesForUser(std::string user);
+        bool DeleteUser(std::string user);
+        bool DeleteRole(std::string role);
+        bool DeletePermission(std::vector<std::string> permission);
 
         /* Internal API member functions */
-        bool addPolicy(string sec, string p_type, vector<string> rule);
-        bool addPolicies(string sec, string p_type, vector<vector<string>> rules);
-        bool removePolicy(string sec , string p_type , vector<string> rule);
-        bool removePolicies(string sec, string p_type, vector<vector<string>> rules);
-        bool removeFilteredPolicy(string sec , string p_type , int field_index , vector<string> field_values);
+        bool addPolicy(std::string sec, std::string p_type, std::vector<std::string> rule);
+        bool addPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
+        bool removePolicy(std::string sec , std::string p_type , std::vector<std::string> rule);
+        bool removePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
+        bool removeFilteredPolicy(std::string sec , std::string p_type , int field_index , std::vector<std::string> field_values);
 
         /* RBAC API with domains.*/
-        vector<string> GetUsersForRoleInDomain(string name, string domain = {});
-        vector<string> GetRolesForUserInDomain(string name, string domain = {});
-        vector<vector<string>> GetPermissionsForUserInDomain(string user, string domain = {});
-        bool AddRoleForUserInDomain(string user, string role, string domain = {});
-        bool DeleteRoleForUserInDomain(string user, string role, string domain = {});
+        std::vector<std::string> GetUsersForRoleInDomain(std::string name, std::string domain = {});
+        std::vector<std::string> GetRolesForUserInDomain(std::string name, std::string domain = {});
+        std::vector<std::vector<std::string>> GetPermissionsForUserInDomain(std::string user, std::string domain = {});
+        bool AddRoleForUserInDomain(std::string user, std::string role, std::string domain = {});
+        bool DeleteRoleForUserInDomain(std::string user, std::string role, std::string domain = {});
 
 };
+
+} // namespace casbin
 
 #endif

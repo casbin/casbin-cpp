@@ -6,8 +6,10 @@
 
 #include "./parseIPv4.h"
 
-IP parseIPv4(string s) {
-    vector <byte> pb(IP :: IPv4len, 0);
+namespace casbin {
+
+IP parseIPv4(std::string s) {
+    std::vector <byte> pb(IP :: IPv4len, 0);
     IP ipv4;
     for(int i = 0; i < IP :: IPv4len ; i++) {
         if(s.length() == 0) {
@@ -22,7 +24,7 @@ IP parseIPv4(string s) {
             }
             s = s.substr(1,s.length() - 1);
         }
-        pair<int,int> p = dtoi(s);
+        std::pair<int,int> p = dtoi(s);
         if ((p.first>=big || p.second==0) || p.first > 0xFF) {
             ipv4.isLegal = false;
             return ipv4;
@@ -36,5 +38,7 @@ IP parseIPv4(string s) {
     }
     return IPv4(pb[0], pb[1], pb[2], pb[3]);
 }
+
+} // namespace casbin
 
 #endif // PARSEIPV4_CPP

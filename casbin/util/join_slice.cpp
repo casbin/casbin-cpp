@@ -22,13 +22,15 @@
 
 #include "./util.h"
 
-using namespace std;
+namespace casbin {
 
-vector<string> JoinSlice(string a, vector<string> slice) {
-    vector<string> result{a};
+std::vector<std::string> JoinSlice(std::string a, std::vector<std::string> slice) {
+    std::vector<std::string> result{a};
     for (int i = 0 ; i < slice.size() ; i++)
         result.push_back(slice[i]);
     return result;
 }
+
+} // namespace casbin
 
 #endif // JOIN_SLICE_CPP

@@ -13,6 +13,10 @@
 #include "./CIDRMask.h"
 #include "../exception/parser_exception.h"
 
-CIDR parseCIDR(string s);
+namespace casbin {
+
+CIDR parseCIDR(std::string s);
+
+} // namespace casbin
 
 #endif

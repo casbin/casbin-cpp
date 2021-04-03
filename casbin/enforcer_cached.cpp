@@ -28,8 +28,8 @@
 #include "./exception/casbin_adapter_exception.h"
 #include "./exception/casbin_enforcer_exception.h"
 #include "./util/util.h"
-using namespace std;
 
+namespace casbin {
 
 /**
  * Enforcer is the default constructor.
@@ -44,7 +44,8 @@ CachedEnforcer ::CachedEnforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-CachedEnforcer ::CachedEnforcer(string model_path, string policy_file): Enforcer(model_path, policy_file) {
+CachedEnforcer ::CachedEnforcer(std::string model_path, std::string policy_file)
+    : Enforcer(model_path, policy_file) {
     this->enableCache = true;
 }
 
@@ -54,7 +55,8 @@ CachedEnforcer ::CachedEnforcer(string model_path, string policy_file): Enforcer
  * @param model_path the path of the model file.
  * @param adapter the adapter.
  */
-CachedEnforcer ::CachedEnforcer(string model_path, shared_ptr<Adapter> adapter): Enforcer(model_path,adapter) {
+CachedEnforcer ::CachedEnforcer(std::string model_path, std::shared_ptr<Adapter> adapter)
+    : Enforcer(model_path, adapter) {
     this->enableCache = true;
 }
 
@@ -64,7 +66,8 @@ CachedEnforcer ::CachedEnforcer(string model_path, shared_ptr<Adapter> adapter):
  * @param m the model.
  * @param adapter the adapter.
  */
-CachedEnforcer :: CachedEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapter): Enforcer(m,adapter) {
+CachedEnforcer ::CachedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter)
+    : Enforcer(m, adapter) {
     this->enableCache = true;
 }
 
@@ -73,7 +76,8 @@ CachedEnforcer :: CachedEnforcer(shared_ptr<Model> m, shared_ptr<Adapter> adapte
  *
  * @param m the model.
  */
-CachedEnforcer ::CachedEnforcer(shared_ptr<Model> m): Enforcer(m) {
+CachedEnforcer ::CachedEnforcer(std::shared_ptr<Model> m)
+    : Enforcer(m) {
     this->enableCache = true;
 }
 
@@ -82,7 +86,8 @@ CachedEnforcer ::CachedEnforcer(shared_ptr<Model> m): Enforcer(m) {
  *
  * @param model_path the path of the model file.
  */
-CachedEnforcer ::CachedEnforcer(string model_path): Enforcer(model_path) {
+CachedEnforcer ::CachedEnforcer(std::string model_path)
+    : Enforcer(model_path) {
     this->enableCache = true;
 }
 
@@ -93,125 +98,129 @@ CachedEnforcer ::CachedEnforcer(string model_path): Enforcer(model_path) {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-CachedEnforcer :: CachedEnforcer(string model_path, string policy_file, bool enable_log): Enforcer(model_path,policy_file,enable_log) {
-   this->enableCache = true;
+CachedEnforcer ::CachedEnforcer(std::string model_path, std::string policy_file, bool enable_log)
+    : Enforcer(model_path, policy_file, enable_log) {
+    this->enableCache = true;
 }
 
-CachedEnforcer::CachedEnforcer(const CachedEnforcer& ce):Enforcer(ce){
-   this->m = ce.m;
-   this->enableCache = ce.enableCache;
+CachedEnforcer::CachedEnforcer(const CachedEnforcer& ce)
+    : Enforcer(ce) {
+    this->m = ce.m;
+    this->enableCache = ce.enableCache;
 }
 
-CachedEnforcer::CachedEnforcer(CachedEnforcer&& ce):Enforcer(ce){
-   this->m = move(ce.m);
-   this->enableCache = ce.enableCache;
+CachedEnforcer::CachedEnforcer(CachedEnforcer&& ce)
+    : Enforcer(ce) {
+    this->m = move(ce.m);
+    this->enableCache = ce.enableCache;
 }
-
 
 void CachedEnforcer::EnableCache(const bool& enableCache) {
-  this->enableCache = enableCache;
+    this->enableCache = enableCache;
 }
 
-pair<bool, bool> CachedEnforcer::getCachedResult(const string& key) {
-  locker.lock();
-  bool ok = m.count(key);
-  if (!ok) {
+std::pair<bool, bool> CachedEnforcer::getCachedResult(const std::string& key) {
+    locker.lock();
+    bool ok = m.count(key);
+    if (!ok) {
+        locker.unlock();
+        return std::pair<bool, bool>(false, false);
+    }
+
+    std::pair<bool, bool> res_ok(m[key], ok);
     locker.unlock();
-    return pair<bool, bool>(false, false);
-  }
-
-  pair<bool, bool> res_ok(m[key], ok);
-  locker.unlock();
-  return res_ok;
+    return res_ok;
 }
 
-void CachedEnforcer::setCachedResult(const string& key, const bool& res) {
-  locker.lock();
-  m[key] = res;
-  locker.unlock();
+void CachedEnforcer::setCachedResult(const std::string& key, const bool& res) {
+    locker.lock();
+    m[key] = res;
+    locker.unlock();
 }
 
 void CachedEnforcer::InvalidateCache() {
-   m.clear(); 
+    m.clear();
 }
 
 // Enforce decides whether a "subject" can access a "object" with the operation
 // "action", input parameters are usually: (sub, obj, act).
 bool CachedEnforcer ::Enforce(Scope scope) {
-  return EnforceWithMatcher("", scope);
+    return EnforceWithMatcher("", scope);
 }
 
 // Enforce with a vector param,decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (sub, obj, act).
-bool CachedEnforcer::Enforce(vector<string> params) {
-  return EnforceWithMatcher("", params);
+bool CachedEnforcer::Enforce(std::vector<std::string> params) {
+    return EnforceWithMatcher("", params);
 }
 
 // Enforce with a map param,decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (sub, obj, act).
-bool CachedEnforcer::Enforce(unordered_map<string, string> params) {
-  return EnforceWithMatcher("", params);
+bool CachedEnforcer::Enforce(std::unordered_map<std::string, std::string> params) {
+    return EnforceWithMatcher("", params);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
 // access a "object" with the operation "action", input parameters are usually:
 // (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool CachedEnforcer ::EnforceWithMatcher(string matcher, Scope scope) {
-  return Enforcer::EnforceWithMatcher(matcher, scope);
+bool CachedEnforcer ::EnforceWithMatcher(std::string matcher, Scope scope) {
+    return Enforcer::EnforceWithMatcher(matcher, scope);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
 // access a "object" with the operation "action", input parameters are usually:
 // (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool CachedEnforcer::EnforceWithMatcher(string matcher, vector<string> params) {
-  if (!enableCache) {
-    return Enforcer::EnforceWithMatcher(matcher,params);
-  }
+bool CachedEnforcer::EnforceWithMatcher(std::string matcher, std::vector<std::string> params) {
+    if (!enableCache) {
+        return Enforcer::EnforceWithMatcher(matcher, params);
+    }
 
-  string key;
-  for (auto r : params) {
-    key += r;
-    key += "$$";
-  }
-  key += matcher;
-  key += "$";
+    std::string key;
+    for (auto r : params) {
+        key += r;
+        key += "$$";
+    }
+    key += matcher;
+    key += "$";
 
-  pair<bool, bool> res_ok = getCachedResult(key);
+    std::pair<bool, bool> res_ok = getCachedResult(key);
 
-  if (res_ok.second) {
-    return res_ok.first;
-  }
+    if (res_ok.second) {
+        return res_ok.first;
+    }
 
-  bool res = Enforcer::EnforceWithMatcher(matcher,params);
-  setCachedResult(key, res);
-  return res;
+    bool res = Enforcer::EnforceWithMatcher(matcher, params);
+    setCachedResult(key, res);
+    return res;
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
 // access a "object" with the operation "action", input parameters are usually:
 // (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool CachedEnforcer::EnforceWithMatcher(string matcher, unordered_map<string, string> params) {
-  if (!enableCache) {
-    return Enforcer::EnforceWithMatcher(matcher,params);
-  }
+bool CachedEnforcer::EnforceWithMatcher(std::string matcher, std::unordered_map<std::string, std::string> params) {
+    if (!enableCache) {
+        return Enforcer::EnforceWithMatcher(matcher, params);
+    }
 
-  string key;
-  for (auto r : params) {
-    key += r.second;
-    key += "$$";
-  }
-  key += matcher;
-  key += "$";
+    std::string key;
+    for (auto r : params) {
+        key += r.second;
+        key += "$$";
+    }
+    key += matcher;
+    key += "$";
 
-  pair<bool, bool> res_ok = getCachedResult(key);
+    std::pair<bool, bool> res_ok = getCachedResult(key);
 
-  if (res_ok.second) {
-    return res_ok.first;
-  }
+    if (res_ok.second) {
+        return res_ok.first;
+    }
 
-  bool res = Enforcer::EnforceWithMatcher(matcher,params);
-  setCachedResult(key, res);
-  return res;
+    bool res = Enforcer::EnforceWithMatcher(matcher, params);
+    setCachedResult(key, res);
+    return res;
 }
+
+} // namespace casbin
 
 #endif // ENFORCER_CACHED_CPP

@@ -5,8 +5,10 @@
 
 #include "./byte.h"
 
-using namespace std;
+namespace casbin {
 
-typedef vector < byte > IPMask;
+typedef std::vector < byte > IPMask;
+
+} // namespace casbin
 
 #endif

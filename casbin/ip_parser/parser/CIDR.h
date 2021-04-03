@@ -4,10 +4,14 @@
 #include "./IP.h"
 #include "./IPNet.h"
 
+namespace casbin {
+
 class CIDR {
     public:
         IP ip;
         IPNet net;
 };
+
+} // namespace casbin
 
 #endif

@@ -3,13 +3,15 @@
 
 #include <string>
 
-using namespace std;
+namespace casbin {
 
 // Exception class for Casbin Adapter Exception.
 class CasbinRBACException{
-    string error_message;
+    std::string error_message;
     public:
-        CasbinRBACException(string error_message);
+        CasbinRBACException(std::string error_message);
 };
+
+} // namespace casbin
 
 #endif

@@ -3,13 +3,15 @@
 
 #include <string>
 
-using namespace std;
+namespace casbin {
 
 // Exception class for illegal arguments.
 class IllegalArgumentException{
-    string error_message;
+    std::string error_message;
     public:
-        IllegalArgumentException(string error_message);
+        IllegalArgumentException(std::string error_message);
 };
+
+} // namespace casbin
 
 #endif

@@ -6,9 +6,11 @@
 
 #include "./IPNet.h"
 
-string IPNet :: NETIP_toString() {
-    string ip1, ip2, ip3, ip4;
-    stringstream ss1, ss2, ss3, ss4;
+namespace casbin {
+
+std::string IPNet :: NETIP_toString() {
+    std::string ip1, ip2, ip3, ip4;
+    std::stringstream ss1, ss2, ss3, ss4;
     ss1 << net_ip.ip[0];
     ss1 >> ip1;
     ss2 << net_ip.ip[1];
@@ -20,9 +22,9 @@ string IPNet :: NETIP_toString() {
     return ip1 + "." + ip2 + "." + ip3 + "." + ip4;
 }
 
-string IPNet :: IPMask_toString() {
-    string mask1, mask2, mask3, mask4;
-    stringstream ss1, ss2, ss3, ss4;
+std::string IPNet :: IPMask_toString() {
+    std::string mask1, mask2, mask3, mask4;
+    std::stringstream ss1, ss2, ss3, ss4;
     ss1 << mask[0];
     ss1 >> mask1;
     ss2 << mask[1];
@@ -36,7 +38,7 @@ string IPNet :: IPMask_toString() {
 
 // Contains reports whether the network includes ip.
 bool IPNet :: contains(IP ipNew) {
-    pair<IP, IPMask> p = networkNumberAndMask(*this);
+    std::pair<IP, IPMask> p = networkNumberAndMask(*this);
     IP x;
     x = ipNew.To4();
     if(x.isLegal == true) {
@@ -54,10 +56,10 @@ bool IPNet :: contains(IP ipNew) {
     return true;
 }
 
-pair<IP, IPMask> IPNet :: networkNumberAndMask(IPNet n) {
+std::pair<IP, IPMask> IPNet :: networkNumberAndMask(IPNet n) {
     IP newIp;
     newIp = n.net_ip.To4();
-    pair <IP, IPMask> p;
+    std::pair<IP, IPMask> p;
     p.first = newIp;
     if(newIp.isLegal == false) {
         newIp = n.net_ip;
@@ -86,5 +88,7 @@ pair<IP, IPMask> IPNet :: networkNumberAndMask(IPNet n) {
     }
     return p;
 }
+
+} // namespace casbin
 
 #endif // IPNET_CPP

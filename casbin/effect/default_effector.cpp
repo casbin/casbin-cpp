@@ -23,10 +23,12 @@
 #include "./default_effector.h"
 #include "../exception/unsupported_operation_exception.h"
 
+namespace casbin {
+
 /**
  * MergeEffects merges all matching results collected by the enforcer into a single decision.
  */
-bool DefaultEffector :: MergeEffects(string expr, vector<Effect> effects, vector<float> results) {
+bool DefaultEffector :: MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<float> results) {
     bool result;
 
     if (!expr.compare("some(where (p.eft == allow))")) {
@@ -73,5 +75,7 @@ bool DefaultEffector :: MergeEffects(string expr, vector<Effect> effects, vector
 
     return result;
 }
+
+} // namespace casbin
 
 #endif // DEFAULT_EFFECTOR_CPP

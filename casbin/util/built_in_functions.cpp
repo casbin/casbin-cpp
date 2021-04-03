@@ -32,22 +32,22 @@
 #include "../ip_parser/parser/parseCIDR.h"
 #include "../ip_parser/parser/parseIP.h"
 
-using namespace std;
+namespace casbin {
 
 // KeyMatch determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*"
 ReturnType KeyMatch(Scope scope) {
-    string key1 = GetString(scope, 0);
-    string key2 = GetString(scope, 1);
+    std::string key1 = GetString(scope, 0);
+    std::string key2 = GetString(scope, 1);
 
     PushBooleanValue(scope, KeyMatch(key1, key2));
     return RETURN_RESULT;
 }
 
-bool KeyMatch(string key1, string key2) {
+bool KeyMatch(std::string key1, std::string key2) {
     size_t pos = key2.find("*");
 
-    if (pos == string :: npos)
+    if (pos == std::string :: npos)
         return key1 == key2;
 
     if (key1.length() > pos)
@@ -59,16 +59,16 @@ bool KeyMatch(string key1, string key2) {
 // KeyMatch2 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/:resource"
 ReturnType KeyMatch2(Scope scope) {
-    string key1 = GetString(scope, 0);
-    string key2 = GetString(scope, 1);
+    std::string key1 = GetString(scope, 0);
+    std::string key2 = GetString(scope, 1);
 
     PushBooleanValue(scope, KeyMatch2(key1, key2));
     return RETURN_RESULT;
 }
 
-bool KeyMatch2(string key1, string key2) {
-    vector<string> key1_arr = Split(key1, "/");
-    vector<string> key2_arr = Split(key2, "/");
+bool KeyMatch2(std::string key1, std::string key2) {
+    std::vector<std::string> key1_arr = Split(key1, "/");
+    std::vector<std::string> key2_arr = Split(key2, "/");
 
     bool res = true;
     for(int i=0;i<key2_arr.size();i++){
@@ -79,7 +79,7 @@ bool KeyMatch2(string key1, string key2) {
         if(key1_arr[i] != key2_arr[i]){
             int index1 = int(key2_arr[i].find("*"));
             int index2 = int(key2_arr[i].find(":"));
-            if(index1 != string::npos){
+            if(index1 != std::string::npos){
                 if(index1==0){
                     res = true;
                     break;
@@ -113,16 +113,16 @@ bool KeyMatch2(string key1, string key2) {
 // KeyMatch3 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/{resource}"
 ReturnType KeyMatch3(Scope scope) {
-    string key1 = GetString(scope, 0);
-    string key2 = GetString(scope, 1);
+    std::string key1 = GetString(scope, 0);
+    std::string key2 = GetString(scope, 1);
 
     PushBooleanValue(scope, KeyMatch3(key1, key2));
     return RETURN_RESULT;
 }
 
-bool KeyMatch3(string key1, string key2) {
-    vector<string> key1_arr = Split(key1, "/");
-    vector<string> key2_arr = Split(key2, "/");
+bool KeyMatch3(std::string key1, std::string key2) {
+    std::vector<std::string> key1_arr = Split(key1, "/");
+    std::vector<std::string> key2_arr = Split(key2, "/");
 
     bool res = true;
     for(int i=0;i<key2_arr.size();i++){
@@ -134,7 +134,7 @@ bool KeyMatch3(string key1, string key2) {
             int index1 = int(key2_arr[i].find("*"));
             int index2 = int(key2_arr[i].find("{"));
             int index3 = int(key2_arr[i].find("}"));
-            if(index1 != string::npos){
+            if(index1 != std::string::npos){
                 if(index1==0){
                     res = true;
                     break;
@@ -144,7 +144,7 @@ bool KeyMatch3(string key1, string key2) {
                 } else
                     continue;
             }
-            if(index2==0 && index3 > 0 && index3 != string::npos){
+            if(index2==0 && index3 > 0 && index3 != std::string::npos){
                 if(key1_arr[i]=="" || !key2_arr[i].substr(1, key2_arr[i].length()-2).compare("")){
                     res = false;
                     break;
@@ -167,29 +167,29 @@ bool KeyMatch3(string key1, string key2) {
 
 // RegexMatch determines whether key1 matches the pattern of key2 in regular expression.
 ReturnType RegexMatch(Scope scope) {
-    string key1 = GetString(scope, 0);
-    string key2 = GetString(scope, 1);
+    std::string key1 = GetString(scope, 0);
+    std::string key2 = GetString(scope, 1);
 
     PushBooleanValue(scope, RegexMatch(key1, key2));
     return RETURN_RESULT;
 }
 
-bool RegexMatch(string key1, string key2) {
-    regex regex_s(key2);
+bool RegexMatch(std::string key1, std::string key2) {
+    std::regex regex_s(key2);
     return regex_match(key1, regex_s);
 }
 
 // IPMatch determines whether IP address ip1 matches the pattern of IP address ip2, ip2 can be an IP address or a CIDR pattern.
 // For example, "192.168.2.123" matches "192.168.2.0/24"
 ReturnType IPMatch(Scope scope) {
-    string ip1 = GetString(scope, 0);
-    string ip2 = GetString(scope, 1);
+    std::string ip1 = GetString(scope, 0);
+    std::string ip2 = GetString(scope, 1);
 
     PushBooleanValue(scope, IPMatch(ip1, ip2));
     return RETURN_RESULT;
 }
 
-bool IPMatch(string ip1, string ip2) {
+bool IPMatch(std::string ip1, std::string ip2) {
     IP objIP1 = parseIP(ip1);
     if (objIP1.isLegal == false)
         throw IllegalArgumentException("invalid argument: ip1 in IPMatch() function is not an IP address.");
@@ -210,24 +210,26 @@ bool IPMatch(string ip1, string ip2) {
 ReturnType GFunction(Scope scope) {
     RoleManager* rm;
     rm = (RoleManager*)GetPointer(scope, 0);
-    string name1 = GetString(scope, 1);
-    string name2 = GetString(scope, 2);
+    std::string name1 = GetString(scope, 1);
+    std::string name2 = GetString(scope, 2);
 
     int len = Size(scope);
 
     if(rm == NULL)
         PushBooleanValue(scope, name1 == name2);
     else if (len == 3) {
-        vector<string> domain;
+        std::vector<std::string> domain;
         bool res = rm->HasLink(name1, name2, domain);
         PushBooleanValue(scope, res);
     } else {
-        vector<string> domain{GetString(scope, 3)};
+        std::vector<std::string> domain{GetString(scope, 3)};
         bool res = rm->HasLink(name1, name2, domain);
         PushBooleanValue(scope, res);
     }
 
     return RETURN_RESULT;
 }
+
+} // namespace casbin
 
 #endif // BUILT_IN_FUNCTIONS_CPP

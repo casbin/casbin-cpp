@@ -6,8 +6,12 @@
 
 #include "./unsupported_operation_exception.h"
 
-UnsupportedOperationException :: UnsupportedOperationException(string error_message) {
+namespace casbin {
+
+UnsupportedOperationException :: UnsupportedOperationException(std::string error_message) {
     this->error_message = error_message;
 }
+
+} // namespace casbin
 
 #endif // UNSUPPORTED_OPERATION_EXCEPTION_CPP

@@ -6,6 +6,8 @@
 
 #include "./CIDRMask.h"
 
+namespace casbin {
+
 IPMask CIDRMask(int ones, int bits) {
     IPMask mask;
     if(bits != 8 * IP :: IPv4len && bits != 8 * IP :: IPv6len) {
@@ -29,5 +31,7 @@ IPMask CIDRMask(int ones, int bits) {
     }
     return mask;
 }
+
+} // namespace casbin
 
 #endif // CIDRMASK_CPP
