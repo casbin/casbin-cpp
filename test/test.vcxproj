@@ -169,6 +169,7 @@
     <ClCompile Include="test_config.cpp" />
     <ClCompile Include="test_enforcer.cpp" />
     <ClCompile Include="test_enforcer_cached.cpp" />
+    <ClCompile Include="test_enforcer_synced.cpp" />
     <ClCompile Include="test_management_api.cpp" />
     <ClCompile Include="test_model.cpp" />
     <ClCompile Include="test_model_enforcer.cpp" />
