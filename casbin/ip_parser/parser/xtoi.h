@@ -6,8 +6,10 @@
 
 #include "./byte.h"
 
-using namespace std;
+namespace casbin {
 
-pair<int, int> xtoi(string s);
+std::pair<int, int> xtoi(std::string s);
+
+} // namespace casbin
 
 #endif

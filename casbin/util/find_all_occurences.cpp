@@ -22,13 +22,13 @@
 
 #include "./util.h"
 
-using namespace std;
+namespace casbin {
 
-vector <size_t> FindAllOccurences(string data, string toSearch){
+std::vector <size_t> FindAllOccurences(std::string data, std::string toSearch){
     // Get the first occurrence
     size_t pos = data.find(toSearch);
 
-    vector<size_t> vec;
+    std::vector<size_t> vec;
 
     // Repeat till end is reached
     while (pos != std::string::npos) {
@@ -40,5 +40,7 @@ vector <size_t> FindAllOccurences(string data, string toSearch){
     }
     return vec;
 }
+
+} // namespace casbin
 
 #endif // FIND_ADD_OCCURENCES_CPP

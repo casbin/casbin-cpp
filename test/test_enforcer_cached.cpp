@@ -6,23 +6,23 @@
 
 #include <enforcer_cached.h>
 
-using namespace std;
-
 namespace test_enforcer_cached
 {
+    using namespace casbin;
+
     TEST_CLASS(TestEnforcerCached)
     {
         public:
 
-            void testEnforceCache(CachedEnforcer& e, string sub,string obj,string act, bool res) {
+            void testEnforceCache(CachedEnforcer & e, std::string sub, std::string obj, std::string act, bool res){
                 Assert::AreEqual(res, e.Enforce({sub,obj,act}));
             }
 
 
 
             TEST_METHOD(TestCache) {
-                string model = "../../examples/basic_model.conf";
-                string policy = "../../examples/basic_policy.csv";
+                std::string model = "../../examples/basic_model.conf";
+                std::string policy = "../../examples/basic_policy.csv";
                 CachedEnforcer e = CachedEnforcer(model, policy);
                 testEnforceCache(e, "alice", "data1", "read", true);
                 testEnforceCache(e, "alice", "data1", "write", false);

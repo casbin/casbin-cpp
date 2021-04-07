@@ -22,6 +22,8 @@
 
 #include "./scope_config.h"
 
+namespace casbin {
+
 Scope InitializeScope() {
     return duk_create_heap_default();
 }
@@ -58,7 +60,7 @@ void PushDoubleValue(Scope scope, double d){
     duk_push_number(scope, d);
 }
 
-void PushStringValue(Scope scope, string s){
+void PushStringValue(Scope scope, std::string s){
     duk_push_string(scope, s.c_str());
 }
 
@@ -70,122 +72,122 @@ void PushObjectValue(Scope scope){
     duk_push_global_object(scope);
 }
 
-void PushFunction(Scope scope, Function f, string fname, int nargs) {
+void PushFunction(Scope scope, Function f, std::string fname, int nargs) {
     duk_push_c_function(scope, f, (Index)nargs);
     duk_put_global_string(scope, fname.c_str());
 }
 
-void PushBoolean(Scope scope, bool expression, string identifier){
+void PushBoolean(Scope scope, bool expression, std::string identifier){
     duk_push_boolean(scope, expression);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void PushTrue(Scope scope, string identifier){
+void PushTrue(Scope scope, std::string identifier){
     duk_push_true(scope);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void PushFalse(Scope scope, string identifier){
+void PushFalse(Scope scope, std::string identifier){
     duk_push_false(scope);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void PushInt(Scope scope, int integer, string identifier){
+void PushInt(Scope scope, int integer, std::string identifier){
     duk_push_int(scope, integer);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void PushFloat(Scope scope, float f, string identifier){
+void PushFloat(Scope scope, float f, std::string identifier){
     duk_push_number(scope, f);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void PushDouble(Scope scope, double d, string identifier){
+void PushDouble(Scope scope, double d, std::string identifier){
     duk_push_number(scope, d);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void PushString(Scope scope, string s, string identifier){
+void PushString(Scope scope, std::string s, std::string identifier){
     duk_push_string(scope, s.c_str());
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void PushPointer(Scope scope, void * ptr, string identifier){
+void PushPointer(Scope scope, void * ptr, std::string identifier){
     duk_push_pointer(scope, ptr);
     duk_put_global_string(scope, identifier.c_str());
 }
 
-void PushObject(Scope scope, string identifier){
+void PushObject(Scope scope, std::string identifier){
     duk_push_object(scope);
     duk_put_global_string(scope, identifier.c_str());
     duk_push_int(scope, 0);
     duk_put_global_string(scope, (identifier+"len").c_str());
 }
 
-void PushFunctionPropToObject(Scope scope, string obj, Function f, string fname, int nargs) {
+void PushFunctionPropToObject(Scope scope, std::string obj, Function f, std::string fname, int nargs) {
     duk_get_global_string(scope, obj.c_str());
     duk_push_c_function(scope, f, nargs);
     duk_put_prop_string(scope, -2, fname.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushBooleanPropToObject(Scope scope, string obj, bool expression, string identifier){
+void PushBooleanPropToObject(Scope scope, std::string obj, bool expression, std::string identifier){
     duk_get_global_string(scope, obj.c_str());
     duk_push_boolean(scope, expression);
     duk_put_prop_string(scope, -2, identifier.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushTruePropToObject(Scope scope, string obj, string identifier){
+void PushTruePropToObject(Scope scope, std::string obj, std::string identifier){
     duk_get_global_string(scope, obj.c_str());
     duk_push_true(scope);
     duk_put_prop_string(scope, -2, identifier.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushFalsePropToObject(Scope scope, string obj, string identifier){
+void PushFalsePropToObject(Scope scope, std::string obj, std::string identifier){
     duk_get_global_string(scope, obj.c_str());
     duk_push_false(scope);
     duk_put_prop_string(scope, -2, identifier.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushIntPropToObject(Scope scope, string obj, int integer, string identifier){
+void PushIntPropToObject(Scope scope, std::string obj, int integer, std::string identifier){
     duk_get_global_string(scope, obj.c_str());
     duk_push_int(scope, integer);
     duk_put_prop_string(scope, -2, identifier.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushFloatPropToObject(Scope scope, string obj, float f, string identifier){
+void PushFloatPropToObject(Scope scope, std::string obj, float f, std::string identifier){
     duk_get_global_string(scope, obj.c_str());
     duk_push_number(scope, f);
     duk_put_prop_string(scope, -2, identifier.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushDoublePropToObject(Scope scope, string obj, double d, string identifier){
+void PushDoublePropToObject(Scope scope, std::string obj, double d, std::string identifier){
     duk_get_global_string(scope, obj.c_str());
     duk_push_number(scope, d);
     duk_put_prop_string(scope, -2, identifier.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushStringPropToObject(Scope scope, string obj, string s, string identifier){
+void PushStringPropToObject(Scope scope, std::string obj, std::string s, std::string identifier){
     duk_get_global_string(scope, obj.c_str());
     duk_push_string(scope, s.c_str());
     duk_put_prop_string(scope, -2, identifier.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushPointerPropToObject(Scope scope, string obj, void * ptr, string identifier){
+void PushPointerPropToObject(Scope scope, std::string obj, void * ptr, std::string identifier){
     duk_get_global_string(scope, obj.c_str());
     duk_push_pointer(scope, ptr);
     duk_put_prop_string(scope, -2, identifier.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushObjectPropToObject(Scope scope, string obj, string identifier){
+void PushObjectPropToObject(Scope scope, std::string obj, std::string identifier){
     duk_get_global_string(scope, obj.c_str());
     duk_get_global_string(scope, identifier.c_str());
     duk_put_prop_string(scope, -2, identifier.c_str());
@@ -199,7 +201,7 @@ Type CheckType(Scope scope){
         return Type::Float;
 }
 
-bool FetchIdentifier(Scope scope, string identifier){
+bool FetchIdentifier(Scope scope, std::string identifier){
     return duk_get_global_string(scope, identifier.c_str());
 }
 
@@ -223,25 +225,27 @@ double GetDouble(Scope scope, int id){
     return double(duk_to_number(scope, (Index)id));
 }
 
-string GetString(Scope scope, int id){
-    return string(duk_to_string(scope, (Index)id));
+std::string GetString(Scope scope, int id){
+    return std::string(duk_to_string(scope, (Index)id));
 }
 
 void* GetPointer(Scope scope, int id){
     return (void *)duk_to_pointer(scope, (Index)id);
 }
 
-void Get(Scope scope, string identifier){
+void Get(Scope scope, std::string identifier){
     Eval(scope, identifier);
 }
 
-bool Eval(Scope scope, string expression){
+bool Eval(Scope scope, std::string expression){
     PushStringValue(scope, expression);
     return duk_peval(scope)==0;
 }
 
-void EvalNoResult(Scope scope, string expression){
+void EvalNoResult(Scope scope, std::string expression){
     duk_eval_string_noresult(scope, expression.c_str());
 }
+
+} // namespace casbin
 
 #endif // SCOPE_CONFIG_CPP

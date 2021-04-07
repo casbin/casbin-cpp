@@ -6,10 +6,12 @@
 
 #include "./byte.h"
 
-using namespace std;
+namespace casbin {
 
 // Decimal to integer.
 // Returns number, characters consumed, success.
-pair<int, int> dtoi(string s);
+std::pair<int, int> dtoi(std::string s);
+
+} // namespace casbin
 
 #endif

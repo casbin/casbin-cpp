@@ -4,6 +4,10 @@
 #include "./IP.h"
 #include "./byte.h"
 
+namespace casbin {
+
 IP IPv4(byte a, byte b, byte c, byte d);
+
+} // namespace casbin
 
 #endif

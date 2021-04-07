@@ -6,16 +6,16 @@
 
 #include <util.h>
 
-using namespace std;
-
 namespace test_util
 {
+    using namespace casbin;
+
     TEST_CLASS(TestModel)
     {
         public:
 
-            void TestEscapeAssertion(string s, string res) {
-                string my_res = EscapeAssertion(s);
+            void TestEscapeAssertion(std::string s, std::string res){
+                std::string my_res = EscapeAssertion(s);
                 Assert::AreEqual(my_res, res);
             }
 
@@ -35,8 +35,8 @@ namespace test_util
                 TestEscapeAssertion("(r.attp.value || p.attr)p.u", "(r_attp.value || p_attr)p_u");
             }
 
-            void TestRemoveComments(string s, string res) {
-                string my_res = RemoveComments(s);
+            void TestRemoveComments(std::string s, std::string res) {
+                std::string my_res = RemoveComments(s);
                 Assert::AreEqual(my_res, res);
             }
 
@@ -48,16 +48,16 @@ namespace test_util
                 TestRemoveComments("r.act == p.act", "r.act == p.act");
             }
 
-            void TestArrayEquals(vector<string> a, vector<string> b, bool res) {
+            void TestArrayEquals(std::vector<std::string> a, std::vector<std::string> b, bool res) {
                 bool my_res = ArrayEquals(a, b);
                 Assert::AreEqual(my_res, res);
             }
 
             TEST_METHOD(TestArrayEquals) {
-                TestArrayEquals(vector<string> {"a", "b", "c"}, vector<string> {"a", "b", "c"}, true);
-                TestArrayEquals(vector<string> {"a", "b", "c"}, vector<string> {"a", "b"}, false);
-                TestArrayEquals(vector<string> {"a", "b", "c"}, vector<string> {"a", "c", "b"}, true);
-                TestArrayEquals(vector<string> {"a", "b", "c"}, vector<string> {}, false);
+                TestArrayEquals(std::vector<std::string>{"a", "b", "c"}, std::vector<std::string>{"a", "b", "c"}, true);
+                TestArrayEquals(std::vector<std::string>{"a", "b", "c"}, std::vector<std::string>{"a", "b"}, false);
+                TestArrayEquals(std::vector<std::string>{"a", "b", "c"}, std::vector<std::string>{"a", "c", "b"}, true);
+                TestArrayEquals(std::vector<std::string>{"a", "b", "c"}, std::vector<std::string>{}, false);
             }
     };
 }

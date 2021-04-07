@@ -21,49 +21,51 @@
 
 #include "../util/built_in_functions.h"
 
-using namespace std;
+namespace casbin {
 
 class FunctionMap {
     public:
         Scope scope;
-        list <string> func_list;
+        std::list<std::string> func_list;
 
         FunctionMap();
 
-        void ProcessFunctions(string expression);
+        void ProcessFunctions(std::string expression);
 
         int GetRLen();
 
-        bool Evaluate(string expression);
+        bool Evaluate(std::string expression);
 
         bool GetBooleanResult();
 
         // AddFunction adds an expression function.
-        void AddFunction(string func_name, Function f, Index nargs);
+        void AddFunction(std::string func_name, Function f, Index nargs);
 
-        void AddFunctionPropToR(string identifier, Function func, Index nargs);
+        void AddFunctionPropToR(std::string identifier, Function func, Index nargs);
 
-        void AddBooleanPropToR(string identifier, bool val);
+        void AddBooleanPropToR(std::string identifier, bool val);
 
-        void AddTruePropToR(string identifier);
+        void AddTruePropToR(std::string identifier);
 
-        void AddFalsePropToR(string identifier);
+        void AddFalsePropToR(std::string identifier);
 
-        void AddIntPropToR(string identifier, int val);
+        void AddIntPropToR(std::string identifier, int val);
 
-        void AddFloatPropToR(string identifier, float val);
+        void AddFloatPropToR(std::string identifier, float val);
 
-        void AddDoublePropToR(string identifier, double val);
+        void AddDoublePropToR(std::string identifier, double val);
 
-        void AddStringPropToR(string identifier, string val);
+        void AddStringPropToR(std::string identifier, std::string val);
 
-        void AddPointerPropToR(string identifier, void* val);
+        void AddPointerPropToR(std::string identifier, void* val);
 
-        void AddObjectPropToR(string identifier);
+        void AddObjectPropToR(std::string identifier);
 
         // LoadFunctionMap loads an initial function map.
         void LoadFunctionMap();
 
 };
+
+};  // namespace casbin
 
 #endif

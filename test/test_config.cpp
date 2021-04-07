@@ -7,18 +7,18 @@
 #include <config.h>
 #include <util.h>
 
-using namespace std;
-
 namespace test_config
 {
+    using namespace casbin;
+
     TEST_CLASS(TestConfig)
     {
         public:
 
-            shared_ptr<Config> config;
+            std::shared_ptr<Config> config;
 
             TEST_METHOD_INITIALIZE(InitializeConfig) {
-                string filepath = "../../casbin/config/testdata/testini.ini";
+                std::string filepath = "../../casbin/config/testdata/testini.ini";
                 config = Config::NewConfig(filepath);
             }
 
@@ -27,21 +27,21 @@ namespace test_config
             }
 
             TEST_METHOD(TestURL) {
-                Assert::AreEqual(string("act.wiki"), config->GetString("url"));
+                Assert::AreEqual(std::string("act.wiki"), config->GetString("url"));
             }
 
             TEST_METHOD(TestRedis) {
-                vector<string> values = config->GetStrings("redis::redis.key");
-                Assert::AreEqual(string("push1"), values[0]);
-                Assert::AreEqual(string("push2"), values[1]);
+                std::vector<std::string> values = config->GetStrings("redis::redis.key");
+                Assert::AreEqual(std::string("push1"), values[0]);
+                Assert::AreEqual(std::string("push2"), values[1]);
             }
 
             TEST_METHOD(TestMYSQLDEV) {
-                Assert::AreEqual(string("127.0.0.1"), config->GetString("mysql::mysql.dev.host"));
+                Assert::AreEqual(std::string("127.0.0.1"), config->GetString("mysql::mysql.dev.host"));
             }
 
             TEST_METHOD(TestMYSQLMASTER) {
-                Assert::AreEqual(string("10.0.0.1"), config->GetString("mysql::mysql.master.host"));
+                Assert::AreEqual(std::string("10.0.0.1"), config->GetString("mysql::mysql.master.host"));
             }
 
             TEST_METHOD(TestMathInt) {
@@ -54,11 +54,11 @@ namespace test_config
 
             TEST_METHOD(TestSetConfig) {
                 config->Set("other::key1", "new test key");
-                Assert::AreEqual(string("new test key"), config->GetString("other::key1"));
+                Assert::AreEqual(std::string("new test key"), config->GetString("other::key1"));
             }
 
             TEST_METHOD(TestMulti) {
-                Assert::AreEqual(string("r.sub==p.sub && r.obj==p.obj"), config->GetString("multi1::name"));
+                Assert::AreEqual(std::string("r.sub==p.sub && r.obj==p.obj"), config->GetString("multi1::name"));
             }
     };
 }

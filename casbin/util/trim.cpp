@@ -22,20 +22,22 @@
 
 #include "./util.h"
 
-using namespace std;
+namespace casbin {
 
-string& LTrim(string& str, const string& chars) {
+std::string& LTrim(std::string& str, const std::string& chars) {
     str.erase(0, str.find_first_not_of(chars));
     return str;
 }
  
-string& RTrim(string& str, const string& chars) {
+std::string& RTrim(std::string& str, const std::string& chars) {
     str.erase(str.find_last_not_of(chars) + 1);
     return str;
 }
  
-string Trim(string& str, const string& chars) {
+std::string Trim(std::string& str, const std::string& chars) {
     return LTrim(RTrim(str, chars), chars);
 }
+
+} // namespace casbin
 
 #endif // TRIM_CPP

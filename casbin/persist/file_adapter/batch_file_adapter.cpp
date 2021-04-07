@@ -7,16 +7,20 @@
 #include "./batch_file_adapter.h"
 #include "../../exception/unsupported_operation_exception.h"
 
+namespace casbin {
+
 // NewAdapter is the constructor for Adapter.
-BatchFileAdapter :: BatchFileAdapter(string file_path): FileAdapter(file_path) {
+BatchFileAdapter :: BatchFileAdapter(std::string file_path): FileAdapter(file_path) {
 }
 
-void BatchFileAdapter :: AddPolicies(string sec, string p_type, vector<vector<string>> rules) {
+void BatchFileAdapter :: AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
     throw UnsupportedOperationException("not implemented hello");
 }
 
-void BatchFileAdapter :: RemovePolicies(string sec, string p_type, vector<vector<string>> rules) {
+void BatchFileAdapter :: RemovePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
     throw UnsupportedOperationException("not implemented");
 }
+
+} // namespace casbin
 
 #endif // BATCH_FILE_ADAPTER_CPP

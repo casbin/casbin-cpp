@@ -23,13 +23,15 @@
 #include "./util.h"
 #include "../persist/watcher_ex.h"
 
-using namespace std;
+namespace casbin {
 
 template<typename Base, typename T>
 bool IsInstanceOf(const T*) {
-   return is_base_of<Base, T>::value;
+    return std::is_base_of<Base, T>::value;
 }
 
 template bool IsInstanceOf<class WatcherEx, class Watcher>(class Watcher const*);
+
+} // namespace casbin
 
 #endif //IS_INSTANCE_OF_CPP

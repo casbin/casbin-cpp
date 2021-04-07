@@ -24,20 +24,22 @@
 
 #include "./util.h"
 
-using namespace std;
+namespace casbin {
 
 // SetSubtract returns the elements in `a` that aren't in `b`.
-vector<string> SetSubtract(vector<string> a, vector<string> b) {
-    unordered_map<string, bool> mb;
+std::vector<std::string> SetSubtract(std::vector<std::string> a, std::vector<std::string> b) {
+    std::unordered_map<std::string, bool> mb;
 
     for (int i = 0 ; i < b.size() ; i++)
         mb[b[i]] = true;
 
-    vector<string> diff;
+    std::vector<std::string> diff;
     for (int i = 0 ; i < a.size() ; i++)
         if (!mb[a[i]])
             diff.push_back(a[i]);
     return diff;
 }
+
+} // namespace casbin
 
 #endif // SET_SUBSTRACT_CPP

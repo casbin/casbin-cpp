@@ -26,17 +26,17 @@
 
 #define LARGE 2147483647
 
-using namespace std;
+namespace casbin {
 
-vector<string> Split(string str, string del, int limit){
-    vector<string> tokens;
+std::vector<std::string> Split(std::string str, std::string del, int limit){
+    std::vector<std::string> tokens;
 
     if(limit<=0)
         limit = LARGE;
 
     for (int i = 1; i < limit ; i++) {
         size_t pos = str.find(del);
-        if (pos != string::npos) {
+        if (pos != std::string::npos) {
             tokens.push_back(str.substr(0, pos));
             str = str.substr(pos + del.length());
         } else
@@ -46,5 +46,7 @@ vector<string> Split(string str, string del, int limit){
 
     return tokens;
 }
+
+} // namespace casbin
 
 #endif // SPLIT_CPP

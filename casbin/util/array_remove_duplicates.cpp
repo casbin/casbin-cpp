@@ -24,11 +24,11 @@
 
 #include "./util.h"
 
-using namespace std;
+namespace casbin {
 
-// ArrayRemoveDuplicates removes any duplicated elements in a string array.
-void ArrayRemoveDuplicates(vector<string> &s) {
-    unordered_map<string, bool> found;
+// ArrayRemoveDuplicates removes any duplicated elements in a std::string array.
+void ArrayRemoveDuplicates(std::vector<std::string> &s) {
+    std::unordered_map<std::string, bool> found;
     int j = 0;
     for (int i = 0 ; i < s.size() ; i++) {
         if (!found[s[i]]) {
@@ -37,7 +37,9 @@ void ArrayRemoveDuplicates(vector<string> &s) {
             j++;
         }
     }
-    s = vector<string> (s.begin(), s.begin()+j);
+    s = std::vector<std::string> (s.begin(), s.begin()+j);
 }
+
+} // namespace casbin
 
 #endif // ARRAY_REMOVE_DUPLICATES_CPP

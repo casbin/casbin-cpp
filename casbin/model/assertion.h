@@ -21,6 +21,8 @@
 
 #include "../rbac/role_manager.h"
 
+namespace casbin {
+
 enum policy_op{
     policy_add,
     policy_remove
@@ -32,15 +34,17 @@ typedef enum policy_op policy_op;
 class Assertion {
     public:
 
-        string key;
-        string value;
-        vector<string> tokens;
-        vector<vector<string>> policy;
-        shared_ptr<RoleManager> rm;
+        std::string key;
+        std::string value;
+        std::vector<std::string> tokens;
+        std::vector<std::vector<std::string>> policy;
+        std::shared_ptr<RoleManager> rm;
 
-        void BuildIncrementalRoleLinks(shared_ptr<RoleManager> rm, policy_op op, vector<vector<string>> rules);
+        void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, std::vector<std::vector<std::string>> rules);
 
-        void BuildRoleLinks(shared_ptr<RoleManager> rm);
+        void BuildRoleLinks(std::shared_ptr<RoleManager> rm);
 };
+
+};  // namespace casbin
 
 #endif

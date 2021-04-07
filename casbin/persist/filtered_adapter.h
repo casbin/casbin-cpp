@@ -19,12 +19,14 @@
 
 #include "./adapter.h"
 
+namespace casbin {
+
 // Filter defines the filtering rules for a FilteredAdapter's policy. Empty values
 // are ignored, but all others must match the filter.
 class Filter{
     public:
-        vector<string> P;
-        vector<string> G;
+        std::vector<std::string> P;
+        std::vector<std::string> G;
 };
 
 // FilteredAdapter is the interface for Casbin adapters supporting filtered policies.
@@ -36,5 +38,7 @@ class FilteredAdapter : virtual public Adapter {
         // IsFiltered returns true if the loaded policy has been filtered.
         virtual bool IsFiltered() = 0;
 };
+
+};  // namespace casbin
 
 #endif

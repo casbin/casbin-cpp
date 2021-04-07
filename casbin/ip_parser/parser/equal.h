@@ -6,8 +6,10 @@
 
 #include "IPMask.h"
 
-using namespace std;
+namespace casbin {
 
 bool equal(IPMask m1, IPMask m2);
+
+} // namespace casbin
 
 #endif

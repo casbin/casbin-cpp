@@ -22,15 +22,17 @@
 
 #include "./util.h"
 
-using namespace std;
+namespace casbin {
 
 // RemoveComments removes the comments starting with # in the text.
-string RemoveComments(string s) {
+std::string RemoveComments(std::string s) {
     size_t pos = s.find("#");
-    if (pos == string::npos)
+    if (pos == std::string::npos)
         return s;
-    string fin_str = s.substr(0, pos);
+    std::string fin_str = s.substr(0, pos);
     return Trim(fin_str);
 }
+
+} // namespace casbin
 
 #endif // REMOVE_COMMENTS_CPP

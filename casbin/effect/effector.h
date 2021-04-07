@@ -22,7 +22,7 @@
 
 #include "effect.h"
 
-using namespace std;
+namespace casbin {
 
 /**
  * Effector is the abstract class for Casbin effectors.
@@ -37,7 +37,9 @@ class Effector{
          * @param results the matcher results of all matched rules.
          * @return the final effect.
          */
-        virtual bool MergeEffects(string expr, vector<Effect> effects, vector<float> results) = 0;
+        virtual bool MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<float> results) = 0;
 };
+
+} // namespace casbin
 
 #endif

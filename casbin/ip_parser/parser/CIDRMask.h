@@ -5,6 +5,10 @@
 #include "./IPMask.h"
 #include "./IP.h"
 
+namespace casbin {
+
 IPMask CIDRMask(int ones, int bits);
+
+} // namespace casbin
 
 #endif

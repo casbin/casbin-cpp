@@ -6,8 +6,12 @@
 
 #include "./missing_required_sections.h"
 
-MissingRequiredSections :: MissingRequiredSections(string error_message) {
+namespace casbin {
+
+MissingRequiredSections :: MissingRequiredSections(std::string error_message) {
     this->error_message = error_message;
 }
+
+} // namespace casbin
 
 #endif // MISSING_REQUIRED_SECTIONS_CPP

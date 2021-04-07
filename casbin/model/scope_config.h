@@ -27,7 +27,7 @@
 #define VARARGS DUK_VARARGS
 #define RETURN_RESULT 1
 
-using namespace std;
+namespace casbin {
 
 enum Type{
     Bool, Float
@@ -48,40 +48,42 @@ void PushFalseValue(Scope scope);
 void PushIntValue(Scope scope, int integer);
 void PushFloatValue(Scope scope, float f);
 void PushDoubleValue(Scope scope, double d);
-void PushStringValue(Scope scope, string s);
+void PushStringValue(Scope scope, std::string s);
 void PushPointerValue(Scope scope, void * ptr);
 void PushObjectValue(Scope scope);
-void PushFunction(Scope scope, Function f, string fname, int nargs);
-void PushBoolean(Scope scope, bool expression, string identifier);
-void PushTrue(Scope scope, string identifier);
-void PushFalse(Scope scope, string identifier);
-void PushInt(Scope scope, int integer, string identifier);
-void PushFloat(Scope scope, float f, string identifier);
-void PushDouble(Scope scope, double d, string identifier);
-void PushString(Scope scope, string s, string identifier);
-void PushPointer(Scope scope, void * ptr, string identifier);
-void PushObject(Scope scope, string identifier = "r");
-void PushFunctionPropToObject(Scope scope, string obj, Function f, string fname, int nargs);
-void PushBooleanPropToObject(Scope scope, string obj, bool expression, string identifier);
-void PushTruePropToObject(Scope scope, string obj, string identifier);
-void PushFalsePropToObject(Scope scope, string obj, string identifier);
-void PushIntPropToObject(Scope scope, string obj, int integer, string identifier);
-void PushFloatPropToObject(Scope scope, string obj, float f, string identifier);
-void PushDoublePropToObject(Scope scope, string obj, double d, string identifier);
-void PushStringPropToObject(Scope scope, string obj, string s, string identifier);
-void PushPointerPropToObject(Scope scope, string obj, void * ptr, string identifier);
-void PushObjectPropToObject(Scope scope, string obj, string identifier);
+void PushFunction(Scope scope, Function f, std::string fname, int nargs);
+void PushBoolean(Scope scope, bool expression, std::string identifier);
+void PushTrue(Scope scope, std::string identifier);
+void PushFalse(Scope scope, std::string identifier);
+void PushInt(Scope scope, int integer, std::string identifier);
+void PushFloat(Scope scope, float f, std::string identifier);
+void PushDouble(Scope scope, double d, std::string identifier);
+void PushString(Scope scope, std::string s, std::string identifier);
+void PushPointer(Scope scope, void * ptr, std::string identifier);
+void PushObject(Scope scope, std::string identifier = "r");
+void PushFunctionPropToObject(Scope scope, std::string obj, Function f, std::string fname, int nargs);
+void PushBooleanPropToObject(Scope scope, std::string obj, bool expression, std::string identifier);
+void PushTruePropToObject(Scope scope, std::string obj, std::string identifier);
+void PushFalsePropToObject(Scope scope, std::string obj, std::string identifier);
+void PushIntPropToObject(Scope scope, std::string obj, int integer, std::string identifier);
+void PushFloatPropToObject(Scope scope, std::string obj, float f, std::string identifier);
+void PushDoublePropToObject(Scope scope, std::string obj, double d, std::string identifier);
+void PushStringPropToObject(Scope scope, std::string obj, std::string s, std::string identifier);
+void PushPointerPropToObject(Scope scope, std::string obj, void * ptr, std::string identifier);
+void PushObjectPropToObject(Scope scope, std::string obj, std::string identifier);
 Type CheckType(Scope scope);
-bool FetchIdentifier(Scope scope, string identifier);
+bool FetchIdentifier(Scope scope, std::string identifier);
 unsigned int Size(Scope scope);
 bool GetBoolean(Scope scope, int id = -1);
 int GetInt(Scope scope, int id = -1);
 float GetFloat(Scope scope, int id = -1);
 double GetDouble(Scope scope, int id = -1);
-string GetString(Scope scope, int id = -1);
+std::string GetString(Scope scope, int id = -1);
 void* GetPointer(Scope scope, int id = -1);
-void Get(Scope scope, string identifier);
-bool Eval(Scope scope, string expression);
-void EvalNoResult(Scope scope, string expression);
+void Get(Scope scope, std::string identifier);
+bool Eval(Scope scope, std::string expression);
+void EvalNoResult(Scope scope, std::string expression);
+
+} // namespace casbin
 
 #endif

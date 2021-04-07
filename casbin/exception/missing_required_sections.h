@@ -3,13 +3,15 @@
 
 #include <string>
 
-using namespace std;
+namespace casbin {
 
 // Exception class for missing required sections.
 class MissingRequiredSections{
-    string error_message;
+    std::string error_message;
     public:
-        MissingRequiredSections(string error_message);
+        MissingRequiredSections(std::string error_message);
 };
+
+} // namespace casbin
 
 #endif

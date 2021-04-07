@@ -6,12 +6,14 @@
 
 #include "./dtoi.h"
 
+namespace casbin {
+
 // Decimal to integer.
 // Returns number, characters consumed, success.
-pair<int, int> dtoi(string s) {
+std::pair<int, int> dtoi(std::string s) {
     int n = 0;
     int i = 0;
-    pair <int,int > p;
+    std::pair<int, int> p;
     for(; i < s.length() && s[i] >= '0' && s[i] <= '9'; i++) {
         n = n*10 + int(s[i]-'0');
         if(n >= big) {
@@ -29,5 +31,7 @@ pair<int, int> dtoi(string s) {
     p.second = i;
     return p;
 }
+
+} // namespace casbin
 
 #endif // DTOI_CPP

@@ -21,7 +21,9 @@
 
 #include "./ticker.h"
 
-Ticker::Ticker(function<void()> onTick, chrono::duration<int64_t, nano> tickInterval)
+namespace casbin {
+
+Ticker::Ticker(std::function<void()> onTick, std::chrono::duration<int64_t, std::nano> tickInterval)
     : _onTick (onTick)
     , _tickInterval (tickInterval)
     , _running (false) {}
@@ -33,7 +35,7 @@ Ticker::~Ticker () {
 void Ticker::start() {
     if (_running) return;
     _running = true;
-    _futures1.push_back(async(launch::async, &Ticker::timer_loop, this));
+    _futures1.push_back(std::async(std::launch::async, &Ticker::timer_loop, this));
 }
 
 void Ticker::stop() { 
@@ -44,11 +46,13 @@ void Ticker::timer_loop()
 {
     while (_running) {
         {
-            lock_guard<mutex> lock(_tickIntervalMutex);
-            _futures2.push_back(async(launch::async, _onTick));
-            this_thread::sleep_for( _tickInterval );
+            std::lock_guard<std::mutex> lock(_tickIntervalMutex);
+            _futures2.push_back(std::async(std::launch::async, _onTick));
+            std::this_thread::sleep_for(_tickInterval);
         }
     }
 }
+
+} // namespace casbin
 
 #endif // TICKER_CPP

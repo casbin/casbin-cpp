@@ -6,6 +6,8 @@
 
 #include "./equal.h"
 
+namespace casbin {
+
 bool equal(IPMask m1, IPMask m2) {
     if(m1.size() != m2.size())
         return false;
@@ -15,5 +17,7 @@ bool equal(IPMask m1, IPMask m2) {
     }
     return true;
 }
+
+} // namespace casbin
 
 #endif // EQUAL_CPP

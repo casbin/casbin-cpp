@@ -19,6 +19,8 @@
 
 #include "./watcher.h"
 
+namespace casbin {
+
 class DefaultWatcher: public Watcher {
     public:
 
@@ -29,5 +31,7 @@ class DefaultWatcher: public Watcher {
 
         void Close();
 };
+
+};  // namespace casbin
 
 #endif

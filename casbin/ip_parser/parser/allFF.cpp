@@ -6,7 +6,9 @@
 
 #include "./allFF.h"
 
-bool allFF(vector<byte> b) {
+namespace casbin {
+
+bool allFF(std::vector<byte> b) {
     for(int i = 0 ; i < b.size() ; i++){
         if(b[i] != 0xff) {
             return false;
@@ -14,5 +16,7 @@ bool allFF(vector<byte> b) {
     }
     return true;
 }
+
+} // namespace casbin
 
 #endif // ALLFF_CPP

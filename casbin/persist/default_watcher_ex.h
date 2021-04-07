@@ -19,16 +19,20 @@
 
 #include "./watcher_ex.h"
 
+namespace casbin {
+
 class DefaultWatcherEx: public WatcherEx {
     public:
 
-        void UpdateForAddPolicy(vector<string> params);
+        void UpdateForAddPolicy(std::vector<std::string> params);
 
-        void UpdateForRemovePolicy(vector<string> params);
+        void UpdateForRemovePolicy(std::vector<std::string> params);
 
-        void UpdateForRemoveFilteredPolicy(int field_index, vector<string> field_values);
+        void UpdateForRemoveFilteredPolicy(int field_index, std::vector<std::string> field_values);
 
         void UpdateForSavePolicy(Model* model);
 };
+
+};  // namespace casbin
 
 #endif

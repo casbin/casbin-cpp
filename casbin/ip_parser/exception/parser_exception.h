@@ -3,12 +3,14 @@
 
 #include <string>
 
-using namespace std;
+namespace casbin {
 
 class ParserException{
-    string error_message;
+    std::string error_message;
     public:
-        ParserException(string error_message);
+        ParserException(std::string error_message);
 };
+
+} // namespace casbin
 
 #endif

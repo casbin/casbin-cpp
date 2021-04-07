@@ -8,8 +8,10 @@
 #include "./byte.h"
 #include "./IPv4.h"
 
-using namespace std;
+namespace casbin {
 
-IP parseIPv4(string s);
+IP parseIPv4(std::string s);
+
+} // namespace casbin
 
 #endif

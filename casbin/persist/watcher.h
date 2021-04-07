@@ -19,7 +19,7 @@
 
 #include <string>
 
-using namespace std;
+namespace casbin {
 
 // Watcher is the interface for Casbin watchers.
 class Watcher {
@@ -41,5 +41,7 @@ class Watcher {
         // Close stops and releases the watcher, the callback function will not be called any more.
         virtual void Close() = 0;
 };
+
+};  // namespace casbin
 
 #endif

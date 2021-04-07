@@ -4,15 +4,19 @@
 #include "./file_adapter.h"
 #include "../batch_adapter.h"
 
+namespace casbin {
+
 class BatchFileAdapter: public BatchAdapter, public FileAdapter {
     public:
 
         // NewAdapter is the constructor for Adapter.
-        BatchFileAdapter(string file_path);
+        BatchFileAdapter(std::string file_path);
 
-        void AddPolicies(string sec, string p_type, vector<vector<string>> rules);
+        void AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
 
-        void RemovePolicies(string sec, string p_type, vector<vector<string>> rules);
+        void RemovePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
 };
+
+} // namespace casbin
 
 #endif

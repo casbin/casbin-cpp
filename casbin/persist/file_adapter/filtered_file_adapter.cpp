@@ -11,18 +11,18 @@
 #include "../../exception/casbin_adapter_exception.h"
 #include "../../util/util.h"
 
-using namespace std;
+namespace casbin {
 
-bool FilteredFileAdapter :: filterLine(string line, Filter* filter) {
+bool FilteredFileAdapter :: filterLine(std::string line, Filter* filter) {
     if (filter == NULL)
         return false;
 
-    vector<string> p = Split(line, ",");
+    std::vector<std::string> p = Split(line, ",");
     if(p.size() == 0)
         return true;
 
-    vector<string> filter_slice;
-    string str = Trim(p[0]);
+    std::vector<std::string> filter_slice;
+    std::string str = Trim(p[0]);
     if (str=="p")
         filter_slice = filter->P;
     else if (str=="g")
@@ -31,7 +31,7 @@ bool FilteredFileAdapter :: filterLine(string line, Filter* filter) {
     return filterWords(p, filter_slice);
 }
 
-bool FilteredFileAdapter :: filterWords(vector<string> line, vector<string> filter) {
+bool FilteredFileAdapter :: filterWords(std::vector<std::string> line, std::vector<std::string> filter) {
     if (line.size() < filter.size()+1)
         return true;
 
@@ -46,15 +46,15 @@ bool FilteredFileAdapter :: filterWords(vector<string> line, vector<string> filt
     return skip_line;
 }
 
-void FilteredFileAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter, void (*handler)(string, Model*)) {
-    ifstream out_file;
+void FilteredFileAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter, void (*handler)(std::string, Model*)) {
+    std::ifstream out_file;
     try {
         out_file.open(this->file_path);
-    } catch (const ifstream::failure e) {
+    } catch (const std::ifstream::failure e) {
         throw IOException("Cannot open file.");
     }
 
-    string line;
+    std::string line;
     while (getline(out_file, line, '\n')) {
         line = Trim(line);
         if (filterLine(line, filter)) {
@@ -68,7 +68,7 @@ void FilteredFileAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter,
 }
 
 // NewFilteredAdapter is the constructor for FilteredAdapter.
-FilteredFileAdapter :: FilteredFileAdapter(string file_path): FileAdapter(file_path) {
+FilteredFileAdapter :: FilteredFileAdapter(std::string file_path): FileAdapter(file_path) {
     this->filtered = true;
 }
 
@@ -104,5 +104,7 @@ void FilteredFileAdapter :: SavePolicy(Model* model) {
     }
     this->SavePolicy(model);
 }
+
+} // namespace casbin
 
 #endif // FILTERED_FILE_ADAPTER_CPP

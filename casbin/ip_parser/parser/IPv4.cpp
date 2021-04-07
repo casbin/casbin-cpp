@@ -6,9 +6,11 @@
 
 #include "./IPv4.h"
 
+namespace casbin {
+
 IP IPv4(byte a, byte b, byte c, byte d) {
     IP p;
-    vector <byte> newIP(IP :: v4InV6Prefix.begin(), IP :: v4InV6Prefix.end());
+    std::vector <byte> newIP(IP :: v4InV6Prefix.begin(), IP :: v4InV6Prefix.end());
     p.ip = newIP;
     p.ip.push_back(a);
     p.ip.push_back(b);
@@ -17,5 +19,7 @@ IP IPv4(byte a, byte b, byte c, byte d) {
     p.isLegal = true;
     return p;
 }
+
+} // namespace casbin
 
 #endif // IPV4_CPP

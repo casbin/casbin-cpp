@@ -9,35 +9,35 @@
 #include <rbac.h>
 #include <util.h>
 
-using namespace std;
-
 namespace test_enforcer
 {
+    using namespace casbin;
+
     TEST_CLASS(TestEnforcer)
     {
     public:
 
-        void TestEnforce(Enforcer e, string sub, string dom, string obj, string act, bool res) {
+        void TestEnforce(Enforcer e, std::string sub, std::string dom, std::string obj, std::string act, bool res){
             Assert::AreEqual(res, e.Enforce({sub, dom, obj, act}));
         }
 
-        void TestEnforce(Enforcer e, string sub, string obj, string act, bool res) {
+        void TestEnforce(Enforcer e, std::string sub, std::string obj, std::string act, bool res) {
             Assert::AreEqual(res, e.Enforce({sub, obj, act}));
         }
 
-        void TestEnforce(Enforcer e, vector<string> params, bool res) {
+        void TestEnforce(Enforcer e, std::vector<std::string> params, bool res) {
             Assert::AreEqual(res, e.Enforce(params));
         }
 
-        void TestEnforce(Enforcer e, unordered_map<string,string> params, bool res) {
+        void TestEnforce(Enforcer e, std::unordered_map<std::string, std::string> params, bool res) {
             Assert::AreEqual(res, e.Enforce(params));
         }
 
 
         TEST_METHOD(TestFourParams) {
 
-            string model = "../../examples/rbac_with_domains_model.conf";
-            string policy = "../../examples/rbac_with_domains_policy.csv";
+            std::string model = "../../examples/rbac_with_domains_model.conf";
+            std::string policy = "../../examples/rbac_with_domains_policy.csv";
             Enforcer e = Enforcer(model, policy);
 
             TestEnforce(e, "alice", "domain1", "data1", "read", true);
@@ -51,8 +51,8 @@ namespace test_enforcer
         }
 
         TEST_METHOD(TestThreeParams) {
-            string model = "../../examples/basic_model_without_spaces.conf";
-            string policy = "../../examples/basic_policy.csv";
+            std::string model = "../../examples/basic_model_without_spaces.conf";
+            std::string policy = "../../examples/basic_policy.csv";
             Enforcer e = Enforcer(model, policy);
 
             TestEnforce(e, { "alice", "data1", "read" }, true);
@@ -66,8 +66,8 @@ namespace test_enforcer
         }
         
         TEST_METHOD(TestVectorParams) {
-            string model = "../../examples/basic_model_without_spaces.conf";
-            string policy = "../../examples/basic_policy.csv";
+            std::string model = "../../examples/basic_model_without_spaces.conf";
+            std::string policy = "../../examples/basic_policy.csv";
             Enforcer e = Enforcer(model, policy);
 
             TestEnforce(e, { "alice", "data1", "read" }, true);
@@ -81,11 +81,11 @@ namespace test_enforcer
         }
 
         TEST_METHOD(TestMapParams) {
-            string model = "../../examples/basic_model_without_spaces.conf";
-            string policy = "../../examples/basic_policy.csv";
+            std::string model = "../../examples/basic_model_without_spaces.conf";
+            std::string policy = "../../examples/basic_policy.csv";
             Enforcer e = Enforcer(model, policy);
 
-            unordered_map<string, string> params = { {"sub","alice"},{"obj","data1"},{"act","read"} };
+            std::unordered_map<std::string, std::string> params = {{"sub", "alice"}, {"obj", "data1"}, {"act", "read"}};
             TestEnforce(e, params, true);
 
             params = { {"sub","alice"},{"obj","data1"},{"act","write"} };

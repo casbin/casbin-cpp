@@ -27,15 +27,15 @@
 #include <iostream>
 #include <mutex>
 
-using namespace std;
+namespace casbin {
 
 class Ticker {
 public:
-    typedef chrono::duration<int64_t, nano> tick_interval_t;
-    typedef function<void()> on_tick_t;
-    typedef vector<future<void>> future_vec;
+    typedef std::chrono::duration<int64_t, std::nano> tick_interval_t;
+    typedef std::function<void()> on_tick_t;
+    typedef std::vector<std::future<void>> future_vec;
 
-    Ticker(function<void()> onTick, chrono::duration<int64_t, nano> tickInterval);
+    Ticker(std::function<void()> onTick, std::chrono::duration<int64_t, std::nano> tickInterval);
     
     ~Ticker();
 
@@ -47,10 +47,12 @@ private:
     void timer_loop();
     on_tick_t           _onTick;
     tick_interval_t     _tickInterval;
-    atomic_bool    _running;
-    mutex          _tickIntervalMutex;
+    std::atomic_bool _running;
+    std::mutex          _tickIntervalMutex;
     future_vec          _futures1;
     future_vec          _futures2;
 };
+
+};  // namespace casbin
 
 #endif // TICKER_H

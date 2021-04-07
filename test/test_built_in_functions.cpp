@@ -6,15 +6,15 @@
 
 #include <util.h>
 
-using namespace std;
-
 namespace test_built_in_functions
 {
+    using namespace casbin;
+
     TEST_CLASS(TestBuiltInFunctions)
     {
         public:
 
-            void TestKeyMatch(string key1, string key2, bool res) {
+            void TestKeyMatch(std::string key1, std::string key2, bool res){
                 Scope scope = InitializeScope();
                 PushStringValue(scope, key1);
                 PushStringValue(scope, key2);
@@ -37,7 +37,7 @@ namespace test_built_in_functions
                 TestKeyMatch("/foobar", "/foo/*", false);
             }
 
-            void TestKeyMatch2(string key1, string key2, bool res) {
+            void TestKeyMatch2(std::string key1, std::string key2, bool res) {
                 Scope scope = InitializeScope();
                 PushStringValue(scope, key1);
                 PushStringValue(scope, key2);
@@ -79,7 +79,7 @@ namespace test_built_in_functions
                 TestKeyMatch2("/alice/all", "/:/all", false);
             }
 
-            void TestKeyMatch3(string key1, string key2, bool res) {
+            void TestKeyMatch3(std::string key1, std::string key2, bool res) {
                 Scope scope = InitializeScope();
                 PushStringValue(scope, key1);
                 PushStringValue(scope, key2);
@@ -117,7 +117,7 @@ namespace test_built_in_functions
                 TestKeyMatch3("/myid/using/myresid", "/{id/using/{resId}", false);
             }
 
-            void TestRegexMatch(string key1, string key2, bool res) {
+            void TestRegexMatch(std::string key1, std::string key2, bool res) {
                 Scope scope = InitializeScope();
                 PushStringValue(scope, key1);
                 PushStringValue(scope, key2);
@@ -140,7 +140,7 @@ namespace test_built_in_functions
                 TestRegexMatch("/topic/edit/123s", "/topic/delete/[0-9]+", false);
             }
 
-            void TestIPMatch(string ip1, string ip2, bool res) {
+            void TestIPMatch(std::string ip1, std::string ip2, bool res) {
                 Scope scope = InitializeScope();
                 PushStringValue(scope, ip1);
                 PushStringValue(scope, ip2);

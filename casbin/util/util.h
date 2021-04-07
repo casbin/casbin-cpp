@@ -20,17 +20,17 @@
 #include <vector>
 #include <string>
 
-using namespace std;
+namespace casbin {
 
-// ArrayEquals determines whether two string arrays are identical.
-bool ArrayEquals(vector<string> a, vector<string> b);
+// ArrayEquals determines whether two std::string arrays are identical.
+bool ArrayEquals(std::vector<std::string> a, std::vector<std::string> b);
 
-// ArrayRemoveDuplicates removes any duplicated elements in a string array.
-void ArrayRemoveDuplicates(vector<string> &s);
+// ArrayRemoveDuplicates removes any duplicated elements in a std::string array.
+void ArrayRemoveDuplicates(std::vector<std::string>& s);
 
-string ArrayToString(vector<string> arr);
+std::string ArrayToString(std::vector<std::string> arr);
 
-bool EndsWith(string base, string suffix);
+bool EndsWith(std::string base, std::string suffix);
 
 /**
 * escapeAssertion escapes the dots in the assertion, because the expression evaluation doesn't support such variable names.
@@ -38,29 +38,31 @@ bool EndsWith(string base, string suffix);
 * @param s the value of the matcher and effect assertions.
 * @return the escaped value.
 */
-string EscapeAssertion(string s);
+std::string EscapeAssertion(std::string s);
 
-vector <size_t> FindAllOccurences(string data, string toSearch);
+std::vector<size_t> FindAllOccurences(std::string data, std::string toSearch);
 
 template<typename Base, typename T>
 bool IsInstanceOf(const T*);
 
-vector<string> JoinSlice(string a, vector<string> slice);
+std::vector<std::string> JoinSlice(std::string a, std::vector<std::string> slice);
 
-string Join(vector<string> vos, string sep = " ");
+std::string Join(std::vector<std::string> vos, std::string sep = " ");
 
 // RemoveComments removes the comments starting with # in the text.
-string RemoveComments(string s);
+std::string RemoveComments(std::string s);
 
 // SetSubtract returns the elements in `a` that aren't in `b`.
-vector<string> SetSubtract(vector<string> a, vector<string> b);
+std::vector<std::string> SetSubtract(std::vector<std::string> a, std::vector<std::string> b);
 
-vector<string> Split(string str, string del, int limit = 0);
+std::vector<std::string> Split(std::string str, std::string del, int limit = 0);
 
-string& LTrim(string& str, const string& chars = "\t\n\v\f\r ");
+std::string& LTrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
  
-string& RTrim(string& str, const string& chars = "\t\n\v\f\r ");
+std::string& RTrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
  
-string Trim(string& str, const string& chars = "\t\n\v\f\r ");
+std::string Trim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
+
+} // namespace casbin
 
 #endif

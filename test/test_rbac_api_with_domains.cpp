@@ -9,10 +9,10 @@
 #include <rbac.h>
 #include <util.h>
 
-using namespace std;
-
 namespace test_rbac_api_with_domains
 {
+    using namespace casbin;
+
     TEST_CLASS(TestRBACAPIWithDomains)
     {
         public:
@@ -24,7 +24,7 @@ namespace test_rbac_api_with_domains
                 Assert::IsTrue(ArrayEquals({ "role:global_admin" }, e.GetRolesForUserInDomain("alice", { "domain1" })));
 
                 // Retrieve all inherit roles. It supports domains as well.
-                Assert::IsTrue(ArrayEquals(vector<string>{"role:global_admin", "role:reader", "role:writer"}, e.GetImplicitRolesForUser("alice", {"domain1"})));
+                Assert::IsTrue(ArrayEquals(std::vector<std::string>{"role:global_admin", "role:reader", "role:writer"}, e.GetImplicitRolesForUser("alice", {"domain1"})));
             }
 
             // TestUserAPIWithDomains: Add by Gordon
@@ -154,8 +154,8 @@ namespace test_rbac_api_with_domains
                 Assert::IsTrue(ArrayEquals({ }, e.GetRolesForUserInDomain("non_exist", { "domain2" })));
             }
 
-            void TestGetPermissionsInDomain(Enforcer e, string name, string domain, vector<vector<string>> res) {
-                vector<vector<string>> my_res = e.GetPermissionsForUserInDomain(name, { domain });
+            void TestGetPermissionsInDomain(Enforcer e, std::string name, std::string domain, std::vector<std::vector<std::string>> res) {
+                std::vector<std::vector<std::string>> my_res = e.GetPermissionsForUserInDomain(name, { domain });
 
                 int count = 0;
                 for (int i = 0; i < my_res.size(); i++) {

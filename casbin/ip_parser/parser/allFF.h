@@ -5,8 +5,10 @@
 
 #include "./byte.h"
 
-using namespace std;
+namespace casbin {
 
-bool allFF(vector<byte> b);
+bool allFF(std::vector<byte> b);
+
+} // namespace casbin
 
 #endif

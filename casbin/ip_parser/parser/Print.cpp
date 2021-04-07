@@ -6,12 +6,16 @@
 
 #include "./Print.h"
 
+namespace casbin {
+
 void Print(IP ip_addr) {
     for(int i = 0 ; i < ip_addr.ip.size() ; i++){
-        cout<<ip_addr.ip[i]<<" ";
+        std::cout << ip_addr.ip[i] << " ";
     }
-    cout<<endl;
-    cout<<"Status : "<<ip_addr.isLegal<<endl;
+    std::cout << std::endl;
+    std::cout << "Status : " << ip_addr.isLegal << std::endl;
 }
+
+} // namespace casbin
 
 #endif // PRINT_CPP
