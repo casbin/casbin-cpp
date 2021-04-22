@@ -8,6 +8,9 @@
 using namespace std;
 
 namespace test_enforcer_synced {
+
+    using namespace casbin;
+
     TEST_CLASS(TestEnforcerSynced){
     public:
 
