@@ -28,13 +28,13 @@ namespace casbin {
 
 // GetRolesForUser gets the roles that a user has.
 std::vector<std::string> Enforcer :: GetRolesForUser(const std::string& name, const std::vector<std::string>& domain) {
-    std::vector<std::string> res = this->model->m["g"].assertion_map["g"]->rm->GetRoles(name, domain);
+    std::vector<std::string> res = m_model->m["g"].assertion_map["g"]->rm->GetRoles(name, domain);
     return res;
 }
 
 // GetUsersForRole gets the users that has a role.
 std::vector<std::string> Enforcer :: GetUsersForRole(const std::string& name, const std::vector<std::string>& domain) {
-    std::vector<std::string> res = this->model->m["g"].assertion_map["g"]->rm->GetUsers(name, domain);
+    std::vector<std::string> res = m_model->m["g"].assertion_map["g"]->rm->GetUsers(name, domain);
     return res;
 }
 
@@ -168,7 +168,7 @@ std::vector<std::string> Enforcer :: GetImplicitRolesForUser(const std::string& 
         std::string name = q[0];
         q.erase(q.begin());
 
-        std::vector<std::string> roles = this->rm->GetRoles(name, domain);
+        std::vector<std::string> roles = rm->GetRoles(name, domain);
 
         for (int i = 0 ; i < roles.size() ; i++) {
             if (!(role_set.find(roles[i]) != role_set.end())) {
@@ -227,8 +227,8 @@ std::vector<std::vector<std::string>> Enforcer :: GetImplicitPermissionsForUser(
 // Note: only users will be returned, roles (2nd arg in "g") will be excluded.
 std::vector<std::string> Enforcer :: GetImplicitUsersForPermission(const std::vector<std::string>& permission) {
     std::vector<std::string> p_subjects = this->GetAllSubjects();
-    std::vector<std::string> g_inherit = this->model->GetValuesForFieldInPolicyAllTypes("g", 1);
-    std::vector<std::string> g_subjects = this->model->GetValuesForFieldInPolicyAllTypes("g", 0);
+    std::vector<std::string> g_inherit = m_model->GetValuesForFieldInPolicyAllTypes("g", 1);
+    std::vector<std::string> g_subjects = m_model->GetValuesForFieldInPolicyAllTypes("g", 0);
 
     std::vector<std::string> subjects(p_subjects);
     subjects.insert(subjects.end(), g_subjects.begin(), g_subjects.end());

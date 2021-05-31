@@ -57,9 +57,11 @@ class IEnforcer {
         virtual void EnableAutoSave(bool auto_save) = 0;
         virtual void EnableAutoBuildRoleLinks(bool auto_build_role_links) = 0;
         virtual void BuildRoleLinks() = 0;
-        virtual bool enforce(const std::string&matcher, Scope scope) = 0;
+        virtual bool m_enforce(const std::string& matcher, Scope scope) = 0;
         virtual bool Enforce(Scope scope) = 0;
-        virtual bool EnforceWithMatcher(const std::string&matcher, Scope scope) = 0;
+        virtual bool EnforceWithMatcher(const std::string& matcher, Scope scope) = 0;
+        virtual std::vector<bool> BatchEnforce(const std::vector<std::vector<std::string>>& requests) = 0;
+        virtual std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests) = 0;
 
         /* RBAC API */
         virtual std::vector<std::string> GetRolesForUser(const std::string& name, const std::vector<std::string>& domain = {}) = 0;
@@ -123,6 +125,12 @@ class IEnforcer {
         virtual bool RemoveNamedGroupingPolicies(const std::string& p_type, const std::vector<std::vector<std::string>>& rules) = 0;
         virtual bool RemoveFilteredNamedGroupingPolicy(const std::string& p_type, int field_index, const std::vector<std::string>& field_values) = 0;
         virtual void AddFunction(const std::string& name, Function function, Index nargs) = 0;
+        virtual bool UpdateGroupingPolicy(const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) = 0;
+        virtual bool UpdateNamedGroupingPolicy(const std::string& ptype, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) = 0;
+        virtual bool UpdatePolicy(const std::vector<std::string>& oldPolicy, const std::vector<std::string>& newPolicy) = 0;
+        virtual bool UpdateNamedPolicy(const std::string& ptype, const std::vector<std::string>& p1, const std::vector<std::string>& p2) = 0;
+        virtual bool UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies) = 0;
+        virtual bool UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) = 0;
 
         /* Internal API member functions */
         virtual bool addPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) = 0;
@@ -130,6 +138,8 @@ class IEnforcer {
         virtual bool removePolicy(const std::string& sec , const std::string& p_type , const std::vector<std::string>& rule) = 0;
         virtual bool removePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) = 0;
         virtual bool removeFilteredPolicy(const std::string& sec , const std::string& p_type , int field_index , const std::vector<std::string>& field_values) = 0;
+        virtual bool updatePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) = 0;
+        virtual bool updatePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) = 0;
 
         /* RBAC API with domains.*/
         virtual std::vector<std::string> GetUsersForRoleInDomain(const std::string& name, const std::string& domain) = 0;

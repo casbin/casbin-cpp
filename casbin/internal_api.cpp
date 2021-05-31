@@ -30,7 +30,7 @@ namespace casbin {
 
 // addPolicy adds a rule to the current policy.
 bool Enforcer :: addPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
-    bool rule_added = this->model->AddPolicy(sec, p_type, rule);
+    bool rule_added = m_model->AddPolicy(sec, p_type, rule);
     if(!rule_added)
         return rule_added;
 
@@ -39,20 +39,20 @@ bool Enforcer :: addPolicy(const std::string& sec, const std::string& p_type, co
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
     }
 
-    if (this->adapter && this->auto_save) {
+    if (m_adapter && m_auto_save) {
         try {
-            this->adapter->AddPolicy(sec, p_type, rule);
+            m_adapter->AddPolicy(sec, p_type, rule);
         }
         catch(UnsupportedOperationException e) {
         }
     }
 
-    if (this->watcher && this->auto_notify_watcher) {
-        if (IsInstanceOf<WatcherEx>(this->watcher.get())) {
-            std::dynamic_pointer_cast<WatcherEx>(this->watcher)->UpdateForAddPolicy(rule);
+    if (m_watcher && m_auto_notify_watcher) {
+        if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
+            std::dynamic_pointer_cast<WatcherEx>(m_watcher)->UpdateForAddPolicy(rule);
         }
         else
-            this->watcher->Update();
+            m_watcher->Update();
     }
 
     return rule_added;
@@ -60,7 +60,7 @@ bool Enforcer :: addPolicy(const std::string& sec, const std::string& p_type, co
 
 // addPolicies adds rules to the current policy.
 bool Enforcer :: addPolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
-    bool rules_added = this->model->AddPolicies(sec, p_type, rules);
+    bool rules_added = m_model->AddPolicies(sec, p_type, rules);
     if (!rules_added)
         return rules_added;
 
@@ -68,23 +68,23 @@ bool Enforcer :: addPolicies(const std::string& sec, const std::string& p_type, 
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
 
 
-    if (this->adapter && this->auto_save) {
+    if (m_adapter && m_auto_save) {
         try {
-            std::dynamic_pointer_cast<BatchAdapter>(this->adapter)->AddPolicies(sec, p_type, rules);
+            std::dynamic_pointer_cast<BatchAdapter>(m_adapter)->AddPolicies(sec, p_type, rules);
         }
         catch(UnsupportedOperationException e) {
         }
     }
 
-    if (this->watcher && this->auto_notify_watcher)
-        this->watcher->Update();
+    if (m_watcher && m_auto_notify_watcher)
+        m_watcher->Update();
 
     return rules_added;
 }
 
 // removePolicy removes a rule from the current policy.
 bool Enforcer :: removePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
-    bool rule_removed = this->model->RemovePolicy(sec, p_type, rule);
+    bool rule_removed = m_model->RemovePolicy(sec, p_type, rule);
     if(!rule_removed)
         return rule_removed;
 
@@ -93,20 +93,20 @@ bool Enforcer :: removePolicy(const std::string& sec, const std::string& p_type,
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
     }
     
-    if (this->adapter && this->auto_save) {
+    if (m_adapter && m_auto_save) {
         try {
-            this->adapter->RemovePolicy(sec, p_type, rule);
+            m_adapter->RemovePolicy(sec, p_type, rule);
         }
         catch (UnsupportedOperationException e) {
         }
     }
 
-    if(this->watcher && this->auto_notify_watcher){
-        if (IsInstanceOf<WatcherEx>(this->watcher.get())) {
-            std::dynamic_pointer_cast<WatcherEx>(watcher)->UpdateForRemovePolicy(rule);
+    if(m_watcher && m_auto_notify_watcher){
+        if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
+            std::dynamic_pointer_cast<WatcherEx>(m_watcher)->UpdateForRemovePolicy(rule);
         }
         else
-            this->watcher->Update();
+            m_watcher->Update();
     }
 
     return rule_removed;
@@ -114,30 +114,30 @@ bool Enforcer :: removePolicy(const std::string& sec, const std::string& p_type,
 
 // removePolicies removes rules from the current policy.
 bool Enforcer :: removePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
-    bool rules_removed = this->model->AddPolicies(sec, p_type, rules);
+    bool rules_removed = m_model->AddPolicies(sec, p_type, rules);
     if (!rules_removed)
         return rules_removed;
 
     if (sec == "g")
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
 
-    if (this->adapter && this->auto_save) {
+    if (m_adapter && m_auto_save) {
         try{
-            std::dynamic_pointer_cast<BatchAdapter>(this->adapter)->RemovePolicies(sec, p_type, rules);
+            std::dynamic_pointer_cast<BatchAdapter>(m_adapter)->RemovePolicies(sec, p_type, rules);
         }
         catch(UnsupportedOperationException e){
         }
     }
 
-    if (this->watcher && this->auto_notify_watcher)
-        this->watcher->Update();
+    if (m_watcher && m_auto_notify_watcher)
+        m_watcher->Update();
 
     return rules_removed;
 }
 
 // removeFilteredPolicy removes rules based on field filters from the current policy.
 bool Enforcer :: removeFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values){
-    std::pair<int, std::vector<std::vector<std::string>>> p = this->model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
+    std::pair<int, std::vector<std::vector<std::string>>> p = m_model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
     bool rule_removed = p.first;
     std::vector<std::vector<std::string>> effects = p.second;
 
@@ -147,23 +147,31 @@ bool Enforcer :: removeFilteredPolicy(const std::string& sec, const std::string&
     if (sec == "g")
         this->BuildIncrementalRoleLinks(policy_remove, p_type, effects);
 
-    if (this->adapter && this->auto_save) {
+    if (m_adapter && m_auto_save) {
         try {
-            this->adapter->RemoveFilteredPolicy(sec, p_type, field_index, field_values); \
+            m_adapter->RemoveFilteredPolicy(sec, p_type, field_index, field_values); \
         }
         catch (UnsupportedOperationException e) {
         }
     }
 
-    if (this->watcher && this->auto_notify_watcher) {
-        if (IsInstanceOf<WatcherEx>(this->watcher.get())) {
-            std::dynamic_pointer_cast<WatcherEx>(this->watcher)->UpdateForRemoveFilteredPolicy(field_index, field_values);
+    if (m_watcher && m_auto_notify_watcher) {
+        if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
+            std::dynamic_pointer_cast<WatcherEx>(m_watcher)->UpdateForRemoveFilteredPolicy(field_index, field_values);
         }
         else
-            this->watcher->Update();
+            m_watcher->Update();
     }
 
     return rule_removed;
+}
+
+bool Enforcer :: updatePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
+    return true;
+}
+
+bool Enforcer :: updatePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) {
+    return true;
 }
 
 } // namespace casbin

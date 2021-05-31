@@ -1,32 +1,31 @@
 #ifndef CASBIN_CPP_LOG_DEFAULT_LOGGER
 #define CASBIN_CPP_LOG_DEFAULT_LOGGER
 
-#include "Logger.h"
-#include "Log.h"
+#include "./Logger.h"
 
 namespace casbin {
 
-class DefaultLogger : public Logger{
+class DefaultLogger : public Logger {
     public:
 
         void EnableLog(bool enable) {
-            this->enable = enable;
+            m_enable = enable;
         }
 
         bool IsEnabled() {
-            return this->enable;
+            return m_enable;
         }
 
         template <typename... Object>
         void Print(Object... objects){
-            if (this->enable){
+            if (m_enable){
                 Print(objects...);
             }
         }
 
         template <typename... Object>
         void Print(std::string format, Object... objects){
-            if (this->enable){
+            if (m_enable){
                 Printf(format, objects...);
             }
         }
