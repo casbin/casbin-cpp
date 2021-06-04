@@ -34,7 +34,7 @@
 namespace casbin {
 
 // enforce use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer :: enforce(std::string matcher, Scope scope) {
+bool Enforcer :: enforce(const std::string& matcher, Scope scope) {
     // TODO
     // defer func() {
     // 	if err := recover(); err != nil {
@@ -179,7 +179,7 @@ Enforcer ::Enforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-Enforcer ::Enforcer(std::string model_path, std::string policy_file)
+Enforcer ::Enforcer(const std::string& model_path, const std::string& policy_file)
     : Enforcer(model_path, std::shared_ptr<FileAdapter>(new FileAdapter(policy_file))) {
 }
 
@@ -189,7 +189,7 @@ Enforcer ::Enforcer(std::string model_path, std::string policy_file)
  * @param model_path the path of the model file.
  * @param adapter the adapter.
  */
-Enforcer ::Enforcer(std::string model_path, std::shared_ptr<Adapter> adapter)
+Enforcer ::Enforcer(const std::string& model_path, std::shared_ptr<Adapter> adapter)
     : Enforcer(std::shared_ptr<Model>(new Model(model_path)), adapter) {
     this->model_path = model_path;
 }
@@ -227,7 +227,7 @@ Enforcer ::Enforcer(std::shared_ptr<Model> m): Enforcer(m, NULL) {
  *
  * @param model_path the path of the model file.
  */
-Enforcer ::Enforcer(std::string model_path): Enforcer(model_path, "") {
+Enforcer ::Enforcer(const std::string& model_path): Enforcer(model_path, "") {
 }
 
 /**
@@ -237,19 +237,19 @@ Enforcer ::Enforcer(std::string model_path): Enforcer(model_path, "") {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-Enforcer :: Enforcer(std::string model_path, std::string policy_file, bool enable_log): Enforcer(model_path, std::shared_ptr<FileAdapter>(new FileAdapter(policy_file))) {
+Enforcer :: Enforcer(const std::string& model_path, const std::string& policy_file, bool enable_log): Enforcer(model_path, std::shared_ptr<FileAdapter>(new FileAdapter(policy_file))) {
     // e.EnableLog(enable_log);
 }
 
 
 // InitWithFile initializes an enforcer with a model file and a policy file.
-void Enforcer :: InitWithFile(std::string model_path, std::string policy_path) {
+void Enforcer :: InitWithFile(const std::string& model_path, const std::string& policy_path) {
     std::shared_ptr<Adapter> a = std::shared_ptr<FileAdapter>(new FileAdapter(policy_path));
     this->InitWithAdapter(model_path, a);
 }
 
 // InitWithAdapter initializes an enforcer with a database adapter.
-void Enforcer :: InitWithAdapter(std::string model_path, std::shared_ptr<Adapter> adapter) {
+void Enforcer :: InitWithAdapter(const std::string& model_path, std::shared_ptr<Adapter> adapter) {
     std::shared_ptr<Model> m =std::shared_ptr<Model>(Model :: NewModelFromFile(model_path));
 
     this->InitWithModelAndAdapter(m, adapter);
@@ -432,7 +432,7 @@ void Enforcer :: BuildRoleLinks() {
 }
 
 // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
-void Enforcer :: BuildIncrementalRoleLinks(policy_op op, std::string p_type, std::vector<std::vector<std::string>> rules) {
+void Enforcer :: BuildIncrementalRoleLinks(policy_op op, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
     return this->model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
 }
 
@@ -442,22 +442,22 @@ bool Enforcer :: Enforce(Scope scope) {
 }
 
 // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-bool Enforcer::Enforce(std::vector<std::string> params) {
+bool Enforcer::Enforce(const std::vector<std::string>& params) {
     return this->EnforceWithMatcher("", params);
 }
 
 // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-bool Enforcer::Enforce(std::unordered_map<std::string, std::string> params) {
+bool Enforcer::Enforce(const std::unordered_map<std::string, std::string>& params) {
     return this->EnforceWithMatcher("", params);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer :: EnforceWithMatcher(std::string matcher, Scope scope) {
+bool Enforcer :: EnforceWithMatcher(const std::string& matcher, Scope scope) {
     return this->enforce(matcher, scope);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer::EnforceWithMatcher(std::string matcher, std::vector<std::string> params) {
+bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::vector<std::string>& params) {
     std::vector<std::string> r_tokens = this->model->m["r"].assertion_map["r"]->tokens;
 
     int r_cnt = int(r_tokens.size());
@@ -479,7 +479,7 @@ bool Enforcer::EnforceWithMatcher(std::string matcher, std::vector<std::string> 
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer::EnforceWithMatcher(std::string matcher, std::unordered_map<std::string, std::string> params) {
+bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::unordered_map<std::string, std::string>& params) {
     Scope scope = InitializeScope();
     PushObject(scope, "r");
 

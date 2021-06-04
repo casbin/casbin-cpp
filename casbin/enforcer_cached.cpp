@@ -44,7 +44,7 @@ CachedEnforcer ::CachedEnforcer() {
  * @param model_path the path of the model file.
  * @param policyFile the path of the policy file.
  */
-CachedEnforcer ::CachedEnforcer(std::string model_path, std::string policy_file)
+CachedEnforcer ::CachedEnforcer(const std::string& model_path, const std::string& policy_file)
     : Enforcer(model_path, policy_file) {
     this->enableCache = true;
 }
@@ -55,7 +55,7 @@ CachedEnforcer ::CachedEnforcer(std::string model_path, std::string policy_file)
  * @param model_path the path of the model file.
  * @param adapter the adapter.
  */
-CachedEnforcer ::CachedEnforcer(std::string model_path, std::shared_ptr<Adapter> adapter)
+CachedEnforcer ::CachedEnforcer(const std::string& model_path, std::shared_ptr<Adapter> adapter)
     : Enforcer(model_path, adapter) {
     this->enableCache = true;
 }
@@ -86,7 +86,7 @@ CachedEnforcer ::CachedEnforcer(std::shared_ptr<Model> m)
  *
  * @param model_path the path of the model file.
  */
-CachedEnforcer ::CachedEnforcer(std::string model_path)
+CachedEnforcer ::CachedEnforcer(const std::string& model_path)
     : Enforcer(model_path) {
     this->enableCache = true;
 }
@@ -98,7 +98,7 @@ CachedEnforcer ::CachedEnforcer(std::string model_path)
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-CachedEnforcer ::CachedEnforcer(std::string model_path, std::string policy_file, bool enable_log)
+CachedEnforcer ::CachedEnforcer(const std::string& model_path, const std::string& policy_file, bool enable_log)
     : Enforcer(model_path, policy_file, enable_log) {
     this->enableCache = true;
 }
@@ -150,27 +150,27 @@ bool CachedEnforcer ::Enforce(Scope scope) {
 
 // Enforce with a vector param,decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (sub, obj, act).
-bool CachedEnforcer::Enforce(std::vector<std::string> params) {
+bool CachedEnforcer::Enforce(const std::vector<std::string>& params) {
     return EnforceWithMatcher("", params);
 }
 
 // Enforce with a map param,decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (sub, obj, act).
-bool CachedEnforcer::Enforce(std::unordered_map<std::string, std::string> params) {
+bool CachedEnforcer::Enforce(const std::unordered_map<std::string, std::string>& params) {
     return EnforceWithMatcher("", params);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
 // access a "object" with the operation "action", input parameters are usually:
 // (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool CachedEnforcer ::EnforceWithMatcher(std::string matcher, Scope scope) {
+bool CachedEnforcer ::EnforceWithMatcher(const std::string& matcher, Scope scope) {
     return Enforcer::EnforceWithMatcher(matcher, scope);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
 // access a "object" with the operation "action", input parameters are usually:
 // (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool CachedEnforcer::EnforceWithMatcher(std::string matcher, std::vector<std::string> params) {
+bool CachedEnforcer::EnforceWithMatcher(const std::string& matcher, const std::vector<std::string>& params) {
     if (!enableCache) {
         return Enforcer::EnforceWithMatcher(matcher, params);
     }
@@ -197,7 +197,7 @@ bool CachedEnforcer::EnforceWithMatcher(std::string matcher, std::vector<std::st
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
 // access a "object" with the operation "action", input parameters are usually:
 // (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool CachedEnforcer::EnforceWithMatcher(std::string matcher, std::unordered_map<std::string, std::string> params) {
+bool CachedEnforcer::EnforceWithMatcher(const std::string& matcher, const std::unordered_map<std::string, std::string>& params) {
     if (!enableCache) {
         return Enforcer::EnforceWithMatcher(matcher, params);
     }

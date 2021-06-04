@@ -30,7 +30,7 @@ std::vector<std::string> Enforcer :: GetAllSubjects() {
 }
 
 // GetAllNamedSubjects gets the list of subjects that show up in the current named policy.
-std::vector<std::string> Enforcer :: GetAllNamedSubjects(std::string p_type) {
+std::vector<std::string> Enforcer :: GetAllNamedSubjects(const std::string& p_type) {
     return this->model->GetValuesForFieldInPolicy("p", p_type, 0);
 }
 
@@ -40,7 +40,7 @@ std::vector<std::string> Enforcer :: GetAllObjects() {
 }
 
 // GetAllNamedObjects gets the list of objects that show up in the current named policy.
-std::vector<std::string> Enforcer :: GetAllNamedObjects(std::string p_type) {
+std::vector<std::string> Enforcer :: GetAllNamedObjects(const std::string& p_type) {
     return this->model->GetValuesForFieldInPolicy("p", p_type, 1);
 }
 
@@ -50,7 +50,7 @@ std::vector<std::string> Enforcer :: GetAllActions() {
 }
 
 // GetAllNamedActions gets the list of actions that show up in the current named policy.
-std::vector<std::string> Enforcer :: GetAllNamedActions(std::string p_type) {
+std::vector<std::string> Enforcer :: GetAllNamedActions(const std::string& p_type) {
     return this->model->GetValuesForFieldInPolicy("p", p_type, 2);
 }
 
@@ -60,7 +60,7 @@ std::vector<std::string> Enforcer :: GetAllRoles() {
 }
 
 // GetAllNamedRoles gets the list of roles that show up in the current named policy.
-std::vector<std::string> Enforcer :: GetAllNamedRoles(std::string p_type) {
+std::vector<std::string> Enforcer :: GetAllNamedRoles(const std::string& p_type) {
     return this->model->GetValuesForFieldInPolicy("g", p_type, 1);
 }
 
@@ -70,17 +70,17 @@ std::vector<std::vector<std::string>> Enforcer :: GetPolicy() {
 }
 
 // GetFilteredPolicy gets all the authorization rules in the policy, field filters can be specified.
-std::vector<std::vector<std::string>> Enforcer :: GetFilteredPolicy(int field_index, std::vector<std::string> field_values) {
+std::vector<std::vector<std::string>> Enforcer :: GetFilteredPolicy(int field_index, const std::vector<std::string>& field_values) {
     return this->GetFilteredNamedPolicy("p", field_index, field_values);
 }
 
 // GetNamedPolicy gets all the authorization rules in the named policy.
-std::vector<std::vector<std::string>> Enforcer :: GetNamedPolicy(std::string p_type) {
+std::vector<std::vector<std::string>> Enforcer :: GetNamedPolicy(const std::string& p_type) {
     return this->model->GetPolicy("p", p_type);
 }
 
 // GetFilteredNamedPolicy gets all the authorization rules in the named policy, field filters can be specified.
-std::vector<std::vector<std::string>> Enforcer :: GetFilteredNamedPolicy(std::string p_type, int field_index, std::vector<std::string> field_values) {
+std::vector<std::vector<std::string>> Enforcer :: GetFilteredNamedPolicy(const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
     return this->model->GetFilteredPolicy("p", p_type, field_index, field_values);
 }
 
@@ -90,27 +90,27 @@ std::vector<std::vector<std::string>> Enforcer :: GetGroupingPolicy() {
 }
 
 // GetFilteredGroupingPolicy gets all the role inheritance rules in the policy, field filters can be specified.
-std::vector<std::vector<std::string>> Enforcer :: GetFilteredGroupingPolicy(int field_index, std::vector<std::string> field_values) {
+std::vector<std::vector<std::string>> Enforcer :: GetFilteredGroupingPolicy(int field_index, const std::vector<std::string>& field_values) {
     return this->GetFilteredNamedGroupingPolicy("g", field_index, field_values);
 }
 
 // GetNamedGroupingPolicy gets all the role inheritance rules in the policy.
-std::vector<std::vector<std::string>> Enforcer :: GetNamedGroupingPolicy(std::string p_type) {
+std::vector<std::vector<std::string>> Enforcer :: GetNamedGroupingPolicy(const std::string& p_type) {
     return this->model->GetPolicy("g", p_type);
 }
 
 // GetFilteredNamedGroupingPolicy gets all the role inheritance rules in the policy, field filters can be specified.
-std::vector<std::vector<std::string>> Enforcer :: GetFilteredNamedGroupingPolicy(std::string p_type, int field_index, std::vector<std::string> field_values) {
+std::vector<std::vector<std::string>> Enforcer :: GetFilteredNamedGroupingPolicy(const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
     return this->model->GetFilteredPolicy("g", p_type, field_index, field_values);
 }
 
 // HasPolicy determines whether an authorization rule exists.
-bool Enforcer :: HasPolicy(std::vector<std::string> params) {
+bool Enforcer :: HasPolicy(const std::vector<std::string>& params) {
     return this->HasNamedPolicy("p", params);
 }
 
 // HasNamedPolicy determines whether a named authorization rule exists.
-bool Enforcer :: HasNamedPolicy(std::string p_type, std::vector<std::string> params) {
+bool Enforcer :: HasNamedPolicy(const std::string& p_type, const std::vector<std::string>& params) {
     if (params.size() == 1) {
         std::vector<std::string> str_slice{params[0]};
         return this->model->HasPolicy("p", p_type, str_slice);
@@ -125,21 +125,21 @@ bool Enforcer :: HasNamedPolicy(std::string p_type, std::vector<std::string> par
 // AddPolicy adds an authorization rule to the current policy.
 // If the rule already exists, the function returns false and the rule will not be added.
 // Otherwise the function returns true by adding the new rule.
-bool Enforcer :: AddPolicy(std::vector<std::string> params) {
+bool Enforcer :: AddPolicy(const std::vector<std::string>& params) {
     return this->AddNamedPolicy("p", params);
 }
 
 // AddPolicies adds authorization rules to the current policy.
 // If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
 // Otherwise the function returns true for the corresponding rule by adding the new rule.
-bool Enforcer :: AddPolicies(std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: AddPolicies( const std::vector<std::vector<std::string>>& rules) {
     return this->AddNamedPolicies("p", rules);
 }
 
 // AddNamedPolicy adds an authorization rule to the current named policy.
 // If the rule already exists, the function returns false and the rule will not be added.
 // Otherwise the function returns true by adding the new rule.
-bool Enforcer :: AddNamedPolicy(std::string p_type, std::vector<std::string> params) {
+bool Enforcer :: AddNamedPolicy(const std::string& p_type, const std::vector<std::string>& params) {
     if (params.size() == 1) {
         std::vector<std::string> str_slice{params[0]};
         return this->addPolicy("p", p_type, str_slice);
@@ -154,27 +154,27 @@ bool Enforcer :: AddNamedPolicy(std::string p_type, std::vector<std::string> par
 // AddNamedPolicies adds authorization rules to the current named policy.
 // If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
 // Otherwise the function returns true for the corresponding by adding the new rule.
-bool Enforcer :: AddNamedPolicies(std::string p_type, std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: AddNamedPolicies(const std::string& p_type,  const std::vector<std::vector<std::string>>& rules) {
     return this->addPolicies("p", p_type, rules);
 }
 
 // RemovePolicy removes an authorization rule from the current policy.
-bool Enforcer :: RemovePolicy(std::vector<std::string> params) {
+bool Enforcer :: RemovePolicy(const std::vector<std::string>& params) {
     return this->RemoveNamedPolicy("p", params);
 }
 
 // RemovePolicies removes authorization rules from the current policy.
-bool Enforcer :: RemovePolicies(std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: RemovePolicies( const std::vector<std::vector<std::string>>& rules) {
     return this->RemoveNamedPolicies("p", rules);
 }
 
 // RemoveFilteredPolicy removes an authorization rule from the current policy, field filters can be specified.
-bool Enforcer :: RemoveFilteredPolicy(int field_index, std::vector<std::string> field_values) {
+bool Enforcer :: RemoveFilteredPolicy(int field_index, const std::vector<std::string>& field_values) {
     return this->RemoveFilteredNamedPolicy("p", field_index, field_values);
 }
 
 // RemoveNamedPolicy removes an authorization rule from the current named policy.
-bool Enforcer :: RemoveNamedPolicy(std::string p_type, std::vector<std::string> params) {
+bool Enforcer :: RemoveNamedPolicy(const std::string& p_type, const std::vector<std::string>& params) {
     if (params.size() == 1) {
         std::vector<std::string> str_slice{params[0]};
         return this->removePolicy("p", p_type, str_slice);
@@ -187,22 +187,22 @@ bool Enforcer :: RemoveNamedPolicy(std::string p_type, std::vector<std::string> 
 }
 
 // RemoveNamedPolicies removes authorization rules from the current named policy.
-bool Enforcer :: RemoveNamedPolicies(std::string p_type, std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: RemoveNamedPolicies(const std::string& p_type,  const std::vector<std::vector<std::string>>& rules) {
 	return this->removePolicies("p", p_type, rules);
 }
 
 // RemoveFilteredNamedPolicy removes an authorization rule from the current named policy, field filters can be specified.
-bool Enforcer :: RemoveFilteredNamedPolicy(std::string p_type, int field_index, std::vector<std::string> field_values) {
+bool Enforcer :: RemoveFilteredNamedPolicy(const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
     return this->removeFilteredPolicy("p", p_type, field_index, field_values);
 }
 
 // HasGroupingPolicy determines whether a role inheritance rule exists.
-bool Enforcer :: HasGroupingPolicy(std::vector<std::string> params) {
+bool Enforcer :: HasGroupingPolicy(const std::vector<std::string>& params) {
     return this->HasNamedGroupingPolicy("g", params);
 }
 
 // HasNamedGroupingPolicy determines whether a named role inheritance rule exists.
-bool Enforcer :: HasNamedGroupingPolicy(std::string p_type, std::vector<std::string> params) {
+bool Enforcer :: HasNamedGroupingPolicy(const std::string& p_type, const std::vector<std::string>& params) {
     if (params.size() == 1) {
         std::vector<std::string> str_slice{params[0]};
         return this->model->HasPolicy("g", p_type, str_slice);
@@ -217,21 +217,21 @@ bool Enforcer :: HasNamedGroupingPolicy(std::string p_type, std::vector<std::str
 // AddGroupingPolicy adds a role inheritance rule to the current policy.
 // If the rule already exists, the function returns false and the rule will not be added.
 // Otherwise the function returns true by adding the new rule.
-bool Enforcer :: AddGroupingPolicy(std::vector<std::string> params) {
+bool Enforcer :: AddGroupingPolicy(const std::vector<std::string>& params) {
     return this->AddNamedGroupingPolicy("g", params);
 }
 
 // AddGroupingPolicies adds role inheritance rulea to the current policy.
 // If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
 // Otherwise the function returns true for the corresponding policy rule by adding the new rule.
-bool Enforcer :: AddGroupingPolicies(std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: AddGroupingPolicies( const std::vector<std::vector<std::string>>& rules) {
     return this->AddNamedGroupingPolicies("g", rules);
 }
 
 // AddNamedGroupingPolicy adds a named role inheritance rule to the current policy.
 // If the rule already exists, the function returns false and the rule will not be added.
 // Otherwise the function returns true by adding the new rule.
-bool Enforcer :: AddNamedGroupingPolicy(std::string p_type, std::vector<std::string> params) {
+bool Enforcer :: AddNamedGroupingPolicy(const std::string& p_type, const std::vector<std::string>& params) {
     bool rule_added;
     if (params.size() == 1) {
         std::vector<std::string> str_slice{params[0]};
@@ -253,27 +253,27 @@ bool Enforcer :: AddNamedGroupingPolicy(std::string p_type, std::vector<std::str
 // AddNamedGroupingPolicies adds named role inheritance rules to the current policy.
 // If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
 // Otherwise the function returns true for the corresponding policy rule by adding the new rule.
-bool Enforcer :: AddNamedGroupingPolicies(std::string p_type, std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: AddNamedGroupingPolicies(const std::string& p_type,  const std::vector<std::vector<std::string>>& rules) {
     return this->addPolicies("g", p_type, rules);
 }
 
 // RemoveGroupingPolicy removes a role inheritance rule from the current policy.
-bool Enforcer :: RemoveGroupingPolicy(std::vector<std::string> params) {
+bool Enforcer :: RemoveGroupingPolicy(const std::vector<std::string>& params) {
     return this->RemoveNamedGroupingPolicy("g", params);
 }
 
 // RemoveGroupingPolicies removes role inheritance rulea from the current policy.
-bool Enforcer :: RemoveGroupingPolicies(std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: RemoveGroupingPolicies( const std::vector<std::vector<std::string>>& rules) {
     return this->RemoveNamedGroupingPolicies("g", rules);
 }
 
 // RemoveFilteredGroupingPolicy removes a role inheritance rule from the current policy, field filters can be specified.
-bool Enforcer :: RemoveFilteredGroupingPolicy(int field_index, std::vector<std::string> field_values) {
+bool Enforcer :: RemoveFilteredGroupingPolicy(int field_index, const std::vector<std::string>& field_values) {
     return this->RemoveFilteredNamedGroupingPolicy("g", field_index, field_values);
 }
 
 // RemoveNamedGroupingPolicy removes a role inheritance rule from the current named policy.
-bool Enforcer :: RemoveNamedGroupingPolicy(std::string p_type, std::vector<std::string> params) {
+bool Enforcer :: RemoveNamedGroupingPolicy(const std::string& p_type, const std::vector<std::string>& params) {
     bool rule_removed;
     if(params.size() == 1){
         std::vector<std::string> str_slice{params[0]};
@@ -293,12 +293,12 @@ bool Enforcer :: RemoveNamedGroupingPolicy(std::string p_type, std::vector<std::
 }
 
 // RemoveNamedGroupingPolicies removes role inheritance rules from the current named policy.
-bool Enforcer :: RemoveNamedGroupingPolicies(std::string p_type, std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: RemoveNamedGroupingPolicies(const std::string& p_type,  const std::vector<std::vector<std::string>>& rules) {
     return this->removePolicies("g", p_type, rules);
 }
 
 // RemoveFilteredNamedGroupingPolicy removes a role inheritance rule from the current named policy, field filters can be specified.
-bool Enforcer :: RemoveFilteredNamedGroupingPolicy(std::string p_type, int field_index, std::vector<std::string> field_values) {
+bool Enforcer :: RemoveFilteredNamedGroupingPolicy(const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
     bool rule_removed = this->removeFilteredPolicy("g", p_type, field_index, field_values);
 
     if(this->auto_build_role_links)
@@ -308,7 +308,7 @@ bool Enforcer :: RemoveFilteredNamedGroupingPolicy(std::string p_type, int field
 }
 
 // AddFunction adds a customized function.
-void Enforcer :: AddFunction(std::string name, Function function, Index nargs) {
+void Enforcer :: AddFunction(const std::string& name, Function function, Index nargs) {
     user_func_list.push_back(make_tuple(name, function, nargs));
 }
 

@@ -29,7 +29,7 @@
 namespace casbin {
 
 // addPolicy adds a rule to the current policy.
-bool Enforcer :: addPolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
+bool Enforcer :: addPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
     bool rule_added = this->model->AddPolicy(sec, p_type, rule);
     if(!rule_added)
         return rule_added;
@@ -59,7 +59,7 @@ bool Enforcer :: addPolicy(std::string sec, std::string p_type, std::vector<std:
 }
 
 // addPolicies adds rules to the current policy.
-bool Enforcer :: addPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: addPolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
     bool rules_added = this->model->AddPolicies(sec, p_type, rules);
     if (!rules_added)
         return rules_added;
@@ -83,7 +83,7 @@ bool Enforcer :: addPolicies(std::string sec, std::string p_type, std::vector<st
 }
 
 // removePolicy removes a rule from the current policy.
-bool Enforcer :: removePolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
+bool Enforcer :: removePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
     bool rule_removed = this->model->RemovePolicy(sec, p_type, rule);
     if(!rule_removed)
         return rule_removed;
@@ -113,7 +113,7 @@ bool Enforcer :: removePolicy(std::string sec, std::string p_type, std::vector<s
 }
 
 // removePolicies removes rules from the current policy.
-bool Enforcer :: removePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
+bool Enforcer :: removePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
     bool rules_removed = this->model->AddPolicies(sec, p_type, rules);
     if (!rules_removed)
         return rules_removed;
@@ -136,7 +136,7 @@ bool Enforcer :: removePolicies(std::string sec, std::string p_type, std::vector
 }
 
 // removeFilteredPolicy removes rules based on field filters from the current policy.
-bool Enforcer :: removeFilteredPolicy(std::string sec, std::string p_type, int field_index, std::vector<std::string> field_values){
+bool Enforcer :: removeFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values){
     std::pair<int, std::vector<std::vector<std::string>>> p = this->model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
     bool rule_removed = p.first;
     std::vector<std::vector<std::string>> effects = p.second;
