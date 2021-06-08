@@ -37,13 +37,6 @@ namespace casbin {
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
 // use model matcher by default when matcher is "".
 bool Enforcer :: m_enforce(const std::string& matcher, Scope scope) {
-    // TODO
-    // defer func() {
-    // 	if err := recover(); err != nil {
-    // 		fmt.Errorf("panic: %v", err)
-    // 	}
-    // }()
-
     m_func_map.scope = scope;
 
     if(!m_enabled)
