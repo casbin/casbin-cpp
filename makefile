@@ -5,7 +5,7 @@ AR := ar
 # Define compiler flags
 OBJ_FLAG := -c
 FILE_FLAG := -o
-STD_FLAG := -std=c++11
+STD_FLAG := -std=c++17
 DIS_WARN := -w
 
 # Define archive flags

@@ -181,6 +181,7 @@
     <ClCompile Include="ip_parser\parser\parseIPv6.cpp" />
     <ClCompile Include="ip_parser\parser\Print.cpp" />
     <ClCompile Include="ip_parser\parser\xtoi.cpp" />
+    <ClCompile Include="logger.cpp" />
     <ClCompile Include="management_api.cpp" />
     <ClCompile Include="model\assertion.cpp" />
     <ClCompile Include="model\function.cpp" />
@@ -263,6 +264,9 @@
     <ClInclude Include="ip_parser\parser\pch.h" />
     <ClInclude Include="ip_parser\parser\Print.h" />
     <ClInclude Include="ip_parser\parser\xtoi.h" />
+    <ClInclude Include="log\default_logger.h" />
+    <ClInclude Include="log\Logger.h" />
+    <ClInclude Include="log\log_util.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="model\assertion.h" />
     <ClInclude Include="model\function.h" />

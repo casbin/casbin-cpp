@@ -27,14 +27,14 @@ namespace casbin {
 // GetUsersForRoleInDomain gets the users that has a role inside a domain. Add by Gordon
 std::vector<std::string> Enforcer :: GetUsersForRoleInDomain(const std::string& name, const std::string& domain) {
     std::vector<std::string> domains{domain};
-	std::vector<std::string> res = this->model->m["g"].assertion_map["g"]->rm->GetUsers(name, domains);
+	std::vector<std::string> res = m_model->m["g"].assertion_map["g"]->rm->GetUsers(name, domains);
 	return res;
 }
 
 // GetRolesForUserInDomain gets the roles that a user has inside a domain.
 std::vector<std::string> Enforcer :: GetRolesForUserInDomain(const std::string& name, const std::string& domain) {
     std::vector<std::string> domains{domain};
-	std::vector<std::string> res = this->model->m["g"].assertion_map["g"]->rm->GetRoles(name, domains);
+	std::vector<std::string> res = m_model->m["g"].assertion_map["g"]->rm->GetRoles(name, domains);
 	return res;
 }
 

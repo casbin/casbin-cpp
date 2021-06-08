@@ -33,8 +33,10 @@
 
 namespace casbin {
 
-// enforce use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer :: enforce(const std::string& matcher, Scope scope) {
+// enforce use a custom matcher to decides whether a "subject" can access a "object" 
+// with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
+// use model matcher by default when matcher is "".
+bool Enforcer :: m_enforce(const std::string& matcher, Scope scope) {
     // TODO
     // defer func() {
     // 	if err := recover(); err != nil {
@@ -42,83 +44,80 @@ bool Enforcer :: enforce(const std::string& matcher, Scope scope) {
     // 	}
     // }()
 
-    this->func_map.scope = scope;
+    m_func_map.scope = scope;
 
-    if(!this->enabled)
+    if(!m_enabled)
         return true;
-
-    // for(unordered_map <std::string, Function> :: iterator it = this->fm.fmap.begin() ; it != this->fm.fmap.end() ; it++)
-    // 	this->fm.AddFunction(it->first, it->second);
 
     std::string exp_string;
     if(matcher == "")
-        exp_string = this->model->m["m"].assertion_map["m"]->value;
+        exp_string = m_model->m["m"].assertion_map["m"]->value;
     else
         exp_string = matcher;
 
 
     std::unordered_map<std::string, std::shared_ptr<RoleManager>> rm_map;
-    bool ok = this->model->m.find("g") != this->model->m.end();
+    bool ok = m_model->m.find("g") != m_model->m.end();
 
     if(ok) {
-        for (std::unordered_map<std::string, std::shared_ptr<Assertion>>::iterator it = this->model->m["g"].assertion_map.begin(); it != this->model->m["g"].assertion_map.end(); it++) {
-            std::shared_ptr<RoleManager> rm = it->second->rm;
-            int char_count = int(std::count(it->second->value.begin(), it->second->value.end(), '_'));
-            int index = int(exp_string.find((it->first)+"("));
+        for (auto it : m_model->m["g"].assertion_map) {
+            std::shared_ptr<RoleManager> rm = it.second->rm;
+            int char_count = int(std::count(it.second->value.begin(), it.second->value.end(), '_'));
+            int index = int(exp_string.find((it.first)+"("));
             if (index != std::string::npos)
-                exp_string.insert(index+(it->first+"(").length(), "rm, ");
-            PushPointer(this->func_map.scope, (void *)rm.get(), "rm");
-            this->func_map.AddFunction(it->first, GFunction, char_count + 1);
+                exp_string.insert(index+(it.first+"(").length(), "rm, ");
+            PushPointer(m_func_map.scope, (void *)rm.get(), "rm");
+            m_func_map.AddFunction(it.first, GFunction, char_count + 1);
         }
     }
 
     // apply function map to current scope.
-    for(auto func: user_func_list){
-        this->func_map.AddFunction(std::get<0>(func), std::get<1>(func), std::get<2>(func));
+    for(auto func : m_user_func_list) {
+        m_func_map.AddFunction(std::get<0>(func), std::get<1>(func), std::get<2>(func));
     }
 
     std::unordered_map<std::string, int> p_int_tokens;
-    for(int i = 0 ; i < this->model->m["p"].assertion_map["p"]->tokens.size() ; i++)
-        p_int_tokens[this->model->m["p"].assertion_map["p"]->tokens[i]] = i;
+    for(int i = 0 ; i < m_model->m["p"].assertion_map["p"]->tokens.size() ; i++)
+        p_int_tokens[m_model->m["p"].assertion_map["p"]->tokens[i]] = i;
 
-    std::vector<std::string> p_tokens = this->model->m["p"].assertion_map["p"]->tokens;
+    std::vector<std::string> p_tokens = m_model->m["p"].assertion_map["p"]->tokens;
 
-    int policy_len = int(this->model->m["p"].assertion_map["p"]->policy.size());
+    int policy_len = static_cast<int>(m_model->m["p"].assertion_map["p"]->policy.size());
 
     std::vector<Effect> policy_effects(policy_len, Effect ::Indeterminate);
-    std::vector<float> matcher_results(policy_len, 0.0);
+    std::vector<float> matcher_results(policy_len, 0.0f);
 
     if(policy_len != 0) {
-        if(this->model->m["r"].assertion_map["r"]->tokens.size() != this->func_map.GetRLen())
+        if(m_model->m["r"].assertion_map["r"]->tokens.size() != m_func_map.GetRLen())
             return false;
 
         //TODO
-        for( int i = 0 ; i < policy_len ; i++){
-            // log.LogPrint("Policy Rule: ", pvals)
-            std::vector<std::string> p_vals = this->model->m["p"].assertion_map["p"]->policy[i];
-            if(this->model->m["p"].assertion_map["p"]->tokens.size() != p_vals.size())
+        for( int i = 0 ; i < policy_len ; i++) {
+            std::vector<std::string> p_vals = m_model->m["p"].assertion_map["p"]->policy[i];
+            m_log.LogPrint("Policy Rule: ", p_vals);
+            if(p_tokens.size() != p_vals.size())
                 return false;
 
-            PushObject(this->func_map.scope, "p");
+            PushObject(m_func_map.scope, "p");
             for(int j = 0 ; j < p_tokens.size() ; j++){
                 int index = int(p_tokens[j].find("_"));
                 std::string token = p_tokens[j].substr(index + 1);
-                PushStringPropToObject(this->func_map.scope, "p", p_vals[j], token);
+                PushStringPropToObject(m_func_map.scope, "p", p_vals[j], token);
             }
 
-            this->func_map.Evaluate(exp_string);
+            m_func_map.Evaluate(exp_string);
             
             //TODO
             // log.LogPrint("Result: ", result)
-            if(CheckType(this->func_map.scope) == Type :: Bool){
-                bool result = GetBoolean(this->func_map.scope);
+            if(CheckType(m_func_map.scope) == Type :: Bool){
+                bool result = GetBoolean(m_func_map.scope);
                 if(!result) {
                     policy_effects[i] = Effect :: Indeterminate;
                     continue;
                 }
             }
-            else if(CheckType(this->func_map.scope) == Type :: Float){
-                float result = GetFloat(this->func_map.scope);
+            else if(CheckType(m_func_map.scope) == Type :: Float){
+                float result = GetFloat(m_func_map.scope);
                 if(result == 0.0) {
                     policy_effects[i] = Effect :: Indeterminate;
                     continue;
@@ -142,27 +141,27 @@ bool Enforcer :: enforce(const std::string& matcher, Scope scope) {
             else
                 policy_effects[i] = Effect :: Allow;
 
-            if(this->model->m["e"].assertion_map["e"]->value == "priority(p_eft) || deny")
+            if(m_model->m["e"].assertion_map["e"]->value == "priority(p_eft) || deny")
                 break;
         }
     } else {
-        bool isValid = this->func_map.Evaluate(exp_string);
+        bool isValid = m_func_map.Evaluate(exp_string);
         if(!isValid)
             return false;
-        bool result = this->func_map.GetBooleanResult();
+        bool result = m_func_map.GetBooleanResult();
 
         //TODO
-        // log.LogPrint("Result: ", result)
-        if(result)
+        m_log.LogPrint("Result: ", result);
+        if (result)
             policy_effects.push_back(Effect::Allow);
         else
             policy_effects.push_back(Effect::Indeterminate);
     }
 
     //TODO
-    // log.LogPrint("Rule Results: ", policyEffects)
+    m_log.LogPrint("Rule Results: ", policy_effects);
 
-    bool result = this->eft->MergeEffects(this->model->m["e"].assertion_map["e"]->value, policy_effects, matcher_results);
+    bool result = m_eft->MergeEffects(m_model->m["e"].assertion_map["e"]->value, policy_effects, matcher_results);
 
     return result;
 }
@@ -190,8 +189,8 @@ Enforcer ::Enforcer(const std::string& model_path, const std::string& policy_fil
  * @param adapter the adapter.
  */
 Enforcer ::Enforcer(const std::string& model_path, std::shared_ptr<Adapter> adapter)
-    : Enforcer(std::shared_ptr<Model>(new Model(model_path)), adapter) {
-    this->model_path = model_path;
+    : Enforcer(std::make_shared<Model>(model_path), adapter) {
+    m_model_path = model_path;
 }
 
 /**
@@ -200,16 +199,13 @@ Enforcer ::Enforcer(const std::string& model_path, std::shared_ptr<Adapter> adap
  * @param m the model.
  * @param adapter the adapter.
  */
-Enforcer :: Enforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter) {
-    this->adapter = adapter;
-    this->watcher = NULL;
-
-    this->model = m;
-    this->model->PrintModel();
+Enforcer :: Enforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter)
+    : m_adapter(adapter), m_watcher(nullptr), m_model(m) {
+    m_model->PrintModel();
 
     this->Initialize();
 
-    if (this->adapter && this->adapter->file_path != "") {
+    if (m_adapter && m_adapter->file_path != "") {
         this->LoadPolicy();
     }
 }
@@ -237,8 +233,9 @@ Enforcer ::Enforcer(const std::string& model_path): Enforcer(model_path, "") {
  * @param policyFile the path of the policy file.
  * @param enableLog whether to enable Casbin's log.
  */
-Enforcer :: Enforcer(const std::string& model_path, const std::string& policy_file, bool enable_log): Enforcer(model_path, std::shared_ptr<FileAdapter>(new FileAdapter(policy_file))) {
-    // e.EnableLog(enable_log);
+Enforcer :: Enforcer(const std::string& model_path, const std::string& policy_file, bool enable_log)
+    : Enforcer(model_path, std::make_shared<FileAdapter>(policy_file)) {
+    this->EnableLog(enable_log);
 }
 
 
@@ -254,72 +251,73 @@ void Enforcer :: InitWithAdapter(const std::string& model_path, std::shared_ptr<
 
     this->InitWithModelAndAdapter(m, adapter);
 
-    this->model_path = model_path;
+    m_model_path = model_path;
 }
 
 // InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.
 void Enforcer :: InitWithModelAndAdapter(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter) {
-    this->adapter = adapter;
+    m_adapter = adapter;
 
-    this->model = m;
-    this->model->PrintModel();
-    this->func_map.LoadFunctionMap();
+    m_model = m;
+    m_model->PrintModel();
+    m_func_map.LoadFunctionMap();
 
     this->Initialize();
 
     // Do not initialize the full policy when using a filtered adapter
-    if(this->adapter != NULL && !this->adapter->IsFiltered()) 
+    if(m_adapter != NULL && !m_adapter->IsFiltered()) 
         this->LoadPolicy();
 }
 
 void Enforcer :: Initialize() {
-    this->rm = std::shared_ptr<DefaultRoleManager>(new DefaultRoleManager(10));
-    this->eft = std::shared_ptr<DefaultEffector>(new DefaultEffector());
-    this->watcher = NULL;
+    this->rm = std::make_shared<DefaultRoleManager>(10);
+    m_eft = std::make_shared<DefaultEffector>();
+    m_watcher = NULL;
 
-    this->enabled = true;
-    this->auto_save = true;
-    this->auto_build_role_links = true;
-    this->auto_notify_watcher = true;
+    m_enabled = true;
+    m_auto_save = true;
+    m_auto_build_role_links = true;
+    m_auto_notify_watcher = true;
 }
 
 // LoadModel reloads the model from the model CONF file.
-// Because the policy is attached to a model, so the policy is invalidated and needs to be reloaded by calling LoadPolicy().
+// Because the policy is attached to a model, so the policy is invalidated and needs 
+// to be reloaded by calling LoadPolicy().
 void Enforcer :: LoadModel() {
-    this->model = std::shared_ptr<Model>(Model ::NewModelFromFile(this->model_path));
+    m_model = std::shared_ptr<Model>(Model ::NewModelFromFile(m_model_path));
 
-    this->model->PrintModel();
-    this->func_map.LoadFunctionMap();
+    m_model->PrintModel();
+    m_func_map.LoadFunctionMap();
 
     this->Initialize();
 }
 
 // GetModel gets the current model.
 std::shared_ptr<Model> Enforcer :: GetModel() {
-    return this->model;
+    return m_model;
 }
 
 // SetModel sets the current model.
 void Enforcer :: SetModel(std::shared_ptr<Model> m) {
-    this->model = m;
-    this->func_map.LoadFunctionMap();
+    m_model = m;
+    m_func_map.LoadFunctionMap();
 
     this->Initialize();
 }
 
 // GetAdapter gets the current adapter.
 std::shared_ptr<Adapter> Enforcer::GetAdapter() {
-    return this->adapter;
+    return m_adapter;
 }
 
 // SetAdapter sets the current adapter.
 void Enforcer::SetAdapter(std::shared_ptr<Adapter> adapter) {
-    this->adapter = adapter;
+    m_adapter = adapter;
 }
 
 // SetWatcher sets the current watcher.
 void Enforcer :: SetWatcher(std::shared_ptr<Watcher> watcher) {
-    this->watcher = watcher;
+    m_watcher = watcher;
     auto func = [&, this](std::string str) {
         this->LoadPolicy();
     };
@@ -338,21 +336,21 @@ void Enforcer :: SetRoleManager(std::shared_ptr<RoleManager> rm) {
 
 // SetEffector sets the current effector.
 void Enforcer :: SetEffector(std::shared_ptr<Effector> eft) {
-    this->eft = eft;
+    m_eft = eft;
 }
 
 // ClearPolicy clears all policy.
 void Enforcer :: ClearPolicy() {
-    this->model->ClearPolicy();
+    m_model->ClearPolicy();
 }
 
 // LoadPolicy reloads the policy from file/database.
 void Enforcer :: LoadPolicy() {
     this->ClearPolicy();
-    this->adapter->LoadPolicy(this->model.get());
-    this->model->PrintPolicy();
+    m_adapter->LoadPolicy(m_model.get());
+    m_model->PrintPolicy();
 
-    if(this->auto_build_role_links) {
+    if(m_auto_build_role_links) {
         this->BuildRoleLinks();
     }
 }
@@ -364,22 +362,22 @@ void Enforcer :: LoadFilteredPolicy(Filter filter) {
 
     std::shared_ptr<FilteredAdapter> filtered_adapter;
 
-    if (this->adapter->IsFiltered()) {
-        filtered_adapter = std::dynamic_pointer_cast<FilteredAdapter>(this->adapter);
+    if (m_adapter->IsFiltered()) {
+        filtered_adapter = std::dynamic_pointer_cast<FilteredAdapter>(m_adapter);
     }
     else
         throw CasbinAdapterException("filtered policies are not supported by this adapter");
 
-    filtered_adapter->LoadFilteredPolicy(this->model, filter);
+    filtered_adapter->LoadFilteredPolicy(m_model, filter);
 
-    this->model->PrintPolicy();
-    if(this->auto_build_role_links)
+    m_model->PrintPolicy();
+    if(m_auto_build_role_links)
         this->BuildRoleLinks();
 }
 
 // IsFiltered returns true if the loaded policy has been filtered.
 bool Enforcer :: IsFiltered() {
-    return this->adapter->IsFiltered();
+    return m_adapter->IsFiltered();
 }
 
 // SavePolicy saves the current policy (usually after changed with Casbin API) back to file/database.
@@ -387,56 +385,58 @@ void Enforcer :: SavePolicy() {
     if(this->IsFiltered())
         throw CasbinEnforcerException("cannot save a filtered policy");
 
-    this->adapter->SavePolicy(this->model.get());
+    m_adapter->SavePolicy(m_model.get());
 
-    if(this->watcher != NULL){
-        if (IsInstanceOf<WatcherEx>(this->watcher.get())) {
-            void* watcher = this->watcher.get();
-            ((WatcherEx*)watcher)->UpdateForSavePolicy(this->model.get());
+    if(m_watcher != NULL){
+        if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
+            auto watcher = dynamic_cast<WatcherEx*>(m_watcher.get());
+            watcher->UpdateForSavePolicy(m_model.get());
         }
         else
-            return this->watcher->Update();
+            return m_watcher->Update();
     }
 }
 
-// EnableEnforce changes the enforcing state of Casbin, when Casbin is disabled, all access will be allowed by the Enforce() function.
+// EnableEnforce changes the enforcing state of Casbin, when Casbin is disabled, 
+// all access will be allowed by the Enforce() function.
 void Enforcer :: EnableEnforce(bool enable) {
-    this->enabled = enable;
+    m_enabled = enable;
 }
 
 // EnableLog changes whether Casbin will log messages to the Logger.
-// void Enforcer :: EnableLog(bool enable) {
-    // log.GetLogger().EnableLog(enable);
-// }
+void Enforcer :: EnableLog(bool enable) {
+    m_log.GetLogger().EnableLog(enable);
+}
 
 // EnableAutoNotifyWatcher controls whether to save a policy rule automatically notify the Watcher when it is added or removed.
 void Enforcer :: EnableAutoNotifyWatcher(bool enable) {
-    this->auto_notify_watcher = enable;
+    m_auto_notify_watcher = enable;
 }
 
 // EnableAutoSave controls whether to save a policy rule automatically to the adapter when it is added or removed.
 void Enforcer :: EnableAutoSave(bool auto_save) {
-    this->auto_save = auto_save;
+    m_auto_save = auto_save;
 }
 
 // EnableAutoBuildRoleLinks controls whether to rebuild the role inheritance relations when a role is added or deleted.
 void Enforcer :: EnableAutoBuildRoleLinks(bool auto_build_role_links) {
-    this->auto_build_role_links = auto_build_role_links;
+    m_auto_build_role_links = auto_build_role_links;
 }
 
 // BuildRoleLinks manually rebuild the role inheritance relations.
 void Enforcer :: BuildRoleLinks() {
     this->rm->Clear();
 
-    this->model->BuildRoleLinks(this->rm);
+    m_model->BuildRoleLinks(this->rm);
 }
 
 // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
 void Enforcer :: BuildIncrementalRoleLinks(policy_op op, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
-    return this->model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
+    return m_model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
 }
 
-// Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
+// Enforce decides whether a "subject" can access a "object" with the operation "action", 
+// input parameters are usually: (sub, obj, act).
 bool Enforcer :: Enforce(Scope scope) {
     return this->EnforceWithMatcher("", scope);
 }
@@ -453,12 +453,12 @@ bool Enforcer::Enforce(const std::unordered_map<std::string, std::string>& param
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool Enforcer :: EnforceWithMatcher(const std::string& matcher, Scope scope) {
-    return this->enforce(matcher, scope);
+    return m_enforce(matcher, scope);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::vector<std::string>& params) {
-    std::vector<std::string> r_tokens = this->model->m["r"].assertion_map["r"]->tokens;
+    std::vector<std::string> r_tokens = m_model->m["r"].assertion_map["r"]->tokens;
 
     int r_cnt = int(r_tokens.size());
     int cnt = int(params.size());
@@ -473,12 +473,14 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::vector<
         PushStringPropToObject(scope, "r", params[i], r_tokens[i].substr(2, r_tokens[i].size() - 2));
     }
 
-    bool result = this->enforce(matcher, scope);
+    bool result = m_enforce(matcher, scope);
     DeinitializeScope(scope);
     return result;
 }
 
-// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
+// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" 
+// with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
+// use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::unordered_map<std::string, std::string>& params) {
     Scope scope = InitializeScope();
     PushObject(scope, "r");
@@ -487,9 +489,30 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::unorder
         PushStringPropToObject(scope, "r", r.second, r.first);
     }
 
-    bool result = this->enforce(matcher, scope);
+    bool result = m_enforce(matcher, scope);
     DeinitializeScope(scope);
     return result;
+}
+
+// BatchEnforce enforce in batches
+std::vector<bool> Enforcer :: BatchEnforce(const std::vector<std::vector<std::string>>& requests) {
+    // Initializing an array for storing results with false
+    std::vector<bool> results;
+    results.reserve(requests.size());
+    for (auto request : requests) {
+        results.push_back(this->Enforce(request));
+    }
+    return results;
+}
+
+// BatchEnforceWithMatcher enforce with matcher in batches
+std::vector<bool> Enforcer :: BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests) {
+    std::vector<bool> results;
+    results.reserve(requests.size());
+    for (auto request : requests) {
+        results.push_back(this->EnforceWithMatcher(matcher, request));
+    }
+    return results;
 }
 
 } // namespace casbin

@@ -201,17 +201,17 @@ bool SyncedEnforcer ::Enforce(const std::unordered_map<std::string, std::string>
     return Enforcer::Enforce(params);
 }
 
-// // BatchEnforce enforce in batches
-// std::vector<bool> SyncedEnforcer ::BatchEnforce(const std::vector<std::vector<std::string>>& requests) {
-//   std::lock_guard<std::mutex> lock(policyMutex);
-//   return Enforcer::BatchEnforce(requests);
-// }
+// BatchEnforce enforce in batches
+std::vector<bool> SyncedEnforcer ::BatchEnforce(const std::vector<std::vector<std::string>>& requests) {
+  std::lock_guard<std::mutex> lock(policyMutex);
+  return Enforcer::BatchEnforce(requests);
+}
 
-// // BatchEnforceWithMatcher enforce with matcher in batches
-// std::vector<bool> SyncedEnforcer ::BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests) {
-//   std::lock_guard<std::mutex> lock(policyMutex);
-//   return Enforcer::BatchEnforce(matcher, requests);
-// }
+// BatchEnforceWithMatcher enforce with matcher in batches
+std::vector<bool> SyncedEnforcer ::BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests) {
+  std::lock_guard<std::mutex> lock(policyMutex);
+  return Enforcer::BatchEnforceWithMatcher(matcher, requests);
+}
 
 // GetAllSubjects gets the list of subjects that show up in the current policy.
 std::vector<std::string> SyncedEnforcer ::GetAllSubjects() {
@@ -348,26 +348,26 @@ bool SyncedEnforcer ::RemovePolicy(const std::vector<std::string>& params) {
 }
 
 // UpdatePolicy updates an authorization rule from the current policy.
-// bool SyncedEnforcer ::UpdatePolicy(const std::vector<std::string>& oldPolicy, const std::vector<std::string>& newPolicy) {
-//   std::lock_guard<std::mutex> lock(policyMutex);
-//   return Enforcer::UpdatePolicy(oldPolicy, newPolicy);
-// }
+bool SyncedEnforcer ::UpdatePolicy(const std::vector<std::string>& oldPolicy, const std::vector<std::string>& newPolicy) {
+  std::lock_guard<std::mutex> lock(policyMutex);
+  return Enforcer::UpdatePolicy(oldPolicy, newPolicy);
+}
 
-// bool SyncedEnforcer ::UpdateNamedPolicy(const std::string& ptype, const std::vector<std::string>& p1, const std::vector<std::string>& p2) {
-//   std::lock_guard<std::mutex> lock(policyMutex);
-//   return Enforcer::UpdateNamedPolicy(ptype, p1, p2);
-// }
+bool SyncedEnforcer ::UpdateNamedPolicy(const std::string& ptype, const std::vector<std::string>& p1, const std::vector<std::string>& p2) {
+  std::lock_guard<std::mutex> lock(policyMutex);
+  return Enforcer::UpdateNamedPolicy(ptype, p1, p2);
+}
 
-// // UpdatePolicies updates authorization rules from the current policies.
-// bool SyncedEnforcer ::UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies) {
-//   std::lock_guard<std::mutex> lock(policyMutex);
-//   return Enforcer::UpdatePolicies(oldPolices, newPolicies);
-// }
+// UpdatePolicies updates authorization rules from the current policies.
+bool SyncedEnforcer ::UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies) {
+  std::lock_guard<std::mutex> lock(policyMutex);
+  return Enforcer::UpdatePolicies(oldPolices, newPolicies);
+}
 
-// bool SyncedEnforcer ::UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) {
-//   std::lock_guard<std::mutex> lock(policyMutex);
-//   return Enforcer::UpdateNamedPolicies(ptype, p1, p2);
-// }
+bool SyncedEnforcer ::UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) {
+  std::lock_guard<std::mutex> lock(policyMutex);
+  return Enforcer::UpdateNamedPolicies(ptype, p1, p2);
+}
 
 // RemovePolicies removes authorization rules from the current policy.
 bool SyncedEnforcer ::RemovePolicies(const std::vector<std::vector<std::string>>& rules) {
@@ -473,15 +473,15 @@ bool SyncedEnforcer ::RemoveNamedGroupingPolicies(const std::string& ptype, cons
     return Enforcer::RemoveNamedGroupingPolicies(ptype, rules);
 }
 
-// bool SyncedEnforcer ::UpdateGroupingPolicy(const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
-//   std::lock_guard<std::mutex> lock(policyMutex);
-//   return Enforcer::UpdateGroupingPolicy(oldRule, newRule);
-// }
+bool SyncedEnforcer ::UpdateGroupingPolicy(const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
+  std::lock_guard<std::mutex> lock(policyMutex);
+  return Enforcer::UpdateGroupingPolicy(oldRule, newRule);
+}
 
-// bool SyncedEnforcer ::UpdateNamedGroupingPolicy(const std::string& ptype, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
-//   std::lock_guard<std::mutex> lock(policyMutex);
-//   return Enforcer::UpdateNamedGroupingPolicy(ptype, oldRule, newRule);
-// }
+bool SyncedEnforcer ::UpdateNamedGroupingPolicy(const std::string& ptype, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
+  std::lock_guard<std::mutex> lock(policyMutex);
+  return Enforcer::UpdateNamedGroupingPolicy(ptype, oldRule, newRule);
+}
 
 // RemoveFilteredNamedGroupingPolicy removes a role inheritance rule from the current named policy, field filters can be specified.
 bool SyncedEnforcer ::RemoveFilteredNamedGroupingPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) {

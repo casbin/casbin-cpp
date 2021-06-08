@@ -23,29 +23,33 @@
 #include "./model/function.h"
 #include "./enforcer_interface.h"
 #include "./persist/filtered_adapter.h"
+#include "./log/log_util.h"
 
 namespace casbin {
 
 // Enforcer is the main interface for authorization enforcement and policy management.
-class Enforcer : public IEnforcer{
+class Enforcer : public IEnforcer {
     private:
 
-        std::string model_path;
-        std::shared_ptr<Model> model;
-        FunctionMap func_map;
-        std::vector<std::tuple<std::string, Function, Index>> user_func_list;
-        std::shared_ptr<Effector> eft;
+        std::string m_model_path;
+        std::shared_ptr<Model> m_model;
+        FunctionMap m_func_map;
+        std::vector<std::tuple<std::string, Function, Index>> m_user_func_list;
+        std::shared_ptr<Effector> m_eft;
 
-        std::shared_ptr<Adapter> adapter;
-        std::shared_ptr<Watcher> watcher;
+        std::shared_ptr<Adapter> m_adapter;
+        std::shared_ptr<Watcher> m_watcher;
+        LogUtil m_log;
 
-        bool enabled;
-        bool auto_save;
-        bool auto_build_role_links;
-        bool auto_notify_watcher;
+        bool m_enabled;
+        bool m_auto_save;
+        bool m_auto_build_role_links;
+        bool m_auto_notify_watcher;
 
-        // enforce use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool enforce(const std::string& matcher, Scope scope);
+        // enforce use a custom matcher to decides whether a "subject" can access a "object" 
+        // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
+        // use model matcher by default when matcher is "".
+        bool m_enforce(const std::string& matcher, Scope scope);
 
     public:
 
@@ -104,7 +108,8 @@ class Enforcer : public IEnforcer{
         void InitWithModelAndAdapter(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
         void Initialize();
         // LoadModel reloads the model from the model CONF file.
-        // Because the policy is attached to a model, so the policy is invalidated and needs to be reloaded by calling LoadPolicy().
+        // Because the policy is attached to a model, so the policy is invalidated and 
+        // needs to be reloaded by calling LoadPolicy().
         void LoadModel();
         // GetModel gets the current model.
         std::shared_ptr<Model> GetModel();
@@ -136,9 +141,7 @@ class Enforcer : public IEnforcer{
         // EnableEnforce changes the enforcing state of Casbin, when Casbin is disabled, all access will be allowed by the Enforce() function.
         void EnableEnforce(bool enable);
         // EnableLog changes whether Casbin will log messages to the Logger.
-        // void EnableLog(bool enable) {
-            // log.GetLogger().EnableLog(enable);
-        // }
+        void EnableLog(bool enable);
 
         // EnableAutoNotifyWatcher controls whether to save a policy rule automatically notify the Watcher when it is added or removed.
         void EnableAutoNotifyWatcher(bool enable);
@@ -162,6 +165,10 @@ class Enforcer : public IEnforcer{
         bool EnforceWithMatcher(const std::string& matcher, const std::vector<std::string>& params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
         bool EnforceWithMatcher(const std::string& matcher, const std::unordered_map<std::string, std::string>& params);
+        // BatchEnforce enforce in batches
+        std::vector<bool> BatchEnforce(const std::vector<std::vector<std::string>>& requests);
+        // BatchEnforceWithMatcher enforce with matcher in batches
+        std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests);
 
         /*Management API member functions.*/
         std::vector<std::string> GetAllSubjects();
@@ -205,6 +212,12 @@ class Enforcer : public IEnforcer{
         bool RemoveNamedGroupingPolicies(const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
         bool RemoveFilteredNamedGroupingPolicy(const std::string& p_type, int field_index, const std::vector<std::string>& field_values);
         void AddFunction(const std::string& name, Function function, Index nargs);
+        bool UpdateGroupingPolicy(const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule);
+        bool UpdateNamedGroupingPolicy(const std::string& ptype, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule);
+        bool UpdatePolicy(const std::vector<std::string>& oldPolicy, const std::vector<std::string>& newPolicy);
+        bool UpdateNamedPolicy(const std::string& ptype, const std::vector<std::string>& p1, const std::vector<std::string>& p2);
+        bool UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies);
+        bool UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2);
 
         /*RBAC API member functions.*/
         std::vector<std::string> GetRolesForUser(const std::string& name, const std::vector<std::string>& domain = {});
@@ -232,6 +245,8 @@ class Enforcer : public IEnforcer{
         bool removePolicy(const std::string& sec , const std::string& p_type , const std::vector<std::string>& rule);
         bool removePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
         bool removeFilteredPolicy(const std::string& sec , const std::string& p_type , int field_index , const std::vector<std::string>& field_values);
+        bool updatePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule);
+        bool updatePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2);
 
         /* RBAC API with domains.*/
         std::vector<std::string> GetUsersForRoleInDomain(const std::string& name, const std::string& domain = {});

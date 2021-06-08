@@ -39,6 +39,7 @@ if(NOT DEFINED CMAKE_OBJECT_PATH_MAX)
     set(CMAKE_OBJECT_PATH_MAX 300)
 endif()
 
-set(CMAKE_CXX_STANDARD 11)
+# Setting to C++ standard to C++17
+set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(casbin)
