@@ -260,15 +260,43 @@ bool Model :: AddPolicies(std::string sec, std::string p_type, std::vector<std::
     return true;
 }
 
-// RemovePolicy removes a policy rule from the model.
-bool Model :: RemovePolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
-    for (int i = 0 ; i < m[sec].assertion_map[p_type]->policy.size() ; i++) {
-        if (ArrayEquals(rule, m[sec].assertion_map[p_type]->policy[i])) {
-            m[sec].assertion_map[p_type]->policy.erase(m[sec].assertion_map[p_type]->policy.begin() + i);
-            return true;
+bool Model :: UpdatePolicy(const std::string& sec, const std::string p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
+    // Caching policy by reference for the scope of this function
+    auto& policy = m[sec].assertion_map[p_type]->policy;
+    bool is_oldRule_deleted = false, is_newRule_added = false;
+
+    for (auto it = policy.begin(); it != policy.end(); ++it) {
+        if(ArrayEquals(oldRule, *it)) {
+            policy.erase(it);
+            is_oldRule_deleted = true;
+            break;
         }
     }
 
+    if(!is_oldRule_deleted)
+        return false;
+
+    if(!this->HasPolicy(sec, p_type, newRule)) {
+        policy.push_back(newRule);
+        is_newRule_added = true;
+    }
+
+    if(!is_newRule_added)
+        return false;
+
+    return is_oldRule_deleted && is_newRule_added;
+}
+
+// RemovePolicy removes a policy rule from the model.
+bool Model :: RemovePolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
+    // Caching policy by reference for the scope of this function
+    auto& policy = m[sec].assertion_map[p_type]->policy;
+    for (auto it = policy.begin(); it != policy.end(); ++it) {
+        if(ArrayEquals(rule, *it)) {
+            policy.erase(it);
+            return true;
+        }
+    }
     return false;
 }
 

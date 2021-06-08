@@ -25,5 +25,18 @@
 
 // add headers that you want to pre-compile here
 // #include "framework.h"
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+#include <vector>
+#include <string>
+#include <memory>
+#include <functional>
+#include <chrono>
+#include <mutex>
+#include <thread>
+#include <future>
+#include <condition_variable>
+
 
 #endif //PCH_H

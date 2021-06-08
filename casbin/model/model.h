@@ -105,6 +105,9 @@ class Model{
         // AddPolicies adds policy rules to the model.
         bool AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
 
+        // UpdatePolicy updates a policy rule from the model.
+        bool UpdatePolicy(const std::string& sec, const std::string p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule);
+
         // RemovePolicy removes a policy rule from the model.
         bool RemovePolicy(std::string sec, std::string p_type, std::vector<std::string> rule);
 

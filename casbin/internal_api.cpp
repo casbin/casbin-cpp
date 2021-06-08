@@ -167,6 +167,7 @@ bool Enforcer :: removeFilteredPolicy(const std::string& sec, const std::string&
 }
 
 bool Enforcer :: updatePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
+    bool is_model_policy_updated = m_model->UpdatePolicy(sec, p_type, oldRule, newRule);
     return true;
 }
 
