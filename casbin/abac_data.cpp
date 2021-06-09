@@ -3,19 +3,14 @@
 #ifndef ABAC_CPP
 #define ABAC_CPP
 
-#include "abac.h"
+#include "abac_data.h"
+#include "./model/scope_config.h"
 
 namespace casbin {
 
 ABACData::ABACData(const std::unordered_map<std::string, std::string>& attrib)
         : m_attributes(attrib)
 {}
-
-ABACData::ABACData(const std::vector<std::vector<std::string>>& attributes) {
-    for(auto attrib : attributes) {
-        m_attributes[attrib[0]] = attrib[1];
-    }
-}
 
 bool ABACData::AddAttribute(const std::string& key, const std::string& value) {
     m_attributes[key] = value;

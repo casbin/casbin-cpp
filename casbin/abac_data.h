@@ -19,18 +19,12 @@ public:
     /**
      * @brief Construct a new casbin::ABACData object
      * 
-     * @param attrib HashMap containing the attributes as key-value pairs
-     */
-    ABACData(const std::unordered_map<std::string, std::string>& attrib);
-    /**
-     * @brief Construct a new casbin::ABACData object
-     * 
      * @param attribs Should be of the format {
      * { "attrib_name1", "value1" },
      * { "attring_name2", "value2" }
      * }
      */
-    ABACData(const std::vector<std::vector<std::string>>& attribs);
+    ABACData(const std::unordered_map<std::string, std::string>& attribs);
     /**
      * @brief Add attribute to the corresponding ABAC entity
      * 
@@ -73,6 +67,9 @@ public:
      */
     const std::unordered_map<std::string, std::string>& GetAttributes();
 };
+
+// Casbin ABAC entity type
+typedef ABACData ABACData;
 
 }
 
