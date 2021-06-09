@@ -25,11 +25,12 @@
 #include "./util/util.h"
 #include "./persist/watcher_ex.h"
 #include "./exception/unsupported_operation_exception.h"
+#include "./persist/watcher_update.h"
 
 namespace casbin {
 
 // addPolicy adds a rule to the current policy.
-bool Enforcer :: addPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
+bool Enforcer::addPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
     bool rule_added = m_model->AddPolicy(sec, p_type, rule);
     if(!rule_added)
         return rule_added;
@@ -59,7 +60,7 @@ bool Enforcer :: addPolicy(const std::string& sec, const std::string& p_type, co
 }
 
 // addPolicies adds rules to the current policy.
-bool Enforcer :: addPolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+bool Enforcer::addPolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
     bool rules_added = m_model->AddPolicies(sec, p_type, rules);
     if (!rules_added)
         return rules_added;
@@ -83,7 +84,7 @@ bool Enforcer :: addPolicies(const std::string& sec, const std::string& p_type, 
 }
 
 // removePolicy removes a rule from the current policy.
-bool Enforcer :: removePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
+bool Enforcer::removePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
     bool rule_removed = m_model->RemovePolicy(sec, p_type, rule);
     if(!rule_removed)
         return rule_removed;
@@ -113,7 +114,7 @@ bool Enforcer :: removePolicy(const std::string& sec, const std::string& p_type,
 }
 
 // removePolicies removes rules from the current policy.
-bool Enforcer :: removePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+bool Enforcer::removePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
     bool rules_removed = m_model->AddPolicies(sec, p_type, rules);
     if (!rules_removed)
         return rules_removed;
@@ -136,7 +137,7 @@ bool Enforcer :: removePolicies(const std::string& sec, const std::string& p_typ
 }
 
 // removeFilteredPolicy removes rules based on field filters from the current policy.
-bool Enforcer :: removeFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values){
+bool Enforcer::removeFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values){
     std::pair<int, std::vector<std::vector<std::string>>> p = m_model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
     bool rule_removed = p.first;
     std::vector<std::vector<std::string>> effects = p.second;
@@ -166,13 +167,46 @@ bool Enforcer :: removeFilteredPolicy(const std::string& sec, const std::string&
     return rule_removed;
 }
 
-bool Enforcer :: updatePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
-    bool is_model_policy_updated = m_model->UpdatePolicy(sec, p_type, oldRule, newRule);
-    return true;
+bool Enforcer::updatePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
+    bool is_rule_updated = m_model->UpdatePolicy(sec, p_type, oldRule, newRule);
+    if(!is_rule_updated)
+        return false;
+    
+    if(sec == "g") {
+        this->BuildIncrementalRoleLinks(policy_remove, p_type, { oldRule });
+        this->BuildIncrementalRoleLinks(policy_add, p_type, { newRule });
+    }
+    if (m_watcher && m_auto_notify_watcher) {
+        if(IsInstanceOf<WatcherUpdatable>(m_watcher.get())) {
+            std::dynamic_pointer_cast<WatcherUpdatable>(m_watcher)->UpdateForUpdatePolicy(oldRule, newRule);
+        }
+        else {
+            m_watcher->Update();
+        }
+    }
+    return is_rule_updated;
 }
 
-bool Enforcer :: updatePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) {
-    return true;
+bool Enforcer::updatePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& oldRules, const std::vector<std::vector<std::string>>& newRules) {
+    bool is_rules_updated = m_model->UpdatePolicies(sec, p_type, oldRules, newRules);
+    if(!is_rules_updated)
+        return false;
+    
+    if(sec == "g") {
+        this->BuildIncrementalRoleLinks(policy_remove, p_type, oldRules);
+        this->BuildIncrementalRoleLinks(policy_add, p_type, newRules);
+    }
+
+    if (m_watcher && m_auto_notify_watcher) {
+        if(IsInstanceOf<WatcherUpdatable>(m_watcher.get())) {
+            std::dynamic_pointer_cast<WatcherUpdatable>(m_watcher)->UpdateForUpdatePolicies(oldRules, newRules);
+        }
+        else {
+            m_watcher->Update();
+        }
+    }
+
+    return is_rules_updated;
 }
 
 } // namespace casbin
