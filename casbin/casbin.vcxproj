@@ -106,6 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,6 +144,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="abac_data.cpp" />
     <ClCompile Include="config\config.cpp" />
     <ClCompile Include="duktape\duktape.cpp" />
     <ClCompile Include="effect\default_effector.cpp" />
@@ -219,6 +222,7 @@
     <ClCompile Include="util\trim.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="abac_data.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="config\config.h" />
     <ClInclude Include="config\config_interface.h" />
