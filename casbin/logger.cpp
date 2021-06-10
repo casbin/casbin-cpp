@@ -3,8 +3,8 @@
 #ifndef LOGGER_CPP
 #define LOGGER_CPP
 
-#include "Logger.h"
-#include "log_util.h"
+#include "./log/Logger.h"
+#include "./log/log_util.h"
 
 namespace casbin {
 
