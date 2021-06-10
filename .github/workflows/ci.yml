@@ -25,18 +25,18 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v2
-      - name: Building files
+      - name: Configuring CMake files
         id: building-files
         run: |
-          make
+          mkdir build && cd build && cmake ..
       - name: Building library
         id: building-lib
         run: |
-          make library
+          cd build && cmake --build . --config Debug --target all -j 10 --
       - name: Cleanup
-        id: cleanup
+        id: clean-up
         run: |
-          make clean
+          rm -r build lib
 
   macos:
     name: "macOS Catalina 10.15"
@@ -45,15 +45,15 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v2
-      - name: Building files
+      - name: Configuring CMake files
         id: building-files
         run: |
-          make
+          mkdir build && cd build && cmake ..
       - name: Building library
         id: building-lib
         run: |
-          make library
+          cd build && cmake --build . --config Debug --target all -j 10 --
       - name: Cleanup
-        id: cleanup
+        id: clean-up
         run: |
-          make clean
+          rm -r build lib
