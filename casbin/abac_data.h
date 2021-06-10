@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <variant>
+#include <memory>
 
 namespace casbin {
 
@@ -12,19 +14,33 @@ namespace casbin {
  * 
  */
 class ABACData {
+
+public:
+// Array containing the reference to instantiated ABACData so far
+static std::vector<std::shared_ptr<ABACData>> s_dataSet;
+
 private:
+
+    // Intrinsic definitions
+    typedef std::variant<std::string, int32_t, float> VariantType;
+    typedef std::unordered_map<std::string, VariantType> VariantMap;
+
     // HashMap containing attributes as key-value pairs
-    std::unordered_map<std::string, std::string> m_attributes;
+    VariantMap m_attributes;
+
 public:
     /**
      * @brief Construct a new casbin::ABACData object
      * 
-     * @param attribs Should be of the format {
+     * @param attribs Should be of the format: {
      * { "attrib_name1", "value1" },
-     * { "attring_name2", "value2" }
+     * { "attring_name2", "value2" },
+     * ...
      * }
+     * 
+     * Key's type is std::string and value's type can be one of std::string, int32_t, and float only
      */
-    ABACData(const std::unordered_map<std::string, std::string>& attribs);
+    ABACData(const VariantMap& attribs);
     /**
      * @brief Add attribute to the corresponding ABAC entity
      * 
@@ -32,17 +48,20 @@ public:
      * @param value Value of the attribute
      * @return true when attribute is added successfully, false otherwise
      */
-    bool AddAttribute(const std::string& key, const std::string& value);
+    bool AddAttribute(const std::string& key, const VariantType& value);
     /**
      * @brief Add attributes to the corresponding ABAC entity
      * 
-     * @param attribs Should be of the format {
+     * @param attribs Should be of the format: {
      * { "attrib_name1", "value1" },
-     * { "attring_name2", "value2" }
+     * { "attring_name2", "value2" },
+     * ...
      * }
-     * @return true when attributes are added successfully, false otherwise
+     * 
+     * Key's type is std::string and value's type can be one of std::string, int32_t, and float only
+     * @return true if attributes are added successfully, false otherwise
      */
-    bool AddAttributes(const std::vector<std::vector<std::string>>& attribs);
+    bool AddAttributes(const VariantMap& attribs);
     /**
      * @brief Delete attribute of the corresponding ABAC entity
      * 
@@ -59,13 +78,13 @@ public:
      * @return true 
      * @return false 
      */
-    bool UpdateAttribute(const std::string& key, const std::string& value);
+    bool UpdateAttribute(const std::string& key, const VariantType& value);
     /**
      * @brief Get the Attributes of the corresponding ABAC entity
      * 
      * @return const reference to the hashmap containing attributes in key-value pairs
      */
-    const std::unordered_map<std::string, std::string>& GetAttributes();
+    const VariantMap& GetAttributes();
 };
 
 // Casbin ABAC entity type
