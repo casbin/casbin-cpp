@@ -59,7 +59,8 @@ jobs:
       - name: Cleanup
         id: clean-up
         run: |
-          rm -r build lib
+          rm -r build
+          rm -r lib
 
   macos:
     name: "macOS Catalina 10.15 (AppleClang 12.0)"
@@ -79,5 +80,4 @@ jobs:
       - name: Cleanup
         id: clean-up
         run: |
-          rm -r build 
-          rm -r lib
+          rm -r build lib
