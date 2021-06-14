@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.19)
 
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${CMAKE_SOURCE_DIR}/cmake/modules
+)
+
 set(CMAKE_WARN_DEPRECATED ON)
 
 if(APPLE AND NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
@@ -34,6 +39,9 @@ if(NOT DEFINED CMAKE_INSTALL_MESSAGE)
     set(CMAKE_INSTALL_MESSAGE "NEVER")
 endif()
 
+enable_testing()
+add_subdirectory(tests)
+
 # Change the path max size to avoid problem on Windows.
 if(NOT DEFINED CMAKE_OBJECT_PATH_MAX)
     set(CMAKE_OBJECT_PATH_MAX 300)
@@ -41,5 +49,13 @@ endif()
 
 # Setting to C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
+
+###############################################################################
+# Find or install external dependencies
+# Some required targets may be created by third-party CMake configs, which 
+# don't generally produce global targets. To guarantee all imported targets are 
+# global, this module is included at the project root level.
+
+include(FindExtPackages)
 
 add_subdirectory(casbin)
