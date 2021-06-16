@@ -277,6 +277,7 @@
     <ClInclude Include="model\model.h" />
     <ClInclude Include="model\pch.h" />
     <ClInclude Include="model\scope_config.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="persist.h" />
     <ClInclude Include="persist\adapter.h" />
     <ClInclude Include="persist\batch_adapter.h" />
@@ -290,6 +291,7 @@
     <ClInclude Include="persist\pch.h" />
     <ClInclude Include="persist\watcher.h" />
     <ClInclude Include="persist\watcher_ex.h" />
+    <ClInclude Include="persist\watcher_update.h" />
     <ClInclude Include="rbac.h" />
     <ClInclude Include="rbac\default_role_manager.h" />
     <ClInclude Include="rbac\pch.h" />
