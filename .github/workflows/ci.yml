@@ -32,7 +32,12 @@ jobs:
       - name: Building library
         id: building-lib
         run: |
-          cd build && cmake --build . --config Debug --target all -j 10 --
+          cd build && cmake --build . --config Debug --target all install -j 10 --
+      - name: Tests
+        id: test-lib
+        run: |
+          cd build
+          ctest -j10 -C Debug -T test --output-on-failure -T test --output-on-failure
       - name: Cleanup
         id: clean-up
         run: |
@@ -55,12 +60,16 @@ jobs:
         id: building-lib
         run: |
           cd build
-          cmake --build . --config Release --target casbin -j 10 --
+          cmake --build . --config Debug --target casbin gtest gtest_main gmock gmock_main casbintest -j 10 --
+      - name: Tests
+        id: test-lib
+        run: |
+          cd build
+          ctest -j10 -C Debug -T test --output-on-failure -T test --output-on-failure
       - name: Cleanup
         id: clean-up
         run: |
           rm -r build
-          rm -r lib
 
   macos:
     name: "macOS Catalina 10.15 (AppleClang 12.0)"
@@ -76,7 +85,12 @@ jobs:
       - name: Building library
         id: building-lib
         run: |
-          cd build && cmake --build . --config Debug --target all -j 10 --
+          cd build && cmake --build . --config Debug --target all install -j 10 --
+      - name: Tests
+        id: test-lib
+        run: |
+          cd build
+          ctest -j10 -C Debug -T test --output-on-failure -T test --output-on-failure
       - name: Cleanup
         id: clean-up
         run: |
