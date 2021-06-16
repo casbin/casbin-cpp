@@ -32,7 +32,7 @@ jobs:
       - name: Building library
         id: building-lib
         run: |
-          cd build && cmake --build . --config Debug --target all install -j 10 --
+          cd build && cmake --build . --config Debug --target all -j 10 --
       - name: Tests
         id: test-lib
         run: |
@@ -41,7 +41,7 @@ jobs:
       - name: Cleanup
         id: clean-up
         run: |
-          rm -r build lib
+          rm -r build
 
   windows:
     name: "Windows 10 (MSVC 19.29)"
