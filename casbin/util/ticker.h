@@ -44,7 +44,7 @@ private:
     void timer_loop();
     on_tick_t           _onTick;
     tick_interval_t     _tickInterval;
-    std::atomic_bool _running;
+    std::atomic_bool    _running;
     std::mutex          _tickIntervalMutex;
     future_vec          _futures1;
     future_vec          _futures2;

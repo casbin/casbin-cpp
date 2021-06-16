@@ -110,7 +110,7 @@ void SyncedEnforcer ::StartAutoLoadPolicy(std::chrono::duration<int64_t, std::na
         SyncedEnforcer::LoadPolicy();
         ++n;
     };
-    ticker = std::unique_ptr<Ticker>(new Ticker(onTick, t));
+    ticker = std::make_unique<Ticker>(onTick, t);
     n = 1;
     ticker->start();
 }

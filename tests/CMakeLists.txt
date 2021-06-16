@@ -12,10 +12,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+set(CMAKE_CXX_STANDARD 17)
+
 add_executable(
   casbintest
-  test_enforcer.cpp
-  main.cpp
+  enforcer_test.cpp
+  enforcer_cached_test.cpp
+  enforcer_synced_test.cpp
 )
 
 target_include_directories(casbintest PUBLIC ${CMAKE_SOURCE_DIR})
