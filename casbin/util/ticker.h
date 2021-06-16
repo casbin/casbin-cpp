@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
+#include "pch.h"
+
 #ifndef TICKER_H
 #define TICKER_H
 
-#include <cstdint>
 #include <functional>
-#include <chrono>
-#include <vector>
-#include <thread>
-#include <future>
-#include <condition_variable>
-#include <iostream>
 #include <mutex>
+#include <chrono>
+#include <future>
 
 namespace casbin {
 

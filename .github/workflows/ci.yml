@@ -19,41 +19,65 @@ on: [push, pull_request]
 
 jobs:
   linux:
-    name: "Linux Ubuntu 20.04"
+    name: "Linux Ubuntu 20.04 (GNU 9.3.0)"
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v2
-      - name: Building files
+      - name: Configuring CMake files
         id: building-files
         run: |
-          make
+          mkdir build && cd build && cmake ..
       - name: Building library
         id: building-lib
         run: |
-          make library
+          cd build && cmake --build . --config Debug --target all -j 10 --
       - name: Cleanup
-        id: cleanup
+        id: clean-up
         run: |
-          make clean
+          rm -r build lib
+
+  windows:
+    name: "Windows 10 (MSVC 19.29)"
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v2
+      - name: Configuring CMake files
+        id: building-files
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+      - name: Building library
+        id: building-lib
+        run: |
+          cd build
+          cmake --build . --config Release --target casbin -j 10 --
+      - name: Cleanup
+        id: clean-up
+        run: |
+          rm -r build
+          rm -r lib
 
   macos:
-    name: "macOS Catalina 10.15"
+    name: "macOS Catalina 10.15 (AppleClang 12.0)"
     runs-on: macos-latest
     steps:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v2
-      - name: Building files
+      - name: Configuring CMake files
         id: building-files
         run: |
-          make
+          mkdir build && cd build && cmake ..
       - name: Building library
         id: building-lib
         run: |
-          make library
+          cd build && cmake --build . --config Debug --target all -j 10 --
       - name: Cleanup
-        id: cleanup
+        id: clean-up
         run: |
-          make clean
+          rm -r build lib

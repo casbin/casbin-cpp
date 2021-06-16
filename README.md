@@ -13,7 +13,8 @@ Casbin-CPP
 Operating Systems | Availability status
 ----------------- | -------------------
 Windows (VS C++)  | :heavy_check_mark: Available
-Linux and MacOS   | :heavy_check_mark: Available
+Linux   | :heavy_check_mark: Available
+macOS   | :heavy_check_mark: Available
 
 
 ![casbin Logo](casbin-logo.png)

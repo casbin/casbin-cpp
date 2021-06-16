@@ -22,6 +22,7 @@
 
 #include "./util.h"
 #include "../persist/watcher_ex.h"
+#include "../persist/watcher_update.h"
 
 namespace casbin {
 
@@ -31,6 +32,7 @@ bool IsInstanceOf(const T*) {
 }
 
 template bool IsInstanceOf<class WatcherEx, class Watcher>(class Watcher const*);
+template bool IsInstanceOf<class WatcherUpdatable, class Watcher>(class Watcher const*);
 
 } // namespace casbin
 
