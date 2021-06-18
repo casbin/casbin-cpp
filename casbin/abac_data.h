@@ -32,14 +32,12 @@ namespace casbin {
 class ABACData {
 
 public:
-// Array containing the reference to instantiated ABACData so far
-static std::vector<std::shared_ptr<ABACData>> s_dataSet;
-
-private:
 
     // Intrinsic definitions
     typedef std::variant<std::string, int32_t, float> VariantType;
     typedef std::unordered_map<std::string, VariantType> VariantMap;
+
+private:
 
     // HashMap containing attributes as key-value pairs
     VariantMap m_attributes;
