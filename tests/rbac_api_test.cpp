@@ -1,0 +1,228 @@
+/*
+* Copyright 2020 The casbin Authors. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+* This is a test file for testing built in functions in casbin
+*/
+
+#include <gtest/gtest.h>
+#include <casbin/casbin.h>
+
+namespace {
+
+TEST(TestRBACAPI, TestRoleAPI) {
+    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_policy.csv");
+
+    ASSERT_TRUE(casbin::ArrayEquals({ "data2_admin" }, e.GetRolesForUser("alice")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("bob")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("data2_admin")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("non_exist")));
+
+    ASSERT_FALSE(e.HasRoleForUser("alice", "data1_admin"));
+    ASSERT_TRUE(e.HasRoleForUser("alice", "data2_admin"));
+
+    e.AddRoleForUser("alice", "data1_admin");
+
+    ASSERT_TRUE(casbin::ArrayEquals({ "data1_admin", "data2_admin" }, e.GetRolesForUser("alice")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("bob")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("data2_admin")));
+
+    e.DeleteRoleForUser("alice", "data1_admin");
+
+    ASSERT_TRUE(casbin::ArrayEquals({ "data2_admin" }, e.GetRolesForUser("alice")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("bob")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("data2_admin")));
+
+    e.DeleteRolesForUser("alice");
+
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("alice")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("bob")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("data2_admin")));
+
+    e.AddRoleForUser("alice", "data1_admin");
+    e.DeleteUser("alice");
+
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("alice")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("bob")));
+    ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("data2_admin")));
+
+    e.AddRoleForUser("alice", "data2_admin");
+
+    ASSERT_FALSE(e.Enforce({ "alice", "data1", "read" }));
+    ASSERT_FALSE(e.Enforce({ "alice", "data1", "write" }));
+    ASSERT_TRUE(e.Enforce({ "alice", "data2", "read" }));
+    ASSERT_TRUE(e.Enforce({ "alice", "data2", "write" }));
+    ASSERT_FALSE(e.Enforce({ "bob", "data1", "read" }));
+    ASSERT_FALSE(e.Enforce({ "bob", "data1", "write" }));
+    ASSERT_FALSE(e.Enforce({ "bob", "data2", "read" }));
+    ASSERT_TRUE(e.Enforce({ "bob", "data2", "write" }));
+
+    e.DeleteRole("data2_admin");
+
+    ASSERT_FALSE(e.Enforce({ "alice", "data1", "read" }));
+    ASSERT_FALSE(e.Enforce({ "alice", "data1", "write" }));
+    ASSERT_FALSE(e.Enforce({ "alice", "data2", "read" }));
+    ASSERT_FALSE(e.Enforce({ "alice", "data2", "write" }));
+    ASSERT_FALSE(e.Enforce({ "bob", "data1", "read" }));
+    ASSERT_FALSE(e.Enforce({ "bob", "data1", "write" }));
+    ASSERT_FALSE(e.Enforce({ "bob", "data2", "read" }));
+    ASSERT_TRUE(e.Enforce({ "bob", "data2", "write" }));
+}
+
+TEST(TestRBACAPI, TestEnforcer_AddRolesForUser) {
+    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_policy.csv");
+
+    e.AddRolesForUser("alice", { "data1_admin", "data2_admin", "data3_admin" });
+    ASSERT_TRUE(casbin::ArrayEquals({ "data1_admin", "data2_admin", "data3_admin" }, e.GetRolesForUser("alice")));
+
+    ASSERT_TRUE(e.Enforce({ "alice", "data1", "read" }));
+    ASSERT_TRUE(e.Enforce({ "alice", "data2", "read" }));
+    ASSERT_TRUE(e.Enforce({ "alice", "data2", "write" }));
+}
+
+void TestGetPermissions(casbin::Enforcer& e, const std::string& name, const std::vector<std::vector<std::string>>& res) {
+    std::vector<std::vector<std::string>> my_res = e.GetPermissionsForUser(name);
+    int count = 0;
+    for (auto& my_response : my_res) {
+        for (auto& response : res) {
+            if (casbin::ArrayEquals(response, my_response)) {
+                ++count;
+                break;
+            }
+        }
+    }
+    ASSERT_EQ(static_cast<int>(res.size()), count);
+}
+
+TEST(TestRBACAPI, TestPermissionAPI) {
+    casbin::Enforcer e("../../examples/basic_without_resources_model.conf", "../../examples/basic_without_resources_policy.csv");
+
+    ASSERT_TRUE(e.Enforce(std::vector<std::string>{ "alice", "read" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "alice", "write" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "bob", "read" }));
+    ASSERT_TRUE(e.Enforce(std::vector<std::string>{ "bob", "write" }));
+
+    TestGetPermissions(e, "alice", { {"alice", "read"} });
+    TestGetPermissions(e, "bob", { {"bob", "write"} });
+
+    ASSERT_TRUE(e.HasPermissionForUser("alice", { "read" }));
+    ASSERT_FALSE(e.HasPermissionForUser("alice", { "write" }));
+    ASSERT_FALSE(e.HasPermissionForUser("bob", { "read" }));
+    ASSERT_TRUE(e.HasPermissionForUser("bob", { "write" }));
+
+    e.DeletePermission({ "read" });
+
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "alice", "read" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "alice", "write" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "bob", "read" }));
+    ASSERT_TRUE(e.Enforce(std::vector<std::string>{ "bob", "write" }));
+
+    e.AddPermissionForUser("bob", { "read" });
+
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "alice", "read" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "alice", "write" }));
+    ASSERT_TRUE(e.Enforce(std::vector<std::string>{ "bob", "read" }));
+    ASSERT_TRUE(e.Enforce(std::vector<std::string>{ "bob", "write" }));
+
+    e.DeletePermissionForUser("bob", { "read" });
+
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "alice", "read" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "alice", "write" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "bob", "read" }));
+    ASSERT_TRUE(e.Enforce(std::vector<std::string>{ "bob", "write" }));
+
+    e.DeletePermissionsForUser("bob");
+
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "alice", "read" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "alice", "write" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "bob", "read" }));
+    ASSERT_FALSE(e.Enforce(std::vector<std::string>{ "bob", "write" }));
+}
+
+TEST(TestRBACAPI, TestImplicitRoleAPI) {
+    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_with_hierarchy_policy.csv");
+
+    TestGetPermissions(e, "alice", std::vector<std::vector<std::string>>{ {"alice", "data1", "read"} });
+    TestGetPermissions(e, "bob", std::vector<std::vector<std::string>>{ {"bob", "data2", "write"} });
+
+    ASSERT_TRUE(casbin::ArrayEquals(std::vector<std::string>{ "admin", "data1_admin", "data2_admin" }, e.GetImplicitRolesForUser("alice")));
+    ASSERT_TRUE(casbin::ArrayEquals(std::vector<std::string>{ }, e.GetImplicitRolesForUser("bob")));
+
+    e = casbin::Enforcer("../../examples/rbac_with_pattern_model.conf", "../../examples/rbac_with_pattern_policy.csv");
+
+    dynamic_cast<casbin::DefaultRoleManager*>(e.GetRoleManager().get())->AddMatchingFunc(casbin::KeyMatch);
+
+    ASSERT_TRUE(casbin::ArrayEquals(std::vector<std::string>{ "/book/1/2/3/4/5", "pen_admin", "/book/*", "book_group" }, e.GetImplicitRolesForUser("cathy")));
+    ASSERT_TRUE(casbin::ArrayEquals(std::vector<std::string>{ "/book/1/2/3/4/5", "pen_admin" }, e.GetRolesForUser("cathy")));
+}
+
+void TestGetImplicitPermissions(casbin::Enforcer& e, const std::string& name, const std::vector<std::vector<std::string>>& res) {
+    std::vector<std::vector<std::string>> my_res = e.GetImplicitPermissionsForUser(name);
+    int count = 0;
+    for (auto& my_response : my_res) {
+        for (auto& response : res) {
+            if (casbin::ArrayEquals(response, my_response)) {
+                ++count;
+                break;
+            }
+        }
+    }
+    ASSERT_EQ(static_cast<int>(res.size()), count);
+}
+
+void TestGetImplicitPermissionsWithDomain(casbin::Enforcer& e, const std::string& name, const std::string& domain, const std::vector<std::vector<std::string>>& res) {
+    std::vector<std::vector<std::string>> my_res = e.GetImplicitPermissionsForUser(name, { domain });
+    int count = 0;
+    for (auto& my_response : my_res) {
+        for (auto& response : res) {
+            if (casbin::ArrayEquals(response, my_response)) {
+                ++count;
+                break;
+            }
+        }
+    }
+    ASSERT_EQ(static_cast<int>(res.size()), count);
+}
+
+TEST(TestRBACAPI, TestImplicitPermissionAPI) {
+    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_with_hierarchy_policy.csv");
+
+    TestGetPermissions(e, "alice", { {"alice", "data1", "read"} });
+    TestGetPermissions(e, "bob", { {"bob", "data2", "write"} });
+
+    TestGetImplicitPermissions(e, "alice", { {"alice", "data1", "read"}, { "data1_admin", "data1", "read" }, { "data1_admin", "data1", "write" }, { "data2_admin", "data2", "read" }, { "data2_admin", "data2", "write" } });
+    TestGetImplicitPermissions(e, "bob", { {"bob", "data2", "write"} });
+}
+
+TEST(TestRBACAPI, TestImplicitPermissionAPIWithDomain) {
+    casbin::Enforcer e("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_hierarchy_with_domains_policy.csv");
+    TestGetImplicitPermissionsWithDomain(e, "alice", "domain1", { {"alice", "domain1", "data2", "read"}, { "role:reader", "domain1", "data1", "read" }, { "role:writer", "domain1", "data1", "write" } });
+}
+
+TEST(TestRBACAPI, TestImplicitUserAPI) {
+    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_with_hierarchy_policy.csv");
+
+    ASSERT_TRUE(casbin::ArrayEquals({ "alice" }, e.GetImplicitUsersForPermission({ "data1", "read" })));
+    ASSERT_TRUE(casbin::ArrayEquals({ "alice" }, e.GetImplicitUsersForPermission({ "data1", "write" })));
+    ASSERT_TRUE(casbin::ArrayEquals({ "alice" }, e.GetImplicitUsersForPermission({ "data2", "read" })));
+    ASSERT_TRUE(casbin::ArrayEquals({ "alice", "bob" }, e.GetImplicitUsersForPermission({ "data2", "write" })));
+
+    e.ClearPolicy();
+    e.AddPolicy({ "admin", "data1", "read" });
+    e.AddPolicy({ "bob", "data1", "read" });
+    e.AddGroupingPolicy({ "alice", "admin" });
+    ASSERT_TRUE(casbin::ArrayEquals({ "alice", "bob" }, e.GetImplicitUsersForPermission({ "data1", "read" })));
+}
+
+}
