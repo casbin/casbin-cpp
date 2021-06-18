@@ -20,4 +20,7 @@
 #include "enforcer.h"
 #include "enforcer_cached.h"
 #include "enforcer_synced.h"
+#include "config/config.h"
+#include "persist.h"
+#include "util.h"
 #include "exception.h"

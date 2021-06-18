@@ -16,9 +16,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(
   casbintest
+  built_in_functions_test.cpp
+  config_test.cpp
   enforcer_test.cpp
   enforcer_cached_test.cpp
   enforcer_synced_test.cpp
+  management_api_test.cpp
+  util_test.cpp
 )
 
 target_include_directories(casbintest PUBLIC ${CMAKE_SOURCE_DIR})
