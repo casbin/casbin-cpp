@@ -192,4 +192,4 @@ TEST(TestRoleManager, TestClear) {
     TestRole(rm, "u4", "g3", false);
 }
 
-}
+} // namespace

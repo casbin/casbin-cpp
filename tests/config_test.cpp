@@ -42,4 +42,4 @@ TEST(TestConfig, TestRedis) {
     ASSERT_EQ(std::string("push2"), values[1]);
 }
 
-}
+} // namespace

@@ -189,4 +189,4 @@ TEST(TestRBACAPIWithDomains, TestPermissionAPIInDomain) {
     TestGetPermissionsInDomain(e, "non_exist", "domain2", {});
 }
 
-}
+} // namespace

@@ -97,4 +97,4 @@ TEST(TestModel, TestModel_AddDef) {
     ASSERT_FALSE(ok);
 }
 
-}
+} // namespace

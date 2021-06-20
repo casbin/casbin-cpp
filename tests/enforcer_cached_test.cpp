@@ -19,6 +19,8 @@
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
 
+namespace {
+
 TEST(TestEnforcerCached, TestCache) {
     std::string model = "../../examples/basic_model.conf";
     std::string policy = "../../examples/basic_policy.csv";
@@ -44,3 +46,5 @@ TEST(TestEnforcerCached, TestCache) {
     ASSERT_EQ(e.Enforce({ "alice", "data2", "read" }), false);
     ASSERT_EQ(e.Enforce({ "alice", "data2", "write" }), false);
 }
+
+} // namespace

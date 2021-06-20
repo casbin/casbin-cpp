@@ -225,4 +225,4 @@ TEST(TestRBACAPI, TestImplicitUserAPI) {
     ASSERT_TRUE(casbin::ArrayEquals({ "alice", "bob" }, e.GetImplicitUsersForPermission({ "data1", "read" })));
 }
 
-}
+} // namespace

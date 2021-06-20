@@ -36,7 +36,7 @@ namespace casbin {
  * Key's type is std::string and value's type can be one of std::string, int32_t, and float only
  * @return Pointer to casbin::ABACData entity
  */
-static const std::shared_ptr<ABACData> GetData(const ABACData::VariantMap& attribs) {
+const std::shared_ptr<ABACData> GetData(const ABACData::VariantMap& attribs) {
     return std::make_shared<ABACData>(attribs);
 }
 
