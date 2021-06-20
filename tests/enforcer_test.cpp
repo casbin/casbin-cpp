@@ -104,22 +104,22 @@ TEST(TestEnforcer, ABACData) {
     };
 
     auto data = casbin::GetData(params);
-    EXPECT_EQ(params, data->GetAttributes());
+    ASSERT_TRUE(params == data->GetAttributes());
 
     data->DeleteAttribute("Name");
     params = {
         { "Grade", 8.6f },
         { "Age", 18 },
     };
-    EXPECT_EQ(params, data->GetAttributes());
+    ASSERT_TRUE(params == data->GetAttributes());
 
     data->AddAttribute("ID", 156);
     params["ID"] = 156;
-    EXPECT_EQ(params, data->GetAttributes());
+    ASSERT_TRUE(params == data->GetAttributes());
 
     data->UpdateAttribute("ID", 152);
     params["ID"] = 152;
-    EXPECT_EQ(params, data->GetAttributes());
+    ASSERT_TRUE(params == data->GetAttributes());
 }
 
 } // namespace
