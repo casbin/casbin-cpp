@@ -21,6 +21,7 @@
 
 #include "./assertion.h"
 #include "../config/config_interface.h"
+#include "enforcer.h"
 
 namespace casbin {
 
@@ -79,7 +80,7 @@ class Model {
         // NewModel creates a model from a std::string which contains model text.
         static Model* NewModelFromString(const std::string& text);
 
-        void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
+        void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<casbin::DataList>& rules);
 
         // BuildRoleLinks initializes the roles in RBAC.
         void BuildRoleLinks(std::shared_ptr<RoleManager> rm);

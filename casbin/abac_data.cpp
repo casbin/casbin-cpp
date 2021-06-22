@@ -24,19 +24,7 @@
 
 namespace casbin {
 
-/**
- * @brief Get casbin::ABACData object
- * 
- * @param attribs Should be of the format: {
- * { "attrib_name1", value1 },
- * { "attrib_name2", value2 },
- * ...
- * }
- * 
- * Key's type is std::string and value's type can be one of std::string, int32_t, and float only
- * @return Pointer to casbin::ABACData entity
- */
-static const std::shared_ptr<ABACData> GetData(const ABACData::VariantMap& attribs) {
+const std::shared_ptr<ABACData> GetData(const ABACData::VariantMap& attribs) {
     return std::make_shared<ABACData>(attribs);
 }
 

@@ -37,6 +37,7 @@
 #include <thread>
 #include <future>
 #include <condition_variable>
+#include <tuple>
 
 
 #endif //PCH_H

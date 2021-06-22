@@ -17,10 +17,6 @@
 #ifndef CASBIN_CPP_CONFIG_CONFIG
 #define CASBIN_CPP_CONFIG_CONFIG
 
-#include <memory>
-#include <unordered_map>
-#include <mutex>
-
 #include "./config_interface.h"
 
 namespace casbin {

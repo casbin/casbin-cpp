@@ -17,15 +17,19 @@
 #ifndef CASBIN_CPP_ENFORCER
 #define CASBIN_CPP_ENFORCER
 
-#include <tuple>
-#include <vector>
 #include "./rbac/role_manager.h"
 #include "./model/function.h"
 #include "./enforcer_interface.h"
 #include "./persist/filtered_adapter.h"
 #include "./log/log_util.h"
+#include "./abac_data.h"
 
 namespace casbin {
+
+// Intrinsic definitions accesible by the client
+typedef std::variant<std::string, std::shared_ptr<casbin::ABACData>> DataVariant;
+typedef std::vector<DataVariant> DataList;
+typedef std::unordered_map<std::string, DataVariant> DataMap;
 
 // Enforcer is the main interface for authorization enforcement and policy management.
 class Enforcer : public IEnforcer {
@@ -152,23 +156,23 @@ class Enforcer : public IEnforcer {
         // BuildRoleLinks manually rebuild the role inheritance relations.
         void BuildRoleLinks();
         // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
-        void BuildIncrementalRoleLinks(policy_op op, const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
+        void BuildIncrementalRoleLinks(policy_op op, const std::string& p_type, const std::vector<DataList>& rules);
         // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(Scope scope);
         // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(const std::vector<std::string>& params);
+        bool Enforce(const DataList& params);
         // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(const std::unordered_map<std::string,std::string>& params);
+        bool Enforce(const DataMap& params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
         bool EnforceWithMatcher(const std::string& matcher, Scope scope);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool EnforceWithMatcher(const std::string& matcher, const std::vector<std::string>& params);
+        bool EnforceWithMatcher(const std::string& matcher, const DataList& params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool EnforceWithMatcher(const std::string& matcher, const std::unordered_map<std::string, std::string>& params);
+        bool EnforceWithMatcher(const std::string& matcher, const DataMap& params);
         // BatchEnforce enforce in batches
-        std::vector<bool> BatchEnforce(const std::vector<std::vector<std::string>>& requests);
+        std::vector<bool> BatchEnforce(const std::vector<DataList>& requests);
         // BatchEnforceWithMatcher enforce with matcher in batches
-        std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests);
+        std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::vector<DataList>& requests);
 
         /*Management API member functions.*/
         std::vector<std::string> GetAllSubjects();
@@ -190,7 +194,7 @@ class Enforcer : public IEnforcer {
         bool HasPolicy(const std::vector<std::string>& params);
         bool HasNamedPolicy(const std::string& p_type, const std::vector<std::string>& params);
         bool AddPolicy(const std::vector<std::string>& params);
-        bool  AddPolicies(const std::vector<std::vector<std::string>>& rules);
+        bool AddPolicies(const std::vector<std::vector<std::string>>& rules);
         bool AddNamedPolicy(const std::string& p_type, const std::vector<std::string>& params);
         bool AddNamedPolicies(const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
         bool RemovePolicy(const std::vector<std::string>& params);

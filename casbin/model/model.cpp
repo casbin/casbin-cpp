@@ -162,7 +162,7 @@ Model* Model::NewModelFromString(const std::string& text) {
     return m;
 }
 
-void Model::BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+void Model::BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<DataList>& rules) {
     if (sec == "g")
         this->m[sec].assertion_map[p_type]->BuildIncrementalRoleLinks(rm, op, rules);
 }

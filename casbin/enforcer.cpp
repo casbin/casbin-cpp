@@ -424,7 +424,7 @@ void Enforcer :: BuildRoleLinks() {
 }
 
 // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
-void Enforcer :: BuildIncrementalRoleLinks(policy_op op, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+void Enforcer :: BuildIncrementalRoleLinks(policy_op op, const std::string& p_type, const std::vector<DataList>& rules) {
     return m_model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
 }
 
@@ -435,12 +435,12 @@ bool Enforcer :: Enforce(Scope scope) {
 }
 
 // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-bool Enforcer::Enforce(const std::vector<std::string>& params) {
+bool Enforcer::Enforce(const DataList& params) {
     return this->EnforceWithMatcher("", params);
 }
 
 // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-bool Enforcer::Enforce(const std::unordered_map<std::string, std::string>& params) {
+bool Enforcer::Enforce(const DataMap& params) {
     return this->EnforceWithMatcher("", params);
 }
 
@@ -450,20 +450,53 @@ bool Enforcer :: EnforceWithMatcher(const std::string& matcher, Scope scope) {
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::vector<std::string>& params) {
-    std::vector<std::string> r_tokens = m_model->m["r"].assertion_map["r"]->tokens;
+bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& params) {
+    const auto& r_tokens = m_model->m["r"].assertion_map["r"]->tokens;
 
-    int r_cnt = int(r_tokens.size());
-    int cnt = int(params.size());
+    int r_count = static_cast<int>(r_tokens.size());
+    int count = static_cast<int>(params.size());
 
-    if (cnt != r_cnt)
+    if (count != r_count)
         return false;
 
     Scope scope = InitializeScope();
     PushObject(scope, "r");
 
-    for (int i = 0; i < cnt; i++) {
-        PushStringPropToObject(scope, "r", params[i], r_tokens[i].substr(2, r_tokens[i].size() - 2));
+    for (int i = 0; i < count; i++) {
+        // If param is string
+        if(auto string_param = std::get_if<std::string>(&params[i]))
+            PushStringPropToObject(scope, "r", *string_param, r_tokens[i].substr(2, r_tokens[i].size() - 2));
+
+        // If the param is ABACData
+        else if(auto abac_param = std::get_if<std::shared_ptr<casbin::ABACData>>(&params[i])) {
+            // Caching away frequently used entities
+            auto data_ptr = *abac_param;
+            std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
+
+            PushObjectPropToObject(scope, "r", token_name);
+
+            // Looping through each attribute
+            for (auto [abac_prop_key, abac_prop_value] : data_ptr->GetAttributes()) {
+
+                // If attribute's value is string
+                if(auto string_prop = std::get_if<std::string>(&abac_prop_value))
+                    PushStringPropToObject(scope, token_name, *string_prop, abac_prop_key);
+
+                // If attribute's value is int
+                else if (auto int_prop = std::get_if<int32_t>(&abac_prop_value))
+                    PushIntPropToObject(scope, token_name, *int_prop, abac_prop_key);
+
+                // If attribute's value is a float
+                else if (auto float_prop = std::get_if<float>(&abac_prop_value))
+                    PushFloatPropToObject(scope, token_name, *float_prop, abac_prop_key);
+
+                else
+                    return false;
+            }
+        }
+
+        else
+            return false;
     }
 
     bool result = m_enforce(matcher, scope);
@@ -474,12 +507,40 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::vector<
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" 
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
 // use model matcher by default when matcher is "".
-bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::unordered_map<std::string, std::string>& params) {
+bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& params) {
     Scope scope = InitializeScope();
     PushObject(scope, "r");
 
-    for (auto r : params) {
-        PushStringPropToObject(scope, "r", r.second, r.first);
+    for (auto [param_token_name, param_value] : params) {
+        if(auto string_param = std::get_if<std::string>(&param_value))
+            PushStringPropToObject(scope, "r", *string_param, param_token_name);
+
+        else if(auto abac_param = std::get_if<std::shared_ptr<casbin::ABACData>>(&param_value)) {
+
+            auto data_ptr = *abac_param;
+            PushObjectPropToObject(scope, "r", param_token_name);
+
+            // Looping through each attribute
+            for (auto [abac_prop_key, abac_prop_value] : data_ptr->GetAttributes()) {
+
+                // If attribute's value is string
+                if(auto string_prop = std::get_if<std::string>(&abac_prop_value))
+                    PushStringPropToObject(scope, param_token_name, *string_prop, abac_prop_key);
+
+                // If attribute's value is int
+                else if (auto int_prop = std::get_if<int32_t>(&abac_prop_value))
+                    PushIntPropToObject(scope, param_token_name, *int_prop, abac_prop_key);
+
+                // If attribute's value is a float
+                else if (auto float_prop = std::get_if<float>(&abac_prop_value))
+                    PushFloatPropToObject(scope, param_token_name, *float_prop, abac_prop_key);
+
+                else
+                    return false;
+            }
+        }
+        else
+            return false;
     }
 
     bool result = m_enforce(matcher, scope);
@@ -488,7 +549,7 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const std::unorder
 }
 
 // BatchEnforce enforce in batches
-std::vector<bool> Enforcer :: BatchEnforce(const std::vector<std::vector<std::string>>& requests) {
+std::vector<bool> Enforcer :: BatchEnforce(const std::vector<DataList>& requests) {
     // Initializing an array for storing results with false
     std::vector<bool> results;
     results.reserve(requests.size());
@@ -499,7 +560,7 @@ std::vector<bool> Enforcer :: BatchEnforce(const std::vector<std::vector<std::st
 }
 
 // BatchEnforceWithMatcher enforce with matcher in batches
-std::vector<bool> Enforcer :: BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests) {
+std::vector<bool> Enforcer :: BatchEnforceWithMatcher(const std::string& matcher, const std::vector<DataList>& requests) {
     std::vector<bool> results;
     results.reserve(requests.size());
     for (auto request : requests) {

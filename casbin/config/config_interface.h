@@ -17,8 +17,6 @@
 #ifndef CASBIN_CPP_CONFIG_CONFIG_INTERFACE
 #define CASBIN_CPP_CONFIG_CONFIG_INTERFACE
 
-#include <string>
-#include <vector>
 
 namespace casbin {
 
