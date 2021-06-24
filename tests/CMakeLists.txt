@@ -12,29 +12,22 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-FILE(GLOB_RECURSE SRC_FILES "*.cpp" "*.h")
+set(CMAKE_CXX_STANDARD 17)
 
-add_library(casbin ${SRC_FILES})
-include_directories(${CMAKE_SOURCE_DIR}/casbin)
-
-target_precompile_headers(casbin PUBLIC "pch.h")
-
-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
-
-set_target_properties(casbin PROPERTIES PREFIX "")
-if(WIN32 OR MSVC)
-    set_target_properties(casbin PROPERTIES SUFFIX ".lib")
-elseif(UNIX)
-    set_target_properties(casbin PROPERTIES SUFFIX ".a")
-endif()
-
-install(
-    TARGETS casbin
-    DESTINATION lib
+add_executable(
+  casbintest
+  enforcer_test.cpp
+  enforcer_cached_test.cpp
+  enforcer_synced_test.cpp
 )
 
-install(
-    DIRECTORY ${CMAKE_SOURCE_DIR}/casbin
-    DESTINATION ${CMAKE_SOURCE_DIR}/lib
-    FILES_MATCHING PATTERN "*.h"
+target_include_directories(casbintest PUBLIC ${CMAKE_SOURCE_DIR})
+
+target_link_libraries(
+  casbintest
+  gtest_main
+  casbin
 )
+
+include(GoogleTest)
+gtest_discover_tests(casbintest)
