@@ -94,4 +94,4 @@ jobs:
       - name: Cleanup
         id: clean-up
         run: |
-          rm -r build lib
+          rm -r build

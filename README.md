@@ -144,8 +144,8 @@ https://casbin.org/docs/en/tutorials
 
     - For **Windows**, this will install `casbin.lib` to `C:/Program Files/casbin-cpp/lib`
     and the headers to `C:/Program Files/casbin-cpp/include`.
-    - For Unix based OS i.e. **Linux and macOS**, this will install `casbin.a` to `usr/local/lib` and the headers
-    to `usr/local/include`
+    - For Unix based OS i.e. **Linux and macOS**, this will install `casbin.a` to `usr/local/lib` 
+    and the headers to `usr/local/include`
 
 5. (OPTIONAL) To run the tests, issue the following command from `/build`:
 
@@ -155,10 +155,15 @@ https://casbin.org/docs/en/tutorials
 
 ## Get started
 
-1. New a Casbin enforcer with a model file and a policy file:
+1. Add the include directory of the project to the PATH Environment variable.
+    ```cpp
+    #include <casbin/casbin.h>
+    ```
+
+2. New a Casbin enforcer with a model file and a policy file:
 
     ```cpp
-    casbin::Enforcer e("<path to model.conf>", "<path to policy.csv>");
+    casbin::Enforcer e("./path/to/model.conf", "./path/to/policy.csv");
     ```
 
 2. Add an enforcement hook into your code right before the access happens:
@@ -178,7 +183,7 @@ https://casbin.org/docs/en/tutorials
 3. Besides the static policy file, Casbin also provides API for permission management at run-time. For example, You can get all the roles assigned to a user as below:
 
     ```cpp
-    std::vector<std::string> roles( e->GetImplicitRolesForUser(sub) );
+    std::vector<std::string> roles( e.GetImplicitRolesForUser(sub) );
     ```
 
 ## Policy management
