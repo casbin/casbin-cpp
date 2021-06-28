@@ -1,4 +1,4 @@
-#  Copyright 2020 The casbin Authors. All Rights Reserved.
+#  Copyright 2021 The casbin Authors. All Rights Reserved.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -47,6 +47,8 @@ endif()
 
 ###############################################################################
 # Global CMake options.
+
+option(BUILD_BENCHMARK "State whether to build benchmarks" ON)
 
 # Do not output install messages.
 if(NOT DEFINED CMAKE_INSTALL_MESSAGE)

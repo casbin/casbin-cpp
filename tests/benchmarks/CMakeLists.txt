@@ -12,11 +12,15 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.zip
+add_executable(casbin_benchmark
+    main.cpp
+    enforcer_cached_b.cpp
 )
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+
+target_include_directories(casbin_benchmark PUBLIC ${CMAKE_SOURCE_DIR})
+
+target_link_libraries(
+    casbin_benchmark
+    benchmark
+    casbin
+)

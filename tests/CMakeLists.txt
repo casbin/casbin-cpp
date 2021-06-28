@@ -40,3 +40,7 @@ target_link_libraries(
 
 include(GoogleTest)
 gtest_discover_tests(casbintest)
+
+if(BUILD_BENCHMARK)
+  add_subdirectory(benchmarks)
+endif()
