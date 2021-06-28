@@ -12,7 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-set(CMAKE_CXX_STANDARD 17)
+if(BUILD_TEST)
+  set(CMAKE_CXX_STANDARD 17)
 
 add_executable(
   casbintest
@@ -30,16 +31,17 @@ add_executable(
   util_test.cpp
 )
 
-target_include_directories(casbintest PUBLIC ${CMAKE_SOURCE_DIR})
+  target_include_directories(casbintest PUBLIC ${CMAKE_SOURCE_DIR})
 
-target_link_libraries(
-  casbintest
-  gtest_main
-  casbin
-)
+  target_link_libraries(
+    casbintest
+    gtest_main
+    casbin
+  )
 
-include(GoogleTest)
-gtest_discover_tests(casbintest)
+  include(GoogleTest)
+  gtest_discover_tests(casbintest)
+endif()
 
 if(BUILD_BENCHMARK)
   add_subdirectory(benchmarks)

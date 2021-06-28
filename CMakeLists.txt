@@ -48,6 +48,7 @@ endif()
 ###############################################################################
 # Global CMake options.
 
+option(BUILD_TEST "State whether to build test" ON)
 option(BUILD_BENCHMARK "State whether to build benchmarks" ON)
 
 # Do not output install messages.
@@ -55,7 +56,10 @@ if(NOT DEFINED CMAKE_INSTALL_MESSAGE)
     set(CMAKE_INSTALL_MESSAGE "NEVER")
 endif()
 
-enable_testing()
+if(BUILD_TEST)
+    enable_testing()
+endif()
+
 add_subdirectory(tests)
 
 # Change the path max size to avoid problem on Windows.
