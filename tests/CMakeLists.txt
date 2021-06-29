@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-if(BUILD_TEST)
+if(CASBIN_BUILD_TEST)
   set(CMAKE_CXX_STANDARD 17)
 
 add_executable(
@@ -43,6 +43,6 @@ add_executable(
   gtest_discover_tests(casbintest)
 endif()
 
-if(BUILD_BENCHMARK)
+if(CASBIN_BUILD_BENCHMARK)
   add_subdirectory(benchmarks)
 endif()

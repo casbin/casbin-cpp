@@ -21,8 +21,9 @@
 
 static void BenchmarkCachedBasicModel(benchmark::State& state) {
     casbin::CachedEnforcer e("../../../examples/basic_model.conf", "../../../examples/basic_policy.csv");
+    std::vector<std::string> request = {"alice", "data1", "read"};
     for (auto _ : state)
-        e.Enforce({ "alice", "data1", "read" });
+        e.Enforce(request);
 }
 
 BENCHMARK(BenchmarkCachedBasicModel);
@@ -30,8 +31,9 @@ BENCHMARK(BenchmarkCachedBasicModel);
 
 static void BenchmarkCachedRBACModel(benchmark::State& state) {
     casbin::CachedEnforcer e("../../../examples/rbac_model.conf", "../../../examples/rbac_policy.csv");
+    std::vector<std::string> request = {"alice", "data2", "read"};
     for (auto _ : state)
-        e.Enforce({ "alice", "data2", "read" });
+        e.Enforce(request);
 }
 
 BENCHMARK(BenchmarkCachedRBACModel);

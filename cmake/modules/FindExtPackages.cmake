@@ -28,7 +28,7 @@ set(CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY ON CACHE BOOL
 # https://github.com/google/googletest
 find_package(googletest 1.11.0 REQUIRED)
 
-if(BUILD_BENCHMARK)
+if(CASBIN_BUILD_BENCHMARK)
     # benchmark
     # https://github.com/google/benchmark
     find_package(benchmark 1.5.5 REQUIRED)

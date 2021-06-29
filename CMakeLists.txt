@@ -48,15 +48,15 @@ endif()
 ###############################################################################
 # Global CMake options.
 
-option(BUILD_TEST "State whether to build test" ON)
-option(BUILD_BENCHMARK "State whether to build benchmarks" ON)
+option(CASBIN_BUILD_TEST "State whether to build test" ON)
+option(CASBIN_BUILD_BENCHMARK "State whether to build benchmarks" ON)
 
 # Do not output install messages.
 if(NOT DEFINED CMAKE_INSTALL_MESSAGE)
     set(CMAKE_INSTALL_MESSAGE "NEVER")
 endif()
 
-if(BUILD_TEST)
+if(CASBIN_BUILD_TEST)
     enable_testing()
 endif()
 
