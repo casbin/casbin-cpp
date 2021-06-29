@@ -27,7 +27,7 @@ jobs:
       - name: Configuring CMake files
         id: building-files
         run: |
-          mkdir build && cd build && cmake ..
+          mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE:STRING=Release
       - name: Building library
         id: building-lib
         run: |
