@@ -111,48 +111,72 @@ https://casbin.org/docs/en/tutorials
 
 ## Installation and Set-Up
 
-#### Windows (Microsoft Visual Studio 2019)
-- `Clone` the repository in your target client project
-- Open the project solution and `build` the solution
-- To use the `casbin-cpp` project in your client project add the path to the static library `casbin.lib` file to your client project properties under `VC++ Directories` > `Library Directories` and also add the path of `casbin` directory to your client project properties under `VC++ Directories` > `Include Directories`
-- Add the static library file name `casbin.lib` to the properties under `Linker` > `Input` > `Additional Dependencies`
+### Build instructions for all platforms
 
-#### Unix
-- `Clone` the repository in your target client project
-- Change the current working directory to the `casbin-cpp` directory and build the library through following commands:
-    - ***Make***
-    ```shell
-    $ make
-    $ make library
+(Assuming you have CMake v3.19 or later installed)
+
+1. Clone/checkout to [`casbin/casbin-cpp:master`](https://github.com/EmperorYP7/casbin-cpp/tree/ctest-setup)
+    ```bash
+    git clone https://github.com/casbin/casbin-cpp.git
     ```
-    - ***CMake***
-    ```shell
-    $ make build
+
+2. Open terminal/cmd in the root directory of the project:
+
+    **Note:** On Windows, this command will also create Visual Studio project files in the `/build` directory.
+
+    ```bash
+    mkdir build
+    cd build
+    cmake ..
     ```
-- To get rid of intermediate files generated during building of library:
-    ```shell
-    $ make clean
+
+3. After the project is configured successfully, build it:
+
+    ```bash
+    cmake --build .
     ```
-- Now, you can use the file present in `lib` directory, created through `archiver`, as a static library
+
+4. To install casbin library to your machine run:
+
+    ```bash
+    cmake --build . --target install
+    ```
+
+    - For **Windows**, this will install `casbin.lib` to `C:/Program Files/casbin-cpp/lib`
+    and the headers to `C:/Program Files/casbin-cpp/include`.
+    - For Unix based OS i.e. **Linux and macOS**, this will install `casbin.a` to `usr/local/lib` 
+    and the headers to `usr/local/include`.
+
+    You can add the respective include and lib paths
+    to the PATH environment variable to use casbin.
+
+5. (OPTIONAL) To run the tests, issue the following command from `/build`:
+
+    ```bash
+    ctest
+    ```
 
 ## Get started
 
-1. New a Casbin enforcer with a model file and a policy file:
-
-    ```c++
-    Enforcer* e = Enforcer :: NewEnforcer("<path to model.conf>", "<path to policy.csv>");
+1. Add the include directory of the project to the PATH Environment variable.
+    ```cpp
+    #include <casbin/casbin.h>
     ```
 
-Note: you can also initialize an enforcer with policy in DB instead of file, see [Policy-persistence](#policy-persistence) section for details.
+2. New a Casbin enforcer with a model file and a policy file:
+
+    ```cpp
+    casbin::Enforcer e("./path/to/model.conf", "./path/to/policy.csv");
+    ```
 
 2. Add an enforcement hook into your code right before the access happens:
 
-    ```c++
-    string sub = "alice"; // the user that wants to access a resource.
-    string obj = "data1"; // the resource that is going to be accessed.
-    string act = "read"; // the operation that the user performs on the resource.
+    ```cpp
+    std::string sub = "alice"; // the user that wants to access a resource.
+    std::string obj = "data1"; // the resource that is going to be accessed.
+    std::string act = "read"; // the operation that the user performs on the resource.
 
-    if(e->Enforce({ sub, obj, act })) {
+    if(e.Enforce({ sub, obj, act })) {
         // permit alice to read data1
     } else {
         // deny the request, show an error
@@ -161,9 +185,28 @@ Note: you can also initialize an enforcer with policy in DB instead of file, see
 
 3. Besides the static policy file, Casbin also provides API for permission management at run-time. For example, You can get all the roles assigned to a user as below:
 
-    ```c++
-    vector<string> roles( e->GetImplicitRolesForUser(sub) );
+    ```cpp
+    std::vector<std::string> roles( e.GetImplicitRolesForUser(sub) );
     ```
+
+Here's the summary:
+```cpp
+#include <casbin/casbin.h>
+
+void IsAuthorized() {
+    casbin::Enforcer e("./path/to/model.conf", "./path/to/policy.csv");
+
+    std::string sub = "alice"; // the user that wants to access a resource.
+    std::string obj = "data1"; // the resource that is going to be accessed.
+    std::string act = "read"; // the operation that the user performs on the resource.
+
+    if(e.Enforce({ sub, obj, act })) {
+        // permit alice to read data1
+    } else {
+        // deny the request, show an error
+    }
+}
+```
 
 ## Policy management
 
