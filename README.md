@@ -145,7 +145,10 @@ https://casbin.org/docs/en/tutorials
     - For **Windows**, this will install `casbin.lib` to `C:/Program Files/casbin-cpp/lib`
     and the headers to `C:/Program Files/casbin-cpp/include`.
     - For Unix based OS i.e. **Linux and macOS**, this will install `casbin.a` to `usr/local/lib` 
-    and the headers to `usr/local/include`
+    and the headers to `usr/local/include`.
+
+    You can add the respective include and lib paths
+    to the PATH environment variable to use casbin.
 
 5. (OPTIONAL) To run the tests, issue the following command from `/build`:
 
@@ -185,6 +188,25 @@ https://casbin.org/docs/en/tutorials
     ```cpp
     std::vector<std::string> roles( e.GetImplicitRolesForUser(sub) );
     ```
+
+Here's the summary:
+```cpp
+#include <casbin/casbin.h>
+
+void IsAuthorized() {
+    casbin::Enforcer e("./path/to/model.conf", "./path/to/policy.csv");
+
+    std::string sub = "alice"; // the user that wants to access a resource.
+    std::string obj = "data1"; // the resource that is going to be accessed.
+    std::string act = "read"; // the operation that the user performs on the resource.
+
+    if(e.Enforce({ sub, obj, act })) {
+        // permit alice to read data1
+    } else {
+        // deny the request, show an error
+    }
+}
+```
 
 ## Policy management
 
