@@ -67,4 +67,4 @@ TEST(TestModel, TestArrayEquals) {
     TestArrayEqualsFn({"a", "b", "c"}, {}, false);
 }
 
-}
+} // namespace

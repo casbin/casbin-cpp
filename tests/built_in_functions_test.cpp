@@ -164,4 +164,4 @@ TEST(TestBuiltInFunctions, TestIPMatch) {
     TestIPMatchFn("11.0.0.123", "10.0.0.0/8", false);
 }
 
-}
+} // namespace

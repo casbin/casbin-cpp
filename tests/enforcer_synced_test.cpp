@@ -19,6 +19,8 @@
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
 
+namespace {
+
 // void TestSyncFn(casbin::SyncedEnforcer& e, const std::string& sub, const std::string& obj, const std::string& act, bool control) {
 //     bool response = e.Enforce({ sub, obj, act });
 //     ASSERT_EQ(response, control);
@@ -72,3 +74,5 @@
 
 //     EXPECT_EQ(e.IsAutoLoadingRunning(), false);
 // }
+
+} // namespace

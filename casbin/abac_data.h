@@ -104,6 +104,7 @@ public:
 // Casbin ABAC entity type
 typedef ABACData ABACData;
 
+const std::shared_ptr<ABACData> GetData(const ABACData::VariantMap& attribs);
 }
 
 #endif

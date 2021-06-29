@@ -284,4 +284,4 @@ TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
     ASSERT_TRUE(casbin::ArrayEquals({"data4_admin"}, e.GetRolesForUser("admin")));
 }
 
-}
+} // namespace

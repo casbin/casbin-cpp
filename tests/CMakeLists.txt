@@ -22,6 +22,11 @@ add_executable(
   enforcer_cached_test.cpp
   enforcer_synced_test.cpp
   management_api_test.cpp
+  model_enforcer_test.cpp
+  model_test.cpp
+  rbac_api_with_domains_test.cpp
+  rbac_api_test.cpp
+  role_manager_test.cpp
   util_test.cpp
 )
 
