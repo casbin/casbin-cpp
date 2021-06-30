@@ -192,6 +192,7 @@ https://casbin.org/docs/en/tutorials
 Here's the summary:
 ```cpp
 #include <casbin/casbin.h>
+#include <string>
 
 void IsAuthorized() {
     casbin::Enforcer e("./path/to/model.conf", "./path/to/policy.csv");
