@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 add_executable(casbin_benchmark
+    config_path.h
     main.cpp
     enforcer_cached_b.cpp
 )
