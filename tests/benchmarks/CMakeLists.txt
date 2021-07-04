@@ -16,6 +16,7 @@ add_executable(casbin_benchmark
     config_path.h
     main.cpp
     enforcer_cached_b.cpp
+    management_api_b.cpp
 )
 
 target_include_directories(casbin_benchmark PUBLIC ${CMAKE_SOURCE_DIR})
