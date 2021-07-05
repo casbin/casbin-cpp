@@ -39,7 +39,7 @@ static inline int GetRandom1000()
 
 static inline int GetRandom10000()
 {
-	return dist_10000(generator);
+    return dist_10000(generator);
 }
 
 static void BenchmarkVectorOperations(benchmark::State& state) {
