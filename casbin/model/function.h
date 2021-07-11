@@ -30,36 +30,36 @@ class FunctionMap {
 
         FunctionMap();
 
-        void ProcessFunctions(std::string expression);
+        void ProcessFunctions(const std::string& expression);
 
         int GetRLen();
 
-        bool Evaluate(std::string expression);
+        bool Evaluate(const std::string& expression);
 
         bool GetBooleanResult();
 
         // AddFunction adds an expression function.
-        void AddFunction(std::string func_name, Function f, Index nargs);
+        void AddFunction(const std::string& func_name, Function f, Index nargs);
 
-        void AddFunctionPropToR(std::string identifier, Function func, Index nargs);
+        void AddFunctionPropToR(const std::string& identifier, Function func, Index nargs);
 
-        void AddBooleanPropToR(std::string identifier, bool val);
+        void AddBooleanPropToR(const std::string& identifier, bool val);
 
-        void AddTruePropToR(std::string identifier);
+        void AddTruePropToR(const std::string& identifier);
 
-        void AddFalsePropToR(std::string identifier);
+        void AddFalsePropToR(const std::string& identifier);
 
-        void AddIntPropToR(std::string identifier, int val);
+        void AddIntPropToR(const std::string& identifier, int val);
 
-        void AddFloatPropToR(std::string identifier, float val);
+        void AddFloatPropToR(const std::string& identifier, float val);
 
-        void AddDoublePropToR(std::string identifier, double val);
+        void AddDoublePropToR(const std::string& identifier, double val);
 
-        void AddStringPropToR(std::string identifier, std::string val);
+        void AddStringPropToR(const std::string& identifier, const std::string& val);
 
-        void AddPointerPropToR(std::string identifier, void* val);
+        void AddPointerPropToR(const std::string& identifier, void* val);
 
-        void AddObjectPropToR(std::string identifier);
+        void AddObjectPropToR(const std::string& identifier);
 
         // LoadFunctionMap loads an initial function map.
         void LoadFunctionMap();

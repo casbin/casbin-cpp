@@ -12,7 +12,7 @@ class LogUtil {
 	public:
 
 		// SetLogger sets the current logger.
-		static void SetLogger(const DefaultLogger& l){
+		static void SetLogger(const DefaultLogger& l) {
 			s_logger = l;
 		}
 

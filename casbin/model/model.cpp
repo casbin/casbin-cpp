@@ -59,7 +59,7 @@ bool Model::HasSection(const std::string& sec) {
 void Model::LoadSection(Model* model, std::shared_ptr<ConfigInterface> cfg, const std::string& sec) {
     int i = 1;
     while(true) {
-        if (!LoadAssertion(model, cfg, sec, sec+GetKeySuffix(i))){
+        if (!LoadAssertion(model, cfg, sec, sec+GetKeySuffix(i))) {
             break;
         }
         else
@@ -129,17 +129,17 @@ void Model::PrintModel() {
     // LogUtil::SetLogger(*logger);
 
     // LogUtil::LogPrint("Model:");
-    // for (unordered_map <std::string, AssertionMap>::iterator it1 = M.begin() ; it1 != M.end() ; it1++){
-    // 	for(unordered_map <std::string, Assertion*>::iterator it2 = (it1->second).AMap.begin() ; it2 != (it1->second).AMap.end() ; it2++){
+    // for (unordered_map <std::string, AssertionMap>::iterator it1 = M.begin() ; it1 != M.end() ; it1++) {
+    // 	for(unordered_map <std::string, Assertion*>::iterator it2 = (it1->second).AMap.begin() ; it2 != (it1->second).AMap.end() ; it2++) {
             // LogUtil::LogPrintf("%s.%s: %s", it1->first, it2->first, it2->second->Value);
     // 	}
     // }
 }
 
-Model::Model(){
+Model::Model() {
 }
 
-Model::Model(const std::string& path){
+Model::Model(const std::string& path) {
     LoadModel(path);
 }
 
@@ -169,8 +169,8 @@ void Model::BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op
 
 // BuildRoleLinks initializes the roles in RBAC.
 void Model::BuildRoleLinks(std::shared_ptr<RoleManager> rm) {
-    for (std::unordered_map<std::string, std::shared_ptr<Assertion>>::iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++)
-        (it->second)->BuildRoleLinks(rm);
+    for (auto [_, second] : this->m["g"].assertion_map)
+        second->BuildRoleLinks(rm);
 }
 
 // PrintPolicy prints the policy to log.
@@ -197,16 +197,16 @@ void Model::PrintPolicy() {
 void Model::ClearPolicy() {
     // Caching "p" assertion map by reference for the scope of this function
     auto& p_assertion_map = this->m["p"].assertion_map;
-    for (auto it : p_assertion_map) {
-        if((it.second)->policy.size() > 0)
-            (it.second)->policy.clear();
+    for (auto [_, second] : p_assertion_map) {
+        if(second->policy.size() > 0)
+            second->policy.clear();
     }
 
     // Caching "g" assertion map by reference for the scope of this function
     auto& g_assertion_map = this->m["g"].assertion_map;
-    for (auto it : g_assertion_map){
-        if((it.second)->policy.size() > 0)
-            (it.second)->policy.clear();
+    for (auto [_, second] : g_assertion_map) {
+        if(second->policy.size() > 0)
+            second->policy.clear();
     }
 }
 
@@ -219,16 +219,16 @@ std::vector<std::vector<std::string>> Model::GetPolicy(const std::string& sec, c
 std::vector<std::vector<std::string>> Model::GetFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
     std::vector<std::vector<std::string>> res;
     std::vector<std::vector<std::string>> policy(m[sec].assertion_map[p_type]->policy);
-    for(int i = 0 ; i < policy.size() ; i++){
+    for(const auto& rule : policy) {
         bool matched = true;
-        for(int j = 0 ; j < field_values.size() ; j++){
-            if(field_values[j] != "" && (policy[i])[field_index + j] != field_values[j] ){
+        for(int j = 0 ; j < field_values.size(); j++) {
+            if(field_values[j] != "" && rule[field_index + j] != field_values[j] ) {
                 matched = false;
                 break;
             }
         }
         if(matched)
-            res.push_back(policy[i]);
+            res.push_back(rule);
     }
 
     return res;
@@ -375,7 +375,7 @@ std::pair<bool, std::vector<std::vector<std::string>>> Model::RemoveFilteredPoli
     std::vector<std::vector<std::string>> effects;
     std::vector<std::vector<std::string>> policy(m[sec].assertion_map[p_type]->policy);
     bool res = false;
-    for(int i = 0 ; i < policy.size() ; i++){
+    for(int i = 0 ; i < policy.size() ; i++) {
         bool matched = true;
         for (int j = 0 ; j < field_values.size() ; j++) {
             if (field_values[j] != "" && (policy[i])[field_index+j] != field_values[j]) {
@@ -383,7 +383,7 @@ std::pair<bool, std::vector<std::vector<std::string>>> Model::RemoveFilteredPoli
                 break;
             }
         }
-        if (matched){
+        if (matched) {
             effects.push_back(policy[i]);
             res = true;
         }

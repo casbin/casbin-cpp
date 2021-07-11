@@ -40,7 +40,7 @@ class Assertion {
         std::vector<std::vector<std::string>> policy;
         std::shared_ptr<RoleManager> rm;
 
-        void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, std::vector<std::vector<std::string>> rules);
+        void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, const std::vector<std::vector<std::string>>& rules);
 
         void BuildRoleLinks(std::shared_ptr<RoleManager> rm);
 };

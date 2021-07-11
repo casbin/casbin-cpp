@@ -9,7 +9,7 @@
 namespace casbin {
 
 bool allFF(std::vector<byte> b) {
-    for(int i = 0 ; i < b.size() ; i++){
+    for(int i = 0 ; i < b.size() ; i++) {
         if(b[i] != 0xff) {
             return false;
         }

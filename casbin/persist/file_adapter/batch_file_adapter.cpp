@@ -10,14 +10,14 @@
 namespace casbin {
 
 // NewAdapter is the constructor for Adapter.
-BatchFileAdapter :: BatchFileAdapter(std::string file_path): FileAdapter(file_path) {
+BatchFileAdapter::BatchFileAdapter(std::string file_path): FileAdapter(file_path) {
 }
 
-void BatchFileAdapter :: AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
+void BatchFileAdapter::AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
     throw UnsupportedOperationException("not implemented hello");
 }
 
-void BatchFileAdapter :: RemovePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
+void BatchFileAdapter::RemovePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
     throw UnsupportedOperationException("not implemented");
 }
 

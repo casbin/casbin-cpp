@@ -29,7 +29,7 @@ class Watcher {
         // when the policy in DB has been changed by other instances.
         // A classic callback is Enforcer.LoadPolicy().
         template <typename Func>
-        void SetUpdateCallback(Func func){
+        void SetUpdateCallback(Func func) {
             return;
         }
 

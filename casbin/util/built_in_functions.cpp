@@ -47,7 +47,7 @@ ReturnType KeyMatch(Scope scope) {
 bool KeyMatch(std::string key1, std::string key2) {
     size_t pos = key2.find("*");
 
-    if (pos == std::string :: npos)
+    if (pos == std::string::npos)
         return key1 == key2;
 
     if (key1.length() > pos)
@@ -71,16 +71,16 @@ bool KeyMatch2(std::string key1, std::string key2) {
     std::vector<std::string> key2_arr = Split(key2, "/");
 
     bool res = true;
-    for(int i=0;i<key2_arr.size();i++){
-        if(i >= key1_arr.size()){
+    for(int i=0;i<key2_arr.size();i++) {
+        if(i >= key1_arr.size()) {
             res = false;
             break;
         }
-        if(key1_arr[i] != key2_arr[i]){
+        if(key1_arr[i] != key2_arr[i]) {
             int index1 = int(key2_arr[i].find("*"));
             int index2 = int(key2_arr[i].find(":"));
-            if(index1 != std::string::npos){
-                if(index1==0){
+            if(index1 != std::string::npos) {
+                if(index1==0) {
                     res = true;
                     break;
                 } else if(key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
@@ -89,8 +89,8 @@ bool KeyMatch2(std::string key1, std::string key2) {
                 } else
                     continue;
             }
-            if(index2==0){
-                if(key1_arr[i]=="" || !key2_arr[i].substr(1).compare("")){
+            if(index2==0) {
+                if(key1_arr[i]=="" || !key2_arr[i].substr(1).compare("")) {
                     res = false;
                     break;
                 }
@@ -125,17 +125,17 @@ bool KeyMatch3(std::string key1, std::string key2) {
     std::vector<std::string> key2_arr = Split(key2, "/");
 
     bool res = true;
-    for(int i=0;i<key2_arr.size();i++){
-        if(i >= key1_arr.size()){
+    for(int i=0;i<key2_arr.size();i++) {
+        if(i >= key1_arr.size()) {
             res = false;
             break;
         }
-        if(key1_arr[i] != key2_arr[i]){
+        if(key1_arr[i] != key2_arr[i]) {
             int index1 = int(key2_arr[i].find("*"));
             int index2 = int(key2_arr[i].find("{"));
             int index3 = int(key2_arr[i].find("}"));
-            if(index1 != std::string::npos){
-                if(index1==0){
+            if(index1 != std::string::npos) {
+                if(index1==0) {
                     res = true;
                     break;
                 } else if(key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
@@ -144,8 +144,8 @@ bool KeyMatch3(std::string key1, std::string key2) {
                 } else
                     continue;
             }
-            if(index2==0 && index3 > 0 && index3 != std::string::npos){
-                if(key1_arr[i]=="" || !key2_arr[i].substr(1, key2_arr[i].length()-2).compare("")){
+            if(index2==0 && index3 > 0 && index3 != std::string::npos) {
+                if(key1_arr[i]=="" || !key2_arr[i].substr(1, key2_arr[i].length()-2).compare("")) {
                     res = false;
                     break;
                 }

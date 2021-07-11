@@ -21,7 +21,7 @@
 
 namespace {
 
-casbin::Scope InitializeParams(const std::string& sub, const std::string& obj, const std::string& act){
+casbin::Scope InitializeParams(const std::string& sub, const std::string& obj, const std::string& act) {
     casbin::Scope scope = casbin::InitializeScope();
     casbin::PushObject(scope, "r");
     casbin::PushStringPropToObject(scope, "r", sub, "sub");

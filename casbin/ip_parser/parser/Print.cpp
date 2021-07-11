@@ -9,7 +9,7 @@
 namespace casbin {
 
 void Print(IP ip_addr) {
-    for(int i = 0 ; i < ip_addr.ip.size() ; i++){
+    for(int i = 0 ; i < ip_addr.ip.size() ; i++) {
         std::cout << ip_addr.ip[i] << " ";
     }
     std::cout << std::endl;

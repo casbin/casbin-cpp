@@ -23,7 +23,7 @@
 namespace casbin {
 
 // ArrayEquals determines whether two std::string arrays are identical.
-bool ArrayEquals(std::vector<std::string> a, std::vector<std::string> b);
+bool ArrayEquals(const std::vector<std::string>& a, const std::vector<std::string>& b);
 
 // ArrayRemoveDuplicates removes any duplicated elements in a std::string array.
 void ArrayRemoveDuplicates(std::vector<std::string>& s);

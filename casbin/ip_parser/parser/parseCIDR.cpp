@@ -10,16 +10,16 @@ namespace casbin {
 
 CIDR parseCIDR(std::string s) {
     size_t pos = s.find("/");
-    if(pos == std::string :: npos) {
+    if(pos == std::string::npos) {
         throw ParserException("Illegal CIDR address.");
     }
     std::string addr = s.substr(0, pos);
     std::string mask = s.substr(pos+1, s.length()-pos-1);
-    byte iplen = IP :: IPv4len;
+    byte iplen = IP::IPv4len;
     IP ip;
     ip = parseIPv4(addr);
     if(ip.isLegal == false) {
-        iplen = IP :: IPv6len;
+        iplen = IP::IPv6len;
         ip = parseIPv6(addr);
     }
     std::pair<int, int> p = dtoi(mask);

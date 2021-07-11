@@ -25,15 +25,15 @@
 namespace casbin {
 
 template <typename Func>
-void DefaultWatcher :: SetUpdateCallback(Func func) {
+void DefaultWatcher::SetUpdateCallback(Func func) {
     return;
 }
 
-void DefaultWatcher :: Update() {
+void DefaultWatcher::Update() {
     return;
 }
 
-void DefaultWatcher :: Close() {
+void DefaultWatcher::Close() {
     return;
 }
 

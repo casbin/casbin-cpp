@@ -42,7 +42,7 @@ std::string EscapeAssertion(std::string s) {
         std::smatch match = *k;
         std::string match_str = match.str();
         int pos = int(match_str.find("."));
-        if(pos!=-1){
+        if(pos!=-1) {
             std::string new_str = match_str.replace(pos, 1, "_");
             s = s.replace(match.position(), match.str().length(), new_str);
         }

@@ -21,7 +21,7 @@
 
 namespace {
 
-void TestEscapeAssertionFn(const std::string& s, const std::string& res){
+void TestEscapeAssertionFn(const std::string& s, const std::string& res) {
     std::string my_res = casbin::EscapeAssertion(s);
     ASSERT_EQ(my_res, res);
 }

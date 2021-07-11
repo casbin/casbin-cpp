@@ -9,9 +9,9 @@
 namespace casbin {
 
 IP parseIPv4(std::string s) {
-    std::vector <byte> pb(IP :: IPv4len, 0);
+    std::vector <byte> pb(IP::IPv4len, 0);
     IP ipv4;
-    for(int i = 0; i < IP :: IPv4len ; i++) {
+    for(int i = 0; i < IP::IPv4len ; i++) {
         if(s.length() == 0) {
             // Missing octets.
             ipv4.isLegal = false;

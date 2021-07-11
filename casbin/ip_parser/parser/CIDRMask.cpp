@@ -10,7 +10,7 @@ namespace casbin {
 
 IPMask CIDRMask(int ones, int bits) {
     IPMask mask;
-    if(bits != 8 * IP :: IPv4len && bits != 8 * IP :: IPv6len) {
+    if(bits != 8 * IP::IPv4len && bits != 8 * IP::IPv6len) {
         return mask;
     }
     if(ones < 0 || ones > bits) {

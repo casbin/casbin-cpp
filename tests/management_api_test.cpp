@@ -199,16 +199,20 @@ TEST(TestManagementAPI, TestModifyPolicyAPI) {
     });
 }
 
+void IsArrayEqual(const std::vector<std::string>& a, const std::vector<std::string>& b) {
+    ASSERT_TRUE(casbin::ArrayEquals(a, b));
+}
+
 TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
     std::string model = "../../examples/rbac_model.conf";
     std::string policy = "../../examples/rbac_policy.csv";
     std::shared_ptr<casbin::Adapter> adapter = std::make_shared<casbin::BatchFileAdapter>(policy);
     casbin::Enforcer e(model, adapter);
 
-    ASSERT_TRUE(casbin::ArrayEquals({"data2_admin"}, e.GetRolesForUser("alice")));
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("bob")));
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("eve")));
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("non_exist")));
+    IsArrayEqual({"data2_admin"}, e.GetRolesForUser("alice"));
+    IsArrayEqual({}, e.GetRolesForUser("bob"));
+    IsArrayEqual({}, e.GetRolesForUser("eve"));
+    IsArrayEqual({}, e.GetRolesForUser("non_exist"));
 
     e.RemoveGroupingPolicy({"alice", "data2_admin"});
     e.AddGroupingPolicy({"bob", "data1_admin"});

@@ -36,15 +36,15 @@ class Role {
     public:
         std::string name;
 
-        static Role* NewRole(std::string name);
+        static Role* NewRole(const std::string& name);
         
         void AddRole(Role* role);
 
         void DeleteRole(Role* role);
 
-        bool HasRole(std::string name, int hierarchy_level);
+        bool HasRole(const std::string& name, int hierarchy_level);
 
-        bool HasDirectRole(std::string name);
+        bool HasDirectRole(const std::string& name);
 
         std::string ToString();
 
@@ -58,9 +58,9 @@ class DefaultRoleManager : public RoleManager {
         int max_hierarchy_level;
         MatchingFunc matching_func;
 
-        bool HasRole(std::string name);
+        bool HasRole(const std::string& name);
 
-        Role* CreateRole(std::string name);
+        Role* CreateRole(const std::string& name);
 
     public:
 
@@ -85,28 +85,28 @@ class DefaultRoleManager : public RoleManager {
         // AddLink adds the inheritance link between role: name1 and role: name2.
         // aka role: name1 inherits role: name2.
         // domain is a prefix to the roles.
-        void AddLink(std::string name1, std::string name2, std::vector<std::string> domain = {});
+        void AddLink(std::string name1, std::string name2, const std::vector<std::string>& domain = {});
 
         /**
          * deleteLink deletes the inheritance link between role: name1 and role: name2.
          * aka role: name1 does not inherit role: name2 any more.
          * domain is a prefix to the roles.
          */
-        void DeleteLink(std::string name1, std::string name2, std::vector<std::string> domain = {});
+        void DeleteLink(std::string name1, std::string name2, const std::vector<std::string>& domain = {});
 
         /**
          * hasLink determines whether role: name1 inherits role: name2.
          * domain is a prefix to the roles.
          */
-        bool HasLink(std::string name1, std::string name2, std::vector<std::string> domain = {});
+        bool HasLink(std::string name1, std::string name2, const std::vector<std::string>& domain = {});
 
         /**
          * getRoles gets the roles that a subject inherits.
          * domain is a prefix to the roles.
          */
-        std::vector<std::string> GetRoles(std::string name, std::vector<std::string> domain = {});
+        std::vector<std::string> GetRoles(std::string name, const std::vector<std::string>& domain = {});
 
-        std::vector<std::string> GetUsers(std::string name, std::vector<std::string> domain = {});
+        std::vector<std::string> GetUsers(std::string name, const std::vector<std::string>& domain = {});
 
         /**
          * printRoles prints all the roles to log.

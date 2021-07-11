@@ -22,7 +22,7 @@ std::pair<int, int> dtoi(std::string s) {
             return p;
         }
     }
-    if(i == 0){
+    if(i == 0) {
         p.first = 0;
         p.second = 0;
         return p;

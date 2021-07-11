@@ -8,15 +8,15 @@
 
 namespace casbin {
 
-byte IP :: IPv4len = 4;
-byte IP :: IPv6len = 16;
-IPMask IP :: v4InV6Prefix{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff};
+byte IP::IPv4len = 4;
+byte IP::IPv6len = 16;
+IPMask IP::v4InV6Prefix{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff};
 
-IP :: IP() {
+IP::IP() {
     isLegal = true;
 }
 
-IP IP :: Mask(IPMask mask) {
+IP IP::Mask(IPMask mask) {
     if (mask.size() == IPv6len && ip.size() == IPv4len) {
         IPMask mask_2(mask.begin(), mask.begin() + 12);
         if (allFF(mask_2)) {
@@ -47,7 +47,7 @@ IP IP :: Mask(IPMask mask) {
     return out;
 }
 
-bool IP :: Equal(IP x) {
+bool IP::Equal(IP x) {
     if(ip.size() == x.ip.size()) {
         return equal(ip, x.ip);
     }
@@ -64,7 +64,7 @@ bool IP :: Equal(IP x) {
     return false;
 }
 
-std::string IP :: toString() {
+std::string IP::toString() {
     std::string ip1, ip2, ip3, ip4;
     std::stringstream ss1, ss2, ss3, ss4;
     ss1 << ip[12];
@@ -80,7 +80,7 @@ std::string IP :: toString() {
 
 // To4 converts the IPv4 address ip to a 4-byte representation.
 // If ip is not an IPv4 address, To4 returns nil.
-IP IP :: To4() {
+IP IP::To4() {
     if(ip.size() == IPv4len) {
         return *this;
     }
@@ -98,7 +98,7 @@ IP IP :: To4() {
 }
 
 // Is p all zeros?
-bool IP :: isZeros(IP p) {
+bool IP::isZeros(IP p) {
     for(int i = 0 ; i < p.ip.size() ; i++ ) {
         if(p.ip[i] != 0) {
             return false;

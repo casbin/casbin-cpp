@@ -102,7 +102,7 @@ bool Enforcer::removePolicy(const std::string& sec, const std::string& p_type, c
         }
     }
 
-    if(m_watcher && m_auto_notify_watcher){
+    if(m_watcher && m_auto_notify_watcher) {
         if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
             std::dynamic_pointer_cast<WatcherEx>(m_watcher)->UpdateForRemovePolicy(rule);
         }
@@ -126,7 +126,7 @@ bool Enforcer::removePolicies(const std::string& sec, const std::string& p_type,
         try{
             std::dynamic_pointer_cast<BatchAdapter>(m_adapter)->RemovePolicies(sec, p_type, rules);
         }
-        catch(UnsupportedOperationException e){
+        catch(UnsupportedOperationException e) {
         }
     }
 
@@ -137,7 +137,7 @@ bool Enforcer::removePolicies(const std::string& sec, const std::string& p_type,
 }
 
 // removeFilteredPolicy removes rules based on field filters from the current policy.
-bool Enforcer::removeFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values){
+bool Enforcer::removeFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
     std::pair<int, std::vector<std::vector<std::string>>> p = m_model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
     bool rule_removed = p.first;
     std::vector<std::vector<std::string>> effects = p.second;

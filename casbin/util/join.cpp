@@ -24,7 +24,7 @@
 
 namespace casbin {
 
-std::string Join(std::vector<std::string> vos, std::string sep){
+std::string Join(std::vector<std::string> vos, std::string sep) {
     std::string fs = vos[0];
     for (int i = 1 ; i < vos.size() ; i++)
         fs += sep + vos[i];

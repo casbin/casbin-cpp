@@ -21,7 +21,7 @@
 
 namespace {
 
-void TestKeyMatchFn(std::string key1, std::string key2, bool res){
+void TestKeyMatchFn(std::string key1, std::string key2, bool res) {
     casbin::Scope scope = casbin::InitializeScope();
     casbin::PushStringValue(scope, key1);
     casbin::PushStringValue(scope, key2);
@@ -53,7 +53,7 @@ void TestKeyMatch2Fn(std::string key1, std::string key2, bool res) {
     EXPECT_EQ(res, my_res);
 }
 
-TEST(TestBuiltInFunctions, TestKeyMatch2){
+TEST(TestBuiltInFunctions, TestKeyMatch2) {
     TestKeyMatch2Fn("/foo", "/foo", true);
     TestKeyMatch2Fn("/foo", "/foo*", true);
     TestKeyMatch2Fn("/foo", "/foo/*", false);

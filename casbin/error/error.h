@@ -10,11 +10,11 @@ class Error{
         static Error NIL;
         std::string err;
 
-        Error(std::string error_message){
+        Error(std::string error_message) {
             err = error_message;
         }
 
-        std::string toString(){
+        std::string toString() {
             return err;
         }
 };

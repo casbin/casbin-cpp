@@ -17,15 +17,15 @@ class DefaultLogger : public Logger {
         }
 
         template <typename... Object>
-        void Print(Object... objects){
-            if (m_enable){
+        void Print(Object... objects) {
+            if (m_enable) {
                 Print(objects...);
             }
         }
 
         template <typename... Object>
-        void Print(std::string format, Object... objects){
-            if (m_enable){
+        void Print(std::string format, Object... objects) {
+            if (m_enable) {
                 Printf(format, objects...);
             }
         }

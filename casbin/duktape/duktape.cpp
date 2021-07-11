@@ -35218,7 +35218,7 @@ DUK_INTERNAL duk_ret_t duk_bi_function_constructor(duk_hthread *thr) {
 	 */
 	duk_push_literal(thr, "function(");
 	duk_dup_1(thr);
-	duk_push_literal(thr, "){");
+	duk_push_literal(thr, ") {");
 	duk_dup_0(thr);
 	duk_push_literal(thr, "\n}");  /* Newline is important to handle trailing // comment. */
 	duk_concat(thr, 5);
@@ -81403,7 +81403,7 @@ DUK_INTERNAL duk_double_t duk_js_tonumber(duk_hthread *thr, duk_tval *tv) {
 		return (p != NULL ? 1.0 : 0.0);
 	}
 	case DUK_TAG_LIGHTFUNC: {
-		/* +(function(){}) -> NaN */
+		/* +(function() {}) -> NaN */
 		return DUK_DOUBLE_NAN;
 	}
 #if defined(DUK_USE_FASTINT)
