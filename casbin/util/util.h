@@ -23,14 +23,14 @@
 namespace casbin {
 
 // ArrayEquals determines whether two std::string arrays are identical.
-bool ArrayEquals(const std::vector<std::string>& a, const std::vector<std::string>& b);
+bool ArrayEquals(std::vector<std::string> a, std::vector<std::string> b);
 
 // ArrayRemoveDuplicates removes any duplicated elements in a std::string array.
 void ArrayRemoveDuplicates(std::vector<std::string>& s);
 
-std::string ArrayToString(std::vector<std::string> arr);
+std::string ArrayToString(const std::vector<std::string>& arr);
 
-bool EndsWith(std::string base, std::string suffix);
+bool EndsWith(const std::string& base, const std::string& suffix);
 
 /**
 * escapeAssertion escapes the dots in the assertion, because the expression evaluation doesn't support such variable names.
@@ -40,22 +40,22 @@ bool EndsWith(std::string base, std::string suffix);
 */
 std::string EscapeAssertion(std::string s);
 
-std::vector<size_t> FindAllOccurences(std::string data, std::string toSearch);
+std::vector<size_t> FindwAllOccurences(const std::string& data, const std::string& toSearch);
 
 template<typename Base, typename T>
 bool IsInstanceOf(const T*);
 
 std::vector<std::string> JoinSlice(std::string a, std::vector<std::string> slice);
 
-std::string Join(std::vector<std::string> vos, std::string sep = " ");
+std::string Join(const std::vector<std::string>& vos, const std::string& sep = " ");
 
 // RemoveComments removes the comments starting with # in the text.
-std::string RemoveComments(std::string s);
+std::string RemoveComments(const std::string& s);
 
 // SetSubtract returns the elements in `a` that aren't in `b`.
-std::vector<std::string> SetSubtract(std::vector<std::string> a, std::vector<std::string> b);
+std::vector<std::string> SetSubtract(const std::vector<std::string>& a, const std::vector<std::string>& b);
 
-std::vector<std::string> Split(std::string str, std::string del, int limit = 0);
+std::vector<std::string> Split(std::string str, const std::string& del, int limit = 0);
 
 std::string& LTrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
  

@@ -21,15 +21,19 @@
 
 namespace {
 
+void IsArrayEqual(std::vector<std::string> a, std::vector<std::string> b) {
+    ASSERT_TRUE(casbin::ArrayEquals(a, b));
+}
+
 TEST(TestManagementAPI, TestGetList) {
     std::string model = "../../examples/rbac_model.conf";
     std::string policy = "../../examples/rbac_policy.csv";
     casbin::Enforcer e(model, policy);
 
-    ASSERT_TRUE(casbin::ArrayEquals({ "alice", "bob", "data2_admin" }, e.GetAllSubjects()));
-    ASSERT_TRUE(casbin::ArrayEquals({ "data1", "data2" }, e.GetAllObjects()));
-    ASSERT_TRUE(casbin::ArrayEquals({ "read", "write" }, e.GetAllActions()));
-    ASSERT_TRUE(casbin::ArrayEquals({ "data2_admin" }, e.GetAllRoles()));
+    IsArrayEqual({ "alice", "bob", "data2_admin" }, e.GetAllSubjects());
+    IsArrayEqual({ "data1", "data2" }, e.GetAllObjects());
+    IsArrayEqual({ "read", "write" }, e.GetAllActions());
+    IsArrayEqual({ "data2_admin" }, e.GetAllRoles());
 }
 
 void TestGetPolicy(casbin::Enforcer& e, const std::vector<std::vector<std::string>>& res) {
@@ -50,21 +54,21 @@ void TestGetPolicy(casbin::Enforcer& e, const std::vector<std::vector<std::strin
 void TestGetFilteredPolicy(casbin::Enforcer& e, int field_index, const std::vector<std::vector<std::string>>& res, const std::vector<std::string>& field_values) {
     auto my_res = e.GetFilteredPolicy(field_index, field_values);
     for (int i = 0; i < res.size(); i++)
-        ASSERT_TRUE(casbin::ArrayEquals(my_res[i], res[i]));
+        IsArrayEqual(my_res[i], res[i]);
 }
 
 void TestGetGroupingPolicy(casbin::Enforcer& e, const std::vector<std::vector<std::string>>& res) {
     auto my_res = e.GetGroupingPolicy();
 
     for (int i = 0; i < my_res.size(); i++)
-        ASSERT_TRUE(casbin::ArrayEquals(my_res[i], res[i]));
+        IsArrayEqual(my_res[i], res[i]);
 }
 
 void TestGetFilteredGroupingPolicy(casbin::Enforcer& e, int field_index, const std::vector<std::vector<std::string>>& res, const std::vector<std::string>& field_values) {
     auto my_res = e.GetFilteredGroupingPolicy(field_index, field_values);
 
     for (int i = 0; i < my_res.size(); i++) {
-        ASSERT_TRUE(casbin::ArrayEquals(my_res[i], res[i]));
+        IsArrayEqual(my_res[i], res[i]);
     }
 }
 
@@ -199,10 +203,6 @@ TEST(TestManagementAPI, TestModifyPolicyAPI) {
     });
 }
 
-void IsArrayEqual(const std::vector<std::string>& a, const std::vector<std::string>& b) {
-    ASSERT_TRUE(casbin::ArrayEquals(a, b));
-}
-
 TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
     std::string model = "../../examples/rbac_model.conf";
     std::string policy = "../../examples/rbac_policy.csv";
@@ -224,44 +224,44 @@ TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
     };
 
     e.AddGroupingPolicies(grouping_rules);
-    ASSERT_TRUE(casbin::ArrayEquals({"data4_admin"}, e.GetRolesForUser("ham")));
-    ASSERT_TRUE(casbin::ArrayEquals({"data5_admin"}, e.GetRolesForUser("jack")));
+    IsArrayEqual({"data4_admin"}, e.GetRolesForUser("ham"));
+    IsArrayEqual({"data5_admin"}, e.GetRolesForUser("jack"));
     e.RemoveGroupingPolicies(grouping_rules);
 
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("alice")));
+    IsArrayEqual({}, e.GetRolesForUser("alice"));
     std::vector<std::string> named_grouping_policy{ "alice", "data2_admin" };
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("alice")));
+    IsArrayEqual({}, e.GetRolesForUser("alice"));
     e.AddNamedGroupingPolicy("g", named_grouping_policy);
-    ASSERT_TRUE(casbin::ArrayEquals({"data2_admin"}, e.GetRolesForUser("alice")));
+    IsArrayEqual({"data2_admin"}, e.GetRolesForUser("alice"));
     e.RemoveNamedGroupingPolicy("g", named_grouping_policy);
 
     e.AddNamedGroupingPolicies("g", grouping_rules);
     e.AddNamedGroupingPolicies("g", grouping_rules);
-    ASSERT_TRUE(casbin::ArrayEquals({"data4_admin"}, e.GetRolesForUser("ham")));
-    ASSERT_TRUE(casbin::ArrayEquals({"data5_admin"}, e.GetRolesForUser("jack")));
+    IsArrayEqual({"data4_admin"}, e.GetRolesForUser("ham"));
+    IsArrayEqual({"data5_admin"}, e.GetRolesForUser("jack"));
     e.RemoveNamedGroupingPolicies("g", grouping_rules);
     e.RemoveNamedGroupingPolicies("g", grouping_rules);
 
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("alice")));
-    ASSERT_TRUE(casbin::ArrayEquals({"data1_admin"}, e.GetRolesForUser("bob")));
-    ASSERT_TRUE(casbin::ArrayEquals({"data3_admin"}, e.GetRolesForUser("eve")));
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("non_exist")));
+    IsArrayEqual({}, e.GetRolesForUser("alice"));
+    IsArrayEqual({"data1_admin"}, e.GetRolesForUser("bob"));
+    IsArrayEqual({"data3_admin"}, e.GetRolesForUser("eve"));
+    IsArrayEqual({}, e.GetRolesForUser("non_exist"));
 
-    ASSERT_TRUE(casbin::ArrayEquals({"bob"}, e.GetUsersForRole("data1_admin")));
+    IsArrayEqual({"bob"}, e.GetUsersForRole("data1_admin"));
     try {
         e.GetUsersForRole("data2_admin", {});
     }
     catch (casbin::CasbinRBACException e) {
         ASSERT_TRUE(true);
     }
-    ASSERT_TRUE(casbin::ArrayEquals({"eve"}, e.GetUsersForRole("data3_admin")));
+    IsArrayEqual({"eve"}, e.GetUsersForRole("data3_admin"));
                 
     e.RemoveFilteredGroupingPolicy(0, {"bob"});
 
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("alice")));
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("bob")));
-    ASSERT_TRUE(casbin::ArrayEquals({"data3_admin"}, e.GetRolesForUser("eve")));
-    ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("non_exist")));
+    IsArrayEqual({}, e.GetRolesForUser("alice"));
+    IsArrayEqual({}, e.GetRolesForUser("bob"));
+    IsArrayEqual({"data3_admin"}, e.GetRolesForUser("eve"));
+    IsArrayEqual({}, e.GetRolesForUser("non_exist"));
 
     try {
         e.GetUsersForRole("data1_admin");
@@ -275,17 +275,17 @@ TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
     catch (casbin::CasbinRBACException e) {
         ASSERT_TRUE(true);
     }
-    ASSERT_TRUE(casbin::ArrayEquals({"eve"}, e.GetUsersForRole("data3_admin")));
+    IsArrayEqual({"eve"}, e.GetUsersForRole("data3_admin"));
 
     ASSERT_TRUE(e.AddGroupingPolicy({"data3_admin", "data4_admin"}));
     e.UpdateGroupingPolicy({"eve", "data3_admin"}, {"eve", "admin"});
     e.UpdateGroupingPolicy({"data3_admin", "data4_admin"}, {"admin", "data4_admin"});
 
-    // ASSERT_TRUE(ArrayEquals({"admin"}, e.GetUsersForRole("data4_admin")));
-    ASSERT_TRUE(casbin::ArrayEquals({"eve"}, e.GetUsersForRole("admin")));
+    // ASSERT_TRUE(ArrayEquals({"admin"}, e.GetUsersForRole("data4_admin"));
+    IsArrayEqual({"eve"}, e.GetUsersForRole("admin"));
 
-    ASSERT_TRUE(casbin::ArrayEquals({"admin"}, e.GetRolesForUser("eve")));
-    ASSERT_TRUE(casbin::ArrayEquals({"data4_admin"}, e.GetRolesForUser("admin")));
+    IsArrayEqual({"admin"}, e.GetRolesForUser("eve"));
+    IsArrayEqual({"data4_admin"}, e.GetRolesForUser("admin"));
 }
 
 } // namespace

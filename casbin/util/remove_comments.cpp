@@ -25,7 +25,7 @@
 namespace casbin {
 
 // RemoveComments removes the comments starting with # in the text.
-std::string RemoveComments(std::string s) {
+std::string RemoveComments(const std::string& s) {
     size_t pos = s.find("#");
     if (pos == std::string::npos)
         return s;

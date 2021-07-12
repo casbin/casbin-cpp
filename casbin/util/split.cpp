@@ -28,10 +28,10 @@
 
 namespace casbin {
 
-std::vector<std::string> Split(std::string str, std::string del, int limit) {
+std::vector<std::string> Split(std::string str, const std::string& del, int limit) {
     std::vector<std::string> tokens;
 
-    if(limit<=0)
+    if(limit <= 0)
         limit = LARGE;
 
     for (int i = 1; i < limit ; i++) {

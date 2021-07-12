@@ -27,8 +27,10 @@
 namespace casbin {
 
 // ArrayEquals determines whether two std::string arrays are identical.
-bool ArrayEquals(const std::vector<std::string>& a, const std::vector<std::string>& b) {
-    return a == b;
+bool ArrayEquals(std::vector<std::string> a, std::vector<std::string> b) {
+    std::sort(a.begin(), a.end());
+    std::sort(b.begin(), b.end());
+    return (a == b);
 }
 
 } // namespace casbin

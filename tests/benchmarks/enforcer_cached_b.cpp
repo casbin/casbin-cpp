@@ -82,7 +82,7 @@ static void BenchmarkCachedRBACModelMedium(benchmark::State& state) {
         e.Enforce(params);
 }
 
-// BENCHMARK(BenchmarkCachedRBACModelMedium);
+BENCHMARK(BenchmarkCachedRBACModelMedium);
 
 static void BenchmarkCachedRBACModelLarge(benchmark::State& state) {
     casbin::CachedEnforcer e(rbac_model_path, "", false);

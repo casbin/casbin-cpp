@@ -24,10 +24,10 @@
 
 namespace casbin {
 
-std::string ArrayToString(std::vector<std::string> arr) {
+std::string ArrayToString(const std::vector<std::string>& arr) {
     std::string res = arr[0];
-    for (int i = 0 ; i < arr.size() ; i++)
-        res += ", " + arr[i];
+    for (const auto& it : arr)
+        res += ", " + it;
     return res;
 }
 
