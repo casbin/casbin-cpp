@@ -38,5 +38,8 @@
 #include <future>
 #include <condition_variable>
 
+#include "attribute_types.h"
+#include "data_types.h"
+
 
 #endif //PCH_H

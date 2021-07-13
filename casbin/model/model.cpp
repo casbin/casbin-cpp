@@ -44,9 +44,9 @@ void Model::LoadModelFromConfig(std::shared_ptr<ConfigInterface> cfg) {
         LoadSection(this, cfg, it->first);
 
     std::vector<std::string> ms;
-    for(int i=0 ; i < required_sections.size() ; i++)
-        if(!this->HasSection(required_sections[i])) 
-            ms.push_back(section_name_map[required_sections[i]]);
+    for(const auto& required_section : required_sections)
+        if(!this->HasSection(required_section)) 
+            ms.push_back(section_name_map[required_section]);
 
     if(ms.size() > 0)
         throw MissingRequiredSections("missing required sections: " + Join(ms, ","));
@@ -70,11 +70,7 @@ void Model::LoadSection(Model* model, std::shared_ptr<ConfigInterface> cfg, cons
 std::string Model ::GetKeySuffix(int i) {
     if (i == 1)
         return "";
-    std::stringstream ss;
-    ss<<i;
-    std::string s;
-    ss>>s;
-    return s;
+    return std::to_string(i);
 }
 
 bool Model::LoadAssertion(Model* model, std::shared_ptr<ConfigInterface> cfg, const std::string& sec, const std::string& key) {
@@ -92,8 +88,8 @@ bool Model::AddDef(const std::string& sec, const std::string& key, const std::st
     ast->value = value;
     if (sec == "r" || sec == "p") {
         ast->tokens = Split(ast->value, ",");
-        for (int i = 0; i < ast->tokens.size() ; i++)
-            ast->tokens[i] = key + "_" + Trim(ast->tokens[i]);
+        for (auto& token : ast->tokens)
+            token = key + "_" + Trim(token);
     }
     else
         ast->value = RemoveComments(ast->value);
