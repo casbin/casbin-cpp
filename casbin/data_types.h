@@ -21,8 +21,10 @@
 #include "abac_data.h"
 
 namespace casbin {
+
 typedef std::variant<std::string, std::shared_ptr<ABACData>> Data;
 typedef std::vector<Data> DataVector;
 typedef std::initializer_list<Data> DataList;
 typedef std::unordered_map<std::string, Data> DataMap;
-}
+
+} // namespace casbin

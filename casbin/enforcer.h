@@ -156,19 +156,19 @@ class Enforcer : public IEnforcer {
         // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(Scope scope);
         // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(const std::vector<std::string>& params);
+        bool Enforce(const DataList& params);
         // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(const std::unordered_map<std::string,std::string>& params);
+        bool Enforce(const DataMap& params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
         bool EnforceWithMatcher(const std::string& matcher, Scope scope);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool EnforceWithMatcher(const std::string& matcher, const std::vector<std::string>& params);
+        bool EnforceWithMatcher(const std::string& matcher, const DataList& params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool EnforceWithMatcher(const std::string& matcher, const std::unordered_map<std::string, std::string>& params);
+        bool EnforceWithMatcher(const std::string& matcher, const DataMap& params);
         // BatchEnforce enforce in batches
-        std::vector<bool> BatchEnforce(const std::vector<std::vector<std::string>>& requests);
+        std::vector<bool> BatchEnforce(const std::initializer_list<DataList>& requests);
         // BatchEnforceWithMatcher enforce with matcher in batches
-        std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests);
+        std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests);
 
         /*Management API member functions.*/
         std::vector<std::string> GetAllSubjects();
