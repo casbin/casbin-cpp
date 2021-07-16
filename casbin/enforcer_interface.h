@@ -60,8 +60,8 @@ class IEnforcer {
         virtual bool m_enforce(const std::string& matcher, Scope scope) = 0;
         virtual bool Enforce(Scope scope) = 0;
         virtual bool EnforceWithMatcher(const std::string& matcher, Scope scope) = 0;
-        virtual std::vector<bool> BatchEnforce(const std::vector<std::vector<std::string>>& requests) = 0;
-        virtual std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests) = 0;
+        virtual std::vector<bool> BatchEnforce(const std::initializer_list<DataList>& requests) = 0;
+        virtual std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) = 0;
 
         /* RBAC API */
         virtual std::vector<std::string> GetRolesForUser(const std::string& name, const std::vector<std::string>& domain = {}) = 0;

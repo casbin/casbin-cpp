@@ -189,26 +189,26 @@ bool SyncedEnforcer ::Enforce(Scope s) {
 // Enforce with a vector param,decides whether a "subject" can access a
 // "object" with the operation "action", input parameters are usually: (sub,
 // obj, act).
-bool SyncedEnforcer ::Enforce(const std::vector<std::string>& params) {
+bool SyncedEnforcer ::Enforce(const DataList& params) {
     std::lock_guard<std::mutex> lock(policyMutex);
     return Enforcer::Enforce(params);
 }
 
 // Enforce with a map param,decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (sub, obj, act).
-bool SyncedEnforcer ::Enforce(const std::unordered_map<std::string, std::string>& params) {
+bool SyncedEnforcer ::Enforce(const DataMap& params) {
     std::lock_guard<std::mutex> lock(policyMutex);
     return Enforcer::Enforce(params);
 }
 
 // BatchEnforce enforce in batches
-std::vector<bool> SyncedEnforcer ::BatchEnforce(const std::vector<std::vector<std::string>>& requests) {
+std::vector<bool> SyncedEnforcer ::BatchEnforce(const std::initializer_list<DataList>& requests) {
   std::lock_guard<std::mutex> lock(policyMutex);
   return Enforcer::BatchEnforce(requests);
 }
 
 // BatchEnforceWithMatcher enforce with matcher in batches
-std::vector<bool> SyncedEnforcer ::BatchEnforceWithMatcher(const std::string& matcher, const std::vector<std::vector<std::string>>& requests) {
+std::vector<bool> SyncedEnforcer ::BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) {
   std::lock_guard<std::mutex> lock(policyMutex);
   return Enforcer::BatchEnforceWithMatcher(matcher, requests);
 }

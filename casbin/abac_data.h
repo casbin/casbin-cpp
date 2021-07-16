@@ -17,11 +17,7 @@
 #ifndef ABAC_H
 #define ABAC_H
 
-#include <unordered_map>
-#include <string>
-#include <vector>
-#include <variant>
-#include <memory>
+#include "attribute_types.h"
 
 namespace casbin {
 
@@ -31,16 +27,10 @@ namespace casbin {
  */
 class ABACData {
 
-public:
-
-    // Intrinsic definitions
-    typedef std::variant<std::string, int32_t, float> VariantType;
-    typedef std::unordered_map<std::string, VariantType> VariantMap;
-
 private:
 
     // HashMap containing attributes as key-value pairs
-    VariantMap m_attributes;
+    AttributeMap m_attributes;
 
 public:
     /**
@@ -54,7 +44,7 @@ public:
      * 
      * Key's type is std::string and value's type can be one of std::string, int32_t, and float only
      */
-    ABACData(const VariantMap& attribs);
+    ABACData(const AttributeMap& attribs);
     /**
      * @brief Add attribute to the corresponding ABAC entity
      * 
@@ -62,7 +52,7 @@ public:
      * @param value Value of the attribute
      * @return true when attribute is added successfully, false otherwise
      */
-    bool AddAttribute(const std::string& key, const VariantType& value);
+    bool AddAttribute(const std::string& key, const AttributeValue& value);
     /**
      * @brief Add attributes to the corresponding ABAC entity
      * 
@@ -75,7 +65,7 @@ public:
      * Key's type is std::string and value's type can be one of std::string, int32_t, and float only
      * @return true if attributes are added successfully, false otherwise
      */
-    bool AddAttributes(const VariantMap& attribs);
+    bool AddAttributes(const AttributeList& attribs);
     /**
      * @brief Delete attribute of the corresponding ABAC entity
      * 
@@ -92,19 +82,31 @@ public:
      * @return true 
      * @return false 
      */
-    bool UpdateAttribute(const std::string& key, const VariantType& value);
+    bool UpdateAttribute(const std::string& key, const AttributeValue& value);
     /**
      * @brief Get the Attributes of the corresponding ABAC entity
      * 
      * @return const reference to the hashmap containing attributes in key-value pairs
      */
-    const VariantMap& GetAttributes();
+    const AttributeMap& GetAttributes();
 };
 
 // Casbin ABAC entity type
 typedef ABACData ABACData;
 
-const std::shared_ptr<ABACData> GetData(const ABACData::VariantMap& attribs);
+/**
+ * @brief Get casbin::ABACData object
+ * 
+ * @param attribs Should be of the format: {
+ * { "attrib_name1", value1 },
+ * { "attrib_name2", value2 },
+ * ...
+ * }
+ * 
+ * Key's type is std::string and value's type can be one of std::string, int32_t, double, and float only
+ * @return Pointer to casbin::ABACData entity
+ */
+const std::shared_ptr<ABACData> GetDataObject(const AttributeMap& attribs);
 }
 
 #endif

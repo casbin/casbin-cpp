@@ -22,7 +22,7 @@
 
 static void BenchmarkCachedBasicModel(benchmark::State& state) {
     casbin::CachedEnforcer e(basic_model_path, basic_policy_path);
-    std::vector<std::string> request = {"alice", "data1", "read"};
+    casbin::DataList request = {"alice", "data1", "read"};
     for (auto _ : state)
         e.Enforce(request);
 }
@@ -32,7 +32,7 @@ BENCHMARK(BenchmarkCachedBasicModel);
 
 static void BenchmarkCachedRBACModel(benchmark::State& state) {
     casbin::CachedEnforcer e(rbac_model_path, rbac_policy_path);
-    std::vector<std::string> request = {"alice", "data2", "read"};
+    casbin::DataList request = {"alice", "data2", "read"};
     for (auto _ : state)
         e.Enforce(request);
 }
@@ -55,7 +55,7 @@ static void BenchmarkCachedRBACModelSmall(benchmark::State& state) {
     // 1000 users.
     for (int i = 0; i < 1000; ++i)
         e.AddGroupingPolicy({ "user" + std::to_string(i), "group", std::to_string(i / 10) });
-    std::vector<std::string> params = {"user501", "data9", "read"};
+    casbin::DataList params = {"user501", "data9", "read"};
     for (auto _ : state)
         e.Enforce(params);
 }
@@ -77,7 +77,7 @@ static void BenchmarkCachedRBACModelMedium(benchmark::State& state) {
         g_policies[i] = { "user" + std::to_string(i), "group" + std::to_string(i/10) };
 
     e.AddGroupingPolicies(g_policies);
-    std::vector<std::string> params = {"user5001", "data150", "read"};
+    casbin::DataList params = {"user5001", "data150", "read"};
     for (auto _ : state)
         e.Enforce(params);
 }
@@ -99,7 +99,7 @@ static void BenchmarkCachedRBACModelLarge(benchmark::State& state) {
         g_policies[i] = {"user" + std::to_string(i), "group", std::to_string(i / 10)};
     }
     e.AddGroupingPolicies(g_policies);
-    std::vector<std::string> params = {"user50001", "data1500", "read"};
+    casbin::DataList params = {"user50001", "data1500", "read"};
     for (auto _ : state)
     {
         e.Enforce(params);
@@ -111,7 +111,7 @@ static void BenchmarkCachedRBACModelLarge(benchmark::State& state) {
 static void BenchmarkCachedRBACModelWithResourceRoles(benchmark::State& state) {
     casbin::CachedEnforcer e(rbac_with_resource_roles_model_path, rbac_with_resource_roles_policy_path, false);
 
-    std::vector<std::string> params = {"alice", "data1", "read"};
+    casbin::DataList params = {"alice", "data1", "read"};
     for (auto _ : state)
     {
         e.Enforce(params);
@@ -123,7 +123,7 @@ BENCHMARK(BenchmarkCachedRBACModelWithResourceRoles);
 static void BenchmarkCachedRBACModelWithDomains(benchmark::State& state) {
     casbin::CachedEnforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path, false);
 
-    std::vector<std::string> params = {"alice", "domain1", "data1", "read"};
+    casbin::DataList params = {"alice", "domain1", "data1", "read"};
 
     for(auto _ : state)
     {
@@ -150,7 +150,7 @@ BENCHMARK(BenchmarkCachedRBACModelWithDomains);
 
 static void BenchmarkCachedKeyMatchModel(benchmark::State& state) {
     casbin::CachedEnforcer e(keymatch_model_path, keymatch_policy_path, false);
-    std::vector<std::string> params = {"alice", "/alice_data/resource1", "GET"};
+    casbin::DataList params = {"alice", "/alice_data/resource1", "GET"};
     for (auto _ : state)
     {
         e.Enforce(params);
@@ -162,7 +162,7 @@ BENCHMARK(BenchmarkCachedKeyMatchModel);
 static void BenchmarkCachedRBACModelWithDeny(benchmark::State& state) {
     casbin::CachedEnforcer e(rbac_with_deny_model_path, rbac_with_deny_policy_path, false);
 
-    std::vector<std::string> params = {"alice", "data1", "read"};
+    casbin::DataList params = {"alice", "data1", "read"};
     for (auto _ : state)
     {
         e.Enforce(params);
@@ -174,7 +174,7 @@ BENCHMARK(BenchmarkCachedRBACModelWithDeny);
 static void BenchmarkCachedPriorityModel(benchmark::State& state) {
     casbin::CachedEnforcer e(priority_model_path, priority_policy_path, false);
 
-    std::vector<std::string> params = {"alice", "data1", "read"};
+    casbin::DataList params = {"alice", "data1", "read"};
 
     for(auto _ : state)
         e.Enforce(params);
@@ -185,7 +185,7 @@ BENCHMARK(BenchmarkCachedPriorityModel);
 static void BenchmarkCachedRBACModelMediumParallel(benchmark::State& state) {
 
     casbin::CachedEnforcer e(rbac_model_path, "", false);
-    std::vector<std::string> params = {"user5001", "data150", "read"};
+    casbin::DataList params = {"user5001", "data150", "read"};
     if (state.thread_index == 0)
     {
         std::vector<std::vector<std::string>> p_policies(10000);

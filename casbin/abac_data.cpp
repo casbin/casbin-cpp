@@ -24,35 +24,22 @@
 
 namespace casbin {
 
-/**
- * @brief Get casbin::ABACData object
- * 
- * @param attribs Should be of the format: {
- * { "attrib_name1", value1 },
- * { "attrib_name2", value2 },
- * ...
- * }
- * 
- * Key's type is std::string and value's type can be one of std::string, int32_t, and float only
- * @return Pointer to casbin::ABACData entity
- */
-const std::shared_ptr<ABACData> GetData(const ABACData::VariantMap& attribs) {
+const std::shared_ptr<ABACData> GetDataObject(const AttributeMap& attribs) {
     return std::make_shared<ABACData>(attribs);
 }
 
-ABACData::ABACData(const VariantMap& attrib)
-        : m_attributes(attrib)
+ABACData::ABACData(const AttributeMap& attribs)
+        : m_attributes(std::move(attribs))
 {}
 
-bool ABACData::AddAttribute(const std::string& key, const VariantType& value) {
+bool ABACData::AddAttribute(const std::string& key, const AttributeValue& value) {
     m_attributes[key] = value;
     return true;
 }
 
-bool ABACData::AddAttributes(const VariantMap& attribs) {
-    for(auto attrib : attribs) {
-        m_attributes[attrib.first] = attrib.second;
-    }
+bool ABACData::AddAttributes(const AttributeList& attribs) {
+    for(auto [name, value] : attribs)
+        m_attributes[name] = value;
     return true;
 }
 
@@ -68,12 +55,12 @@ bool ABACData::DeleteAttribute(const std::string& key) {
     return true;
 }
 
-bool ABACData::UpdateAttribute(const std::string& key, const VariantType& value) {
+bool ABACData::UpdateAttribute(const std::string& key, const AttributeValue& value) {
     m_attributes[key] = value;
     return true;
 }
 
-const ABACData::VariantMap& ABACData::GetAttributes() {
+const AttributeMap& ABACData::GetAttributes() {
     return m_attributes;
 }
 

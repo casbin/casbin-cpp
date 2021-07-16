@@ -71,7 +71,7 @@ TEST(TestEnforcer, TestMapParams) {
     std::string policy = "../../examples/basic_policy.csv";
     casbin::Enforcer e(model, policy);
 
-    std::unordered_map<std::string, std::string> params = {{"sub", "alice"}, {"obj", "data1"}, {"act", "read"}};
+    casbin::DataMap params = {{"sub", "alice"}, {"obj", "data1"}, {"act", "read"}};
     ASSERT_EQ(e.Enforce(params), true);
 
     params = { {"sub","alice"},{"obj","data1"},{"act","write"} };
@@ -97,13 +97,13 @@ TEST(TestEnforcer, TestMapParams) {
 }
 
 TEST(TestEnforcer, ABACData) {
-    casbin::ABACData::VariantMap params = {
+    casbin::AttributeMap params = {
         { "Name", "Yash" },
         { "Grade", 8.6f },
         { "Age", 18 },
     };
 
-    auto data = casbin::GetData(params);
+    auto data = casbin::GetDataObject(params);
     ASSERT_TRUE(params == data->GetAttributes());
 
     data->DeleteAttribute("Name");
