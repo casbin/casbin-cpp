@@ -93,9 +93,9 @@ static void BenchmarkCachedRBACModelLarge(benchmark::State& state) {
         p_policies[i] = {"group", std::to_string(i), "data", std::to_string(i / 10), "read"};
     e.AddPolicies(p_policies);
 
-	// 100000 users.
-	std::vector<std::vector<std::string>> g_policies(100000);
-	for (int i = 0; i < 100000; ++i) {
+    // 100000 users.
+    std::vector<std::vector<std::string>> g_policies(100000);
+    for (int i = 0; i < 100000; ++i) {
         g_policies[i] = {"user" + std::to_string(i), "group", std::to_string(i / 10)};
     }
     e.AddGroupingPolicies(g_policies);
