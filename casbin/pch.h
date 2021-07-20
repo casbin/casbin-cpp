@@ -37,6 +37,7 @@
 #include <thread>
 #include <future>
 #include <condition_variable>
+#include <variant>
 
 #include "attribute_types.h"
 #include "data_types.h"
