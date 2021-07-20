@@ -31,8 +31,8 @@ bool ArrayEquals(std::vector<std::string> a, std::vector<std::string> b) {
     if(a.size() != b.size())
         return false;
 
-    sort(a.begin(), a.end());
-    sort(b.begin(), b.end());
+    std::sort(a.begin(), a.end());
+    std::sort(b.begin(), b.end());
 
     return (a == b);
 }
