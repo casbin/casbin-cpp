@@ -24,10 +24,12 @@
 
 namespace casbin {
 
-std::vector<std::string> JoinSlice(std::string a, std::vector<std::string> slice) {
-    std::vector<std::string> result{a};
-    for (int i = 0 ; i < slice.size() ; i++)
-        result.push_back(slice[i]);
+std::vector<std::string> JoinSlice(const std::string& a, const std::vector<std::string>& slice) {
+    std::vector<std::string> result(slice.size() + 1);
+    size_t i = 0;
+    result[i] = a;
+    for(const std::string& it : slice)
+        result[++i] = it;
     return result;
 }
 

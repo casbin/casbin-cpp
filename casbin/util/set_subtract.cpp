@@ -27,16 +27,20 @@
 namespace casbin {
 
 // SetSubtract returns the elements in `a` that aren't in `b`.
-std::vector<std::string> SetSubtract(std::vector<std::string> a, std::vector<std::string> b) {
-    std::unordered_map<std::string, bool> mb;
+std::vector<std::string> SetSubtract(const std::vector<std::string>& a, const std::vector<std::string>& b) {
+    std::unordered_map<std::string_view, bool> mb;
+    mb.reserve(b.size());
 
-    for (int i = 0 ; i < b.size() ; i++)
-        mb[b[i]] = true;
+    for (const std::string& it : b)
+        mb[it] = true;
 
     std::vector<std::string> diff;
-    for (int i = 0 ; i < a.size() ; i++)
-        if (!mb[a[i]])
-            diff.push_back(a[i]);
+    diff.reserve(a.size());
+
+    for (const std::string& it : a)
+        if (!mb[it])
+            diff.push_back(it);
+
     return diff;
 }
 
