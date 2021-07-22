@@ -38,6 +38,9 @@
 #include <future>
 #include <condition_variable>
 #include <variant>
+#include <fstream>
+#include <sstream>
+#include <cstdio>
 
 #include "attribute_types.h"
 #include "data_types.h"
