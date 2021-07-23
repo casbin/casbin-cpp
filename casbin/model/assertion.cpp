@@ -27,43 +27,40 @@
 
 namespace casbin {
 
-void Assertion :: BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, std::vector<std::vector<std::string>> rules) {
+void Assertion::BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, const std::vector<std::vector<std::string>>& rules) {
     this->rm = rm;
-    int char_count = int(count(this->value.begin(), this->value.end(), '_'));
+    size_t char_count = count(this->value.begin(), this->value.end(), '_');
 
     if (char_count < 2)
         throw IllegalArgumentException("the number of \"_\" in role definition should be at least 2");
 
-    for(int i = 0 ; i < rules.size() ; i++){
-        std::vector<std::string> rule = rules[i];
-
+    for(std::vector<std::string> rule : rules) {
         if (rule.size() < char_count)
             throw IllegalArgumentException("grouping policy elements do not meet role definition");
+
         if (rule.size() > char_count)
             rule = std::vector<std::string>(rule.begin(), rule.begin() + char_count);
 
         std::vector<std::string> domain(rule.begin() + 2, rule.end());
 
         switch(op) {
-            case policy_op :: policy_add:
+            case policy_op::policy_add:
                 this->rm->AddLink(rule[0], rule[1], domain);
                 break;
-            case policy_op :: policy_remove:
+            case policy_op::policy_remove:
                 this->rm->DeleteLink(rule[0], rule[1], domain);
         }
     }
 }
 
-void Assertion :: BuildRoleLinks(std::shared_ptr<RoleManager> rm) {
+void Assertion::BuildRoleLinks(std::shared_ptr<RoleManager> rm) {
     this->rm = rm;
-    int char_count = int(count(this->value.begin(), this->value.end(), '_'));
+    size_t char_count = count(this->value.begin(), this->value.end(), '_');
 
     if (char_count < 2)
         throw IllegalArgumentException("the number of \"_\" in role definition should be at least 2");
 
-    for(int i = 0 ; i < this->policy.size() ; i++){
-        std::vector<std::string> rule = policy[i];
-
+    for(std::vector<std::string> rule : policy) {
         if (rule.size() < char_count)
             throw IllegalArgumentException("grouping policy elements do not meet role definition");
         if (rule.size() > char_count)
@@ -77,9 +74,9 @@ void Assertion :: BuildRoleLinks(std::shared_ptr<RoleManager> rm) {
     // df_logger.EnableLog(true);
 
     // Logger *logger = &df_logger;
-    // LogUtil :: SetLogger(*logger);
+    // LogUtil::SetLogger(*logger);
 
-    // LogUtil :: LogPrint("Role links for: " + Key);
+    // LogUtil::LogPrint("Role links for: " + Key);
 
     // this->rm->PrintRoles();
 }
