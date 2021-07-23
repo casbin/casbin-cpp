@@ -25,7 +25,7 @@
 namespace casbin {
 
 // LoadPolicyLine loads a text line as a policy rule to model.
-void LoadPolicyLine(std::string line, Model* model);
+void LoadPolicyLine(std::string line, const std::shared_ptr<Model>& model);
 
 /**
  * Adapter is the interface for Casbin adapters.
@@ -41,14 +41,14 @@ class Adapter {
          *
          * @param model the model.
          */
-        virtual void LoadPolicy(Model* model) = 0;
+        virtual void LoadPolicy(const std::shared_ptr<Model>& model) = 0;
 
         /**
          * SavePolicy saves all policy rules to the storage.
          *
          * @param model the model.
          */
-        virtual void SavePolicy(Model* model) = 0;
+        virtual void SavePolicy(const std::shared_ptr<Model>& model) = 0;
 
         /**
          * AddPolicy adds a policy rule to the storage.

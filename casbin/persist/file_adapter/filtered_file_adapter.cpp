@@ -46,7 +46,7 @@ bool FilteredFileAdapter :: filterWords(std::vector<std::string> line, std::vect
     return skip_line;
 }
 
-void FilteredFileAdapter :: loadFilteredPolicyFile(Model* model, Filter* filter, void (*handler)(std::string, Model*)) {
+void FilteredFileAdapter :: loadFilteredPolicyFile(const std::shared_ptr<Model>& model, Filter* filter, std::function<void(std::string, const std::shared_ptr<Model>&)> handler) {
     std::ifstream out_file;
     try {
         out_file.open(this->file_path);
@@ -73,13 +73,13 @@ FilteredFileAdapter :: FilteredFileAdapter(std::string file_path): FileAdapter(f
 }
 
 // LoadPolicy loads all policy rules from the storage.
-void FilteredFileAdapter :: LoadPolicy(Model* model) {
+void FilteredFileAdapter :: LoadPolicy(const std::shared_ptr<Model>& model) {
     this->filtered = false;
     this->FileAdapter::LoadPolicy(model);
 }
 
 // LoadFilteredPolicy loads only policy rules that match the filter.
-void FilteredFileAdapter :: LoadFilteredPolicy(Model* model, Filter* filter) {
+void FilteredFileAdapter :: LoadFilteredPolicy(const std::shared_ptr<Model>& model, Filter* filter) {
     if (filter == NULL) {
         this->LoadPolicy(model);
     }
@@ -98,7 +98,7 @@ bool FilteredFileAdapter :: IsFiltered() {
 }
 
 // SavePolicy saves all policy rules to the storage.
-void FilteredFileAdapter :: SavePolicy(Model* model) {
+void FilteredFileAdapter :: SavePolicy(const std::shared_ptr<Model>& model) {
     if (this->filtered) {
         throw CasbinAdapterException("Cannot save a filtered policy");
     }

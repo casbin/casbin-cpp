@@ -54,7 +54,7 @@ bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
 
     if(ok) {
         for (auto [assertion_name, assertion] : m_model->m["g"].assertion_map) {
-            std::shared_ptr<RoleManager> rm = assertion->rm;
+            std::shared_ptr<RoleManager>& rm = assertion->rm;
 
             int char_count = static_cast<int>(std::count(assertion->value.begin(), assertion->value.end(), '_'));
             size_t index = exp_string.find(assertion_name + "(");
@@ -197,7 +197,7 @@ Enforcer ::Enforcer(const std::string& model_path, std::shared_ptr<Adapter> adap
  * @param m the model.
  * @param adapter the adapter.
  */
-Enforcer::Enforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter)
+Enforcer::Enforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter)
     : m_adapter(adapter), m_watcher(nullptr), m_model(m) {
     m_model->PrintModel();
 
@@ -212,7 +212,7 @@ Enforcer::Enforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter)
  *
  * @param m the model.
  */
-Enforcer ::Enforcer(std::shared_ptr<Model> m): Enforcer(m, NULL) {
+Enforcer::Enforcer(const std::shared_ptr<Model>& m) : Enforcer(m, NULL) {
 }
 
 /**
@@ -244,7 +244,7 @@ void Enforcer::InitWithFile(const std::string& model_path, const std::string& po
 
 // InitWithAdapter initializes an enforcer with a database adapter.
 void Enforcer::InitWithAdapter(const std::string& model_path, std::shared_ptr<Adapter> adapter) {
-    std::shared_ptr<Model> m = std::shared_ptr<Model>(Model::NewModelFromFile(model_path));
+    std::shared_ptr<Model> m = Model::NewModelFromFile(model_path);
 
     this->InitWithModelAndAdapter(m, adapter);
 
@@ -252,7 +252,7 @@ void Enforcer::InitWithAdapter(const std::string& model_path, std::shared_ptr<Ad
 }
 
 // InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.
-void Enforcer::InitWithModelAndAdapter(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter) {
+void Enforcer::InitWithModelAndAdapter(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter) {
     m_adapter = adapter;
 
     m_model = m;
@@ -281,7 +281,7 @@ void Enforcer::Initialize() {
 // Because the policy is attached to a model, so the policy is invalidated and needs 
 // to be reloaded by calling LoadPolicy().
 void Enforcer::LoadModel() {
-    m_model = std::shared_ptr<Model>(Model::NewModelFromFile(m_model_path));
+    m_model = Model::NewModelFromFile(m_model_path);
 
     m_model->PrintModel();
     m_func_map.LoadFunctionMap();
@@ -295,7 +295,7 @@ std::shared_ptr<Model> Enforcer::GetModel() {
 }
 
 // SetModel sets the current model.
-void Enforcer::SetModel(std::shared_ptr<Model> m) {
+void Enforcer::SetModel(const std::shared_ptr<Model>& m) {
     m_model = m;
     m_func_map.LoadFunctionMap();
 
@@ -327,7 +327,7 @@ std::shared_ptr<RoleManager> Enforcer ::GetRoleManager() {
 }
 
 // SetRoleManager sets the current role manager.
-void Enforcer::SetRoleManager(std::shared_ptr<RoleManager> rm) {
+void Enforcer::SetRoleManager(std::shared_ptr<RoleManager>& rm) {
     this->rm = rm;
 }
 
@@ -344,7 +344,7 @@ void Enforcer::ClearPolicy() {
 // LoadPolicy reloads the policy from file/database.
 void Enforcer::LoadPolicy() {
     this->ClearPolicy();
-    m_adapter->LoadPolicy(m_model.get());
+    m_adapter->LoadPolicy(m_model);
     m_model->PrintPolicy();
 
     if(m_auto_build_role_links) {
@@ -381,12 +381,12 @@ void Enforcer::SavePolicy() {
     if(this->IsFiltered())
         throw CasbinEnforcerException("cannot save a filtered policy");
 
-    m_adapter->SavePolicy(m_model.get());
+    m_adapter->SavePolicy(m_model);
 
     if(m_watcher != NULL){
         if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
             auto watcher = dynamic_cast<WatcherEx*>(m_watcher.get());
-            watcher->UpdateForSavePolicy(m_model.get());
+            watcher->UpdateForSavePolicy(m_model);
         }
         else
             return m_watcher->Update();

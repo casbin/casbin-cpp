@@ -33,16 +33,16 @@ class IEnforcer {
         /* Enforcer API */
         virtual void InitWithFile(const std::string& model_path, const std::string& policy_path) = 0;
         virtual void InitWithAdapter(const std::string& model_path, std::shared_ptr<Adapter> adapter) = 0;
-        virtual void InitWithModelAndAdapter(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter) = 0;
+        virtual void InitWithModelAndAdapter(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter) = 0;
         virtual void Initialize() = 0;
         virtual void LoadModel() = 0;
         virtual std::shared_ptr<Model> GetModel() = 0;
-        virtual void SetModel(std::shared_ptr<Model> m) = 0;
+        virtual void SetModel(const std::shared_ptr<Model>& m) = 0;
         virtual std::shared_ptr<Adapter> GetAdapter() = 0;
         virtual void SetAdapter(std::shared_ptr<Adapter> adapter) = 0;
         virtual void SetWatcher(std::shared_ptr<Watcher> watcher) = 0;
         virtual std::shared_ptr<RoleManager> GetRoleManager() = 0;
-        virtual void SetRoleManager(std::shared_ptr<RoleManager> rm) = 0;
+        virtual void SetRoleManager(std::shared_ptr<RoleManager>& rm) = 0;
         virtual void SetEffector(std::shared_ptr<Effector> eft) = 0;
         virtual void ClearPolicy() = 0;
         virtual void LoadPolicy() = 0;

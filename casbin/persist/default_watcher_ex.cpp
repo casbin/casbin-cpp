@@ -36,7 +36,7 @@ void DefaultWatcherEx :: UpdateForRemoveFilteredPolicy(int field_index, std::vec
     return;
 }
 
-void DefaultWatcherEx :: UpdateForSavePolicy(Model* model) {
+void DefaultWatcherEx :: UpdateForSavePolicy(const std::shared_ptr<Model>& model) {
     return;
 }
 

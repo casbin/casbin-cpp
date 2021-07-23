@@ -41,7 +41,7 @@ std::vector<std::string> Model::required_sections{"r","p","e","m"};
 
 void Model::LoadModelFromConfig(std::shared_ptr<ConfigInterface> cfg) {
     for (auto [section_name, _] : section_name_map)
-        LoadSection(this, cfg, section_name);
+        LoadSection(this ,cfg, section_name);
 
     std::vector<std::string> ms;
     ms.reserve(required_sections.size());
@@ -58,10 +58,10 @@ bool Model::HasSection(const std::string& sec) {
     return this->m.find(sec) != this->m.end();
 }
 
-void Model::LoadSection(Model* model, std::shared_ptr<ConfigInterface> cfg, const std::string& sec) {
+void Model::LoadSection(Model* raw_ptr, std::shared_ptr<ConfigInterface> cfg, const std::string& sec) {
     int i = 1;
     while(true) {
-        if (!LoadAssertion(model, cfg, sec, sec + GetKeySuffix(i)))
+        if (!LoadAssertion(raw_ptr, cfg, sec, sec + GetKeySuffix(i)))
             break;
         else
             i++;
@@ -74,9 +74,9 @@ std::string Model::GetKeySuffix(int i) {
     return std::to_string(i);
 }
 
-bool Model::LoadAssertion(Model* model, std::shared_ptr<ConfigInterface> cfg, const std::string& sec, const std::string& key) {
+bool Model::LoadAssertion(Model* raw_ptr, std::shared_ptr<ConfigInterface> cfg, const std::string& sec, const std::string& key) {
     std::string value = cfg->GetString(section_name_map[sec] + "::" + key);
-    return model->AddDef(sec, key, value);
+    return raw_ptr->AddDef(sec, key, value);
 }
 
 // AddDef adds an assertion to the model.
@@ -141,31 +141,31 @@ Model::Model(const std::string& path){
 }
 
 // NewModel creates an empty model.
-Model* Model::NewModel() {
-    return new Model();
+std::shared_ptr<Model> Model::NewModel() {
+    return std::make_shared<Model>();
 }
 
 // NewModel creates a model from a .CONF file.
-Model* Model::NewModelFromFile(const std::string& path) {
-    Model* m = NewModel();
+std::shared_ptr<Model> Model::NewModelFromFile(const std::string& path) {
+    std::shared_ptr<Model> m = NewModel();
     m->LoadModel(path);
     return m;
 }
 
 // NewModel creates a model from a std::string which contains model text.
-Model* Model::NewModelFromString(const std::string& text) {
-    Model* m = NewModel();
+std::shared_ptr<Model> Model::NewModelFromString(const std::string& text) {
+    std::shared_ptr<Model> m = NewModel();
     m->LoadModelFromText(text);
     return m;
 }
 
-void Model::BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+void Model::BuildIncrementalRoleLinks(std::shared_ptr<RoleManager>& rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
     if (sec == "g")
         this->m[sec].assertion_map[p_type]->BuildIncrementalRoleLinks(rm, op, rules);
 }
 
 // BuildRoleLinks initializes the roles in RBAC.
-void Model::BuildRoleLinks(std::shared_ptr<RoleManager> rm) {
+void Model::BuildRoleLinks(std::shared_ptr<RoleManager>& rm) {
     for (auto [_, assertion_ptr] : this->m["g"].assertion_map)
         assertion_ptr->BuildRoleLinks(rm);
 }

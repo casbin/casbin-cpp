@@ -62,14 +62,14 @@ public:
         * @param m the model.
         * @param adapter the adapter.
     */
-    SyncedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
+    SyncedEnforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
 
     /**
         * Enforcer initializes an enforcer with a model.
         *
         * @param m the model.
     */
-    SyncedEnforcer(std::shared_ptr<Model> m);
+    SyncedEnforcer(const std::shared_ptr<Model>& m);
 
     /**
         * Enforcer initializes an enforcer with a model file.
