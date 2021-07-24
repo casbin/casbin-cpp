@@ -44,7 +44,7 @@ ReturnType KeyMatch(Scope scope) {
     return RETURN_RESULT;
 }
 
-bool KeyMatch(std::string key1, std::string key2) {
+bool KeyMatch(const std::string& key1, const std::string& key2) {
     size_t pos = key2.find("*");
 
     if (pos == std::string :: npos)
@@ -66,7 +66,7 @@ ReturnType KeyMatch2(Scope scope) {
     return RETURN_RESULT;
 }
 
-bool KeyMatch2(std::string key1, std::string key2) {
+bool KeyMatch2(const std::string& key1, const std::string& key2) {
     std::vector<std::string> key1_arr = Split(key1, "/");
     std::vector<std::string> key2_arr = Split(key2, "/");
 
@@ -77,8 +77,8 @@ bool KeyMatch2(std::string key1, std::string key2) {
             break;
         }
         if(key1_arr[i] != key2_arr[i]){
-            int index1 = int(key2_arr[i].find("*"));
-            int index2 = int(key2_arr[i].find(":"));
+            size_t index1 = key2_arr[i].find("*");
+            size_t index2 = key2_arr[i].find(":");
             if(index1 != std::string::npos){
                 if(index1==0){
                     res = true;
@@ -120,7 +120,7 @@ ReturnType KeyMatch3(Scope scope) {
     return RETURN_RESULT;
 }
 
-bool KeyMatch3(std::string key1, std::string key2) {
+bool KeyMatch3(const std::string& key1, const std::string& key2) {
     std::vector<std::string> key1_arr = Split(key1, "/");
     std::vector<std::string> key2_arr = Split(key2, "/");
 
@@ -131,9 +131,9 @@ bool KeyMatch3(std::string key1, std::string key2) {
             break;
         }
         if(key1_arr[i] != key2_arr[i]){
-            int index1 = int(key2_arr[i].find("*"));
-            int index2 = int(key2_arr[i].find("{"));
-            int index3 = int(key2_arr[i].find("}"));
+            size_t index1 = key2_arr[i].find("*");
+            size_t index2 = key2_arr[i].find("{");
+            size_t index3 = key2_arr[i].find("}");
             if(index1 != std::string::npos){
                 if(index1==0){
                     res = true;
@@ -174,7 +174,7 @@ ReturnType RegexMatch(Scope scope) {
     return RETURN_RESULT;
 }
 
-bool RegexMatch(std::string key1, std::string key2) {
+bool RegexMatch(const std::string& key1, const std::string& key2) {
     std::regex regex_s(key2);
     return regex_match(key1, regex_s);
 }
@@ -189,7 +189,7 @@ ReturnType IPMatch(Scope scope) {
     return RETURN_RESULT;
 }
 
-bool IPMatch(std::string ip1, std::string ip2) {
+bool IPMatch(const std::string& ip1, const std::string& ip2) {
     IP objIP1 = parseIP(ip1);
     if (objIP1.isLegal == false)
         throw IllegalArgumentException("invalid argument: ip1 in IPMatch() function is not an IP address.");
@@ -209,7 +209,7 @@ bool IPMatch(std::string ip1, std::string ip2) {
 // GFunction is the method of the g(_, _) function.
 ReturnType GFunction(Scope scope) {
     RoleManager* rm;
-    rm = (RoleManager*)GetPointer(scope, 0);
+    rm = reinterpret_cast<RoleManager*>(GetPointer(scope, 0));
     std::string name1 = GetString(scope, 1);
     std::string name2 = GetString(scope, 2);
 

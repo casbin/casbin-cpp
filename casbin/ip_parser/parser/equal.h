@@ -8,7 +8,7 @@
 
 namespace casbin {
 
-bool equal(IPMask m1, IPMask m2);
+bool equal(const IPMask& m1, const IPMask& m2);
 
 } // namespace casbin
 

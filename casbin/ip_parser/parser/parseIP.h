@@ -9,7 +9,7 @@
 
 namespace casbin {
 
-IP parseIP(std::string s);
+IP parseIP(const std::string& s);
 
 } // namespace casbin
 
