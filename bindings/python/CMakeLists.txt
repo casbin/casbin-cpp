@@ -14,12 +14,16 @@
 
 set(SOURCES
     main.cpp
+    py_enforcer.cpp
 )
 
 add_library(pycasbin MODULE ${SOURCES})
 
+target_include_directories(pycasbin PUBLIC ${CMAKE_SOURCE_DIR})
+
 set_target_properties(pycasbin PROPERTIES
     PREFIX ""
+    CXX_STANDARD 17
 )
 
 if(WIN32)
@@ -28,7 +32,7 @@ if(WIN32)
         SUFFIX ".pyd"
     )
 endif()
-    
+
 
 # NOTE: Depending of the compiler version pybind11 2.4.3 does not compile with C++17 so revert to c++11
 
@@ -53,5 +57,6 @@ target_link_libraries(pycasbin
     PRIVATE
         # casbin
         pybind11::module
+        casbin
 )
 
