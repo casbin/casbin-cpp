@@ -18,9 +18,11 @@
 #include <pybind11/stl.h>
 #include <casbin/casbin.h>
 
+#include "py_casbin.h"
+
 namespace py = pybind11;
 
-PYBIND11_MODULE(pycasbin, m) {
+void bindPyEnforcer(py::module& m) {
     py::class_<casbin::Enforcer>(m, "Enforcer")
         .def(py::init<>())
         .def(py::init<const std::string &, const std::string &>())

@@ -12,30 +12,11 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-*
-* This is the main file for python bindings workflow
 */
 
 #include <pybind11/pybind11.h>
-#include "py_casbin.h"
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pycasbin, m) {
-    m.doc() = R"pbdoc(
-        Casbin Authorization Library
-        -----------------------
-
-        .. currentmodule:: pycasbin
-
-        .. autosummary::
-           :toctree: _generate
-
-           Enforcer
-    )pbdoc";
-
-    bindPyEnforcer(m);
-    bindPyCachedEnforcer(m);
-
-    m.attr("__version__") = "dev";
-}
+void bindPyEnforcer(py::module &m);
+void bindPyCachedEnforcer(py::module &m);

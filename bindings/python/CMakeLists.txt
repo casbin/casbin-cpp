@@ -14,10 +14,15 @@
 
 set(SOURCES
     main.cpp
+    py_cached_enforcer.cpp
     py_enforcer.cpp
 )
 
-add_library(pycasbin MODULE ${SOURCES})
+set(HEADERS
+    py_casbin.h
+)
+
+add_library(pycasbin MODULE ${SOURCES} ${HEADERS})
 
 target_include_directories(pycasbin PUBLIC ${CMAKE_SOURCE_DIR})
 
