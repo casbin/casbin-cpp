@@ -42,7 +42,9 @@ if(UNIX)
 
     # If supported for the target machine, emit position-independent code
     # suitable for dynamic linking.
-    set_property(TARGET pycasbin PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_target_properties(pycasbin PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+    )
 endif()
 
 # macOS demands that the linker resolve all symbols at build time

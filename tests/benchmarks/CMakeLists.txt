@@ -23,6 +23,12 @@ add_executable(casbin_benchmark
 
 target_include_directories(casbin_benchmark PUBLIC ${CMAKE_SOURCE_DIR})
 
+if(UNIX)
+    set_target_properties(casbin_benchmark PROPERTIES
+      POSITION_INDEPENDENT_CODE ON
+    )
+endif()
+
 target_link_libraries(
     casbin_benchmark
     benchmark
