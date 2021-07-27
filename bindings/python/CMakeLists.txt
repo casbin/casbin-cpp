@@ -31,6 +31,8 @@ set_target_properties(pycasbin PROPERTIES
     CXX_STANDARD 17
 )
 
+add_definitions(-DPY_CASBIN_VERSION=${PY_CASBIN_VERSION})
+
 if(WIN32)
     # Windows uses .pyd extension for python modules
     set_target_properties(pycasbin PROPERTIES

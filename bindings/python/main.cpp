@@ -37,5 +37,5 @@ PYBIND11_MODULE(pycasbin, m) {
     bindPyEnforcer(m);
     bindPyCachedEnforcer(m);
 
-    m.attr("__version__") = "dev";
+    m.attr("__version__") = PY_CASBIN_VERSION;
 }
