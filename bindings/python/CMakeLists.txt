@@ -16,6 +16,7 @@ set(SOURCES
     main.cpp
     py_cached_enforcer.cpp
     py_enforcer.cpp
+    py_abac_data.cpp
 )
 
 set(HEADERS
