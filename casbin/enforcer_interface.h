@@ -17,6 +17,7 @@
 #ifndef CASBIN_CPP_ENFORCER_INTERFACE
 #define CASBIN_CPP_ENFORCER_INTERFACE
 
+#include "./data_types.h"
 #include "./model/model.h"
 #include "./persist/adapter.h"
 #include "./persist/default_watcher.h"
