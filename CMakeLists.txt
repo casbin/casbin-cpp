@@ -31,10 +31,11 @@ endif()
 # Project definition.
 
 project(Casbin-CPP 
-    VERSION 1.0.0
+    VERSION 1.27.0
     DESCRIPTION "An authorization library that supports access control models like ACL, RBAC, ABAC in C/C++"
     HOMEPAGE_URL https://github.com/casbin/casbin-cpp
-    LANGUAGES CXX C)
+    LANGUAGES CXX C
+)
 
 
 ###############################################################################
@@ -50,17 +51,22 @@ endif()
 
 option(CASBIN_BUILD_TEST "State whether to build test" ON)
 option(CASBIN_BUILD_BENCHMARK "State whether to build benchmarks" ON)
+option(CASBIN_BUILD_BINDINGS "State whether to build language bindings" ON)
+option(CASBIN_BUILD_PYTHON_BINDINGS "State whether to build python bindings" ON)
 
 # Do not output install messages.
 if(NOT DEFINED CMAKE_INSTALL_MESSAGE)
     set(CMAKE_INSTALL_MESSAGE "NEVER")
 endif()
 
-if(CASBIN_BUILD_TEST)
-    enable_testing()
+if(CASBIN_BUILD_BINDINGS)
+    add_subdirectory(bindings)
 endif()
 
-add_subdirectory(tests)
+if(CASBIN_BUILD_TEST)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 # Change the path max size to avoid problem on Windows.
 if(NOT DEFINED CMAKE_OBJECT_PATH_MAX)

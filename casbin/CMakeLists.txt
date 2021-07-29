@@ -14,6 +14,9 @@
 
 FILE(GLOB_RECURSE SRC_FILES "*.cpp" "*.h")
 
+# Setting to C++ standard to C++17
+set(CMAKE_CXX_STANDARD 17)
+
 add_library(casbin ${SRC_FILES})
 include_directories(${CMAKE_SOURCE_DIR}/casbin)
 

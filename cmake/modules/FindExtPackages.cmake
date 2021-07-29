@@ -24,12 +24,22 @@ set(CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY ON CACHE BOOL
 ###############################################################################
 ### Packages and versions ###
 
-# googletest
-# https://github.com/google/googletest
-find_package(googletest 1.11.0 REQUIRED)
+if(CASBIN_BUILD_TEST)
+    # googletest
+    # https://github.com/google/googletest
+    find_package(googletest 1.11.0 REQUIRED)
 
-if(CASBIN_BUILD_BENCHMARK)
-    # benchmark
-    # https://github.com/google/benchmark
-    find_package(benchmark 1.5.5 REQUIRED)
+    if(CASBIN_BUILD_BENCHMARK)
+        # benchmark
+        # https://github.com/google/benchmark
+        find_package(benchmark 1.5.5 REQUIRED)
+    endif()
+endif()
+
+if(CASBIN_BUILD_BINDINGS)
+    if(CASBIN_BUILD_PYTHON_BINDINGS)
+        # pybind11
+        # https://github.com/pybind/pybind11
+        find_package(pybind11 2.7.0 REQUIRED)
+    endif()
 endif()
