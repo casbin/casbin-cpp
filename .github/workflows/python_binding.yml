@@ -27,11 +27,11 @@ jobs:
       - name: Configuring CMake files
         id: building-files
         run: |
-          mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+          mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE:STRING=Release
       - name: Building library
         id: building-lib
         run: |
-          cd build && cmake --build . --config Release --target pycasbin -j 10 --
+          cd build && cmake --build . --config Release --target all -j 10 --
       - name: Installing pycasbin
         id: installing-pycasbin
         run: |
