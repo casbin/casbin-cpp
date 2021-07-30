@@ -24,11 +24,17 @@ target_precompile_headers(casbin PUBLIC "pch.h")
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
 
-set_target_properties(casbin PROPERTIES PREFIX "")
+set_target_properties(casbin PROPERTIES 
+    PREFIX ""
+)
+
 if(WIN32 OR MSVC)
     set_target_properties(casbin PROPERTIES SUFFIX ".lib")
 elseif(UNIX)
-    set_target_properties(casbin PROPERTIES SUFFIX ".a")
+    set_target_properties(casbin PROPERTIES 
+        SUFFIX ".a"
+        POSITION_INDEPENDENT_CODE ON
+    )
 endif()
 
 install(
