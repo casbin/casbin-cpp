@@ -64,11 +64,11 @@ void bindABACData(py::module& m) {
             to the given key
             @return true 
             @return false
-        )doc")
-        .def("GetAttributes", &casbin::ABACData::GetAttributes, R"doc(
-            @brief Get the Attributes of the corresponding ABAC entity
-            @return const reference to the hashmap containing attributes in key-value pairs
         )doc");
+        // .def("GetAttributes", &casbin::ABACData::GetAttributes, R"doc(
+        //     @brief Get the Attributes of the corresponding ABAC entity
+        //     @return const reference to the hashmap containing attributes in key-value pairs
+        // )doc");
 
     m.def("GetDataObject", &casbin::GetDataObject, R"doc(
         @brief Get casbin::ABACData object
