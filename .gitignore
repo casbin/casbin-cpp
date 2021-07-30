@@ -355,6 +355,7 @@ MigrationBackup/
 *.iml
 .vscode
 .DS_Store
+*.so
 
 # CMake work directory
 cmake-build/
