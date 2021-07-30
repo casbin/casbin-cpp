@@ -38,9 +38,9 @@ public:
     void InvalidateCache();
 
 public:
-    /**
+     /**
          * Enforcer is the default constructor.
-         */
+     */
     CachedEnforcer();
     /**
          * Enforcer initializes an enforcer with a model file and a policy file.

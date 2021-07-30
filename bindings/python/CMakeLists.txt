@@ -14,10 +14,15 @@
 
 set(SOURCES
     main.cpp
+    py_cached_enforcer.cpp
     py_enforcer.cpp
 )
 
-add_library(pycasbin MODULE ${SOURCES})
+set(HEADERS
+    py_casbin.h
+)
+
+add_library(pycasbin MODULE ${SOURCES} ${HEADERS})
 
 target_include_directories(pycasbin PUBLIC ${CMAKE_SOURCE_DIR})
 
@@ -25,6 +30,8 @@ set_target_properties(pycasbin PROPERTIES
     PREFIX ""
     CXX_STANDARD 17
 )
+
+add_definitions(-DPY_CASBIN_VERSION=${PY_CASBIN_VERSION})
 
 if(WIN32)
     # Windows uses .pyd extension for python modules
