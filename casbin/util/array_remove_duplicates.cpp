@@ -28,7 +28,7 @@ namespace casbin {
 
 // ArrayRemoveDuplicates removes any duplicated elements in a std::string array.
 void ArrayRemoveDuplicates(std::vector<std::string> &s) {
-    std::unordered_map<std::string_view, bool> found;
+    std::unordered_map<std::string, bool> found;
     found.reserve(s.size());
     int j = 0;
     for (const std::string& it : s) {
@@ -37,7 +37,7 @@ void ArrayRemoveDuplicates(std::vector<std::string> &s) {
             s[j++] = it;
         }
     }
-    s.erase(s.begin() + j + 1, s.end());
+    s.erase(s.begin() + j, s.end());
 }
 
 } // namespace casbin
