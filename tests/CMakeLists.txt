@@ -52,3 +52,7 @@ endif()
 if(CASBIN_BUILD_BENCHMARK)
   add_subdirectory(benchmarks)
 endif()
+
+# if(CASBIN_BUILD_PYTHON_BINDINGS)
+#   add_subdirectory(python)
+# endif()

@@ -439,6 +439,10 @@ bool Enforcer::Enforce(const DataList& params) {
     return this->EnforceWithMatcher("", params);
 }
 
+bool Enforcer::Enforce(const DataVector& params) {
+    return this->EnforceWithMatcher("", params);
+}
+
 // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
 bool Enforcer::Enforce(const DataMap& params) {
     return this->EnforceWithMatcher("", params);
@@ -451,6 +455,61 @@ bool Enforcer :: EnforceWithMatcher(const std::string& matcher, Scope scope) {
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& params) {
+    const std::vector<std::string>& r_tokens = m_model->m["r"].assertion_map["r"]->tokens;
+
+    size_t r_cnt = r_tokens.size();
+    size_t cnt = params.size();
+
+    if (cnt != r_cnt)
+        return false;
+
+    Scope scope = InitializeScope();
+    PushObject(scope, "r");
+
+    size_t i = 0;
+
+    for(const auto& param : params) {
+        if(const auto string_param = std::get_if<std::string>(&param)) {
+            PushStringPropToObject(scope, "r", *string_param, r_tokens[i].substr(2, r_tokens[i].size() - 2));
+        }
+        else if(const auto abac_param = std::get_if<std::shared_ptr<ABACData>>(&param)) {
+            auto data_ptr = *abac_param;
+            std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
+
+            PushObjectPropToObject(scope, "r", token_name);
+
+            for(auto [attrib_name, attrib_value] : data_ptr->GetAttributes()) {
+
+                if(const auto string_value = std::get_if<std::string>(&attrib_value))
+                    PushStringPropToObject(scope, token_name, *string_value, attrib_name);
+
+                else if(const auto int_value = std::get_if<int32_t>(&attrib_value))
+                    PushIntPropToObject(scope, token_name, *int_value, attrib_name);
+                
+                else if(const auto float_value = std::get_if<float>(&attrib_value))
+                    PushFloatPropToObject(scope, token_name, *float_value, attrib_name);
+                
+                else if(const auto double_value = std::get_if<double>(&attrib_value))
+                    PushDoublePropToObject(scope, token_name, *double_value, attrib_name);
+                
+                else
+                    throw CasbinEnforcerException("Not a valid type");
+            }
+        }
+        ++i;
+    }
+
+    // for (size_t i = 0; i < cnt; i++) {
+    //     PushStringPropToObject(scope, "r", params[i], r_tokens[i].substr(2, r_tokens[i].size() - 2));
+    // }
+
+    bool result = m_enforce(matcher, scope);
+    DeinitializeScope(scope);
+    return result;
+}
+
+// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
+bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& params) {
     const std::vector<std::string>& r_tokens = m_model->m["r"].assertion_map["r"]->tokens;
 
     size_t r_cnt = r_tokens.size();

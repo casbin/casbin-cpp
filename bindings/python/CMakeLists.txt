@@ -69,3 +69,7 @@ target_link_libraries(pycasbin
         casbin
 )
 
+install(
+    TARGETS pycasbin
+    DESTINATION ${CMAKE_SOURCE_DIR}/tests/python
+)
