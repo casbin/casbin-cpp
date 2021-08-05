@@ -15,8 +15,9 @@
 if(CASBIN_BUILD_TEST)
   set(CMAKE_CXX_STANDARD 17)
 
-  add_executable(
-    casbintest
+  add_definitions(-DCASBIN_PROJECT_DIR=${CMAKE_SOURCE_DIR})
+
+  set(CASBIN_TEST_SOURCE
     built_in_functions_test.cpp
     config_test.cpp
     enforcer_test.cpp
@@ -30,6 +31,12 @@ if(CASBIN_BUILD_TEST)
     role_manager_test.cpp
     util_test.cpp
   )
+
+  set(CASBIN_TEST_HEADER
+    config_path.h
+  )
+
+  add_executable(casbintest ${CASBIN_TEST_SOURCE} ${CASBIN_TEST_HEADER})
 
   if(UNIX)
     set_target_properties(casbintest PROPERTIES

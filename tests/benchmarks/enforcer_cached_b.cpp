@@ -135,7 +135,7 @@ BENCHMARK(BenchmarkCachedRBACModelWithDomains);
 
 // ---- TODO ----
 // static void BenchmarkCachedABACModel(benchmark::State& state) {
-//     casbin::CachedEnforcer e("examples/abac_model.conf", false);
+//     casbin::CachedEnforcer e(abac_model_path, false);
 //     auto data1 = casbin::GetData({
 //         {"Name", "data1"},
 //         {"Owner", "alice"}

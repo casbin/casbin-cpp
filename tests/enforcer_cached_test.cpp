@@ -18,13 +18,12 @@
 
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
+#include "config_path.h"
 
 namespace {
 
 TEST(TestEnforcerCached, TestCache) {
-    std::string model = "../../examples/basic_model.conf";
-    std::string policy = "../../examples/basic_policy.csv";
-    casbin::CachedEnforcer e(model, policy);
+    casbin::CachedEnforcer e(basic_model_path, basic_policy_path);
     ASSERT_EQ(e.Enforce({ "alice", "data1", "read" }), true);
     ASSERT_EQ(e.Enforce({ "alice", "data1", "write" }), false);
     ASSERT_EQ(e.Enforce({ "alice", "data2", "read" }), false);

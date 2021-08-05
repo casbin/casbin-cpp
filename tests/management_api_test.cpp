@@ -18,13 +18,12 @@
 
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
+#include "config_path.h"
 
 namespace {
 
 TEST(TestManagementAPI, TestGetList) {
-    std::string model = "../../examples/rbac_model.conf";
-    std::string policy = "../../examples/rbac_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(rbac_model_path, rbac_policy_path);
 
     ASSERT_TRUE(casbin::ArrayEquals({ "alice", "bob", "data2_admin" }, e.GetAllSubjects()));
     ASSERT_TRUE(casbin::ArrayEquals({ "data1", "data2" }, e.GetAllObjects()));
@@ -79,9 +78,7 @@ void TestHasGroupingPolicy(casbin::Enforcer& e, const std::vector<std::string>& 
 }
 
 TEST(TestManagementAPI, TestGetPolicyAPI) {
-    std::string model = "../../examples/rbac_model.conf";
-    std::string policy = "../../examples/rbac_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(rbac_model_path, rbac_policy_path);
 
     TestGetPolicy(e, {
         {"alice", "data1", "read"},
@@ -123,10 +120,8 @@ TEST(TestManagementAPI, TestGetPolicyAPI) {
 
 
 TEST(TestManagementAPI, TestModifyPolicyAPI) {
-    std::string model = "../../examples/rbac_model.conf";
-    std::string policy = "../../examples/rbac_policy.csv";
-    std::shared_ptr<casbin::Adapter> adapter = std::make_shared<casbin::BatchFileAdapter>(policy);
-    casbin::Enforcer e(model, adapter);
+    std::shared_ptr<casbin::Adapter> adapter = std::make_shared<casbin::BatchFileAdapter>(rbac_policy_path);
+    casbin::Enforcer e(rbac_model_path, adapter);
 
     TestGetPolicy(e, {
         {"alice", "data1", "read"},
@@ -200,10 +195,8 @@ TEST(TestManagementAPI, TestModifyPolicyAPI) {
 }
 
 TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
-    std::string model = "../../examples/rbac_model.conf";
-    std::string policy = "../../examples/rbac_policy.csv";
-    std::shared_ptr<casbin::Adapter> adapter = std::make_shared<casbin::BatchFileAdapter>(policy);
-    casbin::Enforcer e(model, adapter);
+    std::shared_ptr<casbin::Adapter> adapter = std::make_shared<casbin::BatchFileAdapter>(rbac_policy_path);
+    casbin::Enforcer e(rbac_model_path, adapter);
 
     ASSERT_TRUE(casbin::ArrayEquals({"data2_admin"}, e.GetRolesForUser("alice")));
     ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUser("bob")));

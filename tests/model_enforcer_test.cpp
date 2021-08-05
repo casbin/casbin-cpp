@@ -18,6 +18,7 @@
 
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
+#include "config_path.h"
 
 namespace {
 
@@ -63,9 +64,7 @@ void TestEnforce(casbin::Enforcer& e, casbin::Scope& scope, bool res) {
 }
 
 TEST(TestModelEnforcer, TestBasicModel) {
-    std::string model = "../../examples/basic_model.conf";
-    std::string policy = "../../examples/basic_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(basic_model_path, basic_policy_path);
 
     casbin::Scope scope;
 
@@ -88,9 +87,7 @@ TEST(TestModelEnforcer, TestBasicModel) {
 }
             
 TEST(TestModelEnforcer, TestBasicModelWithoutSpaces) {
-    std::string model = "../../examples/basic_model_without_spaces.conf";
-    std::string policy = "../../examples/basic_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
 
     casbin::Scope scope = InitializeParams("alice", "data1", "read");
     TestEnforce(e, scope, true);
@@ -111,8 +108,7 @@ TEST(TestModelEnforcer, TestBasicModelWithoutSpaces) {
 }
 
 TEST(TestModelEnforcer, TestBasicModelNoPolicy) {
-    std::string model = "../../examples/basic_model.conf";
-    casbin::Enforcer e(model);
+    casbin::Enforcer e(basic_model_path);
 
     casbin::Scope scope = InitializeParams("alice", "data1", "read");
     TestEnforce(e, scope, false);
@@ -133,9 +129,7 @@ TEST(TestModelEnforcer, TestBasicModelNoPolicy) {
 }
 
 TEST(TestModelEnforcer, TestBasicModelWithRoot) {
-    std::string model = "../../examples/basic_with_root_model.conf";
-    std::string policy = "../../examples/basic_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(basic_with_root_model_path, basic_policy_path);
 
     casbin::Scope scope = InitializeParams("alice", "data1", "read");
     TestEnforce(e, scope, true);
@@ -164,8 +158,7 @@ TEST(TestModelEnforcer, TestBasicModelWithRoot) {
 }
 
 TEST(TestModelEnforcer, TestBasicModelWithRootNoPolicy) {
-    std::string model = "../../examples/basic_with_root_model.conf";
-    casbin::Enforcer e(model);
+    casbin::Enforcer e(basic_with_root_model_path);
 
     casbin::Scope scope = InitializeParams("alice", "data1", "read");
     TestEnforce(e, scope, false);
@@ -194,9 +187,7 @@ TEST(TestModelEnforcer, TestBasicModelWithRootNoPolicy) {
 }
 
 TEST(TestModelEnforcer, TestBasicModelWithoutUsers) {
-    std::string model = "../../examples/basic_without_users_model.conf";
-    std::string policy = "../../examples/basic_without_users_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(basic_without_users_model_path, basic_without_users_policy_path);
 
     casbin::Scope scope = InitializeParamsWithoutUsers("data1", "read");
     TestEnforce(e, scope, true);
@@ -209,9 +200,7 @@ TEST(TestModelEnforcer, TestBasicModelWithoutUsers) {
 }
 
 TEST(TestModelEnforcer, TestBasicModelWithoutResources) {
-    std::string model = "../../examples/basic_without_resources_model.conf";
-    std::string policy = "../../examples/basic_without_resources_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(basic_without_resources_model_path, basic_without_resources_policy_path);
 
     casbin::Scope scope = InitializeParamsWithoutResources("alice", "read");
     TestEnforce(e, scope, true);
@@ -224,9 +213,7 @@ TEST(TestModelEnforcer, TestBasicModelWithoutResources) {
 }
 
 TEST(TestModelEnforcer, TestRBACModel) {
-    std::string model = "../../examples/rbac_model.conf";
-    std::string policy = "../../examples/rbac_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(rbac_model_path, rbac_policy_path);
 
     casbin::Scope scope = InitializeParams("alice", "data1", "read");
     TestEnforce(e, scope, true);
@@ -247,9 +234,7 @@ TEST(TestModelEnforcer, TestRBACModel) {
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithResourceRoles) {
-    std::string model = "../../examples/rbac_with_resource_roles_model.conf";
-    std::string policy = "../../examples/rbac_with_resource_roles_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(rbac_with_resource_roles_model_path, rbac_with_resource_roles_policy_path);
 
     casbin::Scope scope = InitializeParams("alice", "data1", "read");
     TestEnforce(e, scope, true);
@@ -270,9 +255,7 @@ TEST(TestModelEnforcer, TestRBACModelWithResourceRoles) {
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithDomains) {
-    std::string model = "../../examples/rbac_with_domains_model.conf";
-    std::string policy = "../../examples/rbac_with_domains_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);
     
     casbin::Scope scope = InitializeParamsWithDomains("alice", "domain1", "data1", "read");
     TestEnforce(e, scope, true);
@@ -293,8 +276,7 @@ TEST(TestModelEnforcer, TestRBACModelWithDomains) {
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntime) {
-    std::string model = "../../examples/rbac_with_domains_model.conf";
-    casbin::Enforcer e(model);
+    casbin::Enforcer e(rbac_with_domains_model_path);
 
     std::vector<std::string> params{ "admin", "domain1", "data1", "read" };
     e.AddPolicy(params);
@@ -371,10 +353,8 @@ TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntime) {
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntimeMockAdapter) {
-    std::string model = "../../examples/rbac_with_domains_model.conf";
-    std::string policy = "../../examples/rbac_with_domains_policy.csv";
-    std::shared_ptr<casbin::Adapter> adapter = std::make_shared<casbin::FileAdapter>(policy);
-    casbin::Enforcer e(model, adapter);
+    std::shared_ptr<casbin::Adapter> adapter = std::make_shared<casbin::FileAdapter>(rbac_with_domains_policy_path);
+    casbin::Enforcer e(rbac_with_domains_model_path, adapter);
 
     std::vector<std::string> params{ "admin", "domain3", "data1", "read" };
     e.AddPolicy(params);
@@ -400,9 +380,7 @@ TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntimeMockAdapter) {
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithDeny) {
-    std::string model = "../../examples/rbac_with_deny_model.conf";
-    std::string policy = "../../examples/rbac_with_deny_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(rbac_with_deny_model_path, rbac_with_deny_policy_path);
 
     casbin::Scope scope = InitializeParams("alice", "data1", "read");
     TestEnforce(e, scope, true);
@@ -423,18 +401,14 @@ TEST(TestModelEnforcer, TestRBACModelWithDeny) {
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithOnlyDeny) {
-    std::string model = "../../examples/rbac_with_not_deny_model.conf";
-    std::string policy = "../../examples/rbac_with_deny_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(rbac_with_not_deny_model_path, rbac_with_deny_policy_path);
 
     casbin::Scope scope = InitializeParams("alice", "data2", "write");
     TestEnforce(e, scope, false);
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithCustomData) {
-    std::string model = "../../examples/rbac_model.conf";
-    std::string policy = "../../examples/rbac_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(rbac_model_path, rbac_policy_path);
 
     // You can add custom data to a grouping policy, Casbin will ignore it. It is only meaningful to the caller.
     // This feature can be used to store information like whether "bob" is an end user (so no subject will inherit "bob")
@@ -484,9 +458,7 @@ TEST(TestModelEnforcer, TestRBACModelWithCustomData) {
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithPattern) {
-    std::string model = "../../examples/rbac_with_pattern_model.conf";
-    std::string policy = "../../examples/rbac_with_pattern_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(rbac_with_pattern_model_path, rbac_with_pattern_policy_path);
 
     // Here's a little confusing: the matching function here is not the custom function used in matcher.
     // It is the matching function used by "g" (and "g2", "g3" if any..)

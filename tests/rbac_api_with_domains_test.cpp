@@ -18,11 +18,12 @@
 
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
+#include "config_path.h"
 
 namespace {
 
 TEST(TestRBACAPIWithDomains, TestGetImplicitRolesForDomainUser) {
-    casbin::Enforcer e("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_hierarchy_with_domains_policy.csv");
+    casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_hierarchy_with_domains_policy_path);
 
     // This is only able to retrieve the first level of roles.
     ASSERT_TRUE(casbin::ArrayEquals({ "role:global_admin" }, e.GetRolesForUserInDomain("alice", { "domain1" })));
@@ -33,7 +34,7 @@ TEST(TestRBACAPIWithDomains, TestGetImplicitRolesForDomainUser) {
 
 // TestUserAPIWithDomains: Add by Gordon
 TEST(TestRBACAPIWithDomains, TestUserAPIWithDomains) {
-    casbin::Enforcer e("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_domains_policy.csv");
+    casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);
 
     ASSERT_TRUE(casbin::ArrayEquals({ "alice" }, e.GetUsersForRole("admin", { "domain1" })));
     ASSERT_TRUE(casbin::ArrayEquals({ "alice" }, e.GetUsersForRoleInDomain("admin", { "domain1" })));
@@ -107,7 +108,7 @@ TEST(TestRBACAPIWithDomains, TestUserAPIWithDomains) {
 }
 
 TEST(TestRBACAPIWithDomains, TestRoleAPIWithDomains) {
-    casbin::Enforcer e("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_domains_policy.csv");
+    casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);
     
     ASSERT_TRUE(casbin::ArrayEquals({ "admin" }, e.GetRolesForUser("alice", { "domain1" })));
     ASSERT_TRUE(casbin::ArrayEquals({ "admin" }, e.GetRolesForUserInDomain("alice", { "domain1" })));
@@ -176,7 +177,7 @@ void TestGetPermissionsInDomain(casbin::Enforcer& e, const std::string& name, co
 }
 
 TEST(TestRBACAPIWithDomains, TestPermissionAPIInDomain) {
-    casbin::Enforcer e("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_domains_policy.csv");
+    casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);
 
     TestGetPermissionsInDomain(e, "alice", "domain1", {});
     TestGetPermissionsInDomain(e, "bob", "domain1", {});
