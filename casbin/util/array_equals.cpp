@@ -28,18 +28,13 @@ namespace casbin {
 
 // ArrayEquals determines whether two std::string arrays are identical.
 bool ArrayEquals(std::vector<std::string> a, std::vector<std::string> b) {
-    if (a.size() != b.size()) {
+    if(a.size() != b.size())
         return false;
-    }
 
-    sort(a.begin(), a.end());
-    sort(b.begin(), b.end());
-    for (int i = 0 ; i < a.size() ; i++) {
-        if (a[i] != b[i]) {
-            return false;
-        }
-    }
-    return true;
+    std::sort(a.begin(), a.end());
+    std::sort(b.begin(), b.end());
+
+    return (a == b);
 }
 
 } // namespace casbin

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include "pch.h"
-
 #ifndef TICKER_H
 #define TICKER_H
 

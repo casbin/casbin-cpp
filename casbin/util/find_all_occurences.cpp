@@ -24,7 +24,7 @@
 
 namespace casbin {
 
-std::vector <size_t> FindAllOccurences(std::string data, std::string toSearch){
+std::vector<size_t> FindAllOccurences(std::string_view data, std::string_view toSearch){
     // Get the first occurrence
     size_t pos = data.find(toSearch);
 

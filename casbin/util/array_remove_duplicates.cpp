@@ -29,15 +29,15 @@ namespace casbin {
 // ArrayRemoveDuplicates removes any duplicated elements in a std::string array.
 void ArrayRemoveDuplicates(std::vector<std::string> &s) {
     std::unordered_map<std::string, bool> found;
+    found.reserve(s.size());
     int j = 0;
-    for (int i = 0 ; i < s.size() ; i++) {
-        if (!found[s[i]]) {
-            found[s[i]] = true;
-            s[j] = s[i];
-            j++;
+    for (const std::string& it : s) {
+        if (!found[it]) {
+            found[it] = true;
+            s[j++] = it;
         }
     }
-    s = std::vector<std::string> (s.begin(), s.begin()+j);
+    s.erase(s.begin() + j, s.end());
 }
 
 } // namespace casbin

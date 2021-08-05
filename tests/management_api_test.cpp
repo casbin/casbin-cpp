@@ -277,7 +277,7 @@ TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
     e.UpdateGroupingPolicy({"eve", "data3_admin"}, {"eve", "admin"});
     e.UpdateGroupingPolicy({"data3_admin", "data4_admin"}, {"admin", "data4_admin"});
 
-    // ASSERT_TRUE(ArrayEquals({"admin"}, e.GetUsersForRole("data4_admin")));
+    // ASSERT_TRUE(casbin::ArrayEquals({"admin"}, e.GetUsersForRole("data4_admin")));
     ASSERT_TRUE(casbin::ArrayEquals({"eve"}, e.GetUsersForRole("admin")));
 
     ASSERT_TRUE(casbin::ArrayEquals({"admin"}, e.GetRolesForUser("eve")));
