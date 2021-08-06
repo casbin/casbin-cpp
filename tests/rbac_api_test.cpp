@@ -18,11 +18,12 @@
 
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
+#include "config_path.h"
 
 namespace {
 
 TEST(TestRBACAPI, TestRoleAPI) {
-    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_policy.csv");
+    casbin::Enforcer e(rbac_model_path, rbac_policy_path);
 
     ASSERT_TRUE(casbin::ArrayEquals({ "data2_admin" }, e.GetRolesForUser("alice")));
     ASSERT_TRUE(casbin::ArrayEquals({ }, e.GetRolesForUser("bob")));
@@ -81,7 +82,7 @@ TEST(TestRBACAPI, TestRoleAPI) {
 }
 
 TEST(TestRBACAPI, TestEnforcer_AddRolesForUser) {
-    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_policy.csv");
+    casbin::Enforcer e(rbac_model_path, rbac_policy_path);
 
     e.AddRolesForUser("alice", { "data1_admin", "data2_admin", "data3_admin" });
     ASSERT_TRUE(casbin::ArrayEquals({ "data1_admin", "data2_admin", "data3_admin" }, e.GetRolesForUser("alice")));
@@ -106,7 +107,7 @@ void TestGetPermissions(casbin::Enforcer& e, const std::string& name, const std:
 }
 
 TEST(TestRBACAPI, TestPermissionAPI) {
-    casbin::Enforcer e("../../examples/basic_without_resources_model.conf", "../../examples/basic_without_resources_policy.csv");
+    casbin::Enforcer e(basic_without_resources_model_path, basic_without_resources_policy_path);
 
     ASSERT_TRUE(e.Enforce({ "alice", "read" }));
     ASSERT_FALSE(e.Enforce({ "alice", "write" }));
@@ -151,7 +152,7 @@ TEST(TestRBACAPI, TestPermissionAPI) {
 }
 
 TEST(TestRBACAPI, TestImplicitRoleAPI) {
-    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_with_hierarchy_policy.csv");
+    casbin::Enforcer e(rbac_model_path, rbac_with_hierarchy_policy_path);
 
     TestGetPermissions(e, "alice", { {"alice", "data1", "read"} });
     TestGetPermissions(e, "bob", { {"bob", "data2", "write"} });
@@ -159,7 +160,7 @@ TEST(TestRBACAPI, TestImplicitRoleAPI) {
     ASSERT_TRUE(casbin::ArrayEquals(std::vector<std::string>{ "admin", "data1_admin", "data2_admin" }, e.GetImplicitRolesForUser("alice")));
     ASSERT_TRUE(casbin::ArrayEquals(std::vector<std::string>{ }, e.GetImplicitRolesForUser("bob")));
 
-    e = casbin::Enforcer("../../examples/rbac_with_pattern_model.conf", "../../examples/rbac_with_pattern_policy.csv");
+    e = casbin::Enforcer(rbac_with_pattern_model_path, rbac_with_pattern_policy_path);
 
     dynamic_cast<casbin::DefaultRoleManager*>(e.GetRoleManager().get())->AddMatchingFunc(casbin::KeyMatch);
 
@@ -196,7 +197,7 @@ void TestGetImplicitPermissionsWithDomain(casbin::Enforcer& e, const std::string
 }
 
 TEST(TestRBACAPI, TestImplicitPermissionAPI) {
-    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_with_hierarchy_policy.csv");
+    casbin::Enforcer e(rbac_model_path, rbac_with_hierarchy_policy_path);
 
     TestGetPermissions(e, "alice", { {"alice", "data1", "read"} });
     TestGetPermissions(e, "bob", { {"bob", "data2", "write"} });
@@ -206,12 +207,12 @@ TEST(TestRBACAPI, TestImplicitPermissionAPI) {
 }
 
 TEST(TestRBACAPI, TestImplicitPermissionAPIWithDomain) {
-    casbin::Enforcer e("../../examples/rbac_with_domains_model.conf", "../../examples/rbac_with_hierarchy_with_domains_policy.csv");
+    casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_hierarchy_with_domains_policy_path);
     TestGetImplicitPermissionsWithDomain(e, "alice", "domain1", { {"alice", "domain1", "data2", "read"}, { "role:reader", "domain1", "data1", "read" }, { "role:writer", "domain1", "data1", "write" } });
 }
 
 TEST(TestRBACAPI, TestImplicitUserAPI) {
-    casbin::Enforcer e("../../examples/rbac_model.conf", "../../examples/rbac_with_hierarchy_policy.csv");
+    casbin::Enforcer e(rbac_model_path, rbac_with_hierarchy_policy_path);
 
     ASSERT_TRUE(casbin::ArrayEquals({ "alice" }, e.GetImplicitUsersForPermission({ "data1", "read" })));
     ASSERT_TRUE(casbin::ArrayEquals({ "alice" }, e.GetImplicitUsersForPermission({ "data1", "write" })));

@@ -25,13 +25,24 @@ static const std::string relative_path = STRINGIFY(CASBIN_PROJECT_DIR);
 
 static const std::string basic_model_path = relative_path + "/examples/basic_model.conf";
 static const std::string basic_policy_path = relative_path + "/examples/basic_policy.csv";
+static const std::string basic_model_without_spaces_path = relative_path + "/examples/basic_model_without_spaces.conf";
+static const std::string basic_without_users_model_path = relative_path + "/examples/basic_without_users_model.conf";
+static const std::string basic_without_users_policy_path = relative_path + "/examples/basic_without_users_policy.csv";
+static const std::string basic_without_resources_model_path = relative_path + "/examples/basic_without_resources_model.conf";
+static const std::string basic_without_resources_policy_path = relative_path + "/examples/basic_without_resources_policy.csv";
+static const std::string basic_with_root_model_path = relative_path + "/examples/basic_with_root_model.conf";
 
+static const std::string rbac_with_not_deny_model_path = relative_path + "/examples/rbac_with_not_deny_model.conf";
 static const std::string rbac_model_path = relative_path + "/examples/rbac_model.conf";
 static const std::string rbac_policy_path = relative_path + "/examples/rbac_policy.csv";
 static const std::string rbac_with_resource_roles_model_path = relative_path + "/examples/rbac_with_resource_roles_model.conf";
 static const std::string rbac_with_resource_roles_policy_path = relative_path + "/examples/rbac_with_resource_roles_policy.csv";
 static const std::string rbac_with_domains_model_path = relative_path + "/examples/rbac_with_domains_model.conf";
 static const std::string rbac_with_domains_policy_path = relative_path + "/examples/rbac_with_domains_policy.csv";
+static const std::string rbac_with_pattern_model_path = relative_path + "/examples/rbac_with_pattern_model.conf";
+static const std::string rbac_with_pattern_policy_path = relative_path + "/examples/rbac_with_pattern_policy.csv";
+static const std::string rbac_with_hierarchy_policy_path = relative_path + "/examples/rbac_with_hierarchy_policy.csv";
+static const std::string rbac_with_hierarchy_with_domains_policy_path = relative_path + "/examples/rbac_with_hierarchy_with_domains_policy.csv";
 static const std::string rbac_with_deny_model_path = relative_path + "/examples/rbac_with_deny_model.conf";
 static const std::string rbac_with_deny_policy_path = relative_path + "/examples/rbac_with_deny_policy.csv";
 

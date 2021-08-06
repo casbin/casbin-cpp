@@ -12,14 +12,21 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-add_executable(casbin_benchmark
-    config_path.h
+add_definitions(-DCASBIN_PROJECT_DIR=${CMAKE_SOURCE_DIR})
+
+set(CASBIN_BENCHMARK_SOURCE
     main.cpp
     model_b.cpp
     enforcer_cached_b.cpp
     management_api_b.cpp
     role_manager_b.cpp
 )
+
+set(CASBIN_HEADER
+    config_path.h
+)
+
+add_executable(casbin_benchmark ${CASBIN_BENCHMARK_SOURCE} ${CASBIN_HEADER})
 
 target_include_directories(casbin_benchmark PUBLIC ${CMAKE_SOURCE_DIR})
 

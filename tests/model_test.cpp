@@ -19,13 +19,13 @@
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
 #include <fstream>
+#include "config_path.h"
 
 namespace {
 
-std::string basic_example = "../../examples/basic_model.conf";
 std::shared_ptr<casbin::Config> basic_config;
 void InitTest() {
-    basic_config = casbin::Config::NewConfig(basic_example);
+    basic_config = casbin::Config::NewConfig(basic_model_path);
 }
 
 TEST(TestModel, TestNewModel) {
@@ -34,13 +34,13 @@ TEST(TestModel, TestNewModel) {
 }
 
 TEST(TestModel, TestNewModelFromFile) {
-    casbin::Model *model = casbin::Model::NewModelFromFile(basic_example);
+    casbin::Model *model = casbin::Model::NewModelFromFile(basic_model_path);
     ASSERT_NE(model, nullptr);
 }
 
 TEST(TestModel, TestNewModelFromString) {
     std::ifstream infile;
-    infile.open(basic_example);
+    infile.open(basic_model_path);
     std::string content;
     std::getline(infile, content, '\0');
     casbin::Model* model = casbin::Model::NewModelFromString(content);

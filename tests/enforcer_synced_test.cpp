@@ -27,9 +27,7 @@ namespace {
 // }
 
 // TEST(TestEnforcerSynced, TestSync) {
-//     std::string model = "../../examples/basic_model.conf";
-//     std::string policy = "../../examples/basic_policy.csv";
-//     casbin::SyncedEnforcer e(model, policy);
+//     casbin::SyncedEnforcer e(basic_model_path, basic_policy_path);
 
 //     using namespace std::literals::chrono_literals;
 //     auto time1 = 200ms;
@@ -49,9 +47,7 @@ namespace {
 // }
 
 // TEST(TestEnforcerSynced, TestStopLoadPolicy) {
-//     std::string model = "../../examples/basic_model.conf";
-//     std::string policy = "../../examples/basic_policy.csv";
-//     casbin::SyncedEnforcer e(model, policy);
+//     casbin::SyncedEnforcer e(basic_model_path, basic_policy_path);
 
 //     using namespace std::literals::chrono_literals;
 //     std::chrono::duration<int64_t, std::nano> t = 5ms;

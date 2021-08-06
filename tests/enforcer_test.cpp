@@ -18,13 +18,12 @@
 
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
+#include "config_path.h"
 
 namespace {
 
 TEST(TestEnforcer, TestFourParams) {
-    std::string model = "../../examples/rbac_with_domains_model.conf";
-    std::string policy = "../../examples/rbac_with_domains_policy.csv";
-    casbin::Enforcer e = casbin::Enforcer(model, policy);
+    casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);
 
     ASSERT_EQ(e.Enforce({ "alice", "domain1", "data1", "read" }), true);
     ASSERT_EQ(e.Enforce({ "alice", "domain1", "data1", "write" }), true);
@@ -37,9 +36,7 @@ TEST(TestEnforcer, TestFourParams) {
 }
 
 TEST(TestEnforcer, TestThreeParams) {
-    std::string model = "../../examples/basic_model_without_spaces.conf";
-    std::string policy = "../../examples/basic_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
 
     ASSERT_EQ(e.Enforce({ "alice", "data1", "read" }), true);
     ASSERT_EQ(e.Enforce({ "alice", "data1", "write" }), false);
@@ -52,9 +49,7 @@ TEST(TestEnforcer, TestThreeParams) {
 }
 
 TEST(TestEnforcer, TestVectorParams) {
-    std::string model = "../../examples/basic_model_without_spaces.conf";
-    std::string policy = "../../examples/basic_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
 
     ASSERT_EQ(e.Enforce({ "alice", "data1", "read" }), true);
     ASSERT_EQ(e.Enforce({ "alice", "data1", "write" }), false);
@@ -67,9 +62,7 @@ TEST(TestEnforcer, TestVectorParams) {
 }
 
 TEST(TestEnforcer, TestMapParams) {
-    std::string model = "../../examples/basic_model_without_spaces.conf";
-    std::string policy = "../../examples/basic_policy.csv";
-    casbin::Enforcer e(model, policy);
+    casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
 
     casbin::DataMap params = {{"sub", "alice"}, {"obj", "data1"}, {"act", "read"}};
     ASSERT_EQ(e.Enforce(params), true);
