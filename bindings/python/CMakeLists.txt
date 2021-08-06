@@ -17,6 +17,7 @@ set(SOURCES
     py_cached_enforcer.cpp
     py_enforcer.cpp
     py_abac_data.cpp
+    py_model.cpp
 )
 
 set(HEADERS
@@ -65,7 +66,6 @@ endif()
 
 target_link_libraries(pycasbin
     PRIVATE
-        # casbin
         pybind11::module
         casbin
 )

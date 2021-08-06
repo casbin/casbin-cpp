@@ -12,29 +12,21 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import pycasbin as casbin
+from config_path import *
 import unittest
-import sys
-import os
-import pycasbin
-import test_enforcer
-import test_model
 
-def suite():
+class TestModel(unittest.TestCase):
+    def test_NewModel(self):
+        model = casbin.Model.NewModel()
+        self.assertIsNotNone(model)
 
-    # top level directory cached on loader instance
-    suite = unittest.TestSuite()
-    loader = unittest.TestLoader()
+    def test_NewModelFromFile(self):
+        model = casbin.Model.NewModelFromFile(basic_model_path)
+        self.assertIsNotNone(model)
 
-    suite.addTest(loader.loadTestsFromModule(test_enforcer))
-    suite.addTest(loader.loadTestsFromModule(test_model))
-
-    return suite
-
-
-if __name__ == '__main__':
-    runner = unittest.TextTestRunner(verbosity=2)
-    test_suite = suite()
-    result = runner.run(test_suite)
-    if result.wasSuccessful() == False:
-        sys.exit(1)
-    sys.exit(0)
+    # def test_NewModelFromString(self):
+    #     with open(basic_model_path, 'r') as model_file:
+    #         model_string = model_file.read().replace('\n', '')
+    #     model = casbin.Model.NewModelFromString(model_string)
+    #     self.assertIsNotNone(model)
