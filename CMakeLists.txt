@@ -31,8 +31,8 @@ endif()
 ###############################################################################
 # Project definition.
 
-project(Casbin-CPP 
-    VERSION 1.27.0
+project(CasbinCPP
+    VERSION 1.35.0
     DESCRIPTION "An authorization library that supports access control models like ACL, RBAC, ABAC in C/C++"
     HOMEPAGE_URL https://github.com/casbin/casbin-cpp
     LANGUAGES CXX C

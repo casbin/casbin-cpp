@@ -44,7 +44,7 @@ if(CASBIN_BUILD_TEST)
     )
   endif()
 
-  target_include_directories(casbintest PUBLIC ${CMAKE_SOURCE_DIR})
+  target_include_directories(casbintest PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
   target_link_libraries(
     casbintest

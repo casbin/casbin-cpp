@@ -42,8 +42,15 @@ install(
     DESTINATION lib
 )
 
+install(TARGETS casbin EXPORT CasbinTargets
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include
+        )
+
 install(
     DIRECTORY ${CMAKE_SOURCE_DIR}/casbin
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    DESTINATION include
     FILES_MATCHING PATTERN "*.h"
 )

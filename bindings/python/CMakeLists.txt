@@ -26,7 +26,7 @@ set(HEADERS
 
 add_library(pycasbin MODULE ${SOURCES} ${HEADERS})
 
-target_include_directories(pycasbin PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(pycasbin PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 set_target_properties(pycasbin PROPERTIES
     PREFIX ""
