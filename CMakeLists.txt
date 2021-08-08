@@ -86,3 +86,16 @@ set(CMAKE_CXX_STANDARD 17)
 include(FindExtPackages)
 
 add_subdirectory(casbin)
+
+export(TARGETS
+    casbin
+    NAMESPACE casbin::
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/CasbinConfig.cmake"
+)
+
+if(CASBIN_BUILD_PYTHON_BINDINGS)
+    export(TARGETS pycasbin
+        NAMESPACE casbin::
+        FILE "${CMAKE_CURRENT_BINARY_DIR}/PyCasbinConfig.cmake"
+    )
+endif()

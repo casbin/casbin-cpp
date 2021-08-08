@@ -48,6 +48,7 @@ if(CASBIN_BUILD_TEST)
 
   target_link_libraries(
     casbintest
+          PRIVATE
     gtest_main
     casbin
   )

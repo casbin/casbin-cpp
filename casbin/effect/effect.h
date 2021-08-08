@@ -19,7 +19,7 @@
 
 namespace casbin {
 
-enum class Effect{
+enum class Effect {
     Allow, Indeterminate, Deny
 };
 
