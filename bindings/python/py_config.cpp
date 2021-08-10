@@ -21,7 +21,7 @@
 namespace py = pybind11;
 
 void bindPyConfig(py::module &m) {
-    py::class_<casbin::Config>(m, "Config")
+    py::class_<casbin::Config, std::shared_ptr<casbin::Config>>(m, "Config")
         .def(py::init<>())
         .def(py::init<const std::string&>())
         .def_static("NewConfig", &casbin::Config::NewConfig, R"doc(

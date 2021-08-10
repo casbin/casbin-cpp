@@ -45,9 +45,9 @@ m = r.sub == p.sub && r.obj == p.obj && r.act == p.act"""
         self.assertIsNotNone(model)
 
     def test_LoadModelFromConfig(self):
-        # config = casbin.Config(basic_model_path)
-        # model = casbin.Model.NewModel()
-        # casbin.LoadModelFromConfig(model, basic_config)
+        basic_config = casbin.Config.NewConfig(basic_model_path)
+        model = casbin.Model.NewModel()
+        model.LoadModelFromConfig(basic_config)
         # model = casbin.Model.NewModel()
         # config = casbin.Config.NewConfigFromText("")
         # model.LoadModelFromConfig(config)
