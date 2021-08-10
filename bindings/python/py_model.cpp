@@ -21,7 +21,7 @@
 #include "py_casbin.h"
 
 void bindPyModel(py::module &m) {
-    py::class_<casbin::Model>(m, "Model")
+    py::class_<casbin::Model, std::shared_ptr<casbin::Model>>(m, "Model")
         .def(py::init<>())
         .def(py::init<const std::string &>())
 
