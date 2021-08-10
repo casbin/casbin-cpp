@@ -28,3 +28,4 @@ rbac_with_deny_policy_path = relative_path + 'examples/rbac_with_deny_policy.csv
 priority_model_path = relative_path + 'examples/priority_model.conf'
 priority_policy_path = relative_path + 'examples/priority_policy.csv'
 basic_model_without_spaces_path = relative_path + 'examples/basic_model_without_spaces.conf'
+testini_path = relative_path + 'casbin/config/testdata/testini.ini'

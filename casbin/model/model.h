@@ -24,6 +24,7 @@
 #include "assertion.h"
 #include "function.h"
 #include "scope_config.h"
+#include "../config/config.h"
 
 namespace casbin {
 
@@ -68,7 +69,7 @@ class Model {
         // LoadModelFromText loads the model from the text.
         void LoadModelFromText(const std::string& text);
 
-        void LoadModelFromConfig(std::shared_ptr<ConfigInterface> cfg);
+        void LoadModelFromConfig(std::shared_ptr<Config>& cfg);
 
         // PrintModel prints the model to the log.
         void PrintModel();

@@ -29,6 +29,8 @@ void bindPyModel(py::module &m) {
         .def(py::init<>())
         .def(py::init<const std::string &>())
 
+        .def_readonly_static("required_sections", &casbin::Model::required_sections)
+
         .def("HasSection", &casbin::Model::HasSection)
         .def("AddDef", &casbin::Model::AddDef, "AddDef adds an assertion to the model.")
         .def("LoadModel", &casbin::Model::LoadModel, "LoadModel loads the model from model CONF file.")

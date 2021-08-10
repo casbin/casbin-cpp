@@ -39,7 +39,7 @@ std::unordered_map<std::string, std::string> Model::section_name_map = {
 
 std::vector<std::string> Model::required_sections{"r","p","e","m"};
 
-void Model::LoadModelFromConfig(std::shared_ptr<ConfigInterface> cfg) {
+void Model::LoadModelFromConfig(std::shared_ptr<Config>& cfg) {
     for (auto [section_name, _] : section_name_map)
         LoadSection(this ,cfg, section_name);
 

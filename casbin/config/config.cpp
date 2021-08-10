@@ -114,6 +114,9 @@ std::shared_ptr<Config> Config::NewConfigFromText(const std::string& text) {
     return c;
 }
 
+Config::Config() {
+}
+
 Config::Config(const std::string& conf_name) {
     this->Parse(conf_name);
 }
