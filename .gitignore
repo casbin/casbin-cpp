@@ -360,3 +360,4 @@ MigrationBackup/
 # CMake work directory
 cmake-build/
 xcode-build/
+cmake-build*/

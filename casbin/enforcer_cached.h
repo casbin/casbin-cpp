@@ -62,13 +62,13 @@ public:
          * @param m the model.
          * @param adapter the adapter.
          */
-    CachedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
+    CachedEnforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
     /**
          * Enforcer initializes an enforcer with a model.
          *
          * @param m the model.
          */
-    CachedEnforcer(std::shared_ptr<Model> m);
+    CachedEnforcer(const std::shared_ptr<Model>& m);
     /**
          * Enforcer initializes an enforcer with a model file.
          *

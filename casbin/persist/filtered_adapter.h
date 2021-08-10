@@ -34,7 +34,7 @@ class FilteredAdapter : virtual public Adapter {
     public:
 
         // LoadFilteredPolicy loads only policy rules that match the filter.
-        void LoadFilteredPolicy(Model* model, Filter* filter);
+        void LoadFilteredPolicy(const std::shared_ptr<Model>& model, Filter* filter);
         // IsFiltered returns true if the loaded policy has been filtered.
         virtual bool IsFiltered() = 0;
 };

@@ -66,7 +66,7 @@ CachedEnforcer ::CachedEnforcer(const std::string& model_path, std::shared_ptr<A
  * @param m the model.
  * @param adapter the adapter.
  */
-CachedEnforcer ::CachedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter)
+CachedEnforcer ::CachedEnforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter)
     : Enforcer(m, adapter) {
     this->enableCache = true;
 }
@@ -76,7 +76,7 @@ CachedEnforcer ::CachedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapte
  *
  * @param m the model.
  */
-CachedEnforcer ::CachedEnforcer(std::shared_ptr<Model> m)
+CachedEnforcer ::CachedEnforcer(const std::shared_ptr<Model>& m)
     : Enforcer(m) {
     this->enableCache = true;
 }

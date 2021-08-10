@@ -37,11 +37,11 @@ class Model {
 
         static std::unordered_map<std::string, std::string> section_name_map;
 
-        static void LoadSection(Model* model, std::shared_ptr<ConfigInterface> cfg, const std::string& sec);
+        static void LoadSection(Model* raw_ptr, std::shared_ptr<ConfigInterface> cfg, const std::string& sec);
 
         static std::string GetKeySuffix(int i);
 
-        static bool LoadAssertion(Model* model, std::shared_ptr<ConfigInterface> cfg, const std::string& sec, const std::string& key);
+        static bool LoadAssertion(Model* raw_ptr, std::shared_ptr<ConfigInterface> cfg, const std::string& sec, const std::string& key);
 
     public:
 
@@ -71,18 +71,18 @@ class Model {
         void PrintModel();
 
         // NewModel creates an empty model.
-        static Model* NewModel();
+        static std::shared_ptr<Model> NewModel();
 
         // NewModel creates a model from a .CONF file.
-        static Model* NewModelFromFile(const std::string& path);
+        static std::shared_ptr<Model> NewModelFromFile(const std::string& path);
 
         // NewModel creates a model from a std::string which contains model text.
-        static Model* NewModelFromString(const std::string& text);
+        static std::shared_ptr<Model> NewModelFromString(const std::string& text);
 
-        void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager> rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
+        void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager>& rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
 
         // BuildRoleLinks initializes the roles in RBAC.
-        void BuildRoleLinks(std::shared_ptr<RoleManager> rm);
+        void BuildRoleLinks(std::shared_ptr<RoleManager>& rm);
 
         // PrintPolicy prints the policy to log.
         void PrintPolicy();

@@ -21,7 +21,7 @@ FileAdapter :: FileAdapter(std::string file_path) {
 }
 
 // LoadPolicy loads all policy rules from the storage.
-void FileAdapter :: LoadPolicy(Model* model) {
+void FileAdapter :: LoadPolicy(const std::shared_ptr<Model>& model) {
     if (this->file_path == "")
         throw CasbinAdapterException("Invalid file path, file path cannot be empty");
 
@@ -29,7 +29,7 @@ void FileAdapter :: LoadPolicy(Model* model) {
 }
 
 // SavePolicy saves all policy rules to the storage.
-void FileAdapter :: SavePolicy(Model* model) {
+void FileAdapter :: SavePolicy(const std::shared_ptr<Model>& model) {
     if (this->file_path == "") {
         throw CasbinAdapterException("Invalid file path, file path cannot be empty");
     }
@@ -55,7 +55,7 @@ void FileAdapter :: SavePolicy(Model* model) {
     return this->SavePolicyFile(RTrim(tmp, "\n"));
 }
 
-void FileAdapter :: LoadPolicyFile(Model* model, void (*handler)(std::string, Model*)) {
+void FileAdapter :: LoadPolicyFile(const std::shared_ptr<Model>& model, std::function<void(std::string, const std::shared_ptr<Model>&)> handler) {
     std::ifstream in_file;
     try {
         in_file.open(this->file_path);

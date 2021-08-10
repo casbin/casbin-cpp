@@ -59,7 +59,7 @@ SyncedEnforcer ::SyncedEnforcer(const std::string& model_path, std::shared_ptr<A
  * @param m the model.
  * @param adapter the adapter.
  */
-SyncedEnforcer ::SyncedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter)
+SyncedEnforcer ::SyncedEnforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter)
     : Enforcer(m, adapter), autoLoadRunning(false) {}
 
 /**
@@ -67,7 +67,7 @@ SyncedEnforcer ::SyncedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapte
  *
  * @param m the model.
  */
-SyncedEnforcer ::SyncedEnforcer(std::shared_ptr<Model> m)
+SyncedEnforcer ::SyncedEnforcer(const std::shared_ptr<Model>& m)
     : Enforcer(m), autoLoadRunning(false) {}
 
 /**

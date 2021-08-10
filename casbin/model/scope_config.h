@@ -17,8 +17,6 @@
 #ifndef CASBIN_CPP_MODEL_SCOPE_CONFIG
 #define CASBIN_CPP_MODEL_SCOPE_CONFIG
 
-#include "pch.h"
-
 #include <string>
 
 #include "../duktape/duktape.h"

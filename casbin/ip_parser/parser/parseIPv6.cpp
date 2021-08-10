@@ -8,7 +8,7 @@
 
 namespace casbin {
 
-IP parseIPv6(std::string s) {
+IP parseIPv6(std::string_view s) {
     IP ipv6;
     std::vector <byte> newIP(IP :: IPv6len, 0);
     ipv6.ip = newIP;

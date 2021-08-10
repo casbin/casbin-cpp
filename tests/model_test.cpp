@@ -29,12 +29,12 @@ void InitTest() {
 }
 
 TEST(TestModel, TestNewModel) {
-    casbin::Model* model = casbin::Model::NewModel();
+    std::shared_ptr<casbin::Model> model = casbin::Model::NewModel();
     ASSERT_NE(model, nullptr);
 }
 
 TEST(TestModel, TestNewModelFromFile) {
-    casbin::Model *model = casbin::Model::NewModelFromFile(basic_model_path);
+    std::shared_ptr<casbin::Model> model = casbin::Model::NewModelFromFile(basic_model_path);
     ASSERT_NE(model, nullptr);
 }
 
@@ -43,14 +43,14 @@ TEST(TestModel, TestNewModelFromString) {
     infile.open(basic_model_path);
     std::string content;
     std::getline(infile, content, '\0');
-    casbin::Model* model = casbin::Model::NewModelFromString(content);
+     std::shared_ptr<casbin::Model> model = casbin::Model::NewModelFromString(content);
 
     ASSERT_NE(model, nullptr);
 }
 
 TEST(TestModel, TestLoadModelFromConfig) {
     InitTest();
-    casbin::Model* model = casbin::Model::NewModel();
+     std::shared_ptr<casbin::Model> model = casbin::Model::NewModel();
     model->LoadModelFromConfig(basic_config);
 
     model = casbin::Model::NewModel();
@@ -65,7 +65,7 @@ TEST(TestModel, TestLoadModelFromConfig) {
 
 TEST(TestModel, TestHasSection) {
     InitTest();
-    casbin::Model* model = casbin::Model::NewModel();
+     std::shared_ptr<casbin::Model> model = casbin::Model::NewModel();
     model->LoadModelFromConfig(basic_config);
 
     for (int i = 0; i < (casbin::Model::required_sections).size(); i++) {
@@ -86,7 +86,7 @@ TEST(TestModel, TestHasSection) {
 }
 
 TEST(TestModel, TestModel_AddDef) {
-    casbin::Model *model = casbin::Model::NewModel();
+    std::shared_ptr<casbin::Model> model = casbin::Model::NewModel();
     std::string s = "r";
     std::string v = "sub, obj, act";
 

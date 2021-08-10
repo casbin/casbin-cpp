@@ -30,7 +30,7 @@ class DefaultWatcherEx: public WatcherEx {
 
         void UpdateForRemoveFilteredPolicy(int field_index, std::vector<std::string> field_values);
 
-        void UpdateForSavePolicy(Model* model);
+        void UpdateForSavePolicy(const std::shared_ptr<Model>& model);
 };
 
 };  // namespace casbin

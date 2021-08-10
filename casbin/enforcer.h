@@ -79,13 +79,13 @@ class Enforcer : public IEnforcer {
          * @param m the model.
          * @param adapter the adapter.
          */
-        Enforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
+        Enforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model.
          *
          * @param m the model.
          */
-        Enforcer(std::shared_ptr<Model> m);
+        Enforcer(const std::shared_ptr<Model>& m);
         /**
          * Enforcer initializes an enforcer with a model file.
          *
@@ -105,7 +105,7 @@ class Enforcer : public IEnforcer {
         // InitWithAdapter initializes an enforcer with a database adapter.
         void InitWithAdapter(const std::string& model_path, std::shared_ptr<Adapter> adapter);
         // InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.
-        void InitWithModelAndAdapter(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
+        void InitWithModelAndAdapter(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
         void Initialize();
         // LoadModel reloads the model from the model CONF file.
         // Because the policy is attached to a model, so the policy is invalidated and 
@@ -114,7 +114,7 @@ class Enforcer : public IEnforcer {
         // GetModel gets the current model.
         std::shared_ptr<Model> GetModel();
         // SetModel sets the current model.
-        void SetModel(std::shared_ptr<Model> m);
+        void SetModel(const std::shared_ptr<Model>& m);
         // GetAdapter gets the current adapter.
         std::shared_ptr<Adapter> GetAdapter();
         // SetAdapter sets the current adapter.
@@ -124,7 +124,7 @@ class Enforcer : public IEnforcer {
         // GetRoleManager gets the current role manager.
         std::shared_ptr<RoleManager> GetRoleManager();
         // SetRoleManager sets the current role manager.
-        void SetRoleManager(std::shared_ptr <RoleManager> rm);
+        void SetRoleManager(std::shared_ptr<RoleManager>& rm);
         // SetEffector sets the current effector.
         void SetEffector(std::shared_ptr<Effector> eft);
         // ClearPolicy clears all policy.

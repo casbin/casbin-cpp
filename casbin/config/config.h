@@ -38,9 +38,9 @@ class Config : public ConfigInterface {
         /**
          * addConfig adds a new section->key:value to the configuration.
          */
-        bool AddConfig(std::string section, std::string option, std::string value);
+        bool AddConfig(std::string section, const std::string& option, const std::string& value);
 
-        void Parse(std::string f_name);
+        void Parse(const std::string& f_name);
 
         void ParseBuffer(std::istream* buf);
 
@@ -52,7 +52,7 @@ class Config : public ConfigInterface {
          * @param confName the path of the model file.
          * @return the constructor of Config.
          */
-        static std::shared_ptr<Config> NewConfig(std::string conf_name);
+        static std::shared_ptr<Config> NewConfig(const std::string& conf_name);
 
         /**
          * newConfigFromText create an empty configuration representation from text.
@@ -60,21 +60,21 @@ class Config : public ConfigInterface {
          * @param text the model text.
          * @return the constructor of Config.
          */
-        static std::shared_ptr<Config> NewConfigFromText(std::string text);
+        static std::shared_ptr<Config> NewConfigFromText(const std::string& text);
 
-        bool GetBool(std::string key);
+        bool GetBool(std::string_view key);
 
-        int GetInt(std::string key);
+        int GetInt(std::string_view key);
 
-        float GetFloat(std::string key);
+        float GetFloat(std::string_view key);
 
-        std::string GetString(std::string key);
+        std::string GetString(std::string_view key);
 
-        std::vector<std::string> GetStrings(std::string key);
+        std::vector<std::string> GetStrings(std::string_view key);
 
-        void Set(std::string key, std::string value);
+        void Set(std::string_view key, const std::string& value);
 
-        std::string Get(std::string key);
+        std::string Get(std::string_view key);
 };
 
 } // namespace casbin

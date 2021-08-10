@@ -14,12 +14,12 @@ class FileAdapter : virtual public Adapter {
         FileAdapter(std::string file_path);
 
         // LoadPolicy loads all policy rules from the storage.
-        void LoadPolicy(Model* model);
+        void LoadPolicy(const std::shared_ptr<Model>& model);
 
         // SavePolicy saves all policy rules to the storage.
-        void SavePolicy(Model* model);
+        void SavePolicy(const std::shared_ptr<Model>& model);
 
-        void LoadPolicyFile(Model* model, void (*handler)(std::string, Model*));
+        void LoadPolicyFile(const std::shared_ptr<Model>& model, std::function<void(std::string, const std::shared_ptr<Model>&)> handler);
 
         void SavePolicyFile(std::string text);
 

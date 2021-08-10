@@ -55,7 +55,7 @@ std::string RemoveComments(std::string_view s);
 // SetSubtract returns the elements in `a` that aren't in `b`.
 std::vector<std::string> SetSubtract(const std::vector<std::string>& a, const std::vector<std::string>& b);
 
-std::vector<std::string> Split(std::string str, std::string del, int limit = 0);
+std::vector<std::string> Split(std::string str, const std::string& del, int limit = 0);
 
 std::string& LTrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
  

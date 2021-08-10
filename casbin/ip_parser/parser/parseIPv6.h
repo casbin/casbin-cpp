@@ -9,7 +9,7 @@
 
 namespace casbin {
 
-IP parseIPv6(std::string s);
+IP parseIPv6(std::string_view s);
 
 } // namespace casbin
 

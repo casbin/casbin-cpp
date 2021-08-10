@@ -39,7 +39,7 @@ class WatcherEx: public Watcher {
 
         // UpdateForSavePolicy calls the update callback of other instances to synchronize their policy.
         // It is called after Enforcer.RemoveFilteredNamedGroupingPolicy()
-        virtual void UpdateForSavePolicy(Model* model) = 0;
+        virtual void UpdateForSavePolicy(const std::shared_ptr<Model>& model) = 0;
 };
 
 };  // namespace casbin

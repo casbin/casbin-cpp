@@ -10,7 +10,7 @@ namespace casbin {
 
 // Decimal to integer.
 // Returns number, characters consumed, success.
-std::pair<int, int> dtoi(std::string s);
+std::pair<int, int> dtoi(std::string_view s);
 
 } // namespace casbin
 
