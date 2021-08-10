@@ -34,7 +34,7 @@ TEST(TestModel, TestNewModel) {
 }
 
 TEST(TestModel, TestNewModelFromFile) {
-    std::shared_ptr<casbin::Model> model = casbin::Model::NewModelFromFile(basic_example);
+    std::shared_ptr<casbin::Model> model = casbin::Model::NewModelFromFile(basic_model_path);
     ASSERT_NE(model, nullptr);
 }
 
