@@ -20,6 +20,10 @@
 
 #include "py_casbin.h"
 
+void PyLoadModelFromConfig(casbin::Model* model, std::shared_ptr<casbin::Config> config) {
+    model->LoadModelFromConfig(config);
+}
+
 void bindPyModel(py::module &m) {
     py::class_<casbin::Model, std::shared_ptr<casbin::Model>>(m, "Model")
         .def(py::init<>())
@@ -52,4 +56,6 @@ void bindPyModel(py::module &m) {
         .def_static("NewModel", &casbin::Model::NewModel, "NewModel creates an empty model.")
         .def_static("NewModelFromFile", &casbin::Model::NewModelFromFile, "NewModelFromFile creates a model from a .CONF file.")
         .def_static("NewModelFromString", &casbin::Model::NewModelFromString, "NewModel creates a model from a std::string which contains model text.");
+
+    m.def("LoadModelFromConfig", &PyLoadModelFromConfig);
 }

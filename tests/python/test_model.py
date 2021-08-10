@@ -17,6 +17,10 @@ from config_path import *
 import unittest
 
 class TestModel(unittest.TestCase):
+
+    # def setUp(self):
+        # self.basic_config = casbin.Config.NewConfig(basic_model_path)
+
     def test_NewModel(self):
         model = casbin.Model.NewModel()
         self.assertIsNotNone(model)
@@ -25,8 +29,31 @@ class TestModel(unittest.TestCase):
         model = casbin.Model.NewModelFromFile(basic_model_path)
         self.assertIsNotNone(model)
 
-    # def test_NewModelFromString(self):
-    #     with open(basic_model_path, 'r') as model_file:
-    #         model_string = model_file.read().replace('\n', '')
-    #     model = casbin.Model.NewModelFromString(model_string)
-    #     self.assertIsNotNone(model)
+    def test_NewModelFromString(self):
+        model_string = """[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = r.sub == p.sub && r.obj == p.obj && r.act == p.act"""
+        model = casbin.Model.NewModelFromString(model_string)
+        self.assertIsNotNone(model)
+
+    def test_LoadModelFromConfig(self):
+        # config = casbin.Config(basic_model_path)
+        # model = casbin.Model.NewModel()
+        # casbin.LoadModelFromConfig(model, basic_config)
+        # model = casbin.Model.NewModel()
+        # config = casbin.Config.NewConfigFromText("")
+        # model.LoadModelFromConfig(config)
+
+    def test_HasSection(self):
+        # config = casbin.Config.NewConfig(basic_model_path)
+        # model = casbin.Model.NewModel()
+        # casbin.LoadModelFromConfig(model, basic_config)
+
