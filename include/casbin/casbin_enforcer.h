@@ -30,16 +30,16 @@ namespace casbin {
         /* Enforcer API */
         virtual void InitWithFile(const std::string& model_path, const std::string& policy_path) = 0;
         virtual void InitWithAdapter(const std::string& model_path, std::shared_ptr<Adapter> adapter) = 0;
-        virtual void InitWithModelAndAdapter(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter) = 0;
+        virtual void InitWithModelAndAdapter(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter) = 0;
         virtual void Initialize() = 0;
         virtual void LoadModel() = 0;
         virtual std::shared_ptr<Model> GetModel() = 0;
-        virtual void SetModel(std::shared_ptr<Model> m) = 0;
+        virtual void SetModel(const std::shared_ptr<Model>& m) = 0;
         virtual std::shared_ptr<Adapter> GetAdapter() = 0;
         virtual void SetAdapter(std::shared_ptr<Adapter> adapter) = 0;
         virtual void SetWatcher(std::shared_ptr<Watcher> watcher) = 0;
         virtual std::shared_ptr<RoleManager> GetRoleManager() = 0;
-        virtual void SetRoleManager(std::shared_ptr<RoleManager> rm) = 0;
+        virtual void SetRoleManager(std::shared_ptr<RoleManager>& rm) = 0;
         virtual void SetEffector(std::shared_ptr<Effector> eft) = 0;
         virtual void ClearPolicy() = 0;
         virtual void LoadPolicy() = 0;
@@ -166,8 +166,8 @@ namespace casbin {
         bool m_auto_build_role_links;
         bool m_auto_notify_watcher;
 
-        // enforce use a custom matcher to decides whether a "subject" can access a "object"
-        // with the operation "action", input parameters are usually: (matcher, sub, obj, act),
+        // enforce use a custom matcher to decides whether a "subject" can access a "object" 
+        // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
         // use model matcher by default when matcher is "".
         bool m_enforce(const std::string& matcher, Scope scope);
 
@@ -199,13 +199,13 @@ namespace casbin {
          * @param m the model.
          * @param adapter the adapter.
          */
-        Enforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
+        Enforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
         /**
          * Enforcer initializes an enforcer with a model.
          *
          * @param m the model.
          */
-        Enforcer(std::shared_ptr<Model> m);
+        Enforcer(const std::shared_ptr<Model>& m);
         /**
          * Enforcer initializes an enforcer with a model file.
          *
@@ -225,16 +225,16 @@ namespace casbin {
         // InitWithAdapter initializes an enforcer with a database adapter.
         void InitWithAdapter(const std::string& model_path, std::shared_ptr<Adapter> adapter);
         // InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.
-        void InitWithModelAndAdapter(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
+        void InitWithModelAndAdapter(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
         void Initialize();
         // LoadModel reloads the model from the model CONF file.
-        // Because the policy is attached to a model, so the policy is invalidated and
+        // Because the policy is attached to a model, so the policy is invalidated and 
         // needs to be reloaded by calling LoadPolicy().
         void LoadModel();
         // GetModel gets the current model.
         std::shared_ptr<Model> GetModel();
         // SetModel sets the current model.
-        void SetModel(std::shared_ptr<Model> m);
+        void SetModel(const std::shared_ptr<Model>& m);
         // GetAdapter gets the current adapter.
         std::shared_ptr<Adapter> GetAdapter();
         // SetAdapter sets the current adapter.
@@ -244,7 +244,7 @@ namespace casbin {
         // GetRoleManager gets the current role manager.
         std::shared_ptr<RoleManager> GetRoleManager();
         // SetRoleManager sets the current role manager.
-        void SetRoleManager(std::shared_ptr <RoleManager> rm);
+        void SetRoleManager(std::shared_ptr<RoleManager>& rm);
         // SetEffector sets the current effector.
         void SetEffector(std::shared_ptr<Effector> eft);
         // ClearPolicy clears all policy.
@@ -378,7 +378,6 @@ namespace casbin {
         std::vector<std::vector<std::string>> GetPermissionsForUserInDomain(const std::string& user, const std::string& domain = {});
         bool AddRoleForUserInDomain(const std::string& user, const std::string& role, const std::string& domain = {});
         bool DeleteRoleForUserInDomain(const std::string& user, const std::string& role, const std::string& domain = {});
-
     };
 
     class CachedEnforcer : public Enforcer {
@@ -386,19 +385,19 @@ namespace casbin {
         std::unordered_map<std::string, bool> m;
         bool enableCache;
         std::mutex locker;
-
+    
         CachedEnforcer(const CachedEnforcer& ce);
         CachedEnforcer(CachedEnforcer&& ce);
-
+    
         void EnableCache(const bool& enableCache);
         std::pair<bool, bool> getCachedResult(const std::string& key);
         void setCachedResult(const std::string& key, const bool& res);
         void InvalidateCache();
-
+    
     public:
-        /**
-            * Enforcer is the default constructor.
-        */
+         /**
+             * Enforcer is the default constructor.
+         */
         CachedEnforcer();
         /**
              * Enforcer initializes an enforcer with a model file and a policy file.
@@ -420,13 +419,13 @@ namespace casbin {
              * @param m the model.
              * @param adapter the adapter.
              */
-        CachedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
+        CachedEnforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
         /**
              * Enforcer initializes an enforcer with a model.
              *
              * @param m the model.
              */
-        CachedEnforcer(std::shared_ptr<Model> m);
+        CachedEnforcer(const std::shared_ptr<Model>& m);
         /**
              * Enforcer initializes an enforcer with a model file.
              *
@@ -441,7 +440,7 @@ namespace casbin {
              * @param enable_log whether to enable Casbin's log.
              */
         CachedEnforcer(const std::string& model_path, const std::string& policy_file, bool enable_log);
-
+    
         bool Enforce(Scope scope);
         // Enforce with a vector param,decides whether a "subject" can access a
         // "object" with the operation "action", input parameters are usually: (sub,
@@ -502,14 +501,14 @@ namespace casbin {
             * @param m the model.
             * @param adapter the adapter.
         */
-        SyncedEnforcer(std::shared_ptr<Model> m, std::shared_ptr<Adapter> adapter);
+        SyncedEnforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
 
         /**
             * Enforcer initializes an enforcer with a model.
             *
             * @param m the model.
         */
-        SyncedEnforcer(std::shared_ptr<Model> m);
+        SyncedEnforcer(const std::shared_ptr<Model>& m);
 
         /**
             * Enforcer initializes an enforcer with a model file.
