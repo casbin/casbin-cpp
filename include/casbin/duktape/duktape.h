@@ -157,8 +157,6 @@
  *  (``sami.vaarala@iki.fi``) and I'll fix the omission.
  */
 
-#include "duk_config.h"
-
 #if !defined(DUKTAPE_H_INCLUDED)
 #define DUKTAPE_H_INCLUDED
 

@@ -28,7 +28,7 @@ set(CASBIN_HEADER
 
 add_executable(casbin_benchmark ${CASBIN_BENCHMARK_SOURCE} ${CASBIN_HEADER})
 
-target_include_directories(casbin_benchmark PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(casbin_benchmark PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 if(UNIX)
     set_target_properties(casbin_benchmark PROPERTIES
@@ -38,6 +38,7 @@ endif()
 
 target_link_libraries(
     casbin_benchmark
+        PRIVATE
     benchmark
     casbin
 )

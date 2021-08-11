@@ -12,17 +12,17 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* This is the main file for python bindings workflow
 */
 
-#ifndef CASBIN_CPP_EXCEPTION
-#define CASBIN_CPP_EXCEPTION
+#ifndef CASBIN_CPP_CASBIN_H
+#define CASBIN_CPP_CASBIN_H
 
-#include "./exception/casbin_adapter_exception.h"
-#include "./exception/casbin_enforcer_exception.h"
-#include "./exception/casbin_rbac_exception.h"
-#include "./exception/illegal_argument_exception.h"
-#include "./exception/io_exception.h"
-#include "./exception/missing_required_sections.h"
-#include "./exception/unsupported_operation_exception.h"
+#include "casbin_enforcer.h"
+#include "casbin_helpers.h"
+#include "casbin_types.h"
+#include "duktape/duktape.h"
+#include "duktape/duk_config.h"
 
-#endif
+#endif //CASBIN_CPP_CASBIN_H

@@ -31,8 +31,8 @@ endif()
 ###############################################################################
 # Project definition.
 
-project(Casbin-CPP 
-    VERSION 1.27.0
+project(CasbinCPP
+    VERSION 1.36.0
     DESCRIPTION "An authorization library that supports access control models like ACL, RBAC, ABAC in C/C++"
     HOMEPAGE_URL https://github.com/casbin/casbin-cpp
     LANGUAGES CXX C
@@ -86,3 +86,16 @@ set(CMAKE_CXX_STANDARD 17)
 include(FindExtPackages)
 
 add_subdirectory(casbin)
+
+export(TARGETS
+    casbin
+    NAMESPACE casbin::
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/CasbinConfig.cmake"
+)
+
+if(CASBIN_BUILD_PYTHON_BINDINGS)
+    export(TARGETS pycasbin
+        NAMESPACE casbin::
+        FILE "${CMAKE_CURRENT_BINARY_DIR}/PyCasbinConfig.cmake"
+    )
+endif()

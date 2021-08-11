@@ -26,7 +26,7 @@ set(HEADERS
 
 add_library(pycasbin MODULE ${SOURCES} ${HEADERS})
 
-target_include_directories(pycasbin PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(pycasbin PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 set_target_properties(pycasbin PROPERTIES
     PREFIX ""
@@ -41,9 +41,6 @@ if(WIN32)
         SUFFIX ".pyd"
     )
 endif()
-
-
-# NOTE: Depending of the compiler version pybind11 2.4.3 does not compile with C++17 so revert to c++11
 
 if(UNIX)
     # A 'module' is a dynamic library on Linux (i.e. '-fPIC' needed),
@@ -70,7 +67,20 @@ target_link_libraries(pycasbin
         casbin
 )
 
+if(WIN32)
+    set(Python_VARIANT_PATH "lib${LIB_SUFFIX}/site-packages")
+else()
+    set(Python_VARIANT_PATH "lib${LIB_SUFFIX}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages")
+endif()
+
+# For testing
 install(
     TARGETS pycasbin
-    DESTINATION ${CMAKE_SOURCE_DIR}/tests/python
+    LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/tests/python
+)
+
+# For actual installation
+install(
+    TARGETS pycasbin
+    LIBRARY DESTINATION ${Python_VARIANT_PATH}
 )

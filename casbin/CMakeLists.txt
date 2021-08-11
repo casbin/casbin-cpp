@@ -12,17 +12,69 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-FILE(GLOB_RECURSE SRC_FILES "*.cpp" "*.h")
+set(CASBIN_SOURCE
+        abac_data.cpp
+        enforcer.cpp
+        enforcer_cached.cpp
+        enforcer_synced.cpp
+        internal_api.cpp
+        logger.cpp
+        management_api.cpp
+        pch.cpp
+        rbac_api.cpp
+        rbac_api_with_domains.cpp
+        config/config.cpp
+        duktape/duktape.cpp
+        effect/default_effector.cpp
+        ip_parser/exception/parser_exception.cpp
+        ip_parser/parser/allFF.cpp
+        ip_parser/parser/CIDRMask.cpp
+        ip_parser/parser/dtoi.cpp
+        ip_parser/parser/equal.cpp
+        ip_parser/parser/IP.cpp
+        ip_parser/parser/IPNet.cpp
+        ip_parser/parser/IPv4.cpp
+        ip_parser/parser/parseCIDR.cpp
+        ip_parser/parser/parseIP.cpp
+        ip_parser/parser/parseIPv4.cpp
+        ip_parser/parser/parseIPv6.cpp
+        ip_parser/parser/Print.cpp
+        ip_parser/parser/xtoi.cpp
+        model/assertion.cpp
+        model/function.cpp
+        model/model.cpp
+        model/scope_config.cpp
+        persist/file_adapter/batch_file_adapter.cpp
+        persist/file_adapter/file_adapter.cpp
+        persist/file_adapter/filtered_file_adapter.cpp
+        persist/adapter.cpp
+        persist/default_watcher.cpp
+        persist/default_watcher_ex.cpp
+        rbac/default_role_manager.cpp
+        util/array_equals.cpp
+        util/array_remove_duplicates.cpp
+        util/array_to_string.cpp
+        util/built_in_functions.cpp
+        util/ends_with.cpp
+        util/escape_assertion.cpp
+        util/find_all_occurences.cpp
+        util/is_instance_of.cpp
+        util/join.cpp
+        util/join_slice.cpp
+        util/remove_comments.cpp
+        util/set_subtract.cpp
+        util/split.cpp
+        util/ticker.cpp
+        util/trim.cpp
+        )
 
 # Setting to C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(casbin ${SRC_FILES})
-include_directories(${CMAKE_SOURCE_DIR}/casbin)
+add_library(casbin ${CASBIN_SOURCE})
+target_include_directories(casbin PUBLIC ${CMAKE_SOURCE_DIR}/casbin)
 
 target_precompile_headers(casbin PUBLIC "pch.h")
-
-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
 
 set_target_properties(casbin PROPERTIES 
     PREFIX ""
@@ -37,13 +89,14 @@ elseif(UNIX)
     )
 endif()
 
-install(
-    TARGETS casbin
-    DESTINATION lib
-)
+install(TARGETS casbin EXPORT CasbinTargets
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include
+        )
 
 install(
-    DIRECTORY ${CMAKE_SOURCE_DIR}/casbin
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    FILES_MATCHING PATTERN "*.h"
+    DIRECTORY ${CMAKE_SOURCE_DIR}/include/casbin
+    DESTINATION include
 )

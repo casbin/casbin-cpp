@@ -20,6 +20,8 @@
 #include <vector>
 #include <string>
 
+#include "built_in_functions.h"
+
 namespace casbin {
 
 // ArrayEquals determines whether two std::string arrays are identical.

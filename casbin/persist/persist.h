@@ -17,16 +17,16 @@
 #ifndef CASBIN_CPP_PERSIST
 #define CASBIN_CPP_PERSIST
 
-#include "./persist/adapter.h"
-#include "./persist/filtered_adapter.h"
-#include "./persist/batch_adapter.h"
-#include "./persist/default_watcher.h"
-#include "./persist/default_watcher_ex.h"
-#include "./persist/watcher.h"
-#include "./persist/watcher_ex.h"
+#include "adapter.h"
+#include "filtered_adapter.h"
+#include "batch_adapter.h"
+#include "default_watcher.h"
+#include "default_watcher_ex.h"
+#include "watcher.h"
+#include "watcher_ex.h"
 
-#include "./persist/file_adapter/batch_file_adapter.h"
-#include "./persist/file_adapter/file_adapter.h"
-#include "./persist/file_adapter/filtered_file_adapter.h"
+#include "file_adapter/batch_file_adapter.h"
+#include "file_adapter/file_adapter.h"
+#include "file_adapter/filtered_file_adapter.h"
 
 #endif

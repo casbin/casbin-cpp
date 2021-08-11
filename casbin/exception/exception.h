@@ -1,5 +1,5 @@
 /*
-* Copyright 2020 The casbin Authors. All Rights Reserved.
+* Copyright 2021 The casbin Authors. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,12 +14,15 @@
 * limitations under the License.
 */
 
-#ifndef CASBIN_CPP_MODEL
-#define CASBIN_CPP_MODEL
+#ifndef CASBIN_CPP_EXCEPTION
+#define CASBIN_CPP_EXCEPTION
 
-#include "./model/assertion.h"
-#include "./model/function.h"
-#include "./model/model.h"
-#include "./model/scope_config.h"
+#include "casbin_adapter_exception.h"
+#include "casbin_enforcer_exception.h"
+#include "casbin_rbac_exception.h"
+#include "illegal_argument_exception.h"
+#include "io_exception.h"
+#include "missing_required_sections.h"
+#include "unsupported_operation_exception.h"
 
 #endif
