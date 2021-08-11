@@ -58,6 +58,4 @@ void bindPyModel(py::module &m) {
         .def_static("NewModel", &casbin::Model::NewModel, "NewModel creates an empty model.")
         .def_static("NewModelFromFile", &casbin::Model::NewModelFromFile, "NewModelFromFile creates a model from a .CONF file.")
         .def_static("NewModelFromString", &casbin::Model::NewModelFromString, "NewModel creates a model from a std::string which contains model text.");
-
-    m.def("LoadModelFromConfig", &PyLoadModelFromConfig);
 }
