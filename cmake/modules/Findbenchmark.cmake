@@ -21,3 +21,10 @@ FetchContent_Declare(
 
 set(BENCHMARK_ENABLE_TESTING OFF)
 FetchContent_MakeAvailable(benchmark)
+
+FetchContent_GetProperties(benchmark)
+
+if(NOT benchmark_POPULATED)
+  FetchContent_Populate(benchmark)
+  add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
+endif()
