@@ -54,7 +54,7 @@ namespace casbin {
         std::unordered_map<std::string, std::unordered_map<std::string, std::string>> data;
 
         /**
-         * addConfig adds a new section->key:value to the configuration.
+            * addConfig adds a new section->key:value to the configuration.
          */
         bool AddConfig(std::string section, const std::string& option, const std::string& value);
 
@@ -81,6 +81,10 @@ namespace casbin {
         static std::shared_ptr<Config> NewConfigFromText(const std::string& text);
 
         bool GetBool(std::string_view key);
+
+        Config();
+
+        Config(const std::string& conf_name);
 
         int GetInt(std::string_view key);
 
@@ -206,7 +210,7 @@ namespace casbin {
             // LoadModelFromText loads the model from the text.
             void LoadModelFromText(const std::string& text);
 
-            void LoadModelFromConfig(std::shared_ptr<ConfigInterface> cfg);
+            void LoadModelFromConfig(std::shared_ptr<Config>& cfg);
 
             // PrintModel prints the model to the log.
             void PrintModel();

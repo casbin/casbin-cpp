@@ -17,16 +17,76 @@ from config_path import *
 import unittest
 
 class TestModel(unittest.TestCase):
+
+    def setUp(self):
+        self.model = None
+        self.config = None
+
+    def cleanUp(self):
+        self.model = None
+        self.config = None
+
+    def tearDown(self):
+        self.model = None
+        self.config = None
+
     def test_NewModel(self):
-        model = casbin.Model.NewModel()
-        self.assertIsNotNone(model)
+        self.cleanUp()
+        self.model = casbin.Model.NewModel()
+        self.assertIsNotNone(self.model)
 
     def test_NewModelFromFile(self):
-        model = casbin.Model.NewModelFromFile(basic_model_path)
-        self.assertIsNotNone(model)
+        self.cleanUp()
+        self.model = casbin.Model.NewModelFromFile(basic_model_path)
+        self.assertIsNotNone(self.model)
 
-    # def test_NewModelFromString(self):
-    #     with open(basic_model_path, 'r') as model_file:
-    #         model_string = model_file.read().replace('\n', '')
-    #     model = casbin.Model.NewModelFromString(model_string)
-    #     self.assertIsNotNone(model)
+    def test_NewModelFromString(self):
+        self.cleanUp()
+        model_string = """[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = r.sub == p.sub && r.obj == p.obj && r.act == p.act"""
+        self.model = casbin.Model.NewModelFromString(model_string)
+        self.assertIsNotNone(self.model)
+
+    def test_LoadModelFromConfig(self):
+        self.cleanUp()
+        self.config = casbin.Config.NewConfig(basic_model_path)
+        self.model = casbin.Model.NewModel()
+        self.model.LoadModelFromConfig(self.config)
+        self.model = casbin.Model.NewModel()
+        self.config = casbin.Config.NewConfigFromText('')
+        # self.assertRaises('', model.LoadModelFromConfig(basic_config))
+
+    def test_HasSection(self):
+        self.cleanUp()
+        self.config = casbin.Config.NewConfig(basic_model_path)
+        self.model = casbin.Model.NewModel()
+        self.model.LoadModelFromConfig(self.config)
+        for required_section in casbin.Model.required_sections:
+            self.assertTrue(self.model.HasSection(required_section))
+
+        self.cleanUp()
+        self.model = casbin.Model.NewModel()
+        self.config = casbin.Config.NewConfigFromText('')
+        # self.assertRaises('', model.LoadModelFromConfig(config))
+
+        for required_section in casbin.Model.required_sections:
+            self.assertFalse(self.model.HasSection(required_section))
+
+    def test_ModelAddDef(self):
+        self.cleanUp()
+        self.model = casbin.Model.NewModel()
+        s = 'r'
+        v = 'sub, obj, act'
+
+        self.assertTrue(self.model.AddDef(s, s, v))
+
+        self.assertFalse(self.model.AddDef(s, s, ''))

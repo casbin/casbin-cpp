@@ -18,6 +18,7 @@ import os
 import pycasbin
 import test_enforcer
 import test_model
+import test_config
 
 def suite():
 
@@ -27,6 +28,7 @@ def suite():
 
     suite.addTest(loader.loadTestsFromModule(test_enforcer))
     suite.addTest(loader.loadTestsFromModule(test_model))
+    suite.addTest(loader.loadTestsFromModule(test_config))
 
     return suite
 

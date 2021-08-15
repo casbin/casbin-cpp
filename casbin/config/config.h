@@ -64,6 +64,10 @@ class Config : public ConfigInterface {
 
         bool GetBool(std::string_view key);
 
+        Config();
+
+        Config(const std::string& conf_name);
+
         int GetInt(std::string_view key);
 
         float GetFloat(std::string_view key);

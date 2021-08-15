@@ -20,10 +20,16 @@
 
 #include "py_casbin.h"
 
+void PyLoadModelFromConfig(casbin::Model* model, std::shared_ptr<casbin::Config> config) {
+    model->LoadModelFromConfig(config);
+}
+
 void bindPyModel(py::module &m) {
     py::class_<casbin::Model, std::shared_ptr<casbin::Model>>(m, "Model")
         .def(py::init<>())
         .def(py::init<const std::string &>())
+
+        .def_readonly_static("required_sections", &casbin::Model::required_sections)
 
         .def("HasSection", &casbin::Model::HasSection)
         .def("AddDef", &casbin::Model::AddDef, "AddDef adds an assertion to the model.")

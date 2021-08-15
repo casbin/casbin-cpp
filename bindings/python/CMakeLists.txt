@@ -18,7 +18,7 @@ set(SOURCES
     py_enforcer.cpp
     py_abac_data.cpp
     py_model.cpp
-)
+        py_config.cpp)
 
 set(HEADERS
     py_casbin.h

@@ -50,7 +50,7 @@ TEST(TestModel, TestNewModelFromString) {
 
 TEST(TestModel, TestLoadModelFromConfig) {
     InitTest();
-     std::shared_ptr<casbin::Model> model = casbin::Model::NewModel();
+    std::shared_ptr<casbin::Model> model = casbin::Model::NewModel();
     model->LoadModelFromConfig(basic_config);
 
     model = casbin::Model::NewModel();

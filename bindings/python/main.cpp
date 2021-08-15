@@ -38,6 +38,7 @@ PYBIND11_MODULE(pycasbin, m) {
     bindPyCachedEnforcer(m);
     bindABACData(m);
     bindPyModel(m);
+    bindPyConfig(m);
 
     m.attr("__version__") = PY_CASBIN_VERSION;
 }
