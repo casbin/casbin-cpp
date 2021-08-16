@@ -20,7 +20,7 @@ set(CMAKE_MODULE_PATH
 )
 
 set(CMAKE_WARN_DEPRECATED ON)
-set(PY_CASBIN_VERSION 1.0)
+set(PY_CASBIN_VERSION 1.1)
 
 if(APPLE AND NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
     # The value of this variable should be set prior to the first project() command invocation
@@ -32,7 +32,7 @@ endif()
 # Project definition.
 
 project(CasbinCPP
-    VERSION 1.37.0
+    VERSION 1.38.2
     DESCRIPTION "An authorization library that supports access control models like ACL, RBAC, ABAC in C/C++"
     HOMEPAGE_URL https://github.com/casbin/casbin-cpp
     LANGUAGES CXX C

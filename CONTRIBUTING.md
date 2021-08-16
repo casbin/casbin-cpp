@@ -35,3 +35,8 @@ Good pull requests (e.g. patches, improvements, new features) are a fantastic he
 Please ask first before embarking on any significant pull request (e.g. implementing new features, refactoring code etc.), otherwise you risk spending a lot of time working on something that the maintainers might not want to merge into the project.
 
 First add an issue to the project to discuss the improvement. Please adhere to the coding conventions used throughout the project. If in doubt, consult the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
+
+We follow semantic pull requests. Make sure you sign-off and format every commit message
+as well as the PR title as specified in [conventional-commit-types](https://github.com/commitizen/conventional-commit-types/blob/master/index.json).
+
+Eg. `feat: New feature name`, `fix: Some error`, etc.
