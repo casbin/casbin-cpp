@@ -33,9 +33,7 @@ std::vector<std::string> Split(std::string str, const std::string& del, int limi
 
     if(limit <= 0)
         limit = LARGE;
-
-    tokens.reserve((limit == LARGE) ? 100000 : limit);
-
+    tokens.reserve((limit == LARGE) ? 0 : limit);
     for (int i = 1; i < limit ; i++) {
         size_t pos = str.find(del);
         if (pos != std::string::npos) {
