@@ -38,6 +38,7 @@ namespace casbin {
 // use model matcher by default when matcher is "".
 bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
     m_func_map.scope = scope;
+    m_func_map.func_list.clear();
 
     if(!m_enabled)
         return true;
