@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
+
 set(SOURCES
     main.cpp
     py_cached_enforcer.cpp
@@ -26,7 +28,7 @@ set(HEADERS
     py_casbin.h
 )
 
-add_library(pycasbin MODULE ${SOURCES} ${HEADERS})
+Python_add_library(pycasbin MODULE ${SOURCES} ${HEADERS})
 
 target_include_directories(pycasbin PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
@@ -35,6 +37,7 @@ set_target_properties(pycasbin PROPERTIES
     CXX_STANDARD 17
 )
 
+# For in-source versioning macro
 add_definitions(-DPY_CASBIN_VERSION=${PY_CASBIN_VERSION})
 
 if(WIN32)
@@ -70,10 +73,12 @@ target_link_libraries(pycasbin
 )
 
 if(WIN32)
-    set(Python_VARIANT_PATH "lib${LIB_SUFFIX}/site-packages")
+    set(Python_VARIANT_PATH lib${LIB_SUFFIX}/site-packages)
 else()
-    set(Python_VARIANT_PATH "lib${LIB_SUFFIX}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages")
+    set(Python_VARIANT_PATH lib${LIB_SUFFIX}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages)
 endif()
+
+message("${Python_VARIANT_PATH}")
 
 # For testing
 install(

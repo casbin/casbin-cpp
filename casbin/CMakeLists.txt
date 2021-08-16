@@ -72,12 +72,13 @@ set(CASBIN_SOURCE
 set(CMAKE_CXX_STANDARD 17)
 
 add_library(casbin STATIC ${CASBIN_SOURCE})
-target_include_directories(casbin PUBLIC ${CMAKE_SOURCE_DIR}/casbin)
 
-target_precompile_headers(casbin PUBLIC "pch.h")
+target_precompile_headers(casbin PUBLIC pch.h)
+target_include_directories(casbin PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 set_target_properties(casbin PROPERTIES 
     PREFIX ""
+    VERSION ${CMAKE_PROJECT_VERSION}
 )
 
 if(WIN32 OR MSVC)
@@ -88,16 +89,3 @@ elseif(UNIX)
         POSITION_INDEPENDENT_CODE ON
     )
 endif()
-
-install(
-    TARGETS casbin EXPORT CasbinTargets
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-    RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include
-)
-
-install(
-    DIRECTORY ${CMAKE_SOURCE_DIR}/include/casbin
-    DESTINATION include
-)

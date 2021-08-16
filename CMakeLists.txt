@@ -31,8 +31,9 @@ endif()
 ###############################################################################
 # Project definition.
 
-project(CasbinCPP
-    VERSION 1.38.2
+project(
+    casbin
+    VERSION 1.38.0
     DESCRIPTION "An authorization library that supports access control models like ACL, RBAC, ABAC in C/C++"
     HOMEPAGE_URL https://github.com/casbin/casbin-cpp
     LANGUAGES CXX C
@@ -54,6 +55,7 @@ option(CASBIN_BUILD_TEST "State whether to build test" ON)
 option(CASBIN_BUILD_BENCHMARK "State whether to build benchmarks" ON)
 option(CASBIN_BUILD_BINDINGS "State whether to build language bindings" ON)
 option(CASBIN_BUILD_PYTHON_BINDINGS "State whether to build python bindings" ON)
+
 
 # Do not output install messages.
 if(NOT DEFINED CMAKE_INSTALL_MESSAGE)
@@ -78,7 +80,7 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 
 ###############################################################################
-# Find or install external dependencies
+# Install external dependencies
 # Some required targets may be created by third-party CMake configs, which 
 # don't generally produce global targets. To guarantee all imported targets are 
 # global, this module is included at the project root level.
@@ -86,16 +88,3 @@ set(CMAKE_CXX_STANDARD 17)
 include(FindExtPackages)
 
 add_subdirectory(casbin)
-
-export(TARGETS
-    casbin
-    NAMESPACE casbin::
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/CasbinConfig.cmake"
-)
-
-if(CASBIN_BUILD_PYTHON_BINDINGS)
-    export(TARGETS pycasbin
-        NAMESPACE casbin::
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/PyCasbinConfig.cmake"
-    )
-endif()
