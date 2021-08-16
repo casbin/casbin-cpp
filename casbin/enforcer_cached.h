@@ -85,23 +85,39 @@ public:
     CachedEnforcer(const std::string& model_path, const std::string& policy_file, bool enable_log);
 
     bool Enforce(Scope scope);
+
+    // Enforce with a vector param,decides whether a "subject" can access a
+    // "object" with the operation "action", input parameters are usually: (sub,
+    // obj, act).
+    bool Enforce(const DataVector& params);
+
     // Enforce with a vector param,decides whether a "subject" can access a
     // "object" with the operation "action", input parameters are usually: (sub,
     // obj, act).
     bool Enforce(const DataList& params);
+
     // Enforce with a map param,decides whether a "subject" can access a "object"
     // with the operation "action", input parameters are usually: (sub, obj, act).
     bool Enforce(const DataMap& params);
+
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
     // access a "object" with the operation "action", input parameters are
     // usually: (matcher, sub, obj, act), use model matcher by default when
     // matcher is "".
     bool EnforceWithMatcher(const std::string& matcher, Scope scope);
+
+    // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
+    // access a "object" with the operation "action", input parameters are
+    // usually: (matcher, sub, obj, act), use model matcher by default when
+    // matcher is "".
+    bool EnforceWithMatcher(const std::string& matcher, const DataVector& params);
+
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
     // access a "object" with the operation "action", input parameters are
     // usually: (matcher, sub, obj, act), use model matcher by default when
     // matcher is "".
     bool EnforceWithMatcher(const std::string& matcher, const DataList& params);
+
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
     // access a "object" with the operation "action", input parameters are
     // usually: (matcher, sub, obj, act), use model matcher by default when

@@ -116,7 +116,7 @@ void SyncedEnforcer ::StartAutoLoadPolicy(std::chrono::duration<int64_t, std::na
 }
 
 // IsAutoLoadingRunning check if SyncedEnforcer is auto loading policies
-inline bool SyncedEnforcer ::IsAutoLoadingRunning() {
+bool SyncedEnforcer ::IsAutoLoadingRunning() {
     return autoLoadRunning;
 }
 
@@ -189,6 +189,14 @@ bool SyncedEnforcer ::Enforce(Scope s) {
 // Enforce with a vector param,decides whether a "subject" can access a
 // "object" with the operation "action", input parameters are usually: (sub,
 // obj, act).
+bool SyncedEnforcer::Enforce(const DataVector& params) {
+    std::lock_guard<std::mutex> lock(policyMutex);
+    return Enforcer::Enforce(params);
+}
+
+// Enforce with a vector param,decides whether a "subject" can access a
+// "object" with the operation "action", input parameters are usually: (sub,
+// obj, act).
 bool SyncedEnforcer ::Enforce(const DataList& params) {
     std::lock_guard<std::mutex> lock(policyMutex);
     return Enforcer::Enforce(params);
@@ -208,7 +216,7 @@ std::vector<bool> SyncedEnforcer ::BatchEnforce(const std::initializer_list<Data
 }
 
 // BatchEnforceWithMatcher enforce with matcher in batches
-std::vector<bool> SyncedEnforcer ::BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) {
+std::vector<bool> SyncedEnforcer::BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) {
   std::lock_guard<std::mutex> lock(policyMutex);
   return Enforcer::BatchEnforceWithMatcher(matcher, requests);
 }

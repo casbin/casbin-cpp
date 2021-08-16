@@ -148,6 +148,10 @@ bool CachedEnforcer ::Enforce(Scope scope) {
     return EnforceWithMatcher("", scope);
 }
 
+bool CachedEnforcer::Enforce(const DataVector& params) {
+    return EnforceWithMatcher("", params);
+}
+
 // Enforce with a vector param,decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (sub, obj, act).
 bool CachedEnforcer::Enforce(const DataList& params) {
@@ -165,6 +169,47 @@ bool CachedEnforcer::Enforce(const DataMap& params) {
 // (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool CachedEnforcer ::EnforceWithMatcher(const std::string& matcher, Scope scope) {
     return Enforcer::EnforceWithMatcher(matcher, scope);
+}
+
+// EnforceWithMatcher use a custom matcher to decides whether a "subject" can
+// access a "object" with the operation "action", input parameters are usually:
+// (matcher, sub, obj, act), use model matcher by default when matcher is "".
+bool CachedEnforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& params) {
+    if (!enableCache) {
+        return Enforcer::EnforceWithMatcher(matcher, params);
+    }
+
+    std::string key;
+    for (const auto& r : params) {
+        if(const auto string_param = std::get_if<std::string>(&r))
+            key += *string_param;
+        else if(const auto abac_param = std::get_if<std::shared_ptr<ABACData>>(&r)) {
+            auto data_ptr = *abac_param;
+            for(auto [_, attrib_value] : data_ptr->GetAttributes()) {
+                if(auto string_value = std::get_if<std::string>(&attrib_value))
+                    key += *string_value + "$";
+                else if(auto int_value = std::get_if<int32_t>(&attrib_value))
+                    key += std::to_string(*int_value) + "$";
+                else if(auto double_value = std::get_if<double>(&attrib_value))
+                    key += std::to_string(*double_value) + "$";
+                else if(auto float_value = std::get_if<float>(&attrib_value))
+                    key += std::to_string(*float_value) + "$";
+            }
+        }
+        key += "$$";
+    }
+    key += matcher;
+    key += "$";
+
+    std::pair<bool, bool> res_ok = getCachedResult(key);
+
+    if (res_ok.second) {
+        return res_ok.first;
+    }
+
+    bool res = Enforcer::EnforceWithMatcher(matcher, params);
+    setCachedResult(key, res);
+    return res;
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can

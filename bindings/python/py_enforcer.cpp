@@ -24,13 +24,14 @@ namespace py = pybind11;
 
 void bindPyEnforcer(py::module& m) {
     py::class_<casbin::Enforcer>(m, "Enforcer")
-        .def(py::init<>())
-        .def(py::init<const std::string &, const std::string &>())
-        .def(py::init<const std::string &, std::shared_ptr<casbin::Adapter>>())
-        .def(py::init<std::shared_ptr<casbin::Model>, std::shared_ptr<casbin::Adapter>>())
-        .def(py::init<std::shared_ptr<casbin::Model>>())
-        .def(py::init<const std::string &>())
-        .def(py::init<const std::string &, const std::string &, bool>())
+        .def(py::init<>(), "")
+        .def(py::init<const std::string &, const std::string &>(), "")
+        .def(py::init<const std::string &, std::shared_ptr<casbin::Adapter>>(), "")
+        .def(py::init<std::shared_ptr<casbin::Model>, std::shared_ptr<casbin::Adapter>>(), "")
+        .def(py::init<std::shared_ptr<casbin::Model>>(), "")
+        .def(py::init<const std::string &>(), "")
+        .def(py::init<const std::string &, const std::string &, bool>(), "")
+
         .def("InitWithFile", &casbin::Enforcer::InitWithFile, "InitWithFile initializes an enforcer with a model file and a policy file.")
         .def("InitWithAdapter", &casbin::Enforcer::InitWithAdapter, "InitWithAdapter initializes an enforcer with a database adapter.")
         .def("InitWithModelAndAdapter", &casbin::Enforcer::InitWithModelAndAdapter, "InitWithModelAndAdapter initializes an enforcer with a model and a database adapter.")
@@ -40,6 +41,7 @@ void bindPyEnforcer(py::module& m) {
             Because the policy is attached to a model, so the policy is invalidated and 
             needs to be reloaded by calling LoadPolicy().
         )doc")
+
         .def("GetModel", &casbin::Enforcer::GetModel, "GetModel gets the current model.")
         .def("SetModel", &casbin::Enforcer::SetModel, "SetModel sets the current model.")
         .def("GetAdapter", &casbin::Enforcer::GetAdapter, "GetAdapter gets the current adapter.")
@@ -60,10 +62,8 @@ void bindPyEnforcer(py::module& m) {
         .def("EnableAutoBuildRoleLinks", &casbin::Enforcer::EnableAutoBuildRoleLinks, "EnableAutoBuildRoleLinks controls whether to rebuild the role inheritance relations when a role is added or deleted.")
         .def("BuildRoleLinks", &casbin::Enforcer::BuildRoleLinks, "BuildRoleLinks manually rebuild the role inheritance relations.")
         .def("BuildIncrementalRoleLinks", &casbin::Enforcer::BuildIncrementalRoleLinks, "BuildIncrementalRoleLinks provides incremental build the role inheritance relations.")
-        // .def("Enforce", py::overload_cast<casbin::Scope>(&casbin::Enforcer::Enforce), "Enforce decides whether a \"subject\" can access a \"object\" with the operation \"action\", input parameters are usually: (sub, obj, act).")
         .def("Enforce", py::overload_cast<const casbin::DataVector &>(&casbin::Enforcer::Enforce), "Enforce with a vector param, decides whether a \"subject\" can access a \"object\" with the operation \"action\", input parameters are usually: (sub, obj, act).")
         .def("Enforce", py::overload_cast<const casbin::DataMap &>(&casbin::Enforcer::Enforce), "Enforce with a map param, decides whether a \"subject\" can access a \"object\" with the operation \"action\", input parameters are usually: (sub, obj, act).")
-        // .def("EnforceWithMatcher", py::overload_cast<const std::string &, casbin::Scope>(&casbin::Enforcer::EnforceWithMatcher), "EnforceWithMatcher use a custom matcher to decides whether a \"subject\" can access a \"object\" with the operation \"action\", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is \"\".")
         .def("EnforceWithMatcher", py::overload_cast<const std::string &, const casbin::DataList &>(&casbin::Enforcer::EnforceWithMatcher), "EnforceWithMatcher use a custom matcher to decides whether a \"subject\" can access a \"object\" with the operation \"action\", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is \"\".")
         .def("EnforceWithMatcher", py::overload_cast<const std::string &, const casbin::DataMap &>(&casbin::Enforcer::EnforceWithMatcher), "EnforceWithMatcher use a custom matcher to decides whether a \"subject\" can access a \"object\" with the operation \"action\", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is \"\".")
         .def("BatchEnforce", &casbin::Enforcer::BatchEnforce, "BatchEnforce enforce in batches")

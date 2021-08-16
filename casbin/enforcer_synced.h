@@ -91,7 +91,7 @@ public:
     void StartAutoLoadPolicy(std::chrono::duration<int64_t, std::nano> t);
 
     // IsAutoLoadingRunning check if SyncedEnforcer is auto loading policies
-    inline bool IsAutoLoadingRunning();
+    bool IsAutoLoadingRunning();
 
     // StopAutoLoadPolicy causes the thread to exit
     void StopAutoLoadPolicy();
@@ -127,6 +127,11 @@ public:
 
     // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
     bool Enforce(Scope);
+
+    // Enforce with a vector param,decides whether a "subject" can access a
+    // "object" with the operation "action", input parameters are usually: (sub,
+    // obj, act).
+    bool Enforce(const DataVector& params);
 
     // Enforce with a vector param,decides whether a "subject" can access a
     // "object" with the operation "action", input parameters are usually: (sub,
