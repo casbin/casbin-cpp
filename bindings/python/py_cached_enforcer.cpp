@@ -53,11 +53,12 @@ void bindPyCachedEnforcer(py::module &m) {
             @param enable_log whether to enable Casbin's log.
         )doc")
 
-        // .def("Enforce", py::overload_cast<casbin::Scope>(&casbin::CachedEnforcer::Enforce), R"doc(
-        //     Enforce with a vector param,decides whether a "subject" can access a
-        //     "object" with the operation "action", input parameters are usually: (sub,
-        //     obj, act).
-        // )doc")
+        .def("InvalidateCache", &casbin::CachedEnforcer::InvalidateCache)
+
+        .def("Enforce", py::overload_cast<const casbin::DataVector&>(&casbin::CachedEnforcer::Enforce), R"doc(
+            Enforce with a map param,decides whether a "subject" can access a "object"
+            with the operation "action", input parameters are usually: (sub, obj, act).
+        )doc")
         .def("Enforce", py::overload_cast<const casbin::DataList &>(&casbin::CachedEnforcer::Enforce), R"doc(
             Enforce with a map param,decides whether a "subject" can access a "object"
             with the operation "action", input parameters are usually: (sub, obj, act).
@@ -66,12 +67,7 @@ void bindPyCachedEnforcer(py::module &m) {
             Enforce with a map param,decides whether a "subject" can access a "object"
             with the operation "action", input parameters are usually: (sub, obj, act).
         )doc")
-        // .def("EnforceWithMatcher", py::overload_cast<const std::string &, casbin::Scope>(&casbin::CachedEnforcer::EnforceWithMatcher), R"doc(
-        //     EnforceWithMatcher use a custom matcher to decides whether a "subject" can
-        //     access a "object" with the operation "action", input parameters are
-        //     usually: (matcher, sub, obj, act), use model matcher by default when
-        //     matcher is "".
-        // )doc")
+
         .def("EnforceWithMatcher", py::overload_cast<const std::string &, const casbin::DataList &>(&casbin::CachedEnforcer::EnforceWithMatcher), R"doc(
             EnforceWithMatcher use a custom matcher to decides whether a "subject" can
             access a "object" with the operation "action", input parameters are
