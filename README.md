@@ -15,8 +15,11 @@ Windows (VS C++)  | :heavy_check_mark: Available
 Linux   | :heavy_check_mark: Available
 macOS   | :heavy_check_mark: Available
 
+<br/>
 
-![casbin Logo](casbin-logo.png)
+![casbin Logo](./assets/images/casbin-logo.png)
+
+<br/>
 
 ## All the languages supported by Casbin:
 
@@ -108,6 +111,56 @@ You can also use the online editor (https://casbin.org/editor/) to write your Ca
 
 https://casbin.org/docs/en/tutorials
 
+## Integrating Casbin to your project through CMake
+
+Here is a [working project](https://github.com/EmperorYP7/casbin-CMake-setup) to demonstarte how to set up your CMake
+configurations to integrate casbin.
+
+You may integrate casbin into your CMake project through `find_package`. **It is assumed that you're using CMake >= v3.19.**
+
+You must have casbin installed on your system OR have it fetched from GitHub through [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html).
+
+Here's what your Findcasbin.cmake file should be:
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(
+        casbin
+        GIT_REPOSITORY https://github.com/casbin/casbin-cpp.git
+        GIT_TAG v1.38.1
+)
+
+set(CASBIN_BUILD_TEST OFF)            # If you don't need to build tests for casbin
+set(CASBIN_BUILD_BENCHMARK OFF)       # If you don't need to build benchmarks for casbin
+set(CASBIN_BUILD_BINDINGS OFF)        # If you don't need language bindings provided by casbin
+set(CASBIN_BUILD_PYTHON_BINDINGS OFF) # If you don't need python bindings provided by casbin
+
+# Making casbin and its targets accessible to our project
+FetchContent_MakeAvailable(casbin)
+
+FetchContent_GetProperties(casbin)
+
+# If casbin wasn't populated, then manually populate it
+if(NOT casbin_POPULATED)
+    FetchContent_Populate(casbin)
+    add_subdirectory(${casbin_SOURCE_DIR} ${casbin_BINARY_DIR})
+endif()
+```
+
+Now that casbin's targets are available to your project,
+your may link your own targets against casbin's likewise:
+
+```cmake
+add_executable(myexec main.cpp)
+
+target_link_libraries(myexec PRIVATE casbin)
+
+set(myexec_INCLUDE_DIR ${casbin_SOURCE_DIR}/include)
+target_include_directories(myexec PRIVATE ${myexec_INCLUDE_DIR})
+```
+
+Do remember to include `casbin_SOURCE_DIR/include` directory wherever casbin's functions are utilised.
+
 ## Installation and Set-Up
 
 ### Build instructions for all platforms
@@ -162,7 +215,7 @@ https://casbin.org/docs/en/tutorials
     #include <casbin/casbin.h>
     ```
 
-2. New a Casbin enforcer with a model file and a policy file:
+2. Make a new a `casbin::Enforcer` with a model file and a policy file:
 
     ```cpp
     casbin::Enforcer e("./path/to/model.conf", "./path/to/policy.csv");
