@@ -22,6 +22,7 @@
 #include <variant>
 #include <vector>
 #include <initializer_list>
+#include <memory>
 #include <unordered_map>
 
 namespace casbin {
