@@ -33,6 +33,8 @@ production-ready | production-ready | production-ready | production-ready
 [PyCasbin](https://github.com/casbin/pycasbin) | [Casbin.NET](https://github.com/casbin-net/Casbin.NET) | [Casbin-CPP](https://github.com/casbin/casbin-cpp) | [Casbin-RS](https://github.com/casbin/casbin-rs)
 production-ready | production-ready | beta-test | production-ready
 
+**Note**: PyCasbin-on-CPP is available to use. Refer to the [documentation](./bindings/README.md) for installation and usage.
+
 ## Supported models
 
 1. [**ACL (Access Control List)**](https://en.wikipedia.org/wiki/Access_control_list)
@@ -113,8 +115,10 @@ https://casbin.org/docs/en/tutorials
 
 ## Integrating Casbin to your project through CMake
 
-Here is a [working project](https://github.com/EmperorYP7/casbin-CMake-setup) to demonstarte how to set up your CMake
-configurations to integrate casbin.
+### Without installing casbin locally
+
+Here is a [working project](https://github.com/EmperorYP7/casbin-CMake-setup) to demonstarte how to set up 
+your CMake configurations to integrate casbin without any prior installations.
 
 You may integrate casbin into your CMake project through `find_package`. **It is assumed that you're using CMake >= v3.19.**
 
@@ -161,6 +165,57 @@ target_include_directories(myexec PRIVATE ${myexec_INCLUDE_DIR})
 
 Do remember to include `casbin_SOURCE_DIR/include` directory wherever casbin's functions are utilised.
 
+### With local installation
+
+You may integrate casbin into your CMake project through `find_package`. 
+**It is assumed that you're using CMake >= v3.19**
+
+1. Clone/checkout to [`casbin/casbin-cpp:master`](https://github.com/EmperorYP7/casbin-cpp/tree/ctest-setup)
+    ```bash
+    git clone https://github.com/casbin/casbin-cpp.git
+    ```
+
+2. Open terminal/cmd in the root directory of the project:
+
+    ```bash
+    mkdir build
+    cd build
+    cmake ..
+    ```
+
+    **Note:** Look up for the logs of this step. And add the path indicated by the log into your PATH/project include directory.
+    The log message you're looking for should be something like this:
+    ```bash
+    [casbin]: Installing casbin ...
+    [casbin]: Installing casbin ... -  The targets can now be imported with find_package(casbin)
+    [casbin]: Build the "install" target and add "/usr/local/include" to you PATH for casbin to work
+    ```
+
+3. After the project is configured successfully, build it:
+    ```bash
+    cmake --build . --config Release
+    ```
+
+4. Install casbin:
+
+    ```bash
+    cmake --build . --config Release --target install
+    ```
+    Now, casbin has been installed and ready to go.
+
+5. In your project's CMake file, add
+    ```cmake
+    find_package(casbin REQUIRED)
+    ```
+    This will import all the targets exported by casbin to your project
+
+6. Link against casbin (Refer to Step 2's **Note** to get the value of `MY_INCLUDE_DIR` for your system):
+    ```cmake
+    set(MY_INCLUDE_DIR "/usr/local/include")
+    target_include_directories(MyTargetName PRIVATE ${MY_INCLUDE_DIR})
+    target_link_libraries(MyTargetName PRIVATE casbin::casbin)
+    ```
+
 ## Installation and Set-Up
 
 ### Build instructions for all platforms
@@ -194,8 +249,8 @@ Do remember to include `casbin_SOURCE_DIR/include` directory wherever casbin's f
     cmake --build . --target install
     ```
 
-    - For **Windows**, this will install `casbin.lib` to `C:/Program Files/casbin-cpp/lib`
-    and the headers to `C:/Program Files/casbin-cpp/include`.
+    - For **Windows**, this will install `casbin.lib` to `C:/Program Files/casbin/lib`
+    and the headers to `C:/Program Files/casbin/include`.
     - For Unix based OS i.e. **Linux and macOS**, this will install `casbin.a` to `usr/local/lib` 
     and the headers to `usr/local/include`.
 

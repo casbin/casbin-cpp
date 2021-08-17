@@ -22,13 +22,13 @@ set(CASBIN_BENCHMARK_SOURCE
     role_manager_b.cpp
 )
 
-set(CASBIN_HEADER
+set(CASBIN_BENCHMARK_HEADER
     config_path.h
 )
 
-add_executable(casbin_benchmark ${CASBIN_BENCHMARK_SOURCE} ${CASBIN_HEADER})
+add_executable(casbin_benchmark ${CASBIN_BENCHMARK_SOURCE} ${CASBIN_BENCHMARK_HEADER})
 
-target_include_directories(casbin_benchmark PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(casbin_benchmark PUBLIC ${CASBIN_INCLUDE_DIR})
 
 if(UNIX)
     set_target_properties(casbin_benchmark PROPERTIES

@@ -30,7 +30,7 @@ set(HEADERS
 
 Python_add_library(pycasbin MODULE ${SOURCES} ${HEADERS})
 
-target_include_directories(pycasbin PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(pycasbin PUBLIC ${CASBIN_INCLUDE_DIR})
 
 set_target_properties(pycasbin PROPERTIES
     PREFIX ""
@@ -78,16 +78,19 @@ else()
     set(Python_VARIANT_PATH lib${LIB_SUFFIX}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages)
 endif()
 
-message("${Python_VARIANT_PATH}")
-
 # For testing
 install(
     TARGETS pycasbin
     LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/tests/python
 )
 
-# For actual installation
-install(
-    TARGETS pycasbin
-    LIBRARY DESTINATION ${Python_VARIANT_PATH}
-)
+if(CASBIN_INSTALL)
+    # For actual installation
+    install(
+        TARGETS pycasbin
+        LIBRARY DESTINATION ${Python_VARIANT_PATH}
+    )
+
+    message(STATUS "[pycasbin]: Build \"pycasbin\" target for Python Bindings")
+    message(STATUS "[pycasbin]: Add \"${Python_VARIANT_PATH}\" to your sys.path/USER_SITE variable if not already present")
+endif()
