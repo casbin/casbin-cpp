@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-#ifndef ABAC_H
-#define ABAC_H
+#ifndef CASBIN_ABAC_H
+#define CASBIN_ABAC_H
 
 #include "attribute_types.h"
 
@@ -109,4 +109,4 @@ typedef ABACData ABACData;
 const std::shared_ptr<ABACData> GetDataObject(const AttributeMap& attribs);
 }
 
-#endif
+#endif // CASBIN_ABAC_H

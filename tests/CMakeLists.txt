@@ -44,11 +44,11 @@ if(CASBIN_BUILD_TEST)
     )
   endif()
 
-  target_include_directories(casbintest PUBLIC ${CMAKE_SOURCE_DIR}/include)
+  target_include_directories(casbintest PUBLIC ${CASBIN_INCLUDE_DIR})
 
   target_link_libraries(
     casbintest
-          PRIVATE
+    PRIVATE
     gtest_main
     casbin
   )
@@ -60,7 +60,3 @@ endif()
 if(CASBIN_BUILD_BENCHMARK)
   add_subdirectory(benchmarks)
 endif()
-
-# if(CASBIN_BUILD_PYTHON_BINDINGS)
-#   add_subdirectory(python)
-# endif()

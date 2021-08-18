@@ -55,11 +55,16 @@ option(CASBIN_BUILD_TEST "State whether to build test" ON)
 option(CASBIN_BUILD_BENCHMARK "State whether to build benchmarks" ON)
 option(CASBIN_BUILD_BINDINGS "State whether to build language bindings" ON)
 option(CASBIN_BUILD_PYTHON_BINDINGS "State whether to build python bindings" ON)
+option(CASBIN_INSTALL "State whether to install casbin targets on the current system" ON)
 
+# Intrinsic directory paths
+set(CASBIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/casbin)
+set(CASBIN_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(CASBIN_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Do not output install messages.
 if(NOT DEFINED CMAKE_INSTALL_MESSAGE)
-    set(CMAKE_INSTALL_MESSAGE "NEVER")
+    set(CMAKE_INSTALL_MESSAGE "LAZY")
 endif()
 
 if(CASBIN_BUILD_BINDINGS)
@@ -88,3 +93,24 @@ set(CMAKE_CXX_STANDARD 17)
 include(FindExtPackages)
 
 add_subdirectory(casbin)
+
+if(CASBIN_INSTALL)
+    message(CHECK_START "[casbin]: Installing casbin ...")
+    export(
+        TARGETS casbin
+        NAMESPACE casbin::
+        FILE casbinTargets.cmake
+    )
+
+    # Installing headers
+    install(
+        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/casbin
+        DESTINATION include
+    )
+
+    set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
+    export(PACKAGE casbin)
+
+    message(CHECK_PASS " The targets can now be imported with find_package(casbin)")
+    message(STATUS "[casbin]: Build the \"install\" target and add \"${CMAKE_INSTALL_PREFIX}/include\" to you PATH for casbin to work")
+endif()

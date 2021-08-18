@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-set(CASBIN_SOURCE
+set(CASBIN_SOURCE_FILES
     abac_data.cpp
     enforcer.cpp
     enforcer_cached.cpp
@@ -71,10 +71,10 @@ set(CASBIN_SOURCE
 # Setting to C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(casbin STATIC ${CASBIN_SOURCE})
+add_library(casbin STATIC ${CASBIN_SOURCE_FILES})
 
-target_precompile_headers(casbin PUBLIC pch.h)
-target_include_directories(casbin PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_precompile_headers(casbin PRIVATE pch.h)
+target_include_directories(casbin PRIVATE ${CASBIN_SOURCE_DIR})
 
 set_target_properties(casbin PROPERTIES 
     PREFIX ""
