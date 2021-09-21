@@ -20,7 +20,7 @@
 namespace casbin {
 
 // Exception class for unsupported operations.
-class UnsupportedOperationException : std::logic_error {
+class UnsupportedOperationException : public std::logic_error {
 public:
     using std::logic_error::logic_error;
 };

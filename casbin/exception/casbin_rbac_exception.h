@@ -20,7 +20,7 @@
 namespace casbin {
 
 // Exception class for Casbin Adapter Exception.
-class CasbinRBACException : std::invalid_argument {
+class CasbinRBACException : public std::invalid_argument {
 public:
     using std::invalid_argument::invalid_argument;
 };

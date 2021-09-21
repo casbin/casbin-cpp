@@ -20,7 +20,7 @@
 namespace casbin {
 
 // Exception class for missing required sections.
-class MissingRequiredSections : std::domain_error {
+class MissingRequiredSections : public std::domain_error {
 public:
     using std::domain_error::domain_error;
 };
