@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+#include <string>
 #include <variant>
 #include <vector>
 #include <initializer_list>

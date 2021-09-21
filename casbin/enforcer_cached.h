@@ -17,6 +17,8 @@
 #ifndef CASBIN_CPP_ENFORCER_CACHED
 #define CASBIN_CPP_ENFORCER_CACHED
 
+#include <string>
+#include <unordered_map>
 #include <mutex>
 
 #include "./enforcer.h"
@@ -83,6 +85,7 @@ public:
          * @param enable_log whether to enable Casbin's log.
          */
     CachedEnforcer(const std::string& model_path, const std::string& policy_file, bool enable_log);
+    virtual ~CachedEnforcer() final = default;
 
     bool Enforce(Scope scope);
 
@@ -128,3 +131,4 @@ public:
 } // namespace casbin
 
 #endif
+

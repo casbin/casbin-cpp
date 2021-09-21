@@ -20,7 +20,7 @@
 namespace casbin {
 
 // Exception class for Casbin Enforcer Exception.
-class CasbinEnforcerException : std::runtime_error {
+class CasbinEnforcerException : public std::runtime_error {
 public:
     using std::runtime_error::runtime_error;
 };

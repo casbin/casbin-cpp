@@ -20,7 +20,7 @@
 namespace casbin {
 
 // Exception class for illegal arguments.
-class IllegalArgumentException : std::invalid_argument {
+class IllegalArgumentException : public std::invalid_argument {
 public:
     using std::invalid_argument::invalid_argument;
 };

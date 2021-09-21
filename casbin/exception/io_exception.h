@@ -20,7 +20,7 @@
 namespace casbin {
 
 // Exception class for I/O operations.
-class IOException : std::runtime_error {
+class IOException : public std::runtime_error {
 public:
     using std::runtime_error::runtime_error;
 };
