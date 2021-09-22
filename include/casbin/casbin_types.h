@@ -19,6 +19,7 @@
 #ifndef CASBIN_CPP_CASBIN_TYPES_H
 #define CASBIN_CPP_CASBIN_TYPES_H
 
+#include <string>
 #include <variant>
 #include <vector>
 #include <initializer_list>
