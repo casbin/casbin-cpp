@@ -20,7 +20,7 @@
 namespace casbin {
 
 // Exception class for Casbin Adapter Exception.
-class CasbinAdapterException : std::logic_error {
+class CasbinAdapterException : public std::logic_error {
 public:
     using std::logic_error::logic_error;
 };
