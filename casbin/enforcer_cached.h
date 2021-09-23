@@ -84,6 +84,8 @@ public:
          */
     CachedEnforcer(const std::string& model_path, const std::string& policy_file, bool enable_log);
 
+    virtual ~CachedEnforcer() = default;
+
     bool Enforce(Scope scope);
 
     // Enforce with a vector param,decides whether a "subject" can access a
