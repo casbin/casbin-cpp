@@ -39,6 +39,7 @@ namespace casbin {
 bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
     m_func_map.scope = scope;
     m_func_map.func_list.clear();
+    m_func_map.LoadFunctionMap();
 
     if(!m_enabled)
         return true;
