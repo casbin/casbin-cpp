@@ -222,8 +222,10 @@ TEST(TestRBACAPI, TestImplicitUserAPI) {
     e.ClearPolicy();
     e.AddPolicy({ "admin", "data1", "read" });
     e.AddPolicy({ "bob", "data1", "read" });
+    e.AddPolicies({{ "tom", "data1", "read" }, {"john", "data1", "read" }});
     e.AddGroupingPolicy({ "alice", "admin" });
-    ASSERT_TRUE(casbin::ArrayEquals({ "alice", "bob" }, e.GetImplicitUsersForPermission({ "data1", "read" })));
+    
+    ASSERT_TRUE(casbin::ArrayEquals({ "alice", "bob", "tom", "john"}, e.GetImplicitUsersForPermission({ "data1", "read" })));
 }
 
 } // namespace
