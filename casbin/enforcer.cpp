@@ -25,6 +25,7 @@
 #include "./enforcer.h"
 #include "./persist/watcher_ex.h"
 #include "./persist/file_adapter/file_adapter.h"
+#include "./persist/file_adapter/batch_file_adapter.h"
 #include "./rbac/default_role_manager.h"
 #include "./effect/default_effector.h"
 #include "./exception/casbin_adapter_exception.h"
@@ -179,7 +180,7 @@ Enforcer ::Enforcer() {
  * @param policyFile the path of the policy file.
  */
 Enforcer ::Enforcer(const std::string& model_path, const std::string& policy_file)
-    : Enforcer(model_path, std::make_shared<FileAdapter>(policy_file)) {
+    : Enforcer(model_path, std::make_shared<BatchFileAdapter>(policy_file)) {
 }
 
 /**
@@ -233,14 +234,14 @@ Enforcer ::Enforcer(const std::string& model_path): Enforcer(model_path, "") {
  * @param enableLog whether to enable Casbin's log.
  */
 Enforcer::Enforcer(const std::string& model_path, const std::string& policy_file, bool enable_log)
-    : Enforcer(model_path, std::make_shared<FileAdapter>(policy_file)) {
+    : Enforcer(model_path, std::make_shared<BatchFileAdapter>(policy_file)) {
     this->EnableLog(enable_log);
 }
 
 
 // InitWithFile initializes an enforcer with a model file and a policy file.
 void Enforcer::InitWithFile(const std::string& model_path, const std::string& policy_path) {
-    std::shared_ptr<Adapter> a = std::make_shared<FileAdapter>(policy_path);
+    std::shared_ptr<Adapter> a = std::make_shared<BatchFileAdapter>(policy_path);
     this->InitWithAdapter(model_path, a);
 }
 
