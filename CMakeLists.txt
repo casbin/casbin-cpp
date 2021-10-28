@@ -99,7 +99,7 @@ if(CASBIN_INSTALL)
     export(
         TARGETS casbin
         NAMESPACE casbin::
-        FILE casbinTargets.cmake
+        FILE casbinConfig.cmake
     )
 
     # Installing headers
