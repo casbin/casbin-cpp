@@ -249,9 +249,9 @@ You may integrate casbin into your CMake project through `find_package`.
     cmake --build . --target install
     ```
 
-    - For **Windows**, this will install `casbin.lib` to `C:/Program Files/casbin/lib`
+    - For **Windows**, this will install `casbin.lib` to `<custom-path>/casbin-cpp/build/casbin`
     and the headers to `C:/Program Files/casbin/include`.
-    - For Unix based OS i.e. **Linux and macOS**, this will install `casbin.a` to `usr/local/lib` 
+    - For Unix based OS i.e. **Linux and macOS**, this will install `casbin.a` to `<custom-path>/casbin-cpp/build/casbin` 
     and the headers to `usr/local/include`.
 
     You can add the respective include and lib paths
