@@ -31,16 +31,16 @@ typedef bool (*MatchingFunc)(const std::string&, const std::string&);
 class Role {
     
     private:
-        std::vector<Role*> roles;
+        std::vector<std::shared_ptr<Role>> roles;
 
     public:
         std::string name;
 
-        static Role* NewRole(std::string name);
+        static std::shared_ptr<Role> NewRole(std::string name);
         
-        void AddRole(Role* role);
+        void AddRole(std::shared_ptr<Role> role);
 
-        void DeleteRole(Role* role);
+        void DeleteRole(std::shared_ptr<Role> role);
 
         bool HasRole(std::string name, int hierarchy_level);
 
@@ -53,14 +53,14 @@ class Role {
 
 class DefaultRoleManager : public RoleManager {
     private:
-        std::unordered_map<std::string, Role*> all_roles;
+        std::unordered_map<std::string, std::shared_ptr<Role>> all_roles;
         bool has_pattern;
         int max_hierarchy_level;
         MatchingFunc matching_func;
 
         bool HasRole(std::string name);
 
-        Role* CreateRole(std::string name);
+        std::shared_ptr<Role> CreateRole(std::string name);
 
     public:
 
