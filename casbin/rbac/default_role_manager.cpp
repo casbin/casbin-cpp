@@ -25,13 +25,13 @@
 
 namespace casbin {
 
-Role* Role :: NewRole(std::string name) {
-    Role* role = new Role;
+std::shared_ptr<Role> Role :: NewRole(std::string name) {
+    auto role = std::make_shared<Role>();
     role->name = name;
     return role;
 }
 
-void Role :: AddRole(Role* role) {
+void Role :: AddRole(std::shared_ptr<Role> role) {
     for (int i = 0 ; i < this->roles.size() ; i++) {
         if (this->roles[i]->name == role->name)
             return;
@@ -40,7 +40,7 @@ void Role :: AddRole(Role* role) {
     this->roles.push_back(role);
 }
 
-void Role :: DeleteRole(Role* role) {
+void Role :: DeleteRole(std::shared_ptr<Role> role) {
     for (int i = 0; i < roles.size();i++) {
         if (roles[i]->name == role->name)
             roles.erase(roles.begin()+i);
@@ -80,7 +80,7 @@ std::string Role :: ToString() {
         names += "(";
 
     for (int i = 0; i < roles.size(); i ++) {
-        Role* role = roles[i];
+        auto role = roles[i];
         if (i == 0)
             names += role->name;
         else
@@ -104,7 +104,7 @@ std::vector<std::string> Role :: GetRoles() {
 bool DefaultRoleManager :: HasRole(std::string name) {
     bool ok = false;
     if (this->has_pattern){
-        for (std::unordered_map<std::string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
+        for (auto it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
             if (this->matching_func(name, it->first))
                 ok = true;
         }
@@ -115,8 +115,8 @@ bool DefaultRoleManager :: HasRole(std::string name) {
     return ok;
 }
 
-Role* DefaultRoleManager :: CreateRole(std::string name) {
-    Role* role;
+std::shared_ptr<Role> DefaultRoleManager :: CreateRole(std::string name) {
+    std::shared_ptr<Role> role;
     bool ok = this->all_roles.find(name) != this->all_roles.end();
     if (!ok) {
         all_roles[name] = Role :: NewRole(name);
@@ -125,9 +125,9 @@ Role* DefaultRoleManager :: CreateRole(std::string name) {
         role = all_roles[name];
 
     if (this->has_pattern) {
-        for (std::unordered_map<std::string, Role*> :: iterator it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
+        for (auto it = this->all_roles.begin() ; it != this->all_roles.end() ; it++){
             if (this->matching_func(name, it->first) && name!=it->first) {
-                Role* role1;
+                std::shared_ptr<Role> role1;
                 bool ok1 = this->all_roles.find(it->first) != this->all_roles.end();
                 if (!ok1) {
                     all_roles[it->first] = Role :: NewRole(it->first);
@@ -178,8 +178,8 @@ void DefaultRoleManager :: AddLink(std::string name1, std::string name2, std::ve
     } else if (domain.size() > 1)
         throw CasbinRBACException("error: domain should be 1 parameter");
 
-    Role* role1 = this->CreateRole(name1);
-    Role* role2 = this->CreateRole(name2);
+    auto role1 = this->CreateRole(name1);
+    auto role2 = this->CreateRole(name2);
     role1->AddRole(role2);
 }
 
@@ -199,8 +199,8 @@ void DefaultRoleManager :: DeleteLink(std::string name1, std::string name2, std:
     if (!HasRole(name1) || !HasRole(name2))
         throw CasbinRBACException("error: name1 or name2 does not exist");
 
-    Role* role1 = this->CreateRole(name1);
-    Role* role2 = this->CreateRole(name2);
+    auto role1 = this->CreateRole(name1);
+    auto role2 = this->CreateRole(name2);
     role1->DeleteRole(role2);
 }
 
@@ -221,7 +221,7 @@ bool DefaultRoleManager :: HasLink(std::string name1, std::string name2, std::ve
     if (!HasRole(name1) || !HasRole(name2))
         return false;
 
-    Role* role1 = this->CreateRole(name1);
+    auto role1 = this->CreateRole(name1);
     return role1->HasRole(name2, max_hierarchy_level);
 }
 
@@ -260,8 +260,8 @@ std::vector<std::string> DefaultRoleManager :: GetUsers(std::string name, std::v
         throw CasbinRBACException("error: name does not exist");
 
     std::vector<std::string> names;
-    for (std::unordered_map<std::string, Role*>::iterator it = this->all_roles.begin(); it != this->all_roles.end(); it++) {
-        Role* role = it->second;
+    for (auto it = this->all_roles.begin(); it != this->all_roles.end(); it++) {
+        auto role = it->second;
         if (role->HasDirectRole(name))
             names.push_back(role->name);
     }
@@ -285,7 +285,7 @@ void DefaultRoleManager :: PrintRoles() {
     // LogUtil::SetLogger(*logger);
 
     std::string text = this->all_roles.begin()->second->ToString();
-    std::unordered_map<std::string, Role*> :: iterator it = this->all_roles.begin();
+    auto it = this->all_roles.begin();
     it++;
     for ( ; it != this->all_roles.end() ; it++)
         text += ", " + it->second->ToString();
