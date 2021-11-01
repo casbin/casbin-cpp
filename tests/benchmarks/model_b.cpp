@@ -58,7 +58,7 @@ static void BenchmarkRBACModel(benchmark::State& state) {
 
 BENCHMARK(BenchmarkRBACModel);
 
-static void BenchmarkRBACModelSmall(benchmark::State& state) {
+static void BenchmarkRBACModelLoop(benchmark::State& state) {
     casbin::Enforcer e(rbac_model_path);
 
     // 100 roles, 10 resources.
@@ -74,44 +74,7 @@ static void BenchmarkRBACModelSmall(benchmark::State& state) {
         e.Enforce(params);
 }
 
-BENCHMARK(BenchmarkRBACModelSmall);
-
-static void BenchmarkRBACModelMedium(benchmark::State& state) {
-    casbin::Enforcer e(rbac_model_path);
-
-    // 1000 roles, 100 resources.
-    for (int i = 0; i < 1000; ++i)
-        e.AddPolicy({"group" + std::to_string(i), "data" + std::to_string(i / 10), "read"});
-
-    // 10000 users.
-    for (int i = 0; i < 10000; ++i)
-        e.AddGroupingPolicy({"user" + std::to_string(i), "group" + std::to_string(i / 10)});
-
-    casbin::DataList params = {"user5001", "data99", "read"};
-    for (auto _ : state)
-        e.Enforce(params);
-}
-
-BENCHMARK(BenchmarkRBACModelMedium);
-
-static void BenchmarkRBACModelLarge(benchmark::State& state) {
-    casbin::Enforcer e(rbac_model_path);
-
-    // 10000 roles, 1000 resources.
-    for(int i = 0; i < 10000; ++i)
-        e.AddPolicy({"group" + std::to_string(i), "data" + std::to_string(i / 10), "read"});
-
-    // 100000 users.
-    for(int i = 0; i < 100000; i++)
-        e.AddGroupingPolicy({"user" + std::to_string(i), "group" + std::to_string(i / 10)});
-
-    casbin::DataList params = {"user50001", "data999", "read"};
-
-    for(auto _ : state)
-        e.Enforce(params);
-}
-
-// BENCHMARK(BenchmarkRBACModelLarge);
+BENCHMARK(BenchmarkRBACModelLoop);
 
 static void BenchmarkRBACModelWithResourceRoles(benchmark::State& state) {
     casbin::Enforcer e(rbac_with_resource_roles_model_path, rbac_with_resource_roles_policy_path);
@@ -120,7 +83,7 @@ static void BenchmarkRBACModelWithResourceRoles(benchmark::State& state) {
         e.Enforce(params);
 }
 
-// BENCHMARK(BenchmarkRBACModelWithResourceRoles);
+BENCHMARK(BenchmarkRBACModelWithResourceRoles);
 
 static void BenchmarkRBACModelWithDomains(benchmark::State& state) {
     casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);
