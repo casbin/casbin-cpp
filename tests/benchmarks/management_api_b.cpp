@@ -74,7 +74,7 @@ static void BenchmarkHasPolicyMedium(benchmark::State& state) {
         params = { "user" + std::to_string(GetRandom1000()), "data" + std::to_string(GetRandom1000()/10), "read" }, e.HasPolicy(params);
 }
 
-BENCHMARK(BenchmarkHasPolicyMedium);
+// BENCHMARK(BenchmarkHasPolicyMedium);
 
 static void BenchmarkHasPolicyLarge(benchmark::State& state) {
     casbin::Enforcer e(basic_model_path);
@@ -88,7 +88,7 @@ static void BenchmarkHasPolicyLarge(benchmark::State& state) {
     }
 }
 
-BENCHMARK(BenchmarkHasPolicyLarge);
+// BENCHMARK(BenchmarkHasPolicyLarge);
 
 static void BenchmarkAddPolicySmall(benchmark::State& state) {
     casbin::Enforcer e(basic_model_path);
@@ -116,7 +116,7 @@ static void BenchmarkAddPolicyMedium(benchmark::State& state) {
     }
 }
 
-BENCHMARK(BenchmarkAddPolicyMedium);
+// BENCHMARK(BenchmarkAddPolicyMedium);
 
 static void BenchmarkAddPolicyLarge(benchmark::State& state) {
     casbin::Enforcer e(basic_model_path);
@@ -130,7 +130,7 @@ static void BenchmarkAddPolicyLarge(benchmark::State& state) {
     }
 }
 
-BENCHMARK(BenchmarkAddPolicyLarge);
+// BENCHMARK(BenchmarkAddPolicyLarge);
 
 static void BenchmarkRemovePolicySmall(benchmark::State& state) {
     casbin::Enforcer e(basic_model_path);
@@ -156,7 +156,7 @@ static void BenchmarkRemovePolicyMedium(benchmark::State& state) {
         params = { "user" + std::to_string(GetRandom1000()), "data" + std::to_string(GetRandom1000() / 10), "read" }, e.RemovePolicy(params);
 }
 
-BENCHMARK(BenchmarkRemovePolicyMedium);
+// BENCHMARK(BenchmarkRemovePolicyMedium);
 
 static void BenchmarkRemovePolicyLarge(benchmark::State& state) {
     casbin::Enforcer e(basic_model_path);
@@ -169,4 +169,5 @@ static void BenchmarkRemovePolicyLarge(benchmark::State& state) {
         params = { "user" + std::to_string(GetRandom10000()), "data" + std::to_string(GetRandom1000()), "read" }, e.RemovePolicy(params);
 }
 
-BENCHMARK(BenchmarkRemovePolicyLarge);
+// BENCHMARK(BenchmarkRemovePolicyLarge);
+

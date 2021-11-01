@@ -92,7 +92,7 @@ static void BenchmarkRBACModelMedium(benchmark::State& state) {
         e.Enforce(params);
 }
 
-BENCHMARK(BenchmarkRBACModelMedium);
+// BENCHMARK(BenchmarkRBACModelMedium);
 
 static void BenchmarkRBACModelLarge(benchmark::State& state) {
     casbin::Enforcer e(rbac_model_path);
@@ -120,7 +120,7 @@ static void BenchmarkRBACModelWithResourceRoles(benchmark::State& state) {
         e.Enforce(params);
 }
 
-// BENCHMARK(BenchmarkRBACModelWithResourceRoles);
+BENCHMARK(BenchmarkRBACModelWithResourceRoles);
 
 static void BenchmarkRBACModelWithDomains(benchmark::State& state) {
     casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);

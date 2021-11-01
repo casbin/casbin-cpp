@@ -71,7 +71,7 @@ static void BenchmarkRoleManagerMedium(benchmark::State& state) {
     }
 }
 
-BENCHMARK(BenchmarkRoleManagerMedium);
+// BENCHMARK(BenchmarkRoleManagerMedium);
 
 static void BenchmarkRoleManagerLarge(benchmark::State& state) {
     casbin::Enforcer e(rbac_model_path);
