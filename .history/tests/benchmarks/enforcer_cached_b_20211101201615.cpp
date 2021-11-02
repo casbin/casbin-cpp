@@ -62,6 +62,52 @@ static void BenchmarkCachedRBACModelSmall(benchmark::State& state) {
 
 BENCHMARK(BenchmarkCachedRBACModelSmall);
 
+static void BenchmarkCachedRBACModelMedium(benchmark::State& state) {
+    casbin::CachedEnforcer e(rbac_model_path, "", false);
+    std::vector<std::vector<std::string>> p_policies(1000);
+    // 1000 roles, 100 resources.
+    for (int i = 0; i < 1000; ++i)
+        p_policies[i] = { "group" + std::to_string(i), "data" + std::to_string(i / 10), "read" };
+
+    e.AddPolicies(p_policies);
+
+    // 10000 users.
+    std::vector<std::vector<std::string>> g_policies(10000);
+    for (int i = 0; i < 10000; ++i)
+        g_policies[i] = { "user" + std::to_string(i), "group" + std::to_string(i/10) };
+
+    e.AddGroupingPolicies(g_policies);
+    casbin::DataList params = {"user5001", "data150", "read"};
+    for (auto _ : state)
+        e.Enforce(params);
+}
+
+// BENCHMARK(BenchmarkCachedRBACModelMedium);
+
+static void BenchmarkCachedRBACModelLarge(benchmark::State& state) {
+    casbin::CachedEnforcer e(rbac_model_path, "", false);
+
+    // 10000 roles, 1000 resources.
+    std::vector<std::vector<std::string>> p_policies(10000);
+    for (int i = 0; i < 10000; ++i)
+        p_policies[i] = {"group", std::to_string(i), "data", std::to_string(i / 10), "read"};
+    e.AddPolicies(p_policies);
+
+    // 100000 users.
+    std::vector<std::vector<std::string>> g_policies(100000);
+    for (int i = 0; i < 100000; ++i) {
+        g_policies[i] = {"user" + std::to_string(i), "group", std::to_string(i / 10)};
+    }
+    e.AddGroupingPolicies(g_policies);
+    casbin::DataList params = {"user50001", "data1500", "read"};
+    for (auto _ : state)
+    {
+        e.Enforce(params);
+    }
+}
+
+// BENCHMARK(BenchmarkCachedRBACModelLarge);
+
 static void BenchmarkCachedRBACModelWithResourceRoles(benchmark::State& state) {
     casbin::CachedEnforcer e(rbac_with_resource_roles_model_path, rbac_with_resource_roles_policy_path, false);
 
@@ -135,3 +181,25 @@ static void BenchmarkCachedPriorityModel(benchmark::State& state) {
 }
 
 BENCHMARK(BenchmarkCachedPriorityModel);
+
+static void BenchmarkCachedRBACModelMediumParallel(benchmark::State& state) {
+
+    casbin::CachedEnforcer e(rbac_model_path, "", false);
+    casbin::DataList params = {"user5001", "data150", "read"};
+    if (state.thread_index == 0)
+    {
+        std::vector<std::vector<std::string>> p_policies(10000);
+        for (int i = 0; i < 10000; ++i)
+            p_policies[i] = { "group" + std::to_string(i), "data" + std::to_string(i / 10), "read" };
+        e.AddPolicies(p_policies);
+
+        std::vector<std::vector<std::string>> g_policies(100000);
+        for (int i = 0; i < 100000; ++i)
+            e.AddGroupingPolicy({ "user" + std::to_string(i), "group" + std::to_string(i/10) });
+    }
+    for (auto _ : state) {
+        e.Enforce(params);
+    }
+}
+// BENCHMARK(BenchmarkCachedRBACModelMediumParallel)->Threads(10);
+
