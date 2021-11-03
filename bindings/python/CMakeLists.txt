@@ -22,6 +22,7 @@ set(SOURCES
     py_model.cpp
     py_config.cpp
     py_synced_enforcer.cpp
+    py_adapter.cpp
 )
 
 set(HEADERS

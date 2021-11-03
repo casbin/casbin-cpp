@@ -21,6 +21,7 @@ import test_model
 import test_config
 import test_cached_enforcer
 import test_synced_enforcer
+import test_adapter
 
 def suite():
 
@@ -32,6 +33,7 @@ def suite():
     suite.addTest(loader.loadTestsFromModule(test_model))
     suite.addTest(loader.loadTestsFromModule(test_config))
     suite.addTest(loader.loadTestsFromModule(test_cached_enforcer))
+    suite.addTest(loader.loadTestsFromModule(test_adapter))
     #suite.addTest(loader.loadTestsFromModule(test_synced_enforcer))
 
     return suite

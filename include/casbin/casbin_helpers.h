@@ -465,6 +465,8 @@ namespace casbin {
         // NewAdapter is the constructor for Adapter.
         BatchFileAdapter(std::string file_path);
 
+        static std::shared_ptr<BatchFileAdapter> NewBatchFileAdapter(std::string file_path);
+
         void AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
 
         void RemovePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
