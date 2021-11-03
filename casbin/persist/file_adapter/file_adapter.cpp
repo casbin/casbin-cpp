@@ -20,6 +20,10 @@ FileAdapter :: FileAdapter(std::string file_path) {
     this->filtered = false;
 }
 
+std::shared_ptr<casbin::FileAdapter> FileAdapter::NewFileAdapter(std::string file_path) {
+    return std::make_shared<FileAdapter>(file_path);
+}
+
 // LoadPolicy loads all policy rules from the storage.
 void FileAdapter :: LoadPolicy(const std::shared_ptr<Model>& model) {
     if (this->file_path == "")
@@ -36,7 +40,7 @@ void FileAdapter :: SavePolicy(const std::shared_ptr<Model>& model) {
 
     std::string tmp;
 
-    for (std::unordered_map<std::string, std::shared_ptr<Assertion>> :: iterator it = model->m["p"].assertion_map.begin() ; it != model->m["p"].assertion_map.begin() ; it++){
+    for (std::unordered_map<std::string, std::shared_ptr<Assertion>> :: iterator it = model->m["p"].assertion_map.begin() ; it != model->m["p"].assertion_map.end() ; it++){
         for (int i = 0 ; i < it->second->policy.size() ; i++){
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
@@ -44,7 +48,7 @@ void FileAdapter :: SavePolicy(const std::shared_ptr<Model>& model) {
         }
     }
 
-    for (std::unordered_map <std::string, std::shared_ptr<Assertion>> :: iterator it = model->m["g"].assertion_map.begin() ; it != model->m["g"].assertion_map.begin() ; it++){
+    for (std::unordered_map <std::string, std::shared_ptr<Assertion>> :: iterator it = model->m["g"].assertion_map.begin() ; it != model->m["g"].assertion_map.end() ; it++){
         for (int i = 0 ; i < it->second->policy.size() ; i++){
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
@@ -74,14 +78,18 @@ void FileAdapter :: LoadPolicyFile(const std::shared_ptr<Model>& model, std::fun
 
 void FileAdapter :: SavePolicyFile(std::string text) {
     std::ofstream out_file;
-    out_file.open(this->file_path, std::ios::out);
+
     try {
         out_file.open(this->file_path, std::ios::out);
     } catch (const std::ifstream::failure e) {
         throw IOException("Cannot open file.");
     }
 
-    out_file<<text;
+    if (out_file.is_open() == false) {
+        throw IOException("Don't exit adapter file");
+    }
+
+    out_file << text;
 
     out_file.close();
 }
