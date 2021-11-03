@@ -14,6 +14,8 @@
 
 add_definitions(-DCASBIN_PROJECT_DIR=${CMAKE_SOURCE_DIR})
 
+option(INTENSIVE_BENCHMARK OFF)
+
 set(CASBIN_BENCHMARK_SOURCE
     main.cpp
     model_b.cpp

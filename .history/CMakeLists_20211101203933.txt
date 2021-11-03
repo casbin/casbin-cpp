@@ -53,7 +53,6 @@ endif()
 
 option(CASBIN_BUILD_TEST "State whether to build test" ON)
 option(CASBIN_BUILD_BENCHMARK "State whether to build benchmarks" ON)
-option(INTENSIVE_BENCHMARK "State whether to build intensive benchmarks" OFF)
 option(CASBIN_BUILD_BINDINGS "State whether to build language bindings" ON)
 option(CASBIN_BUILD_PYTHON_BINDINGS "State whether to build python bindings" ON)
 option(CASBIN_INSTALL "State whether to install casbin targets on the current system" ON)
