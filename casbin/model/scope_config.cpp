@@ -21,7 +21,7 @@
 
 
 #include "./scope_config.h"
-
+#include "./exception/illegal_argument_exception.h"
 namespace casbin {
 
 Scope InitializeScope() {
@@ -192,6 +192,38 @@ void PushObjectPropToObject(Scope scope, std::string obj, std::string identifier
     duk_get_global_string(scope, identifier.c_str());
     duk_put_prop_string(scope, -2, identifier.c_str());
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
+}
+
+void PushObjectPropFromJson(Scope scope, nlohmann::json& j, std::string j_name) {
+    if (j.is_null()) {
+        return;
+    }
+
+    for (auto& cur_j: j.items()) {
+        auto key = cur_j.key();
+        auto value = cur_j.value();
+        if (value.is_object()) {
+
+            auto next_json_name = key + "__";
+            PushObject(scope, next_json_name);
+
+            PushObjectPropFromJson(scope, value, next_json_name); 
+
+            duk_get_global_string(scope, j_name.c_str());
+            duk_get_global_string(scope, next_json_name.c_str());
+            duk_put_prop_string(scope, -2, key.c_str());
+        } else if (value.is_number_float()) {
+            PushDoublePropToObject(scope, j_name, value, key);
+        } else if (value.is_number_integer()) {
+            PushIntPropToObject(scope, j_name, value, key);
+        } else if (value.is_string()) {
+            PushStringPropToObject(scope, j_name, value, key);
+        } else if (value.is_boolean()) {
+            PushBooleanPropToObject(scope, j_name, value, key);
+        } else {
+            throw IllegalArgumentException("Unsupport json value type");
+        }
+    }
 }
 
 Type CheckType(Scope scope){

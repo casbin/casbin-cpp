@@ -18,6 +18,7 @@
 #include <vector>
 #include <initializer_list>
 #include <unordered_map>
+#include <nlohmann/json.hpp>
 #include "abac_data.h"
 
 namespace casbin {

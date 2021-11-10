@@ -25,6 +25,7 @@
 #include <initializer_list>
 #include <memory>
 #include <unordered_map>
+#include <nlohmann/json.hpp>
 
 namespace casbin {
 
