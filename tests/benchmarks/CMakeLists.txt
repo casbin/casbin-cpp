@@ -22,11 +22,22 @@ set(CASBIN_BENCHMARK_SOURCE
     role_manager_b.cpp
 )
 
+set(CASBIN_INTENSIVE_BENCHMARK_SOURCE
+    model_b_inten.cpp
+    enforcer_cached_b_inten.cpp
+    management_api_b_inten.cpp
+    role_manager_b_inten.cpp
+)
+
 set(CASBIN_BENCHMARK_HEADER
     config_path.h
 )
 
-add_executable(casbin_benchmark ${CASBIN_BENCHMARK_SOURCE} ${CASBIN_BENCHMARK_HEADER})
+if(INTENSIVE_BENCHMARK STREQUAL ON)
+    add_executable(casbin_benchmark ${CASBIN_BENCHMARK_SOURCE} ${CASBIN_INTENSIVE_BENCHMARK_SOURCE} ${CASBIN_BENCHMARK_HEADER})
+else()
+    add_executable(casbin_benchmark ${CASBIN_BENCHMARK_SOURCE} ${CASBIN_BENCHMARK_HEADER})
+endif()
 
 target_include_directories(casbin_benchmark PUBLIC ${CASBIN_INCLUDE_DIR})
 

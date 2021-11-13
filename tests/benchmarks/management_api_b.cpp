@@ -62,34 +62,6 @@ static void BenchmarkHasPolicySmall(benchmark::State& state) {
 
 BENCHMARK(BenchmarkHasPolicySmall);
 
-static void BenchmarkHasPolicyMedium(benchmark::State& state) {
-    casbin::Enforcer e(basic_model_path);
-
-    // 1000 roles, 100 resources.
-    // std::vector<std::vector<std::string>> p_policies(1000);
-    for (int i = 0; i < 1000; ++i)
-        params = {"user" + std::to_string(i), "data" + std::to_string(i / 10), "read"}, e.AddPolicy(params);
-    // e.AddPolicies(p_policies);
-    for (auto _ : state)
-        params = { "user" + std::to_string(GetRandom1000()), "data" + std::to_string(GetRandom1000()/10), "read" }, e.HasPolicy(params);
-}
-
-BENCHMARK(BenchmarkHasPolicyMedium);
-
-static void BenchmarkHasPolicyLarge(benchmark::State& state) {
-    casbin::Enforcer e(basic_model_path);
-
-    // 10000 roles, 1000 resources.
-    for (int i = 0; i < 10000; i++)
-        params = {"user" + std::to_string(i), "data" + std::to_string(i / 10), "read"}, e.AddPolicy(params);
-
-    for(auto _ : state) {
-        params = {"user" + std::to_string(GetRandom10000()), "data" + std::to_string(GetRandom10000()/10), "read"}, e.HasPolicy(params);
-    }
-}
-
-BENCHMARK(BenchmarkHasPolicyLarge);
-
 static void BenchmarkAddPolicySmall(benchmark::State& state) {
     casbin::Enforcer e(basic_model_path);
 
@@ -103,35 +75,6 @@ static void BenchmarkAddPolicySmall(benchmark::State& state) {
 
 BENCHMARK(BenchmarkAddPolicySmall);
 
-static void BenchmarkAddPolicyMedium(benchmark::State& state) {
-    casbin::Enforcer e(basic_model_path);
-
-    // 1000 roles, 100 resources.
-    for(int i = 0; i < 1000; ++i)
-        params = {"user" + std::to_string(i), "data" + std::to_string(i / 10), "read"}, e.AddPolicy(params);
-    // _, err := e.AddPolicies(pPolicies)
-
-    for(auto _ : state) {
-        params = {"user" + std::to_string(GetRandom1000() + 1000), "data" + std::to_string((GetRandom1000() + 1000) / 10), "read"}, e.AddPolicy(params);
-    }
-}
-
-BENCHMARK(BenchmarkAddPolicyMedium);
-
-static void BenchmarkAddPolicyLarge(benchmark::State& state) {
-    casbin::Enforcer e(basic_model_path);
-
-    // 10000 roles, 1000 resources.
-    for(int i = 0; i < 10000; ++i)
-        params = { "user" + std::to_string(i), "data" + std::to_string(i/10), "read" }, e.AddPolicy(params);
-
-    for(auto _ : state) {
-        params = { "user" + std::to_string(GetRandom10000() + 10000), "data" + std::to_string((GetRandom10000() + 10000) / 10), "read" }, e.AddPolicy(params);
-    }
-}
-
-BENCHMARK(BenchmarkAddPolicyLarge);
-
 static void BenchmarkRemovePolicySmall(benchmark::State& state) {
     casbin::Enforcer e(basic_model_path);
 
@@ -144,29 +87,3 @@ static void BenchmarkRemovePolicySmall(benchmark::State& state) {
 }
 
 BENCHMARK(BenchmarkRemovePolicySmall);
-
-static void BenchmarkRemovePolicyMedium(benchmark::State& state) {
-    casbin::Enforcer e(basic_model_path);
-
-    // 1000 roles, 100 resources.
-    for(int i = 0; i < 1000; ++i)
-        params = {"user" + std::to_string(i), "data" + std::to_string(i / 10), "read"}, e.AddPolicy(params);
-
-    for(auto _ : state)
-        params = { "user" + std::to_string(GetRandom1000()), "data" + std::to_string(GetRandom1000() / 10), "read" }, e.RemovePolicy(params);
-}
-
-BENCHMARK(BenchmarkRemovePolicyMedium);
-
-static void BenchmarkRemovePolicyLarge(benchmark::State& state) {
-    casbin::Enforcer e(basic_model_path);
-
-    // 10000 roles, 1000 resources.
-    for(int i = 0; i < 10000; ++i)
-        params = { "user" + std::to_string(i), "data" + std::to_string(i / 10), "read" }, e.AddPolicy(params);
-
-    for(auto _ : state)
-        params = { "user" + std::to_string(GetRandom10000()), "data" + std::to_string(GetRandom1000()), "read" }, e.RemovePolicy(params);
-}
-
-BENCHMARK(BenchmarkRemovePolicyLarge);
