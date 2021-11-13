@@ -18,11 +18,12 @@
 #include <vector>
 #include <initializer_list>
 #include <unordered_map>
+#include <nlohmann/json.hpp>
 #include "abac_data.h"
 
 namespace casbin {
 
-typedef std::variant<std::string, std::shared_ptr<ABACData>> Data;
+typedef std::variant<std::string, std::shared_ptr<ABACData>, std::shared_ptr<nlohmann::json>> Data;
 typedef std::vector<Data> DataVector;
 typedef std::initializer_list<Data> DataList;
 typedef std::unordered_map<std::string, Data> DataMap;

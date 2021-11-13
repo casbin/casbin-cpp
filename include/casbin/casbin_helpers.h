@@ -544,6 +544,7 @@ namespace casbin {
     void PushStringPropToObject(Scope scope, std::string obj, std::string s, std::string identifier);
     void PushPointerPropToObject(Scope scope, std::string obj, void * ptr, std::string identifier);
     void PushObjectPropToObject(Scope scope, std::string obj, std::string identifier);
+    void PushObjectPropFromJson(Scope scope, nlohmann::json& j, std::string j_name);
     Type CheckType(Scope scope);
     bool FetchIdentifier(Scope scope, std::string identifier);
     unsigned int Size(Scope scope);

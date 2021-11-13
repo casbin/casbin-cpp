@@ -52,4 +52,5 @@ target_link_libraries(
         PRIVATE
     benchmark
     casbin
+    nlohmann_json::nlohmann_json
 )

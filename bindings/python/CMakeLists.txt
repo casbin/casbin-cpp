@@ -71,6 +71,7 @@ target_link_libraries(pycasbin
     PRIVATE
         pybind11::module
         casbin
+        nlohmann_json::nlohmann_json
 )
 
 if(WIN32)

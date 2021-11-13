@@ -51,6 +51,7 @@ if(CASBIN_BUILD_TEST)
     PRIVATE
     gtest_main
     casbin
+    nlohmann_json::nlohmann_json
   )
 
   include(GoogleTest)

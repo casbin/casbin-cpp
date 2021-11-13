@@ -115,4 +115,61 @@ TEST(TestEnforcer, ABACData) {
     ASSERT_TRUE(params == data->GetAttributes());
 }
 
+TEST(TestEnforcer, JsonData) {
+    using json = nlohmann::json;
+    casbin::Scope scope = casbin::InitializeScope();
+    casbin::PushObject(scope, "r");
+
+    json myJson = {
+            {"DoubleCase", 3.141},
+            {"IntegerCase", 2},
+            {"BoolenCase", true},
+            {"StringCase", "Bob"},
+            // {"nothing", nullptr},
+            {"x", {
+                    {"y", {
+                        {"z", 1}
+                        }
+                    },
+                    {"x", 2
+                    }
+                }
+            },
+        };
+
+    casbin::PushObjectPropFromJson(scope, myJson, "r");
+    std::string s1 = "r.DoubleCase == 3.141;";
+    std::string s2 = "r.IntegerCase == 2;";
+    std::string s3 = "r.BoolenCase == true;";
+    std::string s4 = "r.StringCase == \"Bob\";";
+    std::string s5 = "r.x.y.z == 1;";
+    std::string s6 = "r.x.x == 2;";
+
+    auto EvalAndGetTop = [] (casbin::Scope scope, std::string s) -> bool  {
+       casbin::Eval(scope, s);
+       return casbin::GetBoolean(scope, -1);
+    };
+
+    ASSERT_TRUE(EvalAndGetTop(scope, s1));
+    ASSERT_TRUE(EvalAndGetTop(scope, s2));
+    ASSERT_TRUE(EvalAndGetTop(scope, s3));
+    ASSERT_TRUE(EvalAndGetTop(scope, s4));
+    ASSERT_TRUE(EvalAndGetTop(scope, s5));
+    ASSERT_TRUE(EvalAndGetTop(scope, s6));
+
+    s1 = "r.DoubleCase == 3.14;";
+    s2 = "r.IntegerCase == 1;";
+    s3 = "r.BoolenCase == false;";
+    s4 = "r.StringCase == \"BoB\";";
+    s5 = "r.x.y.z == 2;";
+    s6 = "r.x.x == 1;";
+
+    ASSERT_TRUE(!EvalAndGetTop(scope, s1));
+    ASSERT_TRUE(!EvalAndGetTop(scope, s2));
+    ASSERT_TRUE(!EvalAndGetTop(scope, s3));
+    ASSERT_TRUE(!EvalAndGetTop(scope, s4));
+    ASSERT_TRUE(!EvalAndGetTop(scope, s5));
+    ASSERT_TRUE(!EvalAndGetTop(scope, s6));
+}
+
 } // namespace
