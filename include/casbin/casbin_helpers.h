@@ -434,6 +434,8 @@ namespace casbin {
         // NewAdapter is the constructor for Adapter.
         FileAdapter(std::string file_path);
 
+        static std::shared_ptr<FileAdapter> NewFileAdapter(std::string file_path);
+
         // LoadPolicy loads all policy rules from the storage.
         void LoadPolicy(const std::shared_ptr<Model>& model);
 
@@ -462,6 +464,8 @@ namespace casbin {
 
         // NewAdapter is the constructor for Adapter.
         BatchFileAdapter(std::string file_path);
+
+        static std::shared_ptr<BatchFileAdapter> NewBatchFileAdapter(std::string file_path);
 
         void AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
 

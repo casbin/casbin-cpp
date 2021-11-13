@@ -25,10 +25,10 @@
 namespace casbin {
 
 std::string ArrayToString(const std::vector<std::string>& arr){
-    std::string res = arr[0];
+    std::string res = "";
     for (const std::string& it : arr)
         res += ", " + it;
-    return res;
+    return res.substr(2);
 }
 
 } // namespace casbin

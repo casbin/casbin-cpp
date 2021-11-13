@@ -27,6 +27,20 @@ class TestEnforcer(unittest.TestCase):
 
     def tearDown(self):
         self.e = None
+    
+    def test_FileAdapterEnforcer(self):
+        self.fileAdapter = casbin.FileAdapter.NewFileAdapter(rbac_with_domains_policy_path)
+        self.e = casbin.Enforcer(rbac_with_domains_model_path, self.fileAdapter)
+
+        self.assertIsNotNone(self.fileAdapter)
+        self.assertIsNotNone(self.e)
+
+    def test_BatchFileAdapterEnforcer(self):
+        self.fileAdapter = casbin.BatchFileAdapter.NewBatchFileAdapter(rbac_with_domains_policy_path)
+        self.e = casbin.Enforcer(rbac_with_domains_model_path, self.fileAdapter)
+
+        self.assertIsNotNone(self.fileAdapter)
+        self.assertIsNotNone(self.e)
 
     def test_FourParams(self):
         self.initEnforcer(rbac_with_domains_model_path, rbac_with_domains_policy_path)

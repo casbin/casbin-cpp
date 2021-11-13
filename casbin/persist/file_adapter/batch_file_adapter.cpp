@@ -13,6 +13,10 @@ namespace casbin {
 BatchFileAdapter :: BatchFileAdapter(std::string file_path): FileAdapter(file_path) {
 }
 
+std::shared_ptr<BatchFileAdapter> BatchFileAdapter :: NewBatchFileAdapter(std::string file_path) {
+    return std::make_shared<BatchFileAdapter>(file_path);
+}
+
 void BatchFileAdapter :: AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
     throw UnsupportedOperationException("not implemented hello");
 }
