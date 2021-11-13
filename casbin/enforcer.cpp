@@ -501,6 +501,14 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
                 else
                     throw CasbinEnforcerException("Not a valid type");
             }
+        } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param)) {
+            
+            auto data_ptr = *json_param;
+            std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
+
+            PushObject(scope, token_name);
+            PushObjectPropFromJson(scope, *data_ptr, token_name);
+            PushObjectPropToObject(scope, "r", token_name);
         }
         ++i;
     }
@@ -556,7 +564,16 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
                 else
                     throw CasbinEnforcerException("Not a valid type");
             }
+        } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param)) {
+            
+            auto data_ptr = *json_param;
+            std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
+
+            PushObject(scope, token_name);
+            PushObjectPropFromJson(scope, *data_ptr, token_name);
+            PushObjectPropToObject(scope, "r", token_name);
         }
+
         ++i;
     }
 
@@ -601,7 +618,14 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& par
                 else
                     throw CasbinEnforcerException("Not a valid type");
             }
+        } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param_data)) {
+            
+            auto data_ptr = *json_param;
+            PushObject(scope, param_name);
+            PushObjectPropFromJson(scope, *data_ptr, param_name);
+            PushObjectPropToObject(scope, "r", param_name);
         }
+
     }
 
     bool result = m_enforce(matcher, scope);

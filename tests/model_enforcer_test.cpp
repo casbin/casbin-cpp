@@ -504,6 +504,25 @@ TEST(TestModelEnforcer, TestRBACModelWithPattern) {
     scope = InitializeParams("bob", "/pen2/2", "GET");
     TestEnforce(e, scope, true);
 }
+
+TEST(TestModelEnforcer, TestABACModelWithJson) {
+    using json = nlohmann::json;
+
+    json obj = {
+            {"Owner", "alice"},
+        };
+    auto objPtr = std::make_shared<json>(obj);
+
+    casbin::DataMap mapParams = {{"sub", "alice"}, {"obj", objPtr}, {"act", "write"}};
+    casbin::DataList listParams = {"alice", objPtr, "write"}; 
+    casbin::DataVector vectorParams = {"alice", objPtr, "write"}; 
+
+    casbin::Enforcer e(abac_model_path);
+
+    ASSERT_TRUE(e.Enforce(mapParams));
+    ASSERT_TRUE(e.Enforce(listParams));
+    ASSERT_TRUE(e.Enforce(vectorParams));
+}
 /*
 type testCustomRoleManager struct {}
 

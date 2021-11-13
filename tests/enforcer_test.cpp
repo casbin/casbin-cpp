@@ -19,7 +19,6 @@
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
 #include "config_path.h"
-#include <nlohmann/json.hpp>
 
 namespace {
 
@@ -121,7 +120,7 @@ TEST(TestEnforcer, JsonData) {
     casbin::Scope scope = casbin::InitializeScope();
     casbin::PushObject(scope, "r");
 
-    json myjson = {
+    json myJson = {
             {"DoubleCase", 3.141},
             {"IntegerCase", 2},
             {"BoolenCase", true},
@@ -138,7 +137,7 @@ TEST(TestEnforcer, JsonData) {
             },
         };
 
-    casbin::PushObjectPropFromJson(scope, myjson, "r");
+    casbin::PushObjectPropFromJson(scope, myJson, "r");
     std::string s1 = "r.DoubleCase == 3.141;";
     std::string s2 = "r.IntegerCase == 2;";
     std::string s3 = "r.BoolenCase == true;";

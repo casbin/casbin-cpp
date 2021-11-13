@@ -51,3 +51,5 @@ static const std::string keymatch_policy_path = relative_path + "/examples/keyma
 
 static const std::string priority_model_path = relative_path + "/examples/priority_model.conf";
 static const std::string priority_policy_path = relative_path + "/examples/priority_policy.csv";
+
+static const std::string abac_model_path = relative_path + "/examples/abac_model.conf";

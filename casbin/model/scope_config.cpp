@@ -194,34 +194,34 @@ void PushObjectPropToObject(Scope scope, std::string obj, std::string identifier
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushObjectPropFromJson(Scope scope, nlohmann::json& j, std::string j_name) {
+void PushObjectPropFromJson(Scope scope, nlohmann::json& j, std::string objName) {
     if (j.is_null()) {
         return;
     }
 
-    for (auto& cur_j: j.items()) {
-        auto key = cur_j.key();
-        auto value = cur_j.value();
+    for (auto& curJson: j.items()) {
+        auto key = curJson.key();
+        auto value = curJson.value();
         if (value.is_object()) {
 
-            auto next_json_name = key + "__";
-            PushObject(scope, next_json_name);
+            auto nextJsonName = key + "__";
+            PushObject(scope, nextJsonName);
 
-            PushObjectPropFromJson(scope, value, next_json_name); 
+            PushObjectPropFromJson(scope, value, nextJsonName); 
 
-            duk_get_global_string(scope, j_name.c_str());
-            duk_get_global_string(scope, next_json_name.c_str());
+            duk_get_global_string(scope, objName.c_str());
+            duk_get_global_string(scope, nextJsonName.c_str());
             duk_put_prop_string(scope, -2, key.c_str());
         } else if (value.is_number_float()) {
-            PushDoublePropToObject(scope, j_name, value, key);
+            PushDoublePropToObject(scope, objName, value, key);
         } else if (value.is_number_integer()) {
-            PushIntPropToObject(scope, j_name, value, key);
+            PushIntPropToObject(scope, objName, value, key);
         } else if (value.is_string()) {
-            PushStringPropToObject(scope, j_name, value, key);
+            PushStringPropToObject(scope, objName, value, key);
         } else if (value.is_boolean()) {
-            PushBooleanPropToObject(scope, j_name, value, key);
+            PushBooleanPropToObject(scope, objName, value, key);
         } else {
-            throw IllegalArgumentException("Unsupport json value type");
+            throw IllegalArgumentException("Unsupported json value type");
         }
     }
 }
