@@ -66,6 +66,7 @@ set(CASBIN_SOURCE_FILES
     util/split.cpp
     util/ticker.cpp
     util/trim.cpp
+    util/eval.cpp
 )
 
 # Setting to C++ standard to C++17

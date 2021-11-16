@@ -65,6 +65,12 @@ std::string& RTrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
  
 std::string Trim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
 
+// HasEval determine whether matcher contains function eval
+bool HasEval(const std::string& s);
+
+// ReplaceEvalWithMap replace function eval with the value of its parameters via given sets.
+std::string ReplaceEvalWithMap(const std::string& src, std::unordered_map<std::string, std::string>& sets);
+
 } // namespace casbin
 
 #endif

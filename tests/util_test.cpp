@@ -26,7 +26,7 @@ void TestEscapeAssertionFn(const std::string& s, const std::string& res){
     ASSERT_EQ(my_res, res);
 }
 
-TEST(TestModel, TestEscapeAssertion) {
+TEST(TestUtil, TestEscapeAssertion) {
     TestEscapeAssertionFn("r.attr.value == p.attr", "r_attr.value == p_attr");
     TestEscapeAssertionFn("r.attp.value || p.attr", "r_attp.value || p_attr");
     TestEscapeAssertionFn("r.attp.value &&p.attr", "r_attp.value &&p_attr");
@@ -47,7 +47,7 @@ void TestRemoveCommentsFn(const std::string& s, const std::string& res) {
     ASSERT_EQ(my_res, res);
 }
 
-TEST(TestModel, TestRemoveComments) {
+TEST(TestUtil, TestRemoveComments) {
     TestRemoveCommentsFn("r.act == p.act # comments", "r.act == p.act");
     TestRemoveCommentsFn("r.act == p.act#comments", "r.act == p.act");
     TestRemoveCommentsFn("r.act == p.act###", "r.act == p.act");
@@ -60,11 +60,42 @@ void TestArrayEqualsFn(const std::vector<std::string>& a, const std::vector<std:
     ASSERT_EQ(my_res, res);
 }
 
-TEST(TestModel, TestArrayEquals) {
+TEST(TestUtil, TestArrayEquals) {
     TestArrayEqualsFn({"a", "b", "c"}, {"a", "b", "c"}, true);
     TestArrayEqualsFn({"a", "b", "c"}, {"a", "b"}, false);
     TestArrayEqualsFn({"a", "b", "c"}, {"a", "c", "b"}, true);
     TestArrayEqualsFn({"a", "b", "c"}, {}, false);
+}
+
+void testContainEval(std::string s, bool res) {
+    ASSERT_EQ(casbin::HasEval(s), res);
+}
+
+TEST(TestUtil, TestContainEval) {
+	testContainEval("eval() && a && b && c", true);
+	testContainEval("eval) && a && b && c", false);
+	testContainEval("eval)( && a && b && c", false);
+	testContainEval("eval(c * (a + b)) && a && b && c", true);
+	testContainEval("xeval() && a && b && c", false);
+}
+
+void testReplaceEvalWithMap(std::string s, std::unordered_map<std::string, std::string> sets, std::string res) {
+    ASSERT_EQ(casbin::ReplaceEvalWithMap(s, sets), res);
+}
+
+TEST(TestUtil, TestReplaceEvalWithMap) {
+	testReplaceEvalWithMap("eval(rule1)", {{"rule1", "a == b"}}, "a == b");
+	testReplaceEvalWithMap("eval(rule1) && c && d", {{"rule1", "a == b"}}, "a == b && c && d");
+	testReplaceEvalWithMap("eval(rule1)", {{}}, "eval(rule1)");
+	testReplaceEvalWithMap("eval(rule1) && c && d", {{}}, "eval(rule1) && c && d");
+	testReplaceEvalWithMap("eval(rule1) || eval(rule2)", {{"rule1", "a == b"}, {"rule2", "a == c"}}, "a == b || a == c");
+	testReplaceEvalWithMap("eval(rule1) || eval(rule2) && c && d", {{"rule1", "a == b"}, {"rule2", "a == c"}}, "a == b || a == c && c && d");
+	testReplaceEvalWithMap("eval(rule1) || eval(rule2)", {{"rule1", "a == b"}}, "a == b || eval(rule2)");
+	testReplaceEvalWithMap("eval(rule1) || eval(rule2) && c && d", {{"rule1", "a == b"}}, "a == b || eval(rule2) && c && d");
+	testReplaceEvalWithMap("eval(rule1) || eval(rule2)", {{"rule2", "a == b"}}, "eval(rule1) || a == b");
+	testReplaceEvalWithMap("eval(rule1) || eval(rule2) && c && d", {{"rule2", "a == b"}}, "eval(rule1) || a == b && c && d");
+	testReplaceEvalWithMap("eval(rule1) || eval(rule2)", {}, "eval(rule1) || eval(rule2)");
+	testReplaceEvalWithMap("eval(rule1) || eval(rule2) && c && d", {}, "eval(rule1) || eval(rule2) && c && d");
 }
 
 } // namespace
