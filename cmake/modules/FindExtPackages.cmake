@@ -24,7 +24,7 @@ set(CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY ON CACHE BOOL
 ###############################################################################
 ### Packages and versions ###
 
-find_package(json 3.7.3 REQUIRED)
+find_package(json 3.10.1 REQUIRED)
 
 if(CASBIN_BUILD_TEST)
     # googletest
