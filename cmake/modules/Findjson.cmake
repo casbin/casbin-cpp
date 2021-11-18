@@ -16,9 +16,10 @@ include(FetchContent)
 
 FetchContent_Declare(json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG v3.7.3)
+  GIT_TAG v3.10.1)
 
 set(JSON_BuildTests OFF CACHE INTERNAL "")
+set(JSON_Install ON)
 FetchContent_GetProperties(json)
 FetchContent_MakeAvailable(json)
 
