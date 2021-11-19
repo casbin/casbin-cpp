@@ -640,6 +640,9 @@ namespace casbin {
 
     // ReplaceEvalWithMap replace function eval with the value of its parameters via given sets.
     std::string ReplaceEvalWithMap(const std::string& src, std::unordered_map<std::string, std::string>& sets);
+    
+    // GetEvalValue returns the parameters of function eval
+    std::vector<std::string> GetEvalValue(std::string s); 
 
     // Exception class for Casbin Adapter Exception.
     class CasbinAdapterException : std::logic_error {

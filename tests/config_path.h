@@ -53,3 +53,5 @@ static const std::string priority_model_path = relative_path + "/examples/priori
 static const std::string priority_policy_path = relative_path + "/examples/priority_policy.csv";
 
 static const std::string abac_model_path = relative_path + "/examples/abac_model.conf";
+static const std::string abac_rule_model_path = relative_path + "/examples/abac_rule_model.conf";
+static const std::string abac_rule_policy_path = relative_path + "/examples/abac_rule_policy.csv";
