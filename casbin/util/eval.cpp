@@ -1,0 +1,65 @@
+/*
+* Copyright 2020 The casbin Authors. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+#include "pch.h"
+
+#ifndef EVAL_CPP
+#define EVAL_CPP
+
+#include <regex>
+
+#include "./util.h"
+
+namespace casbin {
+
+std::regex evalReg("\\beval\\(([^)]*)\\)", 
+    std::regex_constants::icase);
+
+// HasEval determine whether matcher contains function eval
+bool HasEval(const std::string& s) {
+    return std::regex_search(s, evalReg);
+}
+
+// ReplaceEvalWithMap replace function eval with the value of its parameters via given sets.
+std::string ReplaceEvalWithMap(const std::string& src, std::unordered_map<std::string, std::string>& sets) {
+    std::string replacedExp = "";
+    std::string srcCpy = src;
+    std::smatch m;
+
+    while (std::regex_search(srcCpy, m, evalReg)) {
+        if (m.empty()) {
+            return src;
+        }
+        std::string key = m[1];
+        bool found = sets.find(key) != sets.end();
+
+        replacedExp += m.prefix();
+        if (!found) {
+            replacedExp += m[0];
+        } else {
+            replacedExp += sets[key];
+        }
+        srcCpy = m.suffix();
+    }
+
+    replacedExp += srcCpy;
+
+    return replacedExp;
+}
+
+} // namespace casbin
+
+#endif // EVAL_CPP
