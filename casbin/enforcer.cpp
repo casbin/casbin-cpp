@@ -74,6 +74,8 @@ bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
     for(auto func : m_user_func_list)
         m_func_map.AddFunction(std::get<0>(func), std::get<1>(func), std::get<2>(func));
 
+    bool hasEval = HasEval(exp_string);
+    
     std::unordered_map<std::string, int> p_int_tokens;
     std::vector<std::string>& p_tokens = m_model->m["p"].assertion_map["p"]->tokens;
     p_int_tokens.reserve(p_tokens.size());
@@ -105,7 +107,29 @@ bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
                 PushStringPropToObject(m_func_map.scope, "p", p_vals[j], token);
             }
 
-            m_func_map.Evaluate(exp_string);
+            if(hasEval) {
+                auto ruleNames = GetEvalValue(exp_string);
+                std::unordered_map<std::string, std::string> replacements;
+                for(auto& ruleName: ruleNames) {
+                    auto ruleNameCpy = EscapeAssertion(ruleName);
+
+                    bool ok = p_int_tokens.find(ruleNameCpy) != p_int_tokens.end();
+                    if (ok) {
+                        int idx = p_int_tokens[ruleNameCpy];
+                        replacements[ruleName] = p_vals[idx];
+                    } else {
+                        m_log.LogPrint("please make sure rule exists in policy when using eval() in matcher");
+                        return false;
+                    }
+                }
+
+                auto expWithRule = ReplaceEvalWithMap(exp_string, replacements);
+                m_func_map.Evaluate(expWithRule);
+
+            } else {
+
+                m_func_map.Evaluate(exp_string);
+            }
 
             //TODO
             // log.LogPrint("Result: ", result)

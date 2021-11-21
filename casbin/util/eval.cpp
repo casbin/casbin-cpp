@@ -60,6 +60,25 @@ std::string ReplaceEvalWithMap(const std::string& src, std::unordered_map<std::s
     return replacedExp;
 }
 
+// GetEvalValue returns the parameters of function eval
+std::vector<std::string> GetEvalValue(std::string s) {
+    std::vector<std::string> rules;
+    rules.reserve(10);
+    std::smatch m;
+
+    while (std::regex_search(s, m, evalReg)) {
+        if (m.empty()) {
+            return rules;
+        }
+        std::string rule = m[1];
+
+        rules.push_back(rule);
+        s = m.suffix();
+    }
+
+    return rules;
+}
+
 } // namespace casbin
 
 #endif // EVAL_CPP

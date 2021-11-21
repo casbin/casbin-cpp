@@ -59,6 +59,20 @@ casbin::Scope InitializeParamsWithDomains(const std::string& sub, const std::str
     return scope;
 }
 
+casbin::Scope InitializeParamsWithJson(std::shared_ptr<nlohmann::json> sub, std::string obj, std::string act) {
+    casbin::Scope scope = casbin::InitializeScope();
+    casbin::PushObject(scope, "r");
+
+    casbin::PushStringPropToObject(scope, "r", obj, "obj");
+    casbin::PushStringPropToObject(scope, "r", act, "act");
+
+    casbin::PushObject(scope, "sub");
+    casbin::PushObjectPropFromJson(scope, *sub, "sub");
+    casbin::PushObjectPropToObject(scope, "r", "sub");
+
+    return scope;
+}
+
 void TestEnforce(casbin::Enforcer& e, casbin::Scope& scope, bool res) {
     ASSERT_EQ(res, e.Enforce(scope));
 }
@@ -522,6 +536,44 @@ TEST(TestModelEnforcer, TestABACModelWithJson) {
     ASSERT_TRUE(e.Enforce(mapParams));
     ASSERT_TRUE(e.Enforce(listParams));
     ASSERT_TRUE(e.Enforce(vectorParams));
+}
+
+std::shared_ptr<nlohmann::json> newTestSubject(std::string name, int age) {
+    nlohmann::json sub = {{"Name", name}, {"Age", age}};
+    return std::make_shared<nlohmann::json>(sub);
+}
+
+TEST(TestModelEnforcer, TestABACPolicyWithJson) {
+    casbin::Enforcer e(abac_rule_model_path, abac_rule_policy_path);
+
+    auto sub1 = newTestSubject("alice", 16);
+    auto sub2 = newTestSubject("alice", 20);
+    auto sub3 = newTestSubject("alice", 65);
+
+    auto scope = InitializeParamsWithJson(sub1, "/data1", "read");
+    TestEnforce(e, scope, false);
+    scope = InitializeParamsWithJson(sub1, "/data2", "read");
+    TestEnforce(e, scope, false);
+    scope = InitializeParamsWithJson(sub1, "/data1", "write");
+    TestEnforce(e, scope, false);
+    scope = InitializeParamsWithJson(sub1, "/data2", "write");
+    TestEnforce(e, scope, true);
+    scope = InitializeParamsWithJson(sub2, "/data1", "read");
+    TestEnforce(e, scope, true);
+    scope = InitializeParamsWithJson(sub2, "/data2", "read");
+    TestEnforce(e, scope, false);
+    scope = InitializeParamsWithJson(sub2, "/data1", "write");
+    TestEnforce(e, scope, false);
+    scope = InitializeParamsWithJson(sub2, "/data2", "write");
+    TestEnforce(e, scope, true);
+    scope = InitializeParamsWithJson(sub3, "/data1", "read");
+    TestEnforce(e, scope, true);
+    scope = InitializeParamsWithJson(sub3, "/data2", "read");
+    TestEnforce(e, scope, false);
+    scope = InitializeParamsWithJson(sub3, "/data1", "write");
+    TestEnforce(e, scope, false);
+    scope = InitializeParamsWithJson(sub3, "/data2", "write");
+    TestEnforce(e, scope, false);
 }
 /*
 type testCustomRoleManager struct {}
