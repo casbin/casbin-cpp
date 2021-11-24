@@ -183,19 +183,6 @@ bool CachedEnforcer::EnforceWithMatcher(const std::string& matcher, const DataVe
     for (const auto& r : params) {
         if(const auto string_param = std::get_if<std::string>(&r))
             key += *string_param;
-        else if(const auto abac_param = std::get_if<std::shared_ptr<ABACData>>(&r)) {
-            auto data_ptr = *abac_param;
-            for(auto [_, attrib_value] : data_ptr->GetAttributes()) {
-                if(auto string_value = std::get_if<std::string>(&attrib_value))
-                    key += *string_value + "$";
-                else if(auto int_value = std::get_if<int32_t>(&attrib_value))
-                    key += std::to_string(*int_value) + "$";
-                else if(auto double_value = std::get_if<double>(&attrib_value))
-                    key += std::to_string(*double_value) + "$";
-                else if(auto float_value = std::get_if<float>(&attrib_value))
-                    key += std::to_string(*float_value) + "$";
-            }
-        }
         key += "$$";
     }
     key += matcher;
@@ -224,19 +211,6 @@ bool CachedEnforcer::EnforceWithMatcher(const std::string& matcher, const DataLi
     for (const auto& r : params) {
         if(const auto string_param = std::get_if<std::string>(&r))
             key += *string_param;
-        else if(const auto abac_param = std::get_if<std::shared_ptr<ABACData>>(&r)) {
-            auto data_ptr = *abac_param;
-            for(auto [_, attrib_value] : data_ptr->GetAttributes()) {
-                if(auto string_value = std::get_if<std::string>(&attrib_value))
-                    key += *string_value + "$";
-                else if(auto int_value = std::get_if<int32_t>(&attrib_value))
-                    key += std::to_string(*int_value) + "$";
-                else if(auto double_value = std::get_if<double>(&attrib_value))
-                    key += std::to_string(*double_value) + "$";
-                else if(auto float_value = std::get_if<float>(&attrib_value))
-                    key += std::to_string(*float_value) + "$";
-            }
-        }
         key += "$$";
     }
     key += matcher;
@@ -265,19 +239,6 @@ bool CachedEnforcer::EnforceWithMatcher(const std::string& matcher, const DataMa
     for (auto [param_name, param_value] : params) {
         if(const auto string_value = std::get_if<std::string>(&param_value))
             key += *string_value;
-        else if(const auto abac_param = std::get_if<std::shared_ptr<ABACData>>(&param_value)) {
-            auto data_ptr = *abac_param;
-            for(auto [_, attrib_value] : data_ptr->GetAttributes()) {
-                if(auto string_value = std::get_if<std::string>(&attrib_value))
-                    key += *string_value + "$";
-                else if(auto int_value = std::get_if<int32_t>(&attrib_value))
-                    key += std::to_string(*int_value) + "$";
-                else if(auto double_value = std::get_if<double>(&attrib_value))
-                    key += std::to_string(*double_value) + "$";
-                else if(auto float_value = std::get_if<float>(&attrib_value))
-                    key += std::to_string(*float_value) + "$";
-            }
-        }
         key += "$$";
     }
     key += matcher;

@@ -89,32 +89,6 @@ TEST(TestEnforcer, TestMapParams) {
     ASSERT_EQ(e.Enforce(params), true);
 }
 
-TEST(TestEnforcer, ABACData) {
-    casbin::AttributeMap params = {
-        { "Name", "Yash" },
-        { "Grade", 8.6f },
-        { "Age", 18 },
-    };
-
-    auto data = casbin::GetDataObject(params);
-    ASSERT_TRUE(params == data->GetAttributes());
-
-    data->DeleteAttribute("Name");
-    params = {
-        { "Grade", 8.6f },
-        { "Age", 18 },
-    };
-    ASSERT_TRUE(params == data->GetAttributes());
-
-    data->AddAttribute("ID", 156);
-    params["ID"] = 156;
-    ASSERT_TRUE(params == data->GetAttributes());
-
-    data->UpdateAttribute("ID", 152);
-    params["ID"] = 152;
-    ASSERT_TRUE(params == data->GetAttributes());
-}
-
 TEST(TestEnforcer, JsonData) {
     using json = nlohmann::json;
     casbin::Scope scope = casbin::InitializeScope();

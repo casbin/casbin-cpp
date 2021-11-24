@@ -501,30 +501,6 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
     for(const Data& param : params) {
         if(const auto string_param = std::get_if<std::string>(&param)) {
             PushStringPropToObject(scope, "r", *string_param, r_tokens[i].substr(2, r_tokens[i].size() - 2));
-        }
-        else if(const auto abac_param = std::get_if<std::shared_ptr<ABACData>>(&param)) {
-            auto data_ptr = *abac_param;
-            std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
-
-            PushObjectPropToObject(scope, "r", token_name);
-
-            for(auto [attrib_name, attrib_value] : data_ptr->GetAttributes()) {
-
-                if(const auto string_value = std::get_if<std::string>(&attrib_value))
-                    PushStringPropToObject(scope, token_name, *string_value, attrib_name);
-
-                else if(const auto int_value = std::get_if<int32_t>(&attrib_value))
-                    PushIntPropToObject(scope, token_name, *int_value, attrib_name);
-                
-                else if(const auto float_value = std::get_if<float>(&attrib_value))
-                    PushFloatPropToObject(scope, token_name, *float_value, attrib_name);
-                
-                else if(const auto double_value = std::get_if<double>(&attrib_value))
-                    PushDoublePropToObject(scope, token_name, *double_value, attrib_name);
-                
-                else
-                    throw CasbinEnforcerException("Not a valid type");
-            }
         } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param)) {
             
             auto data_ptr = *json_param;
@@ -564,30 +540,6 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
     for(const auto& param : params) {
         if(const auto string_param = std::get_if<std::string>(&param)) {
             PushStringPropToObject(scope, "r", *string_param, r_tokens[i].substr(2, r_tokens[i].size() - 2));
-        }
-        else if(const auto abac_param = std::get_if<std::shared_ptr<ABACData>>(&param)) {
-            auto data_ptr = *abac_param;
-            std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
-
-            PushObjectPropToObject(scope, "r", token_name);
-
-            for(auto [attrib_name, attrib_value] : data_ptr->GetAttributes()) {
-
-                if(const auto string_value = std::get_if<std::string>(&attrib_value))
-                    PushStringPropToObject(scope, token_name, *string_value, attrib_name);
-
-                else if(const auto int_value = std::get_if<int32_t>(&attrib_value))
-                    PushIntPropToObject(scope, token_name, *int_value, attrib_name);
-                
-                else if(const auto float_value = std::get_if<float>(&attrib_value))
-                    PushFloatPropToObject(scope, token_name, *float_value, attrib_name);
-                
-                else if(const auto double_value = std::get_if<double>(&attrib_value))
-                    PushDoublePropToObject(scope, token_name, *double_value, attrib_name);
-                
-                else
-                    throw CasbinEnforcerException("Not a valid type");
-            }
         } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param)) {
             
             auto data_ptr = *json_param;
@@ -618,30 +570,8 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& par
     PushObject(scope, "r");
 
     for (auto [param_name, param_data] : params) {
-        if(const auto string_param = std::get_if<std::string>(&param_data))
+        if(const auto string_param = std::get_if<std::string>(&param_data)) {
             PushStringPropToObject(scope, "r", *string_param, param_name);
-        else if(const auto abac_param = std::get_if<std::shared_ptr<ABACData>>(&param_data)) {
-            auto data_ptr = *abac_param;
-
-            PushObjectPropToObject(scope, "r", param_name);
-
-            for(auto [attrib_name, attrib_value] : data_ptr->GetAttributes()) {
-
-                if(const auto string_value = std::get_if<std::string>(&attrib_value))
-                    PushStringPropToObject(scope, param_name, *string_value, attrib_name);
-
-                else if(const auto int_value = std::get_if<int32_t>(&attrib_value))
-                    PushIntPropToObject(scope, param_name, *int_value, attrib_name);
-                
-                else if(const auto float_value = std::get_if<float>(&attrib_value))
-                    PushFloatPropToObject(scope, param_name, *float_value, attrib_name);
-                
-                else if(const auto double_value = std::get_if<double>(&attrib_value))
-                    PushDoublePropToObject(scope, param_name, *double_value, attrib_name);
-                
-                else
-                    throw CasbinEnforcerException("Not a valid type");
-            }
         } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param_data)) {
             
             auto data_ptr = *json_param;

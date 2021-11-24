@@ -36,7 +36,6 @@ PYBIND11_MODULE(pycasbin, m) {
 
     bindPyEnforcer(m);
     bindPyCachedEnforcer(m);
-    bindABACData(m);
     bindPyModel(m);
     bindPyConfig(m);
     bindPySyncedEnforcer(m);

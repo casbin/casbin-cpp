@@ -13,7 +13,6 @@
 #  limitations under the License.
 
 set(CASBIN_SOURCE_FILES
-    abac_data.cpp
     enforcer.cpp
     enforcer_cached.cpp
     enforcer_synced.cpp
