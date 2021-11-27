@@ -20,7 +20,6 @@ namespace py = pybind11;
 
 void bindPyEnforcer(py::module &m);
 void bindPyCachedEnforcer(py::module &m);
-void bindABACData(py::module &m);
 void bindPyModel(py::module &m);
 void bindPyConfig(py::module &m);
 void bindPySyncedEnforcer(py::module& m);

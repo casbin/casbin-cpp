@@ -18,7 +18,6 @@ set(SOURCES
     main.cpp
     py_cached_enforcer.cpp
     py_enforcer.cpp
-    py_abac_data.cpp
     py_model.cpp
     py_config.cpp
     py_synced_enforcer.cpp

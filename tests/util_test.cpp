@@ -98,4 +98,21 @@ TEST(TestUtil, TestReplaceEvalWithMap) {
 	testReplaceEvalWithMap("eval(rule1) || eval(rule2) && c && d", {}, "eval(rule1) || eval(rule2) && c && d");
 }
 
+void testGetEvalValue(std::string s, std::vector<std::string> res) {
+    auto myRes = casbin::GetEvalValue(s);
+
+    ASSERT_EQ(res.size(), myRes.size());
+
+    for (size_t i = 0; i < res.size(); i++) {
+        ASSERT_EQ(res[i], myRes[i]);
+    }
+}
+
+TEST(TestUtil, TestGetEvalValue) {
+    testGetEvalValue("eval(a) && a && b && c", {"a"});
+	testGetEvalValue("a && eval(a) && b && c", {"a"});
+	testGetEvalValue("eval(a) && eval(b) && a && b && c", {"a", "b"});
+	testGetEvalValue("a && eval(a) && eval(b) && b && c", {"a", "b"});
+}
+
 } // namespace
