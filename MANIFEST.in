@@ -1,0 +1,5 @@
+include README.md LICENSE 
+graft include
+graft casbin
+graft pycasbin/ 
+global-include CMakeLists.txt *.cmake

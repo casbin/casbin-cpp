@@ -38,11 +38,8 @@ if(CASBIN_BUILD_TEST)
     endif()
 endif()
 
-if(CASBIN_BUILD_BINDINGS)
-    if(CASBIN_BUILD_PYTHON_BINDINGS)
-        find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
-        # pybind11
-        # https://github.com/pybind/pybind11
-        find_package(pybind11 2.7.0 REQUIRED)
-    endif()
+if(CASBIN_BUILD_PYTHON_BINDINGS)
+    # pybind11
+    # https://github.com/pybind/pybind11
+    find_package(pybind11 2.8.0 REQUIRED)
 endif()

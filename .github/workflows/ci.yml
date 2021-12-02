@@ -27,16 +27,16 @@ jobs:
       - name: Configuring CMake files
         id: building-files
         run: |
-          mkdir build && cd build && cmake ..
+          mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release
       - name: Building library
         id: building-lib
         run: |
-          cd build && cmake --build . --config Debug --target all -j 10 --
+          cd build && cmake --build . --config Release --target all -j 10 --
       - name: Tests
         id: test-lib
         run: |
           cd build
-          ctest -j10 -C Debug -T test --output-on-failure -T test --output-on-failure
+          ctest -j10 -C Release -T test --output-on-failure -T test --output-on-failure
       - name: Cleanup
         id: clean-up
         run: |
