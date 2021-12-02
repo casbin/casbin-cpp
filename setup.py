@@ -126,7 +126,7 @@ setup(
     description="An authorization library that supports access control models like ACL, RBAC, ABAC in Python",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/casbin/pycasbin",
+    url="https://github.com/casbin/casbin-cpp",
     keywords=[
         "casbin",
         "acl",
@@ -141,7 +141,6 @@ setup(
     ext_modules=[CMakeExtension("")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
-    extras_require={"test": ["pytest>=6.0"]},
     python_requires=">=3.6",
     license="Apache 2.0",
     classifiers=[
