@@ -1,49 +1,27 @@
-## Language Bindings for Casbin
+## Language Bindings for `casbin-cpp`
 
-Casbin-CPP provides language bindings to compound the advantages of different languages and to make 
-authorization easier and faster.
-
-At present, casbin-cpp provides language bindings for Python.
+At present, `casbin-cpp` provides language bindings for Python, we named it `pycasbin`.
 
 ## Python Bindings
 
-### Installing the PyCasbin module
+### Use `pip` install the `pycasbin` module
 
-It is assumed you have CMake >=v3.19 and Python >= 3.2 installed.
+It is assumed you have `CMake >=v3.19` and `Python >= 3.6` installed. Current `pycasbin` only support `pip` install in local machine. 
 
 1. Clone/download the project:
     ```bash
     git clone https://github.com/casbin/casbin-cpp.git
     ```
 
-2. Make a build directory and generate project files through CMake:
+2. Update `wheel setuptools`:
     ```bash
-    mkdir build
-    cd build
-    cmake ..
+    python -m pip install --upgrade wheel setuptools
     ```
-    **Note:** Kindly look at the log message to find the directory you need to add in your `sys.path` (Step 5). The log may look like this:
+    
+3. Install the `pycasbin` module:
     ```bash
-    [pycasbin]: Build "pycasbin" target for Python Bindings
-    [pycasbin]: Add "lib/python3.9/site-packages" to your sys.path/USER_SITE variable if not already present
+    cd casbin-cpp && pip install --verbose .
     ```
-
-3. Build the python bindings (`pycasbin` target):
-    ```bash
-    cmake --build . --config Release --target pycasbin
-    ```
-
-4. Install the `pycasbin` module:
-    ```bash
-    cmake --build . --config Release --target install
-    ```
-    This will install the module to: 
-    - `<prefix>/lib/site-packages` on Windows.
-    - `<prefix>/lib/python3.x/site-packages` on UNIX.
-
-    **Note:** The actual install path can be deduced in the log output of Step 2.
-
-5. Add the correct `site-packages` directory path to `sys.path` or `USER_SITE` of your current python configuration if not already present.
 
 Now, you're ready to go!
 
@@ -51,7 +29,7 @@ Now, you're ready to go!
 
 It is assumed that you have `pycasbin` module correctly installed on your system.
 
-First, we import the pycasbin module to a python source file:
+First, we import the `pycasbin` module to a python source file:
 
 ```python
 import pycasbin as casbin
@@ -102,11 +80,11 @@ def isAuthorized(req):
         print('Not authorized!')
 ```
 
-Rest of the method's name is on par with casbin-CPP.
+Rest of the method's name is on par with `casbin-cpp`.
 
 #### Summary
 
-This sums up the basic usage of pycasbin module:
+This sums up the basic usage of `pycasbin` module:
 
 ```python
 import pycasbin as casbin
