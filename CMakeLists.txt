@@ -33,7 +33,7 @@ endif()
 
 project(
     casbin
-    VERSION 1.43.0
+    VERSION 1.44.0
     DESCRIPTION "An authorization library that supports access control models like ACL, RBAC, ABAC in C/C++"
     HOMEPAGE_URL https://github.com/casbin/casbin-cpp
     LANGUAGES CXX C
@@ -54,7 +54,6 @@ endif()
 option(CASBIN_BUILD_TEST "State whether to build test" ON)
 option(CASBIN_BUILD_BENCHMARK "State whether to build benchmarks" ON)
 option(INTENSIVE_BENCHMARK "State whether to build intensive benchmarks" OFF)
-option(CASBIN_BUILD_BINDINGS "State whether to build language bindings" ON)
 option(CASBIN_BUILD_PYTHON_BINDINGS "State whether to build python bindings" ON)
 option(CASBIN_INSTALL "State whether to install casbin targets on the current system" ON)
 
@@ -66,15 +65,6 @@ set(CASBIN_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 # Do not output install messages.
 if(NOT DEFINED CMAKE_INSTALL_MESSAGE)
     set(CMAKE_INSTALL_MESSAGE "LAZY")
-endif()
-
-if(CASBIN_BUILD_BINDINGS)
-    add_subdirectory(bindings)
-endif()
-
-if(CASBIN_BUILD_TEST)
-    enable_testing()
-    add_subdirectory(tests)
 endif()
 
 # Change the path max size to avoid problem on Windows.
@@ -94,6 +84,15 @@ set(CMAKE_CXX_STANDARD 17)
 include(FindExtPackages)
 
 add_subdirectory(casbin)
+
+if(CASBIN_BUILD_PYTHON_BINDINGS)
+    add_subdirectory(pycasbin)
+endif()
+
+if(CASBIN_BUILD_TEST)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 if(CASBIN_INSTALL)
     message(CHECK_START "[casbin]: Installing casbin ...")

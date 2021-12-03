@@ -361,3 +361,6 @@ MigrationBackup/
 cmake-build/
 xcode-build/
 cmake-build*/
+
+# pip
+*.egg-info
