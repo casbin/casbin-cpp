@@ -38,6 +38,7 @@ typedef duk_c_function Function;
 typedef duk_idx_t Index;
 
 Scope InitializeScope();
+void CleanScope(Scope scope);
 void DeinitializeScope(Scope scope);
 void PushFunctionValue(Scope scope, Function f, int nargs);
 void PushBooleanValue(Scope scope, bool expression);

@@ -278,6 +278,23 @@ void EvalNoResult(Scope scope, std::string expression){
     duk_eval_string_noresult(scope, expression.c_str());
 }
 
+void DeletePropFromObject(Scope scope, std::string object_name, std::string prop_name) {
+    if (duk_get_global_string(scope, object_name.c_str())) {
+        duk_del_prop_string(scope, -1, prop_name.c_str());
+    }
+}
+
+void CleanScope(Scope scope) {
+    std::vector<std::string> props = {"obj", "sub", "act"};
+    std::vector<std::string> objects = {"r", "p"};
+
+    for (auto obj: objects) {
+        for (auto prop: props) {
+            DeletePropFromObject(scope, obj, prop);
+        }
+    }
+}
+
 } // namespace casbin
 
 #endif // SCOPE_CONFIG_CPP

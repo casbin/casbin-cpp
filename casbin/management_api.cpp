@@ -245,7 +245,8 @@ bool Enforcer :: AddNamedGroupingPolicy(const std::string& p_type, const std::ve
     }
 
     if(m_auto_build_role_links)
-        this->BuildRoleLinks();
+        this->BuildIncrementalRoleLinks(policy_add, p_type, {params});
+        // this->BuildRoleLinks();
 
     return rule_added;
 }
