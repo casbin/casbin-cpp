@@ -171,6 +171,8 @@ namespace casbin {
         // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
         // use model matcher by default when matcher is "".
         bool m_enforce(const std::string& matcher, Scope scope);
+        // clean scope to prepare next enforce
+        void clean_scope(std::string section_name);
 
     public:
 

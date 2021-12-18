@@ -284,17 +284,6 @@ void DeletePropFromObject(Scope scope, std::string object_name, std::string prop
     }
 }
 
-void CleanScope(Scope scope) {
-    std::vector<std::string> props = {"obj", "sub", "act"};
-    std::vector<std::string> objects = {"r", "p"};
-
-    for (auto obj: objects) {
-        for (auto prop: props) {
-            DeletePropFromObject(scope, obj, prop);
-        }
-    }
-}
-
 } // namespace casbin
 
 #endif // SCOPE_CONFIG_CPP

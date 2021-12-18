@@ -536,7 +536,8 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
     bool result = m_enforce(matcher, scope);
 
     if (scope != nullptr) {
-        CleanScope(scope);
+        clean_scope("r");
+        clean_scope("p");
     }
     return result;
 }
@@ -581,7 +582,8 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
 
     bool result = m_enforce(matcher, scope);
     if (scope != nullptr) {
-        CleanScope(scope);
+        clean_scope("r");
+        clean_scope("p");
     }
     return result;
 }
@@ -611,7 +613,8 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& par
 
     bool result = m_enforce(matcher, scope);
     if (scope != nullptr) {
-        CleanScope(scope);
+        clean_scope("r");
+        clean_scope("p");
     }
     return result;
 }
@@ -635,6 +638,20 @@ std::vector<bool> Enforcer::BatchEnforceWithMatcher(const std::string& matcher, 
         results.push_back(this->EnforceWithMatcher(matcher, request));
     }
     return results;
+}
+
+// clean scope to prepare next enforce
+void Enforcer::clean_scope(std::string section_name) {
+    auto& section = this->m_model->m[section_name];
+    for (auto& [assertion_name, assertion]: section.assertion_map) {
+        std::vector<std::string> raw_tokens = assertion->tokens;
+
+        for(int j = 0 ; j < raw_tokens.size() ; j++) {
+            size_t index = raw_tokens[j].find("_");
+            std::string token = raw_tokens[j].substr(index + 1);
+            DeletePropFromObject(this->m_scope, assertion_name, token);
+        }
+    }
 }
 
 } // namespace casbin
