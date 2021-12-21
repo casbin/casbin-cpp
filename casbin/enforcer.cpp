@@ -296,12 +296,24 @@ void Enforcer::InitWithModelAndAdapter(const std::shared_ptr<Model>& m, std::sha
 void Enforcer::Initialize() {
     this->rm = std::make_shared<DefaultRoleManager>(10);
     m_eft = std::make_shared<DefaultEffector>();
-    m_watcher = NULL;
+    m_watcher = nullptr;
+    m_scope = nullptr;
 
     m_enabled = true;
     m_auto_save = true;
     m_auto_build_role_links = true;
     m_auto_notify_watcher = true;
+}
+
+/**
+ * Destructor of Enforcer
+ * 
+ * @step: Release the memory of Enforcer->m_scope
+*/
+Enforcer::~Enforcer() {
+    if (this->m_scope != nullptr) {
+        DeinitializeScope(this->m_scope);
+    }
 }
 
 // LoadModel reloads the model from the model CONF file.
@@ -493,7 +505,11 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
     if (cnt != r_cnt)
         return false;
 
-    Scope scope = InitializeScope();
+    if (this->m_scope == nullptr) {
+        this->m_scope = InitializeScope();
+    }
+    Scope scope = this->m_scope;
+
     PushObject(scope, "r");
 
     size_t i = 0;
@@ -518,7 +534,11 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
     // }
 
     bool result = m_enforce(matcher, scope);
-    DeinitializeScope(scope);
+
+    if (scope != nullptr) {
+        clean_scope("r");
+        clean_scope("p");
+    }
     return result;
 }
 
@@ -532,7 +552,10 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
     if (cnt != r_cnt)
         return false;
 
-    Scope scope = InitializeScope();
+    if (this->m_scope == nullptr) {
+        this->m_scope = InitializeScope();
+    }
+    Scope scope = this->m_scope;
     PushObject(scope, "r");
 
     size_t i = 0;
@@ -558,7 +581,10 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
     // }
 
     bool result = m_enforce(matcher, scope);
-    DeinitializeScope(scope);
+    if (scope != nullptr) {
+        clean_scope("r");
+        clean_scope("p");
+    }
     return result;
 }
 
@@ -566,7 +592,10 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
 // use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& params) {
-    Scope scope = InitializeScope();
+    if (this->m_scope == nullptr) {
+        this->m_scope = InitializeScope();
+    }
+    Scope scope = this->m_scope;
     PushObject(scope, "r");
 
     for (auto [param_name, param_data] : params) {
@@ -583,7 +612,10 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& par
     }
 
     bool result = m_enforce(matcher, scope);
-    DeinitializeScope(scope);
+    if (scope != nullptr) {
+        clean_scope("r");
+        clean_scope("p");
+    }
     return result;
 }
 
@@ -606,6 +638,20 @@ std::vector<bool> Enforcer::BatchEnforceWithMatcher(const std::string& matcher, 
         results.push_back(this->EnforceWithMatcher(matcher, request));
     }
     return results;
+}
+
+// clean scope to prepare next enforce
+void Enforcer::clean_scope(std::string section_name) {
+    auto& section = this->m_model->m[section_name];
+    for (auto& [assertion_name, assertion]: section.assertion_map) {
+        std::vector<std::string> raw_tokens = assertion->tokens;
+
+        for(int j = 0 ; j < raw_tokens.size() ; j++) {
+            size_t index = raw_tokens[j].find("_");
+            std::string token = raw_tokens[j].substr(index + 1);
+            DeletePropFromObject(this->m_scope, assertion_name, token);
+        }
+    }
 }
 
 } // namespace casbin

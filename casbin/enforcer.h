@@ -39,6 +39,7 @@ class Enforcer : public IEnforcer {
 
         std::shared_ptr<Adapter> m_adapter;
         std::shared_ptr<Watcher> m_watcher;
+        Scope m_scope;
         LogUtil m_log;
 
         bool m_enabled;
@@ -50,6 +51,8 @@ class Enforcer : public IEnforcer {
         // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
         // use model matcher by default when matcher is "".
         bool m_enforce(const std::string& matcher, Scope scope);
+        // clean scope to prepare next enforce
+        void clean_scope(std::string section_name);
 
     public:
 
@@ -100,6 +103,8 @@ class Enforcer : public IEnforcer {
          * @param enable_log whether to enable Casbin's log.
          */
         Enforcer(const std::string& model_path, const std::string& policy_file, bool enable_log);
+        // Destructor of Enforcer.
+        ~Enforcer();
         // InitWithFile initializes an enforcer with a model file and a policy file.
         void InitWithFile(const std::string& model_path, const std::string& policy_path);
         // InitWithAdapter initializes an enforcer with a database adapter.
