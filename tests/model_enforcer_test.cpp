@@ -479,8 +479,7 @@ TEST(TestModelEnforcer, TestRBACModelWithPattern) {
     // You can see in policy that: "g2, /book/:id, book_group", so in "g2()" function in the matcher, instead
     // of checking whether "/book/:id" equals the obj: "/book/1", it checks whether the pattern matches.
     // You can see it as normal RBAC: "/book/:id" == "/book/1" becomes KeyMatch2("/book/:id", "/book/1")
-    casbin::DefaultRoleManager* rm_tmp = dynamic_cast<casbin::DefaultRoleManager*>(e.rm.get());
-    rm_tmp->AddMatchingFunc(casbin::KeyMatch2);
+    e.AddNamedMatchingFunc("p", "", casbin::KeyMatch2);
     casbin::Scope scope = InitializeParams("alice", "/book/1", "GET");
     TestEnforce(e, scope, true);
     scope = InitializeParams("alice", "/book/2", "GET");
@@ -500,7 +499,7 @@ TEST(TestModelEnforcer, TestRBACModelWithPattern) {
 
     // AddMatchingFunc() is actually setting a function because only one function is allowed,
     // so when we set "KeyMatch3", we are actually replacing "KeyMatch2" with "KeyMatch3".
-    rm_tmp->AddMatchingFunc(casbin::KeyMatch3);
+    e.AddNamedMatchingFunc("p", "", casbin::KeyMatch3);
     scope = InitializeParams("alice", "/book2/1", "GET");
     TestEnforce(e, scope, true);
     scope = InitializeParams("alice", "/book2/2", "GET");

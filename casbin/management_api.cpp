@@ -340,6 +340,14 @@ bool Enforcer :: UpdateNamedPolicies(const std::string& ptype, const std::vector
     return this->updatePolicies("p", ptype, p1, p2);
 }
 
+// AddNamedMatchingFunc add MatchingFunc by ptype RoleManager
+bool Enforcer :: AddNamedMatchingFunc(const std::string& ptype, const std::string& name, casbin::MatchingFunc func) {
+    auto default_rm = dynamic_cast<casbin::DefaultRoleManager*>(this->rm.get());
+    default_rm->AddMatchingFunc(func);
+
+    return true;
+}
+
 } // namespace casbin
 
 #endif // MANAGEMENT_API_CPP
