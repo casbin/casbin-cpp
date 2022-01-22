@@ -129,6 +129,7 @@ namespace casbin {
         virtual bool UpdateNamedPolicy(const std::string& ptype, const std::vector<std::string>& p1, const std::vector<std::string>& p2) = 0;
         virtual bool UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies) = 0;
         virtual bool UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) = 0;
+        virtual bool AddNamedMatchingFunc(const std::string& ptype, const std::string& name, casbin::MatchingFunc func) = 0;
 
         /* Internal API member functions */
         virtual bool addPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) = 0;
@@ -347,6 +348,7 @@ namespace casbin {
         bool UpdateNamedPolicy(const std::string& ptype, const std::vector<std::string>& p1, const std::vector<std::string>& p2);
         bool UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies);
         bool UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2);
+        bool AddNamedMatchingFunc(const std::string& ptype, const std::string& name, casbin::MatchingFunc func);
 
         /*RBAC API member functions.*/
         std::vector<std::string> GetRolesForUser(const std::string& name, const std::vector<std::string>& domain = {});

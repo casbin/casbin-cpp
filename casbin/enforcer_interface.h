@@ -23,6 +23,7 @@
 #include "./persist/default_watcher.h"
 #include "./effect/effector.h"
 #include "./model/scope_config.h"
+#include "./rbac/default_role_manager.h"
 
 namespace casbin {
 
@@ -104,7 +105,7 @@ class IEnforcer {
         virtual bool HasPolicy(const std::vector<std::string>& params) = 0;
         virtual bool HasNamedPolicy(const std::string& p_type, const std::vector<std::string>& params) = 0;
         virtual bool AddPolicy(const std::vector<std::string>& params) = 0;
-        virtual bool  AddPolicies(const std::vector<std::vector<std::string>>& rules) = 0;
+        virtual bool AddPolicies(const std::vector<std::vector<std::string>>& rules) = 0;
         virtual bool AddNamedPolicy(const std::string& p_type, const std::vector<std::string>& params) = 0;
         virtual bool AddNamedPolicies(const std::string& p_type, const std::vector<std::vector<std::string>>& rules) = 0;
         virtual bool RemovePolicy(const std::vector<std::string>& params) = 0;
@@ -132,6 +133,7 @@ class IEnforcer {
         virtual bool UpdateNamedPolicy(const std::string& ptype, const std::vector<std::string>& p1, const std::vector<std::string>& p2) = 0;
         virtual bool UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies) = 0;
         virtual bool UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) = 0;
+        virtual bool AddNamedMatchingFunc(const std::string& ptype, const std::string& name, casbin::MatchingFunc func) = 0;
 
         /* Internal API member functions */
         virtual bool addPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) = 0;
