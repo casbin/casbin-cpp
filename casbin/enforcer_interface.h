@@ -59,9 +59,9 @@ class IEnforcer {
         virtual void EnableAutoSave(bool auto_save) = 0;
         virtual void EnableAutoBuildRoleLinks(bool auto_build_role_links) = 0;
         virtual void BuildRoleLinks() = 0;
-        virtual bool m_enforce(const std::string& matcher, Scope scope) = 0;
-        virtual bool Enforce(Scope scope) = 0;
-        virtual bool EnforceWithMatcher(const std::string& matcher, Scope scope) = 0;
+        virtual bool m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) = 0;
+        virtual bool Enforce(std::shared_ptr<IEvaluator> evalator) = 0;
+        virtual bool EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) = 0;
         virtual std::vector<bool> BatchEnforce(const std::initializer_list<DataList>& requests) = 0;
         virtual std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) = 0;
 

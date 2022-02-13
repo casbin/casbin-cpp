@@ -86,7 +86,7 @@ public:
 
     virtual ~CachedEnforcer() = default;
 
-    bool Enforce(Scope scope);
+    bool Enforce(std::shared_ptr<IEvaluator> evalator);
 
     // Enforce with a vector param,decides whether a "subject" can access a
     // "object" with the operation "action", input parameters are usually: (sub,
@@ -106,7 +106,7 @@ public:
     // access a "object" with the operation "action", input parameters are
     // usually: (matcher, sub, obj, act), use model matcher by default when
     // matcher is "".
-    bool EnforceWithMatcher(const std::string& matcher, Scope scope);
+    bool EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator);
 
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
     // access a "object" with the operation "action", input parameters are

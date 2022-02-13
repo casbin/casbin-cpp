@@ -122,28 +122,29 @@ TEST(TestRBACAPI, TestPermissionAPI) {
     ASSERT_FALSE(e.HasPermissionForUser("bob", { "read" }));
     ASSERT_TRUE(e.HasPermissionForUser("bob", { "write" }));
 
-    e.DeletePermission({ "read" });
+    ASSERT_TRUE(e.DeletePermission({ "read" }));
 
     ASSERT_FALSE(e.Enforce({ "alice", "read" }));
     ASSERT_FALSE(e.Enforce({ "alice", "write" }));
     ASSERT_FALSE(e.Enforce({ "bob", "read" }));
     ASSERT_TRUE(e.Enforce({ "bob", "write" }));
 
-    e.AddPermissionForUser("bob", { "read" });
+    ASSERT_TRUE(e.AddPermissionForUser("bob", { "read" }));
 
     ASSERT_FALSE(e.Enforce({ "alice", "read" }));
     ASSERT_FALSE(e.Enforce({ "alice", "write" }));
     ASSERT_TRUE(e.Enforce({ "bob", "read" }));
     ASSERT_TRUE(e.Enforce({ "bob", "write" }));
 
-    e.DeletePermissionForUser("bob", { "read" });
+    ASSERT_TRUE(e.DeletePermissionForUser("bob", { "read" }));
 
     ASSERT_FALSE(e.Enforce({ "alice", "read" }));
     ASSERT_FALSE(e.Enforce({ "alice", "write" }));
     ASSERT_FALSE(e.Enforce({ "bob", "read" }));
     ASSERT_TRUE(e.Enforce({ "bob", "write" }));
 
-    e.DeletePermissionsForUser("bob");
+    // TODO: DeletePermissionsForUser this api don't work
+    ASSERT_TRUE(e.DeletePermissionsForUser("bob"));
 
     ASSERT_FALSE(e.Enforce({ "alice", "read" }));
     ASSERT_FALSE(e.Enforce({ "alice", "write" }));

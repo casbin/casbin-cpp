@@ -37,9 +37,9 @@ namespace casbin {
 // enforce use a custom matcher to decides whether a "subject" can access a "object" 
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
 // use model matcher by default when matcher is "".
-bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
-    m_func_map.scope = scope;
-    m_func_map.func_list.clear();
+bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) {
+    m_func_map.evalator = evalator;
+    m_func_map.evalator->func_list.clear();
     m_func_map.LoadFunctionMap();
 
     if(!m_enabled)
@@ -65,14 +65,13 @@ bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
             if (index != std::string::npos)
                 exp_string.insert(index + assertion_name.length() + 1, "rm, ");
 
-            PushPointer(m_func_map.scope, reinterpret_cast<void *>(rm.get()), "rm");
-            m_func_map.AddFunction(assertion_name, GFunction, char_count + 1);
+            m_func_map.evalator->LoadGFunction(rm, assertion_name, char_count + 1);
         }
     }
 
     // apply function map to current scope.
-    for(auto func : m_user_func_list)
-        m_func_map.AddFunction(std::get<0>(func), std::get<1>(func), std::get<2>(func));
+    // for(auto func : m_user_func_list)
+    //     m_func_map.AddFunction(std::get<0>(func), std::get<1>(func), std::get<2>(func));
 
     bool hasEval = HasEval(exp_string);
     
@@ -90,8 +89,8 @@ bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
     std::vector<float> matcher_results(policy_len, 0.0f);
 
     if(policy_len != 0) {
-        if(m_model->m["r"].assertion_map["r"]->tokens.size() != m_func_map.GetRLen())
-            return false;
+        // if(m_model->m["r"].assertion_map["r"]->tokens.size() != m_func_map.GetRLen())
+        //     return false;
 
         //TODO
         for(int i = 0 ; i < policy_len ; i++) {
@@ -99,12 +98,11 @@ bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
             m_log.LogPrint("Policy Rule: ", p_vals);
             if(p_tokens.size() != p_vals.size())
                 return false;
-
-            PushObject(m_func_map.scope, "p");
+            m_func_map.evalator->InitialObject("p");
             for(int j = 0 ; j < p_tokens.size() ; j++) {
                 size_t index = p_tokens[j].find("_");
                 std::string token = p_tokens[j].substr(index + 1);
-                PushStringPropToObject(m_func_map.scope, "p", p_vals[j], token);
+                m_func_map.evalator->PushObjectString("p", token, p_vals[j]);
             }
 
             if(hasEval) {
@@ -133,15 +131,14 @@ bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
 
             //TODO
             // log.LogPrint("Result: ", result)
-            if(CheckType(m_func_map.scope) == Type::Bool) {
-                bool result = GetBoolean(m_func_map.scope);
-                if(!result) {
+            if (m_func_map.evalator->CheckType() == Type::Bool) {
+                bool result = m_func_map.evalator->GetBoolen();
+                if (!result) {
                     policy_effects[i] = Effect::Indeterminate;
                     continue;
                 }
-            }
-            else if(CheckType(m_func_map.scope) == Type::Float){
-                float result = GetFloat(m_func_map.scope);
+            } else if (m_func_map.evalator->CheckType() == Type::Float){
+                float result = m_func_map.evalator->GetFloat();
                 if(result == 0.0) {
                     policy_effects[i] = Effect::Indeterminate;
                     continue;
@@ -168,13 +165,12 @@ bool Enforcer::m_enforce(const std::string& matcher, Scope scope) {
             if(m_model->m["e"].assertion_map["e"]->value == "priority(p_eft) || deny")
                 break;
         }
-    }
-    else {
-        bool isValid = m_func_map.Evaluate(exp_string);
-        if(!isValid)
+    } else {
+        bool isvalid = m_func_map.Evaluate(exp_string);
+        if (!isvalid) {
             return false;
-        bool result = m_func_map.GetBooleanResult();
-
+        }
+        bool result = m_func_map.evalator->GetBoolen();
         //TODO
         m_log.LogPrint("Result: ", result);
         if (result)
@@ -205,7 +201,7 @@ Enforcer ::Enforcer() {
  */
 Enforcer ::Enforcer(const std::string& model_path, const std::string& policy_file)
     : Enforcer(model_path, std::make_shared<BatchFileAdapter>(policy_file)) {
-}
+}   
 
 /**
  * Enforcer initializes an enforcer with a database adapter.
@@ -297,7 +293,7 @@ void Enforcer::Initialize() {
     this->rm = std::make_shared<DefaultRoleManager>(10);
     m_eft = std::make_shared<DefaultEffector>();
     m_watcher = nullptr;
-    m_scope = nullptr;
+    m_evalator = nullptr;
 
     m_enabled = true;
     m_auto_save = true;
@@ -310,11 +306,7 @@ void Enforcer::Initialize() {
  * 
  * @step: Release the memory of Enforcer->m_scope
 */
-Enforcer::~Enforcer() {
-    if (this->m_scope != nullptr) {
-        DeinitializeScope(this->m_scope);
-    }
-}
+Enforcer::~Enforcer() {}
 
 // LoadModel reloads the model from the model CONF file.
 // Because the policy is attached to a model, so the policy is invalidated and needs 
@@ -472,8 +464,8 @@ void Enforcer::BuildIncrementalRoleLinks(policy_op op, const std::string& p_type
 
 // Enforce decides whether a "subject" can access a "object" with the operation "action", 
 // input parameters are usually: (sub, obj, act).
-bool Enforcer::Enforce(Scope scope) {
-    return this->EnforceWithMatcher("", scope);
+bool Enforcer::Enforce(std::shared_ptr<IEvaluator> evalator) {
+    return this->EnforceWithMatcher("", evalator);
 }
 
 // Enforce with a vector param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
@@ -491,8 +483,8 @@ bool Enforcer::Enforce(const DataMap& params) {
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer::EnforceWithMatcher(const std::string& matcher, Scope scope) {
-    return m_enforce(matcher, scope);
+bool Enforcer::EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) {
+    return m_enforce(matcher, evalator);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
@@ -505,40 +497,34 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
     if (cnt != r_cnt)
         return false;
 
-    if (this->m_scope == nullptr) {
-        this->m_scope = InitializeScope();
+    if (this->m_evalator == nullptr) {
+        this->m_evalator = std::make_shared<DuktapeEvaluator>();
     }
-    Scope scope = this->m_scope;
 
-    PushObject(scope, "r");
+    this->m_evalator->InitialObject("r");
 
     size_t i = 0;
 
     for(const Data& param : params) {
         if(const auto string_param = std::get_if<std::string>(&param)) {
-            PushStringPropToObject(scope, "r", *string_param, r_tokens[i].substr(2, r_tokens[i].size() - 2));
+            this->m_evalator->PushObjectString("r", r_tokens[i].substr(2, r_tokens[i].size() - 2), *string_param);
         } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param)) {
             
             auto data_ptr = *json_param;
             std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
+            this->m_evalator->PushObjectJson("r", token_name, *data_ptr);
 
-            PushObject(scope, token_name);
-            PushObjectPropFromJson(scope, *data_ptr, token_name);
-            PushObjectPropToObject(scope, "r", token_name);
         }
         ++i;
     }
 
-    // for (size_t i = 0; i < cnt; i++) {
-    //     PushStringPropToObject(scope, "r", params[i], r_tokens[i].substr(2, r_tokens[i].size() - 2));
-    // }
+    bool result = m_enforce(matcher, m_evalator);
 
-    bool result = m_enforce(matcher, scope);
-
-    if (scope != nullptr) {
-        clean_scope("r");
-        clean_scope("p");
+    if (m_evalator != nullptr) {
+        m_evalator->Clean(m_model->m["p"]);
+        m_evalator->Clean(m_model->m["r"]);
     }
+
     return result;
 }
 
@@ -552,39 +538,36 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
     if (cnt != r_cnt)
         return false;
 
-    if (this->m_scope == nullptr) {
-        this->m_scope = InitializeScope();
+    if (this->m_evalator == nullptr) {
+        auto scope = InitializeScope();
+        this->m_evalator = std::make_shared<DuktapeEvaluator>(scope);
     }
-    Scope scope = this->m_scope;
-    PushObject(scope, "r");
+
+    this->m_evalator->InitialObject("r");
 
     size_t i = 0;
 
     for(const auto& param : params) {
         if(const auto string_param = std::get_if<std::string>(&param)) {
-            PushStringPropToObject(scope, "r", *string_param, r_tokens[i].substr(2, r_tokens[i].size() - 2));
+            this->m_evalator->PushObjectString("r", r_tokens[i].substr(2, r_tokens[i].size() - 2), *string_param);
         } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param)) {
             
             auto data_ptr = *json_param;
             std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
 
-            PushObject(scope, token_name);
-            PushObjectPropFromJson(scope, *data_ptr, token_name);
-            PushObjectPropToObject(scope, "r", token_name);
+            this->m_evalator->PushObjectJson("r", token_name, *data_ptr);
         }
 
         ++i;
     }
 
-    // for (size_t i = 0; i < cnt; i++) {
-    //     PushStringPropToObject(scope, "r", params[i], r_tokens[i].substr(2, r_tokens[i].size() - 2));
-    // }
+    bool result = m_enforce(matcher, m_evalator);
 
-    bool result = m_enforce(matcher, scope);
-    if (scope != nullptr) {
-        clean_scope("r");
-        clean_scope("p");
+    if (m_evalator != nullptr) {
+        m_evalator->Clean(m_model->m["p"]);
+        m_evalator->Clean(m_model->m["r"]);
     }
+
     return result;
 }
 
@@ -592,30 +575,31 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
 // use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& params) {
-    if (this->m_scope == nullptr) {
-        this->m_scope = InitializeScope();
+    if (this->m_evalator == nullptr) {
+        auto scope = InitializeScope();
+        this->m_evalator = std::make_shared<DuktapeEvaluator>(scope);
     }
-    Scope scope = this->m_scope;
-    PushObject(scope, "r");
+
+    this->m_evalator->InitialObject("r");
 
     for (auto [param_name, param_data] : params) {
         if(const auto string_param = std::get_if<std::string>(&param_data)) {
-            PushStringPropToObject(scope, "r", *string_param, param_name);
+            this->m_evalator->PushObjectString("r", param_name, *string_param);
         } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param_data)) {
             
             auto data_ptr = *json_param;
-            PushObject(scope, param_name);
-            PushObjectPropFromJson(scope, *data_ptr, param_name);
-            PushObjectPropToObject(scope, "r", param_name);
+            this->m_evalator->PushObjectJson("r", param_name, *data_ptr);
         }
 
     }
 
-    bool result = m_enforce(matcher, scope);
-    if (scope != nullptr) {
-        clean_scope("r");
-        clean_scope("p");
+    bool result = m_enforce(matcher, m_evalator);
+
+    if (m_evalator != nullptr) {
+        m_evalator->Clean(m_model->m["p"]);
+        m_evalator->Clean(m_model->m["r"]);
     }
+
     return result;
 }
 
@@ -642,16 +626,7 @@ std::vector<bool> Enforcer::BatchEnforceWithMatcher(const std::string& matcher, 
 
 // clean scope to prepare next enforce
 void Enforcer::clean_scope(std::string section_name) {
-    auto& section = this->m_model->m[section_name];
-    for (auto& [assertion_name, assertion]: section.assertion_map) {
-        std::vector<std::string> raw_tokens = assertion->tokens;
 
-        for(int j = 0 ; j < raw_tokens.size() ; j++) {
-            size_t index = raw_tokens[j].find("_");
-            std::string token = raw_tokens[j].substr(index + 1);
-            DeletePropFromObject(this->m_scope, assertion_name, token);
-        }
-    }
 }
 
 } // namespace casbin

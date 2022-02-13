@@ -126,7 +126,7 @@ public:
     void BuildRoleLinks();
 
     // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-    bool Enforce(Scope);
+    bool Enforce(std::shared_ptr<IEvaluator>);
 
     // Enforce with a vector param,decides whether a "subject" can access a
     // "object" with the operation "action", input parameters are usually: (sub,

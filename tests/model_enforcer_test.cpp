@@ -74,7 +74,8 @@ casbin::Scope InitializeParamsWithJson(std::shared_ptr<nlohmann::json> sub, std:
 }
 
 void TestEnforce(casbin::Enforcer& e, casbin::Scope& scope, bool res) {
-    ASSERT_EQ(res, e.Enforce(scope));
+    auto evaluator = std::make_shared<casbin::DuktapeEvaluator>(scope);
+    ASSERT_EQ(res, e.Enforce(evaluator));
 }
 
 TEST(TestModelEnforcer, TestBasicModel) {

@@ -181,9 +181,9 @@ void SyncedEnforcer ::BuildRoleLinks() {
 }
 
 // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-bool SyncedEnforcer ::Enforce(Scope s) {
+bool SyncedEnforcer ::Enforce(std::shared_ptr<IEvaluator> evalator) {
     std::lock_guard<std::mutex> lock(policyMutex);
-    return Enforcer::Enforce(s);
+    return Enforcer::Enforce(evalator);
 }
 
 // Enforce with a vector param,decides whether a "subject" can access a

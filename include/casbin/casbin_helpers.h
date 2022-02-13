@@ -28,6 +28,7 @@
 
 #include "duktape/duktape.h"
 #include "duktape/duk_config.h"
+#include "exprtk/exprtk.hpp"
 
 namespace casbin {
 
@@ -544,7 +545,7 @@ namespace casbin {
     void PushStringPropToObject(Scope scope, std::string obj, std::string s, std::string identifier);
     void PushPointerPropToObject(Scope scope, std::string obj, void * ptr, std::string identifier);
     void PushObjectPropToObject(Scope scope, std::string obj, std::string identifier);
-    void PushObjectPropFromJson(Scope scope, nlohmann::json& j, std::string j_name);
+    void PushObjectPropFromJson(Scope scope, const nlohmann::json& j, std::string j_name);
     void DeletePropFromObject(Scope scope, std::string object_name, std::string prop_name);
     Type CheckType(Scope scope);
     bool FetchIdentifier(Scope scope, std::string identifier);
@@ -778,47 +779,141 @@ namespace casbin {
         void PrintRoles();
     };
 
+    using numerical_type = float;
+
+    using symbol_table_t = exprtk::symbol_table<numerical_type>;
+    using expression_t = exprtk::expression<numerical_type>;
+    using parser_t = exprtk::parser<numerical_type>;
+
+    class IEvaluator {
+        public:
+            std::list<std::string> func_list;
+            virtual bool Eval(const std::string& expression) = 0;
+
+            virtual void InitialObject(std::string target) = 0;
+
+            virtual void PushObjectString(std::string target, std::string proprity, const std::string& var) = 0;
+
+            virtual void PushObjectJson(std::string target, std::string proprity, const nlohmann::json& var) = 0;
+
+            virtual void LoadFunctions() = 0;
+
+            virtual void LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg) = 0;
+
+            virtual void ProcessFunctions(const std::string& expression) = 0;
+
+            virtual Type CheckType() = 0;
+
+            virtual bool GetBoolen() = 0;
+
+            virtual float GetFloat() = 0;
+
+            virtual void Clean(AssertionMap& section) = 0;
+    };
+
+    class ExprtkEvaluator : public IEvaluator {
+        private:
+            symbol_table_t symbol_table;
+            expression_t expression;
+            parser_t parser;
+        public:
+            bool Eval(const std::string& expression);
+
+            void InitialObject(std::string target);
+
+            void PushObjectString(std::string target, std::string proprity, const std::string& var);
+
+            void PushObjectJson(std::string target, std::string proprity, const nlohmann::json& var);
+
+            void LoadFunctions();
+
+            void LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg);
+
+            void ProcessFunctions(const std::string& expression);
+
+            Type CheckType();
+
+            bool GetBoolen();
+
+            float GetFloat();
+
+            void Clean(AssertionMap& section);
+    };
+
+    class DuktapeEvaluator : public IEvaluator {
+        private:
+            Scope scope;
+        public:
+            DuktapeEvaluator(Scope scope_) : scope(scope_) {};
+
+            DuktapeEvaluator() : scope(InitializeScope()) {};
+
+            ~DuktapeEvaluator() {
+                DeinitializeScope(scope);
+            };
+
+            bool Eval(const std::string& expression);
+
+            void InitialObject(std::string target);
+            
+            void PushObjectString(std::string target, std::string proprity, const  std::string& var);
+            
+            void PushObjectJson(std::string target, std::string proprity, const nlohmann::json& var);
+
+            void LoadFunctions();
+
+            void LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg);
+            
+            void ProcessFunctions(const std::string& expression);
+
+            Type CheckType();
+
+            bool GetBoolen();
+
+            float GetFloat();
+
+            void Clean(AssertionMap& section);
+            // For duktape
+            void AddFunction(const std::string& func_name, Function f, Index nargs);
+
+            int GetRLen();
+
+            bool GetBooleanResult();
+
+            void AddFunctionPropToR(const std::string& identifier, Function func, Index nargs);
+
+            void AddBooleanPropToR(const std::string& identifier, bool val);
+
+            void AddTruePropToR(const std::string& identifier);
+
+            void AddFalsePropToR(const std::string& identifier);
+
+            void AddIntPropToR(const std::string& identifier, int val);
+
+            void AddFloatPropToR(const std::string& identifier, float val);
+
+            void AddDoublePropToR(const std::string& identifier, double val);
+
+            void AddStringPropToR(const std::string& identifier, const std::string& val);
+
+            void AddPointerPropToR(const std::string& identifier, void* val);
+
+            void AddObjectPropToR(const std::string& identifier);
+
+    };
+
     class FunctionMap {
-    public:
-        Scope scope;
-        std::list<std::string> func_list;
+        public:
+            std::shared_ptr<IEvaluator> evalator;
 
-        FunctionMap();
+            FunctionMap();
 
-        void ProcessFunctions(const std::string& expression);
+            bool Evaluate(const std::string& expression);
 
-        int GetRLen();
+            void ProcessFunctions(const std::string& expression);
 
-        bool Evaluate(const std::string& expression);
-
-        bool GetBooleanResult();
-
-        // AddFunction adds an expression function.
-        void AddFunction(const std::string& func_name, Function f, Index nargs);
-
-        void AddFunctionPropToR(const std::string& identifier, Function func, Index nargs);
-
-        void AddBooleanPropToR(const std::string& identifier, bool val);
-
-        void AddTruePropToR(const std::string& identifier);
-
-        void AddFalsePropToR(const std::string& identifier);
-
-        void AddIntPropToR(const std::string& identifier, int val);
-
-        void AddFloatPropToR(const std::string& identifier, float val);
-
-        void AddDoublePropToR(const std::string& identifier, double val);
-
-        void AddStringPropToR(const std::string& identifier, const std::string& val);
-
-        void AddPointerPropToR(const std::string& identifier, void* val);
-
-        void AddObjectPropToR(const std::string& identifier);
-
-        // LoadFunctionMap loads an initial function map.
-        void LoadFunctionMap();
-
+            // LoadFunctionMap loads an initial function map.
+            void LoadFunctionMap();
     };
 
     class Logger{
