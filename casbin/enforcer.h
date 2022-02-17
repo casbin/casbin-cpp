@@ -24,6 +24,7 @@
 #include "./enforcer_interface.h"
 #include "./persist/filtered_adapter.h"
 #include "./log/log_util.h"
+#include "./model/evaluator.h"
 
 namespace casbin {
 
@@ -39,7 +40,7 @@ class Enforcer : public IEnforcer {
 
         std::shared_ptr<Adapter> m_adapter;
         std::shared_ptr<Watcher> m_watcher;
-        Scope m_scope;
+        std::shared_ptr<IEvaluator> m_evalator;
         LogUtil m_log;
 
         bool m_enabled;
@@ -50,7 +51,7 @@ class Enforcer : public IEnforcer {
         // enforce use a custom matcher to decides whether a "subject" can access a "object" 
         // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
         // use model matcher by default when matcher is "".
-        bool m_enforce(const std::string& matcher, Scope scope);
+        bool m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator> evalator);
         // clean scope to prepare next enforce
         void clean_scope(std::string section_name);
 
@@ -159,7 +160,7 @@ class Enforcer : public IEnforcer {
         // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
         void BuildIncrementalRoleLinks(policy_op op, const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
         // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
-        bool Enforce(Scope scope);
+        bool Enforce(std::shared_ptr<IEvaluator> evalator);
         // Enforce with a list param, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(const DataList& params);
         // Enforce with a vector param, decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
@@ -167,7 +168,7 @@ class Enforcer : public IEnforcer {
         // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
         bool Enforce(const DataMap& params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-        bool EnforceWithMatcher(const std::string& matcher, Scope scope);
+        bool EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
         bool EnforceWithMatcher(const std::string& matcher, const DataList& params);
         // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".

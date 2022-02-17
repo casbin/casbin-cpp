@@ -20,50 +20,22 @@
 #include <list>
 
 #include "../util/built_in_functions.h"
+#include "evaluator.h"
 
 namespace casbin {
 
 class FunctionMap {
     public:
-        Scope scope;
-        std::list<std::string> func_list;
+        std::shared_ptr<IEvaluator> evalator;
 
         FunctionMap();
 
-        void ProcessFunctions(const std::string& expression);
-
-        int GetRLen();
-
         bool Evaluate(const std::string& expression);
 
-        bool GetBooleanResult();
-
-        // AddFunction adds an expression function.
-        void AddFunction(const std::string& func_name, Function f, Index nargs);
-
-        void AddFunctionPropToR(const std::string& identifier, Function func, Index nargs);
-
-        void AddBooleanPropToR(const std::string& identifier, bool val);
-
-        void AddTruePropToR(const std::string& identifier);
-
-        void AddFalsePropToR(const std::string& identifier);
-
-        void AddIntPropToR(const std::string& identifier, int val);
-
-        void AddFloatPropToR(const std::string& identifier, float val);
-
-        void AddDoublePropToR(const std::string& identifier, double val);
-
-        void AddStringPropToR(const std::string& identifier, const std::string& val);
-
-        void AddPointerPropToR(const std::string& identifier, void* val);
-
-        void AddObjectPropToR(const std::string& identifier);
+        void ProcessFunctions(const std::string& expression);
 
         // LoadFunctionMap loads an initial function map.
         void LoadFunctionMap();
-
 };
 
 };  // namespace casbin

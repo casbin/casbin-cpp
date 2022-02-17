@@ -194,7 +194,7 @@ void PushObjectPropToObject(Scope scope, std::string obj, std::string identifier
     duk_eval_string_noresult(scope, (obj+"len += 1;").c_str());
 }
 
-void PushObjectPropFromJson(Scope scope, nlohmann::json& j, std::string objName) {
+void PushObjectPropFromJson(Scope scope, const nlohmann::json& j, std::string objName) {
     if (j.is_null()) {
         return;
     }

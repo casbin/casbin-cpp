@@ -144,8 +144,8 @@ void CachedEnforcer::InvalidateCache() {
 
 // Enforce decides whether a "subject" can access a "object" with the operation
 // "action", input parameters are usually: (sub, obj, act).
-bool CachedEnforcer ::Enforce(Scope scope) {
-    return EnforceWithMatcher("", scope);
+bool CachedEnforcer ::Enforce(std::shared_ptr<IEvaluator> evalator) {
+    return EnforceWithMatcher("", evalator);
 }
 
 bool CachedEnforcer::Enforce(const DataVector& params) {
@@ -167,8 +167,8 @@ bool CachedEnforcer::Enforce(const DataMap& params) {
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
 // access a "object" with the operation "action", input parameters are usually:
 // (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool CachedEnforcer ::EnforceWithMatcher(const std::string& matcher, Scope scope) {
-    return Enforcer::EnforceWithMatcher(matcher, scope);
+bool CachedEnforcer ::EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) {
+    return Enforcer::EnforceWithMatcher(matcher, evalator);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can
