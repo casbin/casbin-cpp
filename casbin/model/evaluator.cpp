@@ -13,11 +13,90 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+#include <regex>
 
 #include "evaluator.h"
 #include "../util/util.h"
 
 namespace casbin {
+    bool ExprtkEvaluator::Eval(const std::string& expression_string) {
+        expression.register_symbol_table(symbol_table);
+        // replace (&& -> and), (|| -> or)
+        auto replaced_string = std::regex_replace(expression_string, std::regex("&&"), "and");
+        replaced_string = std::regex_replace(replaced_string, std::regex("\\|{2}"), "or");
+        // replace string "" -> ''
+        replaced_string = std::regex_replace(replaced_string, std::regex("\""), "\'");
+
+        return parser.compile(replaced_string, expression);
+    }
+
+    void ExprtkEvaluator::InitialObject(std::string identifier) {
+        // symbol_table.add_stringvar("");
+    }
+
+    void ExprtkEvaluator::PushObjectString(std::string target, std::string proprity, const std::string& var) {
+        auto identifier = target + "." + proprity;
+        this->symbol_table.add_stringvar(identifier, const_cast<std::string&>(var));
+    }
+
+    void ExprtkEvaluator::PushObjectJson(std::string target, std::string proprity, const nlohmann::json& var) {
+        auto identifier = target + "." + proprity;
+        // this->symbol_table.add_stringvar(identifier, const_cast<std::string&>(var));
+    }
+
+    void ExprtkEvaluator::LoadFunctions() {
+
+    }
+
+    void ExprtkEvaluator::LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg) {
+
+    }
+
+    void ExprtkEvaluator::ProcessFunctions(const std::string& expression) {
+
+    }
+
+    Type ExprtkEvaluator::CheckType() {
+        if (expression.value() == float(0) || expression.value() == float(1)) {
+            return Type::Bool;
+        } else {
+            return Type::Float;
+        }
+    }
+
+    bool ExprtkEvaluator::GetBoolen() {
+        return expression.value();
+    }
+
+    float ExprtkEvaluator::GetFloat() {
+        return expression.value();
+    }
+
+    void ExprtkEvaluator::Clean(AssertionMap& section) {
+        for (auto& [assertion_name, assertion]: section.assertion_map) {
+            std::vector<std::string> raw_tokens = assertion->tokens;
+
+            for(int j = 0 ; j < raw_tokens.size() ; j++) {
+                size_t index = raw_tokens[j].find("_");
+                std::string token = raw_tokens[j].substr(index + 1);
+                auto identifier = assertion_name + "." + token;
+                if (symbol_table.get_stringvar(identifier) != nullptr) {
+                    symbol_table.remove_stringvar(identifier);
+                }
+            }
+        }
+    }
+
+    void ExprtkEvaluator::PrintSymbol() {
+        std::vector<std::string> var_list;
+        symbol_table.get_stringvar_list(var_list);
+
+        printf("Current symboltable: \n");
+        for (auto& var: var_list) {
+            printf(" %s: %s\n" , var.c_str(), symbol_table.get_stringvar(var)->ref().c_str());
+        }
+    }
+
     bool DuktapeEvaluator::Eval(const std::string& expression) {
         return casbin::Eval(scope, expression);
     }
@@ -54,7 +133,7 @@ namespace casbin {
         PushFunction(scope, f, func_name, nargs);
     }
 
-    void DuktapeEvaluator::ProcessFunctions(const std::string& expression){
+    void DuktapeEvaluator::ProcessFunctions(const std::string& expression) {
         for(const std::string& func: func_list) {
             size_t index = expression.find(func+"(");
 

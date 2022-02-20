@@ -21,15 +21,28 @@
 #include "config_path.h"
 
 namespace {
+    std::string global_sub;
+    std::string global_obj;
+    std::string global_act;
 
-casbin::Scope InitializeParams(const std::string& sub, const std::string& obj, const std::string& act){
-    casbin::Scope scope = casbin::InitializeScope();
-    casbin::PushObject(scope, "r");
-    casbin::PushStringPropToObject(scope, "r", sub, "sub");
-    casbin::PushStringPropToObject(scope, "r", obj, "obj");
-    casbin::PushStringPropToObject(scope, "r", act, "act");
+template <typename T>
+std::shared_ptr<casbin::IEvaluator> InitializeParams(const std::string& sub, const std::string& obj, const std::string& act) {
+    auto evaluator = std::make_shared<T>();
+    evaluator->InitialObject("r");
 
-    return scope;
+    // Because of "Short String Optimization", these strings's data is in stack.
+    // For MSVC compiler, when this stack frame return, these memory will can't access.
+    // So we need keep this memory accessiable.
+
+    global_sub = sub;
+    global_obj = obj;
+    global_act = act;
+
+    evaluator->PushObjectString("r", "sub", global_sub);
+    evaluator->PushObjectString("r", "obj", global_obj);
+    evaluator->PushObjectString("r", "act", global_act);
+
+    return evaluator;
 }
 
 casbin::Scope InitializeParamsWithoutUsers(const std::string& obj, const std::string& act) {
@@ -78,127 +91,240 @@ void TestEnforce(casbin::Enforcer& e, casbin::Scope& scope, bool res) {
     ASSERT_EQ(res, e.Enforce(evaluator));
 }
 
+void TestEnforce(casbin::Enforcer& e, std::shared_ptr<casbin::IEvaluator> evaluator, bool res) {
+    ASSERT_EQ(res, e.Enforce(evaluator));
+}
+
 TEST(TestModelEnforcer, TestBasicModel) {
     casbin::Enforcer e(basic_model_path, basic_policy_path);
 
-    casbin::Scope scope;
+    std::shared_ptr<casbin::IEvaluator> evaluator;
 
-    scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
             
 TEST(TestModelEnforcer, TestBasicModelWithoutSpaces) {
     casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
 
-    casbin::Scope scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, true);
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestBasicModelNoPolicy) {
     casbin::Enforcer e(basic_model_path);
 
-    casbin::Scope scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, false);
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, false);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, false);
 }
 
 TEST(TestModelEnforcer, TestBasicModelWithRoot) {
     casbin::Enforcer e(basic_with_root_model_path, basic_policy_path);
 
-    casbin::Scope scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("root", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("root", "data1", "write");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("root", "data2", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("root", "data2", "write");
-    TestEnforce(e, scope, true);
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("root", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("root", "data1", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("root", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("root", "data2", "write");
+    TestEnforce(e, evaluator, true);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("root", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("root", "data1", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("root", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("root", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestBasicModelWithRootNoPolicy) {
     casbin::Enforcer e(basic_with_root_model_path);
 
-    casbin::Scope scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("root", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("root", "data1", "write");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("root", "data2", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("root", "data2", "write");
-    TestEnforce(e, scope, true);
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("root", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("root", "data1", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("root", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("root", "data2", "write");
+    TestEnforce(e, evaluator, true);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("root", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("root", "data1", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("root", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("root", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestBasicModelWithoutUsers) {
@@ -230,43 +356,47 @@ TEST(TestModelEnforcer, TestBasicModelWithoutResources) {
 TEST(TestModelEnforcer, TestRBACModel) {
     casbin::Enforcer e(rbac_model_path, rbac_policy_path);
 
-    casbin::Scope scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, true);
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithResourceRoles) {
     casbin::Enforcer e(rbac_with_resource_roles_model_path, rbac_with_resource_roles_policy_path);
 
-    casbin::Scope scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, true);
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithDomains) {
@@ -397,29 +527,31 @@ TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntimeMockAdapter) {
 TEST(TestModelEnforcer, TestRBACModelWithDeny) {
     casbin::Enforcer e(rbac_with_deny_model_path, rbac_with_deny_policy_path);
 
-    casbin::Scope scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, true);
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithOnlyDeny) {
     casbin::Enforcer e(rbac_with_not_deny_model_path, rbac_with_deny_policy_path);
 
-    casbin::Scope scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, false);
+    auto evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithCustomData) {
@@ -431,22 +563,22 @@ TEST(TestModelEnforcer, TestRBACModelWithCustomData) {
     std::vector<std::string> params{ "bob", "data2_admin", "custom_data" };
     e.AddGroupingPolicy(params);
 
-    casbin::Scope scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, true);
+    auto evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
 
     // You should also take the custom data as a parameter when deleting a grouping policy.
     // e.RemoveGroupingPolicy("bob", "data2_admin") won't work.
@@ -454,22 +586,22 @@ TEST(TestModelEnforcer, TestRBACModelWithCustomData) {
     params = std::vector<std::string>{ "bob", "data2_admin", "custom_data" };
     e.RemoveGroupingPolicy(params);
 
-    scope = InitializeParams("alice", "data1", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("alice", "data2", "read");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "data2", "write");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("bob", "data1", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data1", "write");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "read");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "data2", "write");
-    TestEnforce(e, scope, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithPattern) {
@@ -481,42 +613,42 @@ TEST(TestModelEnforcer, TestRBACModelWithPattern) {
     // of checking whether "/book/:id" equals the obj: "/book/1", it checks whether the pattern matches.
     // You can see it as normal RBAC: "/book/:id" == "/book/1" becomes KeyMatch2("/book/:id", "/book/1")
     e.AddNamedMatchingFunc("p", "", casbin::KeyMatch2);
-    casbin::Scope scope = InitializeParams("alice", "/book/1", "GET");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "/book/2", "GET");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "/pen/1", "GET");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "/pen/2", "GET");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "/book/1", "GET");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "/book/2", "GET");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "/pen/1", "GET");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("bob", "/pen/2", "GET");
-    TestEnforce(e, scope, true);
+    auto evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "/book/1", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "/book/2", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "/pen/1", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "/pen/2", "GET");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "/book/1", "GET");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "/book/2", "GET");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "/pen/1", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "/pen/2", "GET");
+    TestEnforce(e, evaluator, true);
 
     // AddMatchingFunc() is actually setting a function because only one function is allowed,
     // so when we set "KeyMatch3", we are actually replacing "KeyMatch2" with "KeyMatch3".
     e.AddNamedMatchingFunc("p", "", casbin::KeyMatch3);
-    scope = InitializeParams("alice", "/book2/1", "GET");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "/book2/2", "GET");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "/pen2/1", "GET");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("alice", "/pen2/2", "GET");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "/book2/1", "GET");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "/book2/2", "GET");
-    TestEnforce(e, scope, false);
-    scope = InitializeParams("bob", "/pen2/1", "GET");
-    TestEnforce(e, scope, true);
-    scope = InitializeParams("bob", "/pen2/2", "GET");
-    TestEnforce(e, scope, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "/book2/1", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "/book2/2", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "/pen2/1", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("alice", "/pen2/2", "GET");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "/book2/1", "GET");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "/book2/2", "GET");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "/pen2/1", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "/pen2/2", "GET");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestABACModelWithJson) {
