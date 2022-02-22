@@ -28,6 +28,10 @@ if(APPLE AND NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment version")
 endif()
 
+if(WIN32)
+    add_compile_options("/bigobj")
+endif()
+
 ###############################################################################
 # Project definition.
 

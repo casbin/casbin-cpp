@@ -98,6 +98,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
             m_log.LogPrint("Policy Rule: ", p_vals);
             if(p_tokens.size() != p_vals.size())
                 return false;
+            m_func_map.evalator->Clean(m_model->m["p"]);
             m_func_map.evalator->InitialObject("p");
             for(int j = 0 ; j < p_tokens.size() ; j++) {
                 size_t index = p_tokens[j].find("_");
@@ -166,6 +167,16 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
                 break;
         }
     } else {
+        // Push initial value for p in symbol table
+        // If p don't in symbol table, the evaluate result will be invalid.
+        m_func_map.evalator->Clean(m_model->m["p"]);
+        m_func_map.evalator->InitialObject("p");
+        for(int j = 0 ; j < p_tokens.size() ; j++) {
+            size_t index = p_tokens[j].find("_");
+            std::string token = p_tokens[j].substr(index + 1);
+            m_func_map.evalator->PushObjectString("p", token, "");
+        }
+
         bool isvalid = m_func_map.Evaluate(exp_string);
         if (!isvalid) {
             return false;

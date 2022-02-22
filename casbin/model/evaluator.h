@@ -86,6 +86,8 @@ namespace casbin {
             float GetFloat();
 
             void Clean(AssertionMap& section);
+
+            void PrintSymbol();
     };
 
     class DuktapeEvaluator : public IEvaluator {
