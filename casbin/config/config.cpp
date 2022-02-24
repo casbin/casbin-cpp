@@ -14,15 +14,15 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef CONFIG_CPP
 #define CONFIG_CPP
 
-#include "./config.h"
-#include "../exception/io_exception.h"
-#include "../exception/illegal_argument_exception.h"
-#include "../util/util.h"
+#include "casbin/config/config.h"
+#include "casbin/exception/io_exception.h"
+#include "casbin/exception/illegal_argument_exception.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

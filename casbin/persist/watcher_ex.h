@@ -17,8 +17,8 @@
 #ifndef CASBIN_CPP_PERSIST_WATCHER_EX
 #define CASBIN_CPP_PERSIST_WATCHER_EX
 
-#include "../model/model.h"
-#include "./watcher.h"
+#include "casbin/model/model.h"
+#include "casbin/persist/watcher.h"
 
 namespace casbin {
 

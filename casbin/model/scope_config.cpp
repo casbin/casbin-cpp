@@ -14,14 +14,14 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef SCOPE_CONFIG_CPP
 #define SCOPE_CONFIG_CPP
 
 
-#include "./scope_config.h"
-#include "./exception/illegal_argument_exception.h"
+#include "casbin/model/scope_config.h"
+#include "casbin/exception/illegal_argument_exception.h"
 namespace casbin {
 
 Scope InitializeScope() {

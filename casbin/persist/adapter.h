@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include "../model/model.h"
+#include "casbin/model/model.h"
 
 namespace casbin {
 

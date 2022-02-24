@@ -152,7 +152,7 @@
 *  (``sami.vaarala@iki.fi``) and I'll fix the omission.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef DUKTAPE_CPP
 #define DUKTAPE_CPP

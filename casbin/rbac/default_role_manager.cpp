@@ -14,14 +14,14 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef DEFAULT_ROLE_MANAGER_CPP
 #define DEFAULT_ROLE_MANAGER_CPP
 
 
-#include "./default_role_manager.h"
-#include "../exception/casbin_rbac_exception.h"
+#include "casbin/rbac/default_role_manager.h"
+#include "casbin/exception/casbin_rbac_exception.h"
 
 namespace casbin {
 

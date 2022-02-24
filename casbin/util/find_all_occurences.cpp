@@ -14,13 +14,13 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef FIND_ADD_OCCURENCES_CPP
 #define FIND_ADD_OCCURENCES_CPP
 
 
-#include "./util.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

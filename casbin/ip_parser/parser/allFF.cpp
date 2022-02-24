@@ -1,10 +1,10 @@
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef ALLFF_CPP
 #define ALLFF_CPP
 
 
-#include "./allFF.h"
+#include "casbin/ip_parser/parser/allFF.h"
 
 namespace casbin {
 

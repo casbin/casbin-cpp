@@ -19,7 +19,7 @@
 
 #include <mutex>
 
-#include "./enforcer.h"
+#include "casbin/enforcer.h"
 
 namespace casbin {
 

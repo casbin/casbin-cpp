@@ -14,14 +14,14 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef DEFAULT_EFFECTOR_CPP
 #define DEFAULT_EFFECTOR_CPP
 
 
-#include "./default_effector.h"
-#include "../exception/unsupported_operation_exception.h"
+#include "casbin/effect/default_effector.h"
+#include "casbin/exception/unsupported_operation_exception.h"
 
 namespace casbin {
 

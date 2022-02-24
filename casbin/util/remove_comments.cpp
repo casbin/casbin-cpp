@@ -14,13 +14,13 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef REMOVE_COMMENTS_CPP
 #define REMOVE_COMMENTS_CPP
 
 
-#include "./util.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

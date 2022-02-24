@@ -15,8 +15,8 @@
 */
 #include <regex>
 
-#include "evaluator.h"
-#include "../util/util.h"
+#include "casbin/model/evaluator.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
     bool ExprtkEvaluator::Eval(const std::string& expression_string) {

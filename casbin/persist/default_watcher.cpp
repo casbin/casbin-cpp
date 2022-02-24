@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef DEFAULT_WATCHER_CPP
 #define DEFAULT_WATCHER_CPP

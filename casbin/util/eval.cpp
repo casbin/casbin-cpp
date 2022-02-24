@@ -14,14 +14,14 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef EVAL_CPP
 #define EVAL_CPP
 
 #include <regex>
 
-#include "./util.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

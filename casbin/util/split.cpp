@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef SPLIT_CPP
 #define SPLIT_CPP
@@ -22,7 +22,7 @@
 
 #include <string.h>
 
-#include "./util.h"
+#include "casbin/util/util.h"
 
 #define LARGE 2147483647
 

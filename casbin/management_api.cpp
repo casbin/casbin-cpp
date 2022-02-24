@@ -14,13 +14,13 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef MANAGEMENT_API_CPP
 #define MANAGEMENT_API_CPP
 
 
-#include "./enforcer.h"
+#include "casbin/enforcer.h"
 
 namespace casbin {
 

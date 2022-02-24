@@ -14,13 +14,13 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef ENDS_WITH_CPP
 #define ENDS_WITH_CPP
 
 
-#include "./util.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

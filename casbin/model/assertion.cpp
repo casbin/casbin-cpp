@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef ASSERTION_CPP
 #define ASSERTION_CPP
@@ -22,8 +22,8 @@
 
 #include <algorithm>
 
-#include "./assertion.h"
-#include "../exception/illegal_argument_exception.h"
+#include "casbin/model/assertion.h"
+#include "casbin/exception/illegal_argument_exception.h"
 
 namespace casbin {
 

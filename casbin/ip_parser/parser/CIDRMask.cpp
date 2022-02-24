@@ -1,10 +1,10 @@
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef CIDRMASK_CPP
 #define CIDRMASK_CPP
 
 
-#include "./CIDRMask.h"
+#include "casbin/ip_parser/parser/CIDRMask.h"
 
 namespace casbin {
 

@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef MODEL_CPP
 #define MODEL_CPP
@@ -22,10 +22,10 @@
 
 #include <sstream>
 
-#include "./model.h"
-#include "../config/config.h"
-#include "../exception/missing_required_sections.h"
-#include "../util/util.h"
+#include "casbin/model/model.h"
+#include "casbin/config/config.h"
+#include "casbin/exception/missing_required_sections.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

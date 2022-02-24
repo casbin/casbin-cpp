@@ -14,14 +14,14 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef FUNCTION_CPP
 #define FUNCTION_CPP
 
 
-#include "./function.h"
-#include "../util/util.h"
+#include "casbin/model/function.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

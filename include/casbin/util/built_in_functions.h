@@ -17,7 +17,7 @@
 #ifndef CASBIN_CPP_UTIL_BUILT_IN_FUNCTIONS
 #define CASBIN_CPP_UTIL_BUILT_IN_FUNCTIONS
 
-#include "../model/scope_config.h"
+#include "casbin/model/scope_config.h"
 
 namespace casbin {
 
