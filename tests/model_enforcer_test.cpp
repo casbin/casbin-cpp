@@ -374,6 +374,23 @@ TEST(TestModelEnforcer, TestRBACModel) {
     TestEnforce(e, evaluator, false);
     evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
     TestEnforce(e, evaluator, true);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false); 
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithResourceRoles) {
@@ -396,6 +413,23 @@ TEST(TestModelEnforcer, TestRBACModelWithResourceRoles) {
     evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
     TestEnforce(e, evaluator, false);
     evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
     TestEnforce(e, evaluator, true);
 }
 
@@ -545,6 +579,23 @@ TEST(TestModelEnforcer, TestRBACModelWithDeny) {
     TestEnforce(e, evaluator, false);
     evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
     TestEnforce(e, evaluator, true);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
 }
 
 TEST(TestModelEnforcer, TestRBACModelWithOnlyDeny) {
@@ -580,6 +631,23 @@ TEST(TestModelEnforcer, TestRBACModelWithCustomData) {
     evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
     TestEnforce(e, evaluator, true);
 
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
+
     // You should also take the custom data as a parameter when deleting a grouping policy.
     // e.RemoveGroupingPolicy("bob", "data2_admin") won't work.
     // Or you can remove it by using RemoveFilteredGroupingPolicy().
@@ -601,6 +669,23 @@ TEST(TestModelEnforcer, TestRBACModelWithCustomData) {
     evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "read");
     TestEnforce(e, evaluator, false);
     evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "data2", "write");
+    TestEnforce(e, evaluator, true);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
     TestEnforce(e, evaluator, true);
 }
 

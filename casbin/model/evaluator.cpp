@@ -16,6 +16,7 @@
 #include <regex>
 
 #include "casbin/model/evaluator.h"
+#include "casbin/model/exprtk_config.h"
 #include "casbin/util/util.h"
 
 namespace casbin {
@@ -45,11 +46,12 @@ namespace casbin {
     }
 
     void ExprtkEvaluator::LoadFunctions() {
-
+        
     }
 
     void ExprtkEvaluator::LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg) {
-
+        std::shared_ptr<exprtk_func_t> func = std::make_shared<ExprtkGFunction<numerical_type>>(rm);
+        this->AddFunction(name, func);
     }
 
     void ExprtkEvaluator::ProcessFunctions(const std::string& expression) {
@@ -85,6 +87,11 @@ namespace casbin {
                 }
             }
         }
+    }
+
+    void ExprtkEvaluator::AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func) {
+        this->Functions.push_back(func);
+        symbol_table.add_function(func_name, *func);
     }
 
     void ExprtkEvaluator::PrintSymbol() {

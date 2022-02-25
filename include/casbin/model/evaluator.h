@@ -19,6 +19,7 @@
 #define CASBIN_CPP_MODEL_EVALATOR_CONFIG
 
 #include <string>
+#include <vector>
 #include <nlohmann/json.hpp>
 
 #include "../exprtk/exprtk.hpp"
@@ -32,6 +33,7 @@ namespace casbin {
     using symbol_table_t = exprtk::symbol_table<numerical_type>;
     using expression_t = exprtk::expression<numerical_type>;
     using parser_t = exprtk::parser<numerical_type>;
+    using exprtk_func_t = exprtk::igeneric_function<numerical_type>;
 
     class IEvaluator {
         public:
@@ -64,6 +66,7 @@ namespace casbin {
             symbol_table_t symbol_table;
             expression_t expression;
             parser_t parser;
+            std::vector<std::shared_ptr<exprtk_func_t>> Functions;
         public:
             bool Eval(const std::string& expression);
 
@@ -88,6 +91,8 @@ namespace casbin {
             void Clean(AssertionMap& section);
 
             void PrintSymbol();
+
+            void AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func);
     };
 
     class DuktapeEvaluator : public IEvaluator {
