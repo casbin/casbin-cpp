@@ -59,18 +59,17 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
         for (auto [assertion_name, assertion] : m_model->m["g"].assertion_map) {
             std::shared_ptr<RoleManager>& rm = assertion->rm;
 
-            if (dynamic_cast<DuktapeEvaluator*>(m_func_map.evalator.get()) != nullptr) {
                 int char_count = static_cast<int>(std::count(assertion->value.begin(), assertion->value.end(), '_'));
                 size_t index = exp_string.find(assertion_name + "(");
 
-                if (index != std::string::npos)
-                    exp_string.insert(index + assertion_name.length() + 1, "rm, ");
+                if (dynamic_cast<DuktapeEvaluator*>(m_func_map.evalator.get()) != nullptr) {
+                    if (index != std::string::npos)
+                        exp_string.insert(index + assertion_name.length() + 1, "rm, ");
 
-                m_func_map.evalator->LoadGFunction(rm, assertion_name, char_count + 1);
-            } else {
-                m_func_map.evalator->LoadGFunction(rm, assertion_name, 0);
-            }
-
+                    m_func_map.evalator->LoadGFunction(rm, assertion_name, char_count + 1);
+                } else {
+                    m_func_map.evalator->LoadGFunction(rm, assertion_name, char_count);
+                }
         }
     }
 

@@ -16,7 +16,6 @@
 #include <regex>
 
 #include "casbin/model/evaluator.h"
-#include "casbin/model/exprtk_config.h"
 #include "casbin/util/util.h"
 
 namespace casbin {
@@ -50,7 +49,7 @@ namespace casbin {
     }
 
     void ExprtkEvaluator::LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg) {
-        std::shared_ptr<exprtk_func_t> func = std::make_shared<ExprtkGFunction<numerical_type>>(rm);
+        auto func = ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::Gfunction, narg, rm);
         this->AddFunction(name, func);
     }
 
@@ -59,6 +58,9 @@ namespace casbin {
     }
 
     Type ExprtkEvaluator::CheckType() {
+        if (parser.error_count() != 0) {
+            throw parser.error();
+        }
         if (expression.value() == float(0) || expression.value() == float(1)) {
             return Type::Bool;
         } else {
