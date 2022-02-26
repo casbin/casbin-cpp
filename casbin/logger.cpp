@@ -1,10 +1,10 @@
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef LOGGER_CPP
 #define LOGGER_CPP
 
-#include "./log/Logger.h"
-#include "./log/log_util.h"
+#include "casbin/log/Logger.h"
+#include "casbin/log/log_util.h"
 
 namespace casbin {
 

@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef FILE_ADAPTER_CPP
 #define FILE_ADAPTER_CPP
@@ -6,11 +6,11 @@
 
 #include <fstream>
 
-#include "./file_adapter.h"
-#include "../../util/util.h"
-#include "../../exception/io_exception.h"
-#include "../../exception/unsupported_operation_exception.h"
-#include "../../exception/casbin_adapter_exception.h"
+#include "casbin/persist/file_adapter/file_adapter.h"
+#include "casbin/util/util.h"
+#include "casbin/exception/io_exception.h"
+#include "casbin/exception/unsupported_operation_exception.h"
+#include "casbin/exception/casbin_adapter_exception.h"
 
 namespace casbin {
 

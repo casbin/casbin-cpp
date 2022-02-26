@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef ENFORCER_SYNCED_CPP
 #define ENFORCER_SYNCED_CPP
@@ -23,9 +23,9 @@
 #include <atomic>
 #include <memory>
 
-#include "./persist/watcher.h"
-#include "./enforcer_synced.h"
-#include "./util/ticker.h"
+#include "casbin/persist/watcher.h"
+#include "casbin/enforcer_synced.h"
+#include "casbin/util/ticker.h"
 
 namespace casbin {
 

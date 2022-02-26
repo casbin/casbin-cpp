@@ -18,9 +18,10 @@
 #define CASBIN_CPP_MODEL_SCOPE_CONFIG
 
 #include <string>
+#include <nlohmann/json.hpp>
 
-#include "../duktape/duktape.h"
-#include "../duktape/duk_config.h"
+#include "casbin/duktape/duktape.h"
+#include "casbin/duktape/duk_config.h"
 
 #define VARARGS DUK_VARARGS
 #define RETURN_RESULT 1

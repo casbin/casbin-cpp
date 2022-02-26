@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef BUILT_IN_FUNCTIONS_CPP
 #define BUILT_IN_FUNCTIONS_CPP
@@ -22,15 +22,15 @@
 
 #include <regex>
 
-#include "../model/function.h"
-#include "./built_in_functions.h"
-#include "../rbac/role_manager.h"
-#include "./util.h"
-#include "../exception/illegal_argument_exception.h"
-#include "../ip_parser/parser/CIDR.h"
-#include "../ip_parser/parser/IP.h"
-#include "../ip_parser/parser/parseCIDR.h"
-#include "../ip_parser/parser/parseIP.h"
+#include "casbin/util/built_in_functions.h"
+#include "casbin/util/util.h"
+#include "casbin/model/function.h"
+#include "casbin/rbac/role_manager.h"
+#include "casbin/exception/illegal_argument_exception.h"
+#include "casbin/ip_parser/parser/CIDR.h"
+#include "casbin/ip_parser/parser/IP.h"
+#include "casbin/ip_parser/parser/parseCIDR.h"
+#include "casbin/ip_parser/parser/parseIP.h"
 
 namespace casbin {
 

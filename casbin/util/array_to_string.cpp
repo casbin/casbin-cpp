@@ -14,13 +14,13 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef ARRAY_TO_STRING_CPP
 #define ARRAY_TO_STRING_CPP
 
 
-#include "./util.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

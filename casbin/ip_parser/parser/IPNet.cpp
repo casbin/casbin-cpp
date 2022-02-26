@@ -1,10 +1,10 @@
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef IPNET_CPP
 #define IPNET_CPP
 
 
-#include "./IPNet.h"
+#include "casbin/ip_parser/parser/IPNet.h"
 
 namespace casbin {
 

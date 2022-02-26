@@ -14,15 +14,15 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef IS_INSTANCE_OF_CPP
 #define IS_INSTANCE_OF_CPP
 
 
-#include "./util.h"
-#include "../persist/watcher_ex.h"
-#include "../persist/watcher_update.h"
+#include "casbin/util/util.h"
+#include "casbin/persist/watcher_ex.h"
+#include "casbin/persist/watcher_update.h"
 
 namespace casbin {
 

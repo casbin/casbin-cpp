@@ -14,13 +14,13 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef RBAC_API_WITH_DOMAINS_CPP
 #define RBAC_API_WITH_DOMAINS_CPP
 
 
-#include "./enforcer.h"
+#include "casbin/enforcer.h"
 
 namespace casbin {
 

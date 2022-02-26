@@ -14,12 +14,12 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef TICKER_CPP
 #define TICKER_CPP
 
-#include "./ticker.h"
+#include "casbin/util/ticker.h"
 
 namespace casbin {
 

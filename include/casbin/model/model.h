@@ -21,7 +21,6 @@
 
 #include "./assertion.h"
 #include "../config/config_interface.h"
-#include "assertion.h"
 #include "../config/config.h"
 
 namespace casbin {

@@ -1,10 +1,10 @@
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef EQUAL_CPP
 #define EQUAL_CPP
 
 
-#include "./equal.h"
+#include "casbin/ip_parser/parser/equal.h"
 
 namespace casbin {
 

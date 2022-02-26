@@ -19,12 +19,12 @@
 
 #include <tuple>
 #include <vector>
-#include "./rbac/role_manager.h"
-#include "./model/function.h"
-#include "./enforcer_interface.h"
-#include "./persist/filtered_adapter.h"
-#include "./log/log_util.h"
-#include "./model/evaluator.h"
+#include "casbin/rbac/role_manager.h"
+#include "casbin/model/function.h"
+#include "casbin/enforcer_interface.h"
+#include "casbin/persist/filtered_adapter.h"
+#include "casbin/log/log_util.h"
+#include "casbin/model/evaluator.h"
 
 namespace casbin {
 

@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef ARRAY_EQUALS_CPP
 #define ARRAY_EQUALS_CPP
@@ -22,7 +22,7 @@
 
 #include <algorithm>
 
-#include "./util.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

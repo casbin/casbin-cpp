@@ -14,20 +14,20 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef ENFORCER_CACHED_CPP
 #define ENFORCER_CACHED_CPP
 
 
-#include "./enforcer_cached.h"
-#include "./persist/watcher_ex.h"
-#include "./persist/file_adapter/file_adapter.h"
-#include "./rbac/default_role_manager.h"
-#include "./effect/default_effector.h"
-#include "./exception/casbin_adapter_exception.h"
-#include "./exception/casbin_enforcer_exception.h"
-#include "./util/util.h"
+#include "casbin/enforcer_cached.h"
+#include "casbin/persist/watcher_ex.h"
+#include "casbin/persist/file_adapter/file_adapter.h"
+#include "casbin/rbac/default_role_manager.h"
+#include "casbin/effect/default_effector.h"
+#include "casbin/exception/casbin_adapter_exception.h"
+#include "casbin/exception/casbin_enforcer_exception.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

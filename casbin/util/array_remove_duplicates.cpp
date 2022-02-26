@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef ARRAY_REMOVE_DUPLICATES_CPP
 #define ARRAY_REMOVE_DUPLICATES_CPP
@@ -22,7 +22,7 @@
 
 #include <unordered_map>
 
-#include "./util.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-// pch.h: This is a precompiled header file.
+// casbin/casbin/pch.h.h: This is a precompiled header file.
 // Files listed below are compiled only once, improving build performance for future builds.
 // This also affects IntelliSense performance, including code completion and many code browsing features.
 // However, files listed here are ALL re-compiled if any one of them is updated between builds.
@@ -42,7 +42,7 @@
 #include <sstream>
 #include <cstdio>
 
-#include "data_types.h"
+#include "casbin/data_types.h"
 
 
 #endif //PCH_H

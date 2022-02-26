@@ -14,14 +14,14 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef ADAPTER_CPP
 #define ADAPTER_CPP
 
 
-#include "./adapter.h"
-#include "../util/util.h"
+#include "casbin/persist/adapter.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

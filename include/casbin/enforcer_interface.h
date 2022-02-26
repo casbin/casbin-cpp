@@ -17,13 +17,13 @@
 #ifndef CASBIN_CPP_ENFORCER_INTERFACE
 #define CASBIN_CPP_ENFORCER_INTERFACE
 
-#include "./data_types.h"
-#include "./model/model.h"
-#include "./persist/adapter.h"
-#include "./persist/default_watcher.h"
-#include "./effect/effector.h"
-#include "./model/scope_config.h"
-#include "./rbac/default_role_manager.h"
+#include "casbin/data_types.h"
+#include "casbin/model/model.h"
+#include "casbin/persist/adapter.h"
+#include "casbin/persist/default_watcher.h"
+#include "casbin/effect/effector.h"
+#include "casbin/model/scope_config.h"
+#include "casbin/rbac/default_role_manager.h"
 
 namespace casbin {
 

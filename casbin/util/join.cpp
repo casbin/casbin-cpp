@@ -14,13 +14,13 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef JOIN_CPP
 #define JOIN_CPP
 
 
-#include "./util.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 

@@ -14,18 +14,18 @@
 * limitations under the License.
 */
 
-#include "pch.h"
+#include "casbin/pch.h"
 
 #ifndef INTERNAL_API_CPP
 #define INTERNAL_API_CPP
 
 
-#include "./enforcer.h"
-#include "./persist/batch_adapter.h"
-#include "./util/util.h"
-#include "./persist/watcher_ex.h"
-#include "./exception/unsupported_operation_exception.h"
-#include "./persist/watcher_update.h"
+#include "casbin/enforcer.h"
+#include "casbin/persist/batch_adapter.h"
+#include "casbin/util/util.h"
+#include "casbin/persist/watcher_ex.h"
+#include "casbin/exception/unsupported_operation_exception.h"
+#include "casbin/persist/watcher_update.h"
 
 namespace casbin {
 

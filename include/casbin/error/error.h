@@ -19,8 +19,6 @@ class Error{
         }
 };
 
-Error Error::NIL = Error("nil");
-
 } // namespace casbin
 
 #endif
