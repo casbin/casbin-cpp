@@ -829,6 +829,23 @@ TEST(TestModelEnforcer, TestRBACModelWithPattern) {
     evaluator = InitializeParams<casbin::DuktapeEvaluator>("bob", "/pen/2", "GET");
     TestEnforce(e, evaluator, true);
 
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "/book/1", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "/book/2", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "/pen/1", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "/pen/2", "GET");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "/book/1", "GET");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "/book/2", "GET");
+    TestEnforce(e, evaluator, false);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "/pen/1", "GET");
+    TestEnforce(e, evaluator, true);
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "/pen/2", "GET");
+    TestEnforce(e, evaluator, true);
+
     // AddMatchingFunc() is actually setting a function because only one function is allowed,
     // so when we set "KeyMatch3", we are actually replacing "KeyMatch2" with "KeyMatch3".
     e.AddNamedMatchingFunc("p", "", casbin::KeyMatch3);

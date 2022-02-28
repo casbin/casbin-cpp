@@ -21,6 +21,8 @@
 
 #include "casbin/exprtk/exprtk.hpp"
 #include "casbin/rbac/role_manager.h"
+#include "casbin/rbac/default_role_manager.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
     using numerical_type = float;
@@ -98,8 +100,70 @@ namespace casbin {
         }
     };
 
+
+    struct ExprtkOtherFunction : public exprtk::igeneric_function<numerical_type>
+    {
+        typedef typename exprtk::igeneric_function<numerical_type>::generic_type
+                                                        generic_type;
+
+        typedef typename generic_type::scalar_view scalar_t;
+        typedef typename generic_type::vector_view vector_t;
+        typedef typename generic_type::string_view string_t;
+
+        typedef typename exprtk::igeneric_function<numerical_type>::parameter_list_t
+                                                        parameter_list_t;
+    private:
+        casbin::MatchingFunc func_;
+    public:
+        ExprtkOtherFunction(const std::string& idenfier, casbin::MatchingFunc func)
+        : exprtk::igeneric_function<numerical_type>(idenfier), func_(func)
+        {}
+
+        ExprtkOtherFunction()
+        : exprtk::igeneric_function<numerical_type>("ss")
+        {}
+
+        inline numerical_type operator()(parameter_list_t parameters) {        
+            bool res = false;
+
+            // check value cnt
+            if (parameters.size() != 2) {
+                return numerical_type(res);
+            }
+
+            // check value type
+            for (std::size_t i = 0; i < parameters.size(); ++i) {
+                generic_type& gt = parameters[i];
+
+                if (generic_type::e_scalar == gt.type) {
+                    return numerical_type(res);
+                }
+                else if (generic_type::e_vector == gt.type) {
+                    return numerical_type(res);
+                }
+            }
+
+            std::string name1 = exprtk::to_str(string_t(parameters[0]));
+            std::string name2 = exprtk::to_str(string_t(parameters[1]));
+
+            if(this->func_ == nullptr)
+                res = name1 == name2;
+            else {
+                res = this->func_(name1, name2);
+            }
+
+            return numerical_type(res);
+        }
+    };
+
     enum class ExprtkFunctionType {
+        Unknown,
         Gfunction,
+        KeyMatch,
+        KeyMatch2,
+        KeyMatch3,
+        RegexMatch,
+        IpMatch,
     };
 
     class ExprtkFunctionFactory {
@@ -108,6 +172,22 @@ namespace casbin {
                 if (type == ExprtkFunctionType::Gfunction) {
                     std::string idenfier(narg, 'S');
                     return std::make_shared<ExprtkGFunction>(idenfier, rm);
+                } else if (type != ExprtkFunctionType::Unknown) {
+                    std::string idenfier(narg, 'S');
+                    auto ret = std::make_shared<ExprtkOtherFunction>();
+                    if (type == ExprtkFunctionType::KeyMatch) {
+                        ret.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        return ret;
+                    } else if (type == ExprtkFunctionType::KeyMatch2) {
+                        ret.reset(new ExprtkOtherFunction(idenfier, KeyMatch2));
+                        return ret;
+                    } else if (type == ExprtkFunctionType::KeyMatch3) {
+                        ret.reset(new ExprtkOtherFunction(idenfier, KeyMatch3));
+                        return ret;
+                    } else if (type == ExprtkFunctionType::IpMatch) {
+                        ret.reset(new ExprtkOtherFunction(idenfier, IPMatch));
+                        return ret;
+                    }
                 } else {
                     return nullptr;
                 }
