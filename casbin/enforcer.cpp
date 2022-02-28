@@ -367,6 +367,11 @@ void Enforcer::SetWatcher(std::shared_ptr<Watcher> watcher) {
     watcher->SetUpdateCallback(func);
 }
 
+// SetWatcher sets the current evaluator.
+void Enforcer::SetEvaluator(std::shared_ptr<IEvaluator> evaluator) {
+    this->m_evalator = evaluator;
+}
+
 // GetRoleManager gets the current role manager.
 std::shared_ptr<RoleManager> Enforcer ::GetRoleManager() {
     return this->rm;

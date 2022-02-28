@@ -127,6 +127,8 @@ class Enforcer : public IEnforcer {
         void SetAdapter(std::shared_ptr<Adapter> adapter);
         // SetWatcher sets the current watcher.
         void SetWatcher(std::shared_ptr<Watcher> watcher);
+        // SetWatcher sets the current watcher.
+        void SetEvaluator(std::shared_ptr<IEvaluator> evaluator);
         // GetRoleManager gets the current role manager.
         std::shared_ptr<RoleManager> GetRoleManager();
         // SetRoleManager sets the current role manager.
