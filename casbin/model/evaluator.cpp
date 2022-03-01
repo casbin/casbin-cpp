@@ -94,18 +94,7 @@ namespace casbin {
             return;
         }
 
-        for (auto& [assertion_name, assertion]: section.assertion_map) {
-            std::vector<std::string> raw_tokens = assertion->tokens;
-
-            for(int j = 0 ; j < raw_tokens.size() ; j++) {
-                size_t index = raw_tokens[j].find("_");
-                std::string token = raw_tokens[j].substr(index + 1);
-                auto identifier = assertion_name + "." + token;
-                if (symbol_table.symbol_exists(identifier)) {
-                    symbol_table.remove_stringvar(identifier);
-                }
-            }
-        }
+        this->symbol_table.clear();
         this->expression_string_ = "";
         this->Functions.clear();
         this->identifiers_.clear();
@@ -114,9 +103,6 @@ namespace casbin {
     void ExprtkEvaluator::AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func) {
         if (func != nullptr) {
             this->Functions.push_back(func);
-            if (symbol_table.symbol_exists(func_name)) {
-                symbol_table.remove_function(func_name);
-            } 
             symbol_table.add_function(func_name, *func);
         }
     }
