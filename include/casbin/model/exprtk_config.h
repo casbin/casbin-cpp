@@ -187,10 +187,13 @@ namespace casbin {
                     } else if (type == ExprtkFunctionType::IpMatch) {
                         ret.reset(new ExprtkOtherFunction(idenfier, IPMatch));
                         return ret;
+                    } else if (type == ExprtkFunctionType::RegexMatch) {
+                        ret.reset(new ExprtkOtherFunction(idenfier, RegexMatch));
+                        return ret;
                     }
-                } else {
-                    return nullptr;
                 }
+
+                return nullptr;
             }
     };
 }

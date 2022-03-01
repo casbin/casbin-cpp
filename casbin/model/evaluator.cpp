@@ -112,8 +112,13 @@ namespace casbin {
     }
 
     void ExprtkEvaluator::AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func) {
-        this->Functions.push_back(func);
-        symbol_table.add_function(func_name, *func);
+        if (func != nullptr) {
+            this->Functions.push_back(func);
+            if (symbol_table.symbol_exists(func_name)) {
+                symbol_table.remove_function(func_name);
+            } 
+            symbol_table.add_function(func_name, *func);
+        }
     }
 
     void ExprtkEvaluator::PrintSymbol() {
