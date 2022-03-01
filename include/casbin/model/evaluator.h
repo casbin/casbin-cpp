@@ -34,11 +34,11 @@ namespace casbin {
             std::list<std::string> func_list;
             virtual bool Eval(const std::string& expression) = 0;
 
-            virtual void InitialObject(std::string target) = 0;
+            virtual void InitialObject(const std::string& target) = 0;
 
-            virtual void PushObjectString(std::string target, std::string proprity, const std::string& var) = 0;
+            virtual void PushObjectString(const std::string& target, const std::string& proprity, const std::string& var) = 0;
 
-            virtual void PushObjectJson(std::string target, std::string proprity, const nlohmann::json& var) = 0;
+            virtual void PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var) = 0;
 
             virtual void LoadFunctions() = 0;
 
@@ -52,23 +52,28 @@ namespace casbin {
 
             virtual float GetFloat() = 0;
 
-            virtual void Clean(AssertionMap& section) = 0;
+            virtual void Clean(AssertionMap& section, bool after_enforce = true) = 0;
     };
 
     class ExprtkEvaluator : public IEvaluator {
         private:
+            std::string expression_string_;
             symbol_table_t symbol_table;
             expression_t expression;
             parser_t parser;
             std::vector<std::shared_ptr<exprtk_func_t>> Functions;
+            std::unordered_map<std::string, std::unique_ptr<std::string>> identifiers_;
         public:
+            ExprtkEvaluator() {
+                this->expression.register_symbol_table(this->symbol_table);
+            };
             bool Eval(const std::string& expression);
 
-            void InitialObject(std::string target);
+            void InitialObject(const std::string& target);
 
-            void PushObjectString(std::string target, std::string proprity, const std::string& var);
+            void PushObjectString(const std::string& target, const std::string& proprity, const std::string& var);
 
-            void PushObjectJson(std::string target, std::string proprity, const nlohmann::json& var);
+            void PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var);
 
             void LoadFunctions();
 
@@ -82,7 +87,7 @@ namespace casbin {
 
             float GetFloat();
 
-            void Clean(AssertionMap& section);
+            void Clean(AssertionMap& section, bool after_enforce = true);
 
             void PrintSymbol();
 
@@ -103,11 +108,11 @@ namespace casbin {
 
             bool Eval(const std::string& expression);
 
-            void InitialObject(std::string target);
+            void InitialObject(const std::string& target);
             
-            void PushObjectString(std::string target, std::string proprity, const  std::string& var);
+            void PushObjectString(const std::string& target, const std::string& proprity, const  std::string& var);
             
-            void PushObjectJson(std::string target, std::string proprity, const nlohmann::json& var);
+            void PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var);
 
             void LoadFunctions();
 
@@ -121,7 +126,7 @@ namespace casbin {
 
             float GetFloat();
 
-            void Clean(AssertionMap& section);
+            void Clean(AssertionMap& section, bool after_enforce = true);
             // For duktape
             void AddFunction(const std::string& func_name, Function f, Index nargs);
 

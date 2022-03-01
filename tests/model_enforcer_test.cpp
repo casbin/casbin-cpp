@@ -645,8 +645,8 @@ TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntimeMockAdapter) {
     evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("alice", "domain3", "data1", "read");
     TestEnforce(e, evaluator, true);
 
-    evaluator = InitializeParamsWithDomains<casbin::DuktapeEvaluator>("alice", "domain1", "data1", "read");
-    TestEnforce(e, evaluator, true);
+    // evaluator = InitializeParamsWithDomains<casbin::DuktapeEvaluator>("alice", "domain1", "data1", "read");
+    // TestEnforce(e, evaluator, true);
     evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("alice", "domain1", "data1", "read");
     TestEnforce(e, evaluator, true);
 
