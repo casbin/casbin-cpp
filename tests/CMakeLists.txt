@@ -15,6 +15,11 @@
 if(CASBIN_BUILD_TEST)
   set(CMAKE_CXX_STANDARD 17)
 
+  # set memcheck
+  find_program( MEMORYCHECK_COMMAND valgrind )
+  set( MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --error-exitcode=1" )
+  include(CTest)
+
   add_definitions(-DCASBIN_PROJECT_DIR=${CMAKE_SOURCE_DIR})
 
   set(CASBIN_TEST_SOURCE
