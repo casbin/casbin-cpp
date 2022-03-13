@@ -18,57 +18,58 @@
 
 #include <gtest/gtest.h>
 #include <casbin/casbin.h>
+#include "config_path.h"
 
 namespace {
 
-// void TestSyncFn(casbin::SyncedEnforcer& e, const std::string& sub, const std::string& obj, const std::string& act, bool control) {
-//     bool response = e.Enforce({ sub, obj, act });
-//     ASSERT_EQ(response, control);
-// }
+void TestSyncFn(casbin::SyncedEnforcer& e, const std::string& sub, const std::string& obj, const std::string& act, bool control) {
+    bool response = e.Enforce({ sub, obj, act });
+    ASSERT_EQ(response, control);
+}
 
-// TEST(TestEnforcerSynced, TestSync) {
-//     casbin::SyncedEnforcer e(basic_model_path, basic_policy_path);
+TEST(TestEnforcerSynced, TestSync) {
+    casbin::SyncedEnforcer e(basic_model_path, basic_policy_path);
 
-//     using namespace std::literals::chrono_literals;
-//     auto time1 = 200ms;
-//     e.StartAutoLoadPolicy(time1);
+    using namespace std::literals::chrono_literals;
+    auto time1 = 200ms;
+    e.StartAutoLoadPolicy(time1);
 
-//     TestSyncFn(e, "alice", "data1", "read", true);
-//     TestSyncFn(e, "alice", "data1", "write", false);
-//     TestSyncFn(e, "alice", "data2", "read", false);
-//     TestSyncFn(e, "alice", "data2", "write", false);
-//     TestSyncFn(e, "bob", "data1", "read", false);
-//     TestSyncFn(e, "bob", "data1", "write", false);
-//     TestSyncFn(e, "bob", "data2", "read", false);
-//     TestSyncFn(e, "bob", "data2", "write", true);
+    TestSyncFn(e, "alice", "data1", "read", true);
+    TestSyncFn(e, "alice", "data1", "write", false);
+    TestSyncFn(e, "alice", "data2", "read", false);
+    TestSyncFn(e, "alice", "data2", "write", false);
+    TestSyncFn(e, "bob", "data1", "read", false);
+    TestSyncFn(e, "bob", "data1", "write", false);
+    TestSyncFn(e, "bob", "data2", "read", false);
+    TestSyncFn(e, "bob", "data2", "write", true);
 
-//     std::this_thread::sleep_for(200ms);
-//     e.StopAutoLoadPolicy();
-// }
+    std::this_thread::sleep_for(200ms);
+    e.StopAutoLoadPolicy();
+}
 
-// TEST(TestEnforcerSynced, TestStopLoadPolicy) {
-//     casbin::SyncedEnforcer e(basic_model_path, basic_policy_path);
+TEST(TestEnforcerSynced, TestStopLoadPolicy) {
+    casbin::SyncedEnforcer e(basic_model_path, basic_policy_path);
 
-//     using namespace std::literals::chrono_literals;
-//     std::chrono::duration<int64_t, std::nano> t = 5ms;
+    using namespace std::literals::chrono_literals;
+    std::chrono::duration<int64_t, std::nano> t = 5ms;
 
-//     e.StartAutoLoadPolicy(t);
+    e.StartAutoLoadPolicy(t);
 
-//     EXPECT_EQ(e.IsAutoLoadingRunning(), true);
+    EXPECT_EQ(e.IsAutoLoadingRunning(), true);
 
-//     TestSyncFn(e , "alice", "data1", "read", true);
-//     TestSyncFn(e , "alice", "data1", "write", false);
-//     TestSyncFn(e , "alice", "data2", "read", false);
-//     TestSyncFn(e , "alice", "data2", "write", false);
-//     TestSyncFn(e , "bob", "data1", "read", false);
-//     TestSyncFn(e , "bob", "data1", "write", false);
-//     TestSyncFn(e , "bob", "data2", "read", false);
-//     TestSyncFn(e , "bob", "data2", "write", true);
+    TestSyncFn(e , "alice", "data1", "read", true);
+    TestSyncFn(e , "alice", "data1", "write", false);
+    TestSyncFn(e , "alice", "data2", "read", false);
+    TestSyncFn(e , "alice", "data2", "write", false);
+    TestSyncFn(e , "bob", "data1", "read", false);
+    TestSyncFn(e , "bob", "data1", "write", false);
+    TestSyncFn(e , "bob", "data2", "read", false);
+    TestSyncFn(e , "bob", "data2", "write", true);
 
-//     e.StopAutoLoadPolicy();
-//     std::this_thread::sleep_for(10ms);
+    e.StopAutoLoadPolicy();
+    std::this_thread::sleep_for(10ms);
 
-//     EXPECT_EQ(e.IsAutoLoadingRunning(), false);
-// }
+    EXPECT_EQ(e.IsAutoLoadingRunning(), false);
+}
 
 } // namespace
