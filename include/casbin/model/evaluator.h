@@ -25,15 +25,9 @@
 #include "../exprtk/exprtk.hpp"
 #include "./scope_config.h"
 #include "./model.h"
+#include "./exprtk_config.h"
 
 namespace casbin {
-
-    using numerical_type = float;
-
-    using symbol_table_t = exprtk::symbol_table<numerical_type>;
-    using expression_t = exprtk::expression<numerical_type>;
-    using parser_t = exprtk::parser<numerical_type>;
-    using exprtk_func_t = exprtk::igeneric_function<numerical_type>;
 
     class IEvaluator {
         public:

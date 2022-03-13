@@ -23,28 +23,33 @@
 #include "casbin/rbac/role_manager.h"
 
 namespace casbin {
+    using numerical_type = float;
 
-    template <typename T>
-    struct ExprtkGFunction : public exprtk::igeneric_function<T>
+    using symbol_table_t = exprtk::symbol_table<numerical_type>;
+    using expression_t = exprtk::expression<numerical_type>;
+    using parser_t = exprtk::parser<numerical_type>;
+    using exprtk_func_t = exprtk::igeneric_function<numerical_type>;
+
+    struct ExprtkGFunction : public exprtk::igeneric_function<numerical_type>
     {
-        typedef typename exprtk::igeneric_function<T>::generic_type
+        typedef typename exprtk::igeneric_function<numerical_type>::generic_type
                                                         generic_type;
 
         typedef typename generic_type::scalar_view scalar_t;
         typedef typename generic_type::vector_view vector_t;
         typedef typename generic_type::string_view string_t;
 
-        typedef typename exprtk::igeneric_function<T>::parameter_list_t
+        typedef typename exprtk::igeneric_function<numerical_type>::parameter_list_t
                                                         parameter_list_t;
     private:
         std::shared_ptr<casbin::RoleManager> rm_;
     public:
-        ExprtkGFunction()
-        : exprtk::igeneric_function<T>("SS"), rm_(nullptr)
+        ExprtkGFunction(const std::string& idenfier)
+        : exprtk::igeneric_function<numerical_type>(idenfier), rm_(nullptr)
         {}
 
-        ExprtkGFunction(std::shared_ptr<RoleManager> rm)
-        : exprtk::igeneric_function<T>("SS"), rm_(rm)
+        ExprtkGFunction(const std::string& idenfier, std::shared_ptr<RoleManager> rm)
+        : exprtk::igeneric_function<numerical_type>(idenfier), rm_(rm)
         {}
 
         bool UpdateRoleManager(std::shared_ptr<RoleManager> rm) {
@@ -53,12 +58,12 @@ namespace casbin {
             return true;
         }
 
-        inline T operator()(parameter_list_t parameters) {        
+        inline numerical_type operator()(parameter_list_t parameters) {        
             bool res = false;
 
             // check value cnt
-            if (parameters.size() < 2 || parameters.size() > 3) {
-                return T(res);
+            if (parameters.size() != 2 && parameters.size() != 3) {
+                return numerical_type(res);
             }
 
             // check value type
@@ -66,10 +71,10 @@ namespace casbin {
                 generic_type& gt = parameters[i];
 
                 if (generic_type::e_scalar == gt.type) {
-                    return T(res);
+                    return numerical_type(res);
                 }
                 else if (generic_type::e_vector == gt.type) {
-                    return T(res);
+                    return numerical_type(res);
                 }
             }
 
@@ -89,8 +94,24 @@ namespace casbin {
                 res = rm_->HasLink(name1, name2, domains);
             }
 
-            return T(res);
+            return numerical_type(res);
         }
+    };
+
+    enum class ExprtkFunctionType {
+        Gfunction,
+    };
+
+    class ExprtkFunctionFactory {
+        public:
+            static std::shared_ptr<exprtk_func_t> GetExprtkFunction(ExprtkFunctionType type, int narg, std::shared_ptr<RoleManager> rm = nullptr) {
+                if (type == ExprtkFunctionType::Gfunction) {
+                    std::string idenfier(narg, 'S');
+                    return std::make_shared<ExprtkGFunction>(idenfier, rm);
+                } else {
+                    return nullptr;
+                }
+            }
     };
 }
 
