@@ -24,11 +24,6 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v2
-      - name: Install requirement
-        id: install-requirements
-        run: |
-          sudo apt-get update
-          sudo apt-get install valgrind
       - name: Configuring CMake files
         id: building-files
         run: |
@@ -42,11 +37,6 @@ jobs:
         run: |
           cd build
           ctest -j10 -C Release -T test --output-on-failure
-      - name: Memcheck
-        id: memcheck
-        run: |
-          cd build
-          ctest -j10 -C Release -T MemCheck --output-on-failure
       - name: Cleanup
         id: clean-up
         run: |
