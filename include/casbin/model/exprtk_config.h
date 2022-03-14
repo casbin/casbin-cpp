@@ -169,31 +169,32 @@ namespace casbin {
     class ExprtkFunctionFactory {
         public:
             static std::shared_ptr<exprtk_func_t> GetExprtkFunction(ExprtkFunctionType type, int narg, std::shared_ptr<RoleManager> rm = nullptr) {
-                if (type == ExprtkFunctionType::Gfunction) {
-                    std::string idenfier(narg, 'S');
-                    return std::make_shared<ExprtkGFunction>(idenfier, rm);
-                } else if (type != ExprtkFunctionType::Unknown) {
-                    std::string idenfier(narg, 'S');
-                    auto ret = std::make_shared<ExprtkOtherFunction>();
-                    if (type == ExprtkFunctionType::KeyMatch) {
-                        ret.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
-                        return ret;
-                    } else if (type == ExprtkFunctionType::KeyMatch2) {
-                        ret.reset(new ExprtkOtherFunction(idenfier, KeyMatch2));
-                        return ret;
-                    } else if (type == ExprtkFunctionType::KeyMatch3) {
-                        ret.reset(new ExprtkOtherFunction(idenfier, KeyMatch3));
-                        return ret;
-                    } else if (type == ExprtkFunctionType::IpMatch) {
-                        ret.reset(new ExprtkOtherFunction(idenfier, IPMatch));
-                        return ret;
-                    } else if (type == ExprtkFunctionType::RegexMatch) {
-                        ret.reset(new ExprtkOtherFunction(idenfier, RegexMatch));
-                        return ret;
-                    }
+                std::string idenfier(narg, 'S');
+                std::shared_ptr<exprtk_func_t> func = nullptr;
+                switch (type) {
+                    case ExprtkFunctionType::Gfunction:
+                        func = std::make_shared<ExprtkGFunction>(idenfier, rm);
+                        break;
+                    case ExprtkFunctionType::KeyMatch:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    case ExprtkFunctionType::KeyMatch2:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    case ExprtkFunctionType::KeyMatch3:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    case ExprtkFunctionType::IpMatch:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    case ExprtkFunctionType::RegexMatch:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    default:
+                        func = nullptr;
                 }
 
-                return nullptr;
+                return func;
             }
     };
 }
