@@ -20,32 +20,45 @@
 
 namespace casbin {
     bool ExprtkEvaluator::Eval(const std::string& expression_string) {
-        expression.register_symbol_table(symbol_table);
-        // replace (&& -> and), (|| -> or)
-        auto replaced_string = std::regex_replace(expression_string, std::regex("&&"), "and");
-        replaced_string = std::regex_replace(replaced_string, std::regex("\\|{2}"), "or");
-        // replace string "" -> ''
-        replaced_string = std::regex_replace(replaced_string, std::regex("\""), "\'");
+        if (this->expression_string_ != expression_string) {
+            this->expression_string_ = expression_string;
+            // replace (&& -> and), (|| -> or)
+            auto replaced_string = std::regex_replace(expression_string, std::regex("&&"), "and");
+            replaced_string = std::regex_replace(replaced_string, std::regex("\\|{2}"), "or");
+            // replace string "" -> ''
+            replaced_string = std::regex_replace(replaced_string, std::regex("\""), "\'");
+            
+            return parser.compile(replaced_string, expression);
+        }
 
-        return parser.compile(replaced_string, expression);
+        return this->parser.error_count() == 0;
     }
 
-    void ExprtkEvaluator::InitialObject(std::string identifier) {
+    void ExprtkEvaluator::InitialObject(const std::string& identifier) {
         // symbol_table.add_stringvar("");
     }
 
-    void ExprtkEvaluator::PushObjectString(std::string target, std::string proprity, const std::string& var) {
+    void ExprtkEvaluator::PushObjectString(const std::string& target, const std::string& proprity, const std::string& var) {
         auto identifier = target + "." + proprity;
-        this->symbol_table.add_stringvar(identifier, const_cast<std::string&>(var));
+
+        if (!symbol_table.symbol_exists(identifier)) {
+            identifiers_[identifier] = std::make_unique<std::string>("");
+            this->symbol_table.add_stringvar(identifier, *identifiers_[identifier]);
+        }
+        symbol_table.get_stringvar(identifier)->ref() = var;
     }
 
-    void ExprtkEvaluator::PushObjectJson(std::string target, std::string proprity, const nlohmann::json& var) {
+    void ExprtkEvaluator::PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var) {
         auto identifier = target + "." + proprity;
         // this->symbol_table.add_stringvar(identifier, const_cast<std::string&>(var));
     }
 
     void ExprtkEvaluator::LoadFunctions() {
-        
+        AddFunction("keyMatch", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyMatch, 2));
+        AddFunction("keyMatch2", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyMatch2, 2));
+        AddFunction("keyMatch3", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyMatch3, 2));
+        AddFunction("regexMatch", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::RegexMatch, 2));
+        AddFunction("ipMatch", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::IpMatch, 2));
     }
 
     void ExprtkEvaluator::LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg) {
@@ -69,31 +82,29 @@ namespace casbin {
     }
 
     bool ExprtkEvaluator::GetBoolen() {
-        return expression.value();
+        return bool(this->expression);
     }
 
     float ExprtkEvaluator::GetFloat() {
         return expression.value();
     }
 
-    void ExprtkEvaluator::Clean(AssertionMap& section) {
-        for (auto& [assertion_name, assertion]: section.assertion_map) {
-            std::vector<std::string> raw_tokens = assertion->tokens;
-
-            for(int j = 0 ; j < raw_tokens.size() ; j++) {
-                size_t index = raw_tokens[j].find("_");
-                std::string token = raw_tokens[j].substr(index + 1);
-                auto identifier = assertion_name + "." + token;
-                if (symbol_table.get_stringvar(identifier) != nullptr) {
-                    symbol_table.remove_stringvar(identifier);
-                }
-            }
+    void ExprtkEvaluator::Clean(AssertionMap& section, bool after_enforce) {
+        if (after_enforce == false) {
+            return;
         }
+
+        this->symbol_table.clear();
+        this->expression_string_ = "";
+        this->Functions.clear();
+        this->identifiers_.clear();
     }
 
     void ExprtkEvaluator::AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func) {
-        this->Functions.push_back(func);
-        symbol_table.add_function(func_name, *func);
+        if (func != nullptr) {
+            this->Functions.push_back(func);
+            symbol_table.add_function(func_name, *func);
+        }
     }
 
     void ExprtkEvaluator::PrintSymbol() {
@@ -104,21 +115,24 @@ namespace casbin {
         for (auto& var: var_list) {
             printf(" %s: %s\n" , var.c_str(), symbol_table.get_stringvar(var)->ref().c_str());
         }
+        printf("Current error: %s\n", parser.error().c_str());
+        // printf("Current exprsio string: %s\n", parser.current_token);
+        printf("Current value: %d\n", bool(this->expression));
     }
 
     bool DuktapeEvaluator::Eval(const std::string& expression) {
         return casbin::Eval(scope, expression);
     }
 
-    void DuktapeEvaluator::InitialObject(std::string identifier) {
+    void DuktapeEvaluator::InitialObject(const std::string& identifier) {
         PushObject(scope, identifier);
     }
 
-    void DuktapeEvaluator::PushObjectString(std::string target, std::string proprity, const std::string& var) {
+    void DuktapeEvaluator::PushObjectString(const std::string& target, const std::string& proprity, const std::string& var) {
         PushStringPropToObject(scope, target, var, proprity);
     }
 
-    void DuktapeEvaluator::PushObjectJson(std::string target, std::string proprity, const nlohmann::json& var) {
+    void DuktapeEvaluator::PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var) {
         PushObject(scope, proprity);
         PushObjectPropFromJson(scope, var, proprity);
         PushObjectPropToObject(scope, target, proprity);
@@ -183,7 +197,7 @@ namespace casbin {
         return casbin::GetFloat(scope);
     }
 
-    void DuktapeEvaluator::Clean(AssertionMap& section) {
+    void DuktapeEvaluator::Clean(AssertionMap& section, bool after_enforce) {
         if (scope != nullptr) {
             for (auto& [assertion_name, assertion]: section.assertion_map) {
                 std::vector<std::string> raw_tokens = assertion->tokens;

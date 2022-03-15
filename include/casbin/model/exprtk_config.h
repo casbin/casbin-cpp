@@ -21,6 +21,8 @@
 
 #include "casbin/exprtk/exprtk.hpp"
 #include "casbin/rbac/role_manager.h"
+#include "casbin/rbac/default_role_manager.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
     using numerical_type = float;
@@ -98,19 +100,101 @@ namespace casbin {
         }
     };
 
+
+    struct ExprtkOtherFunction : public exprtk::igeneric_function<numerical_type>
+    {
+        typedef typename exprtk::igeneric_function<numerical_type>::generic_type
+                                                        generic_type;
+
+        typedef typename generic_type::scalar_view scalar_t;
+        typedef typename generic_type::vector_view vector_t;
+        typedef typename generic_type::string_view string_t;
+
+        typedef typename exprtk::igeneric_function<numerical_type>::parameter_list_t
+                                                        parameter_list_t;
+    private:
+        casbin::MatchingFunc func_;
+    public:
+        ExprtkOtherFunction(const std::string& idenfier, casbin::MatchingFunc func)
+        : exprtk::igeneric_function<numerical_type>(idenfier), func_(func)
+        {}
+
+        ExprtkOtherFunction()
+        : exprtk::igeneric_function<numerical_type>("ss")
+        {}
+
+        inline numerical_type operator()(parameter_list_t parameters) {        
+            bool res = false;
+
+            // check value cnt
+            if (parameters.size() != 2) {
+                return numerical_type(res);
+            }
+
+            // check value type
+            for (std::size_t i = 0; i < parameters.size(); ++i) {
+                generic_type& gt = parameters[i];
+
+                if (generic_type::e_scalar == gt.type) {
+                    return numerical_type(res);
+                }
+                else if (generic_type::e_vector == gt.type) {
+                    return numerical_type(res);
+                }
+            }
+
+            std::string name1 = exprtk::to_str(string_t(parameters[0]));
+            std::string name2 = exprtk::to_str(string_t(parameters[1]));
+
+            if(this->func_ == nullptr)
+                res = name1 == name2;
+            else {
+                res = this->func_(name1, name2);
+            }
+
+            return numerical_type(res);
+        }
+    };
+
     enum class ExprtkFunctionType {
+        Unknown,
         Gfunction,
+        KeyMatch,
+        KeyMatch2,
+        KeyMatch3,
+        RegexMatch,
+        IpMatch,
     };
 
     class ExprtkFunctionFactory {
         public:
             static std::shared_ptr<exprtk_func_t> GetExprtkFunction(ExprtkFunctionType type, int narg, std::shared_ptr<RoleManager> rm = nullptr) {
-                if (type == ExprtkFunctionType::Gfunction) {
-                    std::string idenfier(narg, 'S');
-                    return std::make_shared<ExprtkGFunction>(idenfier, rm);
-                } else {
-                    return nullptr;
+                std::string idenfier(narg, 'S');
+                std::shared_ptr<exprtk_func_t> func = nullptr;
+                switch (type) {
+                    case ExprtkFunctionType::Gfunction:
+                        func = std::make_shared<ExprtkGFunction>(idenfier, rm);
+                        break;
+                    case ExprtkFunctionType::KeyMatch:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    case ExprtkFunctionType::KeyMatch2:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    case ExprtkFunctionType::KeyMatch3:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    case ExprtkFunctionType::IpMatch:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    case ExprtkFunctionType::RegexMatch:
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        break;
+                    default:
+                        func = nullptr;
                 }
+
+                return func;
             }
     };
 }

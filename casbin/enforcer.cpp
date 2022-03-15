@@ -102,7 +102,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
             m_log.LogPrint("Policy Rule: ", p_vals);
             if(p_tokens.size() != p_vals.size())
                 return false;
-            m_func_map.evalator->Clean(m_model->m["p"]);
+            m_func_map.evalator->Clean(m_model->m["p"], false);
             m_func_map.evalator->InitialObject("p");
             for(int j = 0 ; j < p_tokens.size() ; j++) {
                 size_t index = p_tokens[j].find("_");
@@ -173,7 +173,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
     } else {
         // Push initial value for p in symbol table
         // If p don't in symbol table, the evaluate result will be invalid.
-        m_func_map.evalator->Clean(m_model->m["p"]);
+        m_func_map.evalator->Clean(m_model->m["p"], false);
         m_func_map.evalator->InitialObject("p");
         for(int j = 0 ; j < p_tokens.size() ; j++) {
             size_t index = p_tokens[j].find("_");
@@ -365,6 +365,11 @@ void Enforcer::SetWatcher(std::shared_ptr<Watcher> watcher) {
         this->LoadPolicy();
     };
     watcher->SetUpdateCallback(func);
+}
+
+// SetWatcher sets the current evaluator.
+void Enforcer::SetEvaluator(std::shared_ptr<IEvaluator> evaluator) {
+    this->m_evalator = evaluator;
 }
 
 // GetRoleManager gets the current role manager.
