@@ -36,7 +36,7 @@ jobs:
         id: test-lib
         run: |
           cd build
-          ctest -j10 -C Release -T test --output-on-failure -T test --output-on-failure
+          ctest -j10 -C Release -T test --output-on-failure
       - name: Cleanup
         id: clean-up
         run: |
@@ -64,7 +64,7 @@ jobs:
         id: test-lib
         run: |
           cd build
-          ctest -j10 -C Debug -T test --output-on-failure -T test --output-on-failure
+          ctest -j10 -C Release -T test --output-on-failure
 
   macos:
     name: "macOS Catalina 10.15 (AppleClang 12.0)"
@@ -85,7 +85,7 @@ jobs:
         id: test-lib
         run: |
           cd build
-          ctest -j10 -C Debug -T test --output-on-failure -T test --output-on-failure
+          ctest -j10 -C Release -T test --output-on-failure
       - name: Cleanup
         id: clean-up
         run: |
