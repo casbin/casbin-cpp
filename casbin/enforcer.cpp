@@ -394,12 +394,13 @@ void Enforcer::ClearPolicy() {
 
 // LoadPolicy reloads the policy from file/database.
 void Enforcer::LoadPolicy() {
-    this->ClearPolicy();
+    // must use base's LoadPolicy to avoid dead lock
+    Enforcer::ClearPolicy();
     m_adapter->LoadPolicy(m_model);
     m_model->PrintPolicy();
 
     if(m_auto_build_role_links) {
-        this->BuildRoleLinks();
+        Enforcer::BuildRoleLinks();
     }
 }
 
