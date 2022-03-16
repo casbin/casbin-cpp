@@ -497,12 +497,6 @@ bool SyncedEnforcer ::RemoveFilteredNamedGroupingPolicy(const std::string& ptype
     return Enforcer::RemoveFilteredNamedGroupingPolicy(ptype, fieldIndex, fieldValues);
 }
 
-// AddFunction adds a customized function.
-void SyncedEnforcer ::AddFunction(const std::string& name, Function function, Index nargs) {
-    std::lock_guard<std::mutex> lock(policyMutex);
-    return Enforcer::AddFunction(name, function, nargs);
-}
-
 } // namespace casbin
 
 #endif // ENFORCER_SYNCED_CPP

@@ -49,7 +49,6 @@ static void BenchmarkBasicModel(benchmark::State& state) {
         e.Enforce(params);
 }
 
-BENCHMARK_TEMPLATE(BenchmarkBasicModel, casbin::DuktapeEvaluator);
 BENCHMARK_TEMPLATE(BenchmarkBasicModel, casbin::ExprtkEvaluator);
 
 template <typename T>
@@ -65,7 +64,6 @@ static void BenchmarkRBACModel(benchmark::State& state) {
         e.Enforce(params);
 }
 
-BENCHMARK_TEMPLATE(BenchmarkRBACModel, casbin::DuktapeEvaluator);
 BENCHMARK_TEMPLATE(BenchmarkRBACModel, casbin::ExprtkEvaluator);
 
 template <typename T>
@@ -87,7 +85,6 @@ static void BenchmarkRBACModelSmall(benchmark::State& state) {
         e.Enforce(params);
 }
 
-BENCHMARK_TEMPLATE(BenchmarkRBACModelSmall, casbin::DuktapeEvaluator);
 BENCHMARK_TEMPLATE(BenchmarkRBACModelSmall, casbin::ExprtkEvaluator);
 
 template <typename T>
@@ -100,7 +97,6 @@ static void BenchmarkRBACModelWithResourceRoles(benchmark::State& state) {
         e.Enforce(params);
 }
 
-BENCHMARK_TEMPLATE(BenchmarkRBACModelWithResourceRoles, casbin::DuktapeEvaluator);
 BENCHMARK_TEMPLATE(BenchmarkRBACModelWithResourceRoles, casbin::ExprtkEvaluator);
 
 static void BenchmarkRBACModelWithDomains(benchmark::State& state) {

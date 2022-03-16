@@ -292,8 +292,6 @@ public:
     // RemoveFilteredNamedGroupingPolicy removes a role inheritance rule from the current named policy, field filters can be specified.
     bool RemoveFilteredNamedGroupingPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues);
 
-    // AddFunction adds a customized function.
-    void AddFunction(const std::string& name, Function function, Index nargs);
 };
 
 } // namespace casbin

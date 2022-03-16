@@ -38,9 +38,8 @@ namespace casbin {
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
 // use model matcher by default when matcher is "".
 bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) {
-    m_func_map.evalator = evalator;
-    m_func_map.evalator->func_list.clear();
-    m_func_map.LoadFunctionMap();
+    evalator->func_list.clear();
+    evalator->LoadFunctions();
 
     if(!m_enabled)
         return true;
@@ -59,17 +58,10 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
         for (auto [assertion_name, assertion] : m_model->m["g"].assertion_map) {
             std::shared_ptr<RoleManager>& rm = assertion->rm;
 
-                int char_count = static_cast<int>(std::count(assertion->value.begin(), assertion->value.end(), '_'));
-                size_t index = exp_string.find(assertion_name + "(");
+            int char_count = static_cast<int>(std::count(assertion->value.begin(), assertion->value.end(), '_'));
+            size_t index = exp_string.find(assertion_name + "(");
 
-                if (dynamic_cast<DuktapeEvaluator*>(m_func_map.evalator.get()) != nullptr) {
-                    if (index != std::string::npos)
-                        exp_string.insert(index + assertion_name.length() + 1, "rm, ");
-
-                    m_func_map.evalator->LoadGFunction(rm, assertion_name, char_count + 1);
-                } else {
-                    m_func_map.evalator->LoadGFunction(rm, assertion_name, char_count);
-                }
+            evalator->LoadGFunction(rm, assertion_name, char_count);
         }
     }
 
@@ -102,12 +94,12 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
             m_log.LogPrint("Policy Rule: ", p_vals);
             if(p_tokens.size() != p_vals.size())
                 return false;
-            m_func_map.evalator->Clean(m_model->m["p"], false);
-            m_func_map.evalator->InitialObject("p");
+            evalator->Clean(m_model->m["p"], false);
+            evalator->InitialObject("p");
             for(int j = 0 ; j < p_tokens.size() ; j++) {
                 size_t index = p_tokens[j].find("_");
                 std::string token = p_tokens[j].substr(index + 1);
-                m_func_map.evalator->PushObjectString("p", token, p_vals[j]);
+                evalator->PushObjectString("p", token, p_vals[j]);
             }
 
             if(hasEval) {
@@ -127,23 +119,23 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
                 }
 
                 auto expWithRule = ReplaceEvalWithMap(exp_string, replacements);
-                m_func_map.Evaluate(expWithRule);
+                evalator->Eval(expWithRule);
 
             } else {
 
-                m_func_map.Evaluate(exp_string);
+                evalator->Eval(exp_string);
             }
 
             //TODO
             // log.LogPrint("Result: ", result)
-            if (m_func_map.evalator->CheckType() == Type::Bool) {
-                bool result = m_func_map.evalator->GetBoolen();
+            if (evalator->CheckType() == Type::Bool) {
+                bool result = evalator->GetBoolen();
                 if (!result) {
                     policy_effects[i] = Effect::Indeterminate;
                     continue;
                 }
-            } else if (m_func_map.evalator->CheckType() == Type::Float){
-                float result = m_func_map.evalator->GetFloat();
+            } else if (evalator->CheckType() == Type::Float){
+                float result = evalator->GetFloat();
                 if(result == 0.0) {
                     policy_effects[i] = Effect::Indeterminate;
                     continue;
@@ -173,19 +165,19 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
     } else {
         // Push initial value for p in symbol table
         // If p don't in symbol table, the evaluate result will be invalid.
-        m_func_map.evalator->Clean(m_model->m["p"], false);
-        m_func_map.evalator->InitialObject("p");
+        evalator->Clean(m_model->m["p"], false);
+        evalator->InitialObject("p");
         for(int j = 0 ; j < p_tokens.size() ; j++) {
             size_t index = p_tokens[j].find("_");
             std::string token = p_tokens[j].substr(index + 1);
-            m_func_map.evalator->PushObjectString("p", token, "");
+            evalator->PushObjectString("p", token, "");
         }
 
-        bool isvalid = m_func_map.Evaluate(exp_string);
+        bool isvalid = evalator->Eval(exp_string);
         if (!isvalid) {
             return false;
         }
-        bool result = m_func_map.evalator->GetBoolen();
+        bool result = evalator->GetBoolen();
         //TODO
         m_log.LogPrint("Result: ", result);
         if (result)
@@ -295,7 +287,6 @@ void Enforcer::InitWithModelAndAdapter(const std::shared_ptr<Model>& m, std::sha
 
     m_model = m;
     m_model->PrintModel();
-    m_func_map.LoadFunctionMap();
 
     this->Initialize();
 
@@ -330,7 +321,6 @@ void Enforcer::LoadModel() {
     m_model = Model::NewModelFromFile(m_model_path);
 
     m_model->PrintModel();
-    m_func_map.LoadFunctionMap();
 
     this->Initialize();
 }
@@ -343,7 +333,6 @@ std::shared_ptr<Model> Enforcer::GetModel() {
 // SetModel sets the current model.
 void Enforcer::SetModel(const std::shared_ptr<Model>& m) {
     m_model = m;
-    m_func_map.LoadFunctionMap();
 
     this->Initialize();
 }
@@ -518,9 +507,7 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
     if (cnt != r_cnt)
         return false;
 
-    if (this->m_evalator == nullptr) {
-        this->m_evalator = std::make_shared<DuktapeEvaluator>();
-    }
+    this->m_evalator = std::make_shared<ExprtkEvaluator>();
 
     this->m_evalator->InitialObject("r");
 
@@ -541,11 +528,6 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
 
     bool result = m_enforce(matcher, m_evalator);
 
-    if (m_evalator != nullptr) {
-        m_evalator->Clean(m_model->m["p"]);
-        m_evalator->Clean(m_model->m["r"]);
-    }
-
     return result;
 }
 
@@ -559,10 +541,7 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
     if (cnt != r_cnt)
         return false;
 
-    if (this->m_evalator == nullptr) {
-        auto scope = InitializeScope();
-        this->m_evalator = std::make_shared<DuktapeEvaluator>(scope);
-    }
+    this->m_evalator = std::make_shared<ExprtkEvaluator>();
 
     this->m_evalator->InitialObject("r");
 
@@ -584,11 +563,6 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
 
     bool result = m_enforce(matcher, m_evalator);
 
-    if (m_evalator != nullptr) {
-        m_evalator->Clean(m_model->m["p"]);
-        m_evalator->Clean(m_model->m["r"]);
-    }
-
     return result;
 }
 
@@ -596,10 +570,7 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
 // use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& params) {
-    if (this->m_evalator == nullptr) {
-        auto scope = InitializeScope();
-        this->m_evalator = std::make_shared<DuktapeEvaluator>(scope);
-    }
+    this->m_evalator = std::make_shared<ExprtkEvaluator>();
 
     this->m_evalator->InitialObject("r");
 
@@ -615,11 +586,6 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& par
     }
 
     bool result = m_enforce(matcher, m_evalator);
-
-    if (m_evalator != nullptr) {
-        m_evalator->Clean(m_model->m["p"]);
-        m_evalator->Clean(m_model->m["r"]);
-    }
 
     return result;
 }
@@ -643,11 +609,6 @@ std::vector<bool> Enforcer::BatchEnforceWithMatcher(const std::string& matcher, 
         results.push_back(this->EnforceWithMatcher(matcher, request));
     }
     return results;
-}
-
-// clean scope to prepare next enforce
-void Enforcer::clean_scope(std::string section_name) {
-
 }
 
 } // namespace casbin

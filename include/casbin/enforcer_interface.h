@@ -22,7 +22,6 @@
 #include "casbin/persist/adapter.h"
 #include "casbin/persist/default_watcher.h"
 #include "casbin/effect/effector.h"
-#include "casbin/model/scope_config.h"
 #include "casbin/rbac/default_role_manager.h"
 
 namespace casbin {
@@ -126,7 +125,6 @@ class IEnforcer {
         virtual bool RemoveNamedGroupingPolicy(const std::string& p_type, const std::vector<std::string>& params) = 0;
         virtual bool RemoveNamedGroupingPolicies(const std::string& p_type, const std::vector<std::vector<std::string>>& rules) = 0;
         virtual bool RemoveFilteredNamedGroupingPolicy(const std::string& p_type, int field_index, const std::vector<std::string>& field_values) = 0;
-        virtual void AddFunction(const std::string& name, Function function, Index nargs) = 0;
         virtual bool UpdateGroupingPolicy(const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) = 0;
         virtual bool UpdateNamedGroupingPolicy(const std::string& ptype, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) = 0;
         virtual bool UpdatePolicy(const std::vector<std::string>& oldPolicy, const std::vector<std::string>& newPolicy) = 0;

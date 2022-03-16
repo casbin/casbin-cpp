@@ -23,7 +23,6 @@ set(CASBIN_SOURCE_FILES
     rbac_api.cpp
     rbac_api_with_domains.cpp
     config/config.cpp
-    duktape/duktape.cpp
     effect/default_effector.cpp
     ip_parser/exception/parser_exception.cpp
     ip_parser/parser/allFF.cpp
@@ -42,7 +41,6 @@ set(CASBIN_SOURCE_FILES
     model/assertion.cpp
     model/function.cpp
     model/model.cpp
-    model/scope_config.cpp
     model/evaluator.cpp
     persist/file_adapter/batch_file_adapter.cpp
     persist/file_adapter/file_adapter.cpp
