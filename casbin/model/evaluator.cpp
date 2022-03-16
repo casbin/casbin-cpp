@@ -41,11 +41,7 @@ namespace casbin {
     void ExprtkEvaluator::PushObjectString(const std::string& target, const std::string& proprity, const std::string& var) {
         auto identifier = target + "." + proprity;
 
-        if (!symbol_table.symbol_exists(identifier)) {
-            identifiers_[identifier] = std::make_unique<std::string>("");
-            this->symbol_table.add_stringvar(identifier, *identifiers_[identifier]);
-        }
-        symbol_table.get_stringvar(identifier)->ref() = var;
+        this->AddIdentifier(identifier, var);
     }
 
     void ExprtkEvaluator::PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var) {
@@ -118,6 +114,14 @@ namespace casbin {
         printf("Current error: %s\n", parser.error().c_str());
         // printf("Current exprsio string: %s\n", parser.current_token);
         printf("Current value: %d\n", bool(this->expression));
+    }
+
+    void ExprtkEvaluator::AddIdentifier(const std::string& identifier, const std::string& var) {
+        if (!symbol_table.symbol_exists(identifier)) {
+            identifiers_[identifier] = std::make_unique<std::string>("");
+            this->symbol_table.add_stringvar(identifier, *identifiers_[identifier]);
+        }
+        symbol_table.get_stringvar(identifier)->ref() = var;
     }
 
 } // namespace casbin

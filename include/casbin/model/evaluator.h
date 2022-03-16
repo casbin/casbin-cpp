@@ -95,6 +95,8 @@ namespace casbin {
             void PrintSymbol();
 
             void AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func);
+
+            void AddIdentifier(const std::string& identifier, const std::string& var);
     };
 } // namespace casbin
 

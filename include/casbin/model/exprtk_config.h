@@ -179,16 +179,16 @@ namespace casbin {
                         func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
                         break;
                     case ExprtkFunctionType::KeyMatch2:
-                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch2));
                         break;
                     case ExprtkFunctionType::KeyMatch3:
-                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch3));
                         break;
                     case ExprtkFunctionType::IpMatch:
-                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        func.reset(new ExprtkOtherFunction(idenfier, IPMatch));
                         break;
                     case ExprtkFunctionType::RegexMatch:
-                        func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                        func.reset(new ExprtkOtherFunction(idenfier, RegexMatch));
                         break;
                     default:
                         func = nullptr;
