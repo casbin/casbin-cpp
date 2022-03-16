@@ -507,7 +507,9 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
     if (cnt != r_cnt)
         return false;
 
-    this->m_evalator = std::make_shared<ExprtkEvaluator>();
+    if (this->m_evalator == nullptr) {
+        this->m_evalator = std::make_shared<ExprtkEvaluator>();
+    }
 
     this->m_evalator->InitialObject("r");
 
@@ -541,7 +543,9 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
     if (cnt != r_cnt)
         return false;
 
-    this->m_evalator = std::make_shared<ExprtkEvaluator>();
+    if (this->m_evalator == nullptr) {
+        this->m_evalator = std::make_shared<ExprtkEvaluator>();
+    }
 
     this->m_evalator->InitialObject("r");
 
@@ -570,7 +574,9 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
 // use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& params) {
-    this->m_evalator = std::make_shared<ExprtkEvaluator>();
+    if (this->m_evalator == nullptr) {
+        this->m_evalator = std::make_shared<ExprtkEvaluator>();
+    }
 
     this->m_evalator->InitialObject("r");
 
