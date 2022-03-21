@@ -36,14 +36,6 @@ namespace casbin {
 
 // KeyMatch determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*"
-ReturnType KeyMatch(Scope scope) {
-    std::string key1 = GetString(scope, 0);
-    std::string key2 = GetString(scope, 1);
-
-    PushBooleanValue(scope, KeyMatch(key1, key2));
-    return RETURN_RESULT;
-}
-
 bool KeyMatch(const std::string& key1, const std::string& key2) {
     size_t pos = key2.find("*");
 
@@ -58,14 +50,6 @@ bool KeyMatch(const std::string& key1, const std::string& key2) {
 
 // KeyMatch2 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/:resource"
-ReturnType KeyMatch2(Scope scope) {
-    std::string key1 = GetString(scope, 0);
-    std::string key2 = GetString(scope, 1);
-
-    PushBooleanValue(scope, KeyMatch2(key1, key2));
-    return RETURN_RESULT;
-}
-
 bool KeyMatch2(const std::string& key1, const std::string& key2) {
     std::vector<std::string> key1_arr = Split(key1, "/");
     std::vector<std::string> key2_arr = Split(key2, "/");
@@ -112,13 +96,6 @@ bool KeyMatch2(const std::string& key1, const std::string& key2) {
 
 // KeyMatch3 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/{resource}"
-ReturnType KeyMatch3(Scope scope) {
-    std::string key1 = GetString(scope, 0);
-    std::string key2 = GetString(scope, 1);
-
-    PushBooleanValue(scope, KeyMatch3(key1, key2));
-    return RETURN_RESULT;
-}
 
 bool KeyMatch3(const std::string& key1, const std::string& key2) {
     std::vector<std::string> key1_arr = Split(key1, "/");
@@ -166,14 +143,6 @@ bool KeyMatch3(const std::string& key1, const std::string& key2) {
 }
 
 // RegexMatch determines whether key1 matches the pattern of key2 in regular expression.
-ReturnType RegexMatch(Scope scope) {
-    std::string key1 = GetString(scope, 0);
-    std::string key2 = GetString(scope, 1);
-
-    PushBooleanValue(scope, RegexMatch(key1, key2));
-    return RETURN_RESULT;
-}
-
 bool RegexMatch(const std::string& key1, const std::string& key2) {
     std::regex regex_s(key2);
     return regex_match(key1, regex_s);
@@ -181,14 +150,6 @@ bool RegexMatch(const std::string& key1, const std::string& key2) {
 
 // IPMatch determines whether IP address ip1 matches the pattern of IP address ip2, ip2 can be an IP address or a CIDR pattern.
 // For example, "192.168.2.123" matches "192.168.2.0/24"
-ReturnType IPMatch(Scope scope) {
-    std::string ip1 = GetString(scope, 0);
-    std::string ip2 = GetString(scope, 1);
-
-    PushBooleanValue(scope, IPMatch(ip1, ip2));
-    return RETURN_RESULT;
-}
-
 bool IPMatch(const std::string& ip1, const std::string& ip2) {
     IP objIP1 = parseIP(ip1);
     if (objIP1.isLegal == false)
@@ -204,30 +165,6 @@ bool IPMatch(const std::string& ip1, const std::string& ip2) {
     }
 
     return objCIDR.net.contains(objIP1);
-}
-
-// GFunction is the method of the g(_, _) function.
-ReturnType GFunction(Scope scope) {
-    RoleManager* rm;
-    rm = reinterpret_cast<RoleManager*>(GetPointer(scope, 0));
-    std::string name1 = GetString(scope, 1);
-    std::string name2 = GetString(scope, 2);
-
-    int len = Size(scope);
-
-    if(rm == NULL)
-        PushBooleanValue(scope, name1 == name2);
-    else if (len == 3) {
-        std::vector<std::string> domain;
-        bool res = rm->HasLink(name1, name2, domain);
-        PushBooleanValue(scope, res);
-    } else {
-        std::vector<std::string> domain{GetString(scope, 3)};
-        bool res = rm->HasLink(name1, name2, domain);
-        PushBooleanValue(scope, res);
-    }
-
-    return RETURN_RESULT;
 }
 
 } // namespace casbin

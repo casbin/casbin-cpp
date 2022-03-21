@@ -109,7 +109,7 @@ void bindPyEnforcer(py::module& m) {
         .def("RemoveNamedGroupingPolicy", &casbin::Enforcer::RemoveNamedGroupingPolicy)
         .def("RemoveNamedGroupingPolicies", &casbin::Enforcer::RemoveNamedGroupingPolicies)
         .def("RemoveFilteredNamedGroupingPolicy", &casbin::Enforcer::RemoveFilteredNamedGroupingPolicy)
-        .def("AddFunction", &casbin::Enforcer::AddFunction)
+        // .def("AddFunction", &casbin::Enforcer::AddFunction)
         .def("UpdateGroupingPolicy", &casbin::Enforcer::UpdateGroupingPolicy)
         .def("UpdateNamedGroupingPolicy", &casbin::Enforcer::UpdateNamedGroupingPolicy)
         .def("UpdatePolicy", &casbin::Enforcer::UpdatePolicy)

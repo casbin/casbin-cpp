@@ -34,8 +34,6 @@ class Enforcer : public IEnforcer {
 
         std::string m_model_path;
         std::shared_ptr<Model> m_model;
-        FunctionMap m_func_map;
-        std::vector<std::tuple<std::string, Function, Index>> m_user_func_list;
         std::shared_ptr<Effector> m_eft;
 
         std::shared_ptr<Adapter> m_adapter;
@@ -52,8 +50,6 @@ class Enforcer : public IEnforcer {
         // with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
         // use model matcher by default when matcher is "".
         bool m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator> evalator);
-        // clean scope to prepare next enforce
-        void clean_scope(std::string section_name);
 
     public:
 
@@ -223,7 +219,6 @@ class Enforcer : public IEnforcer {
         bool RemoveNamedGroupingPolicy(const std::string& p_type, const std::vector<std::string>& params);
         bool RemoveNamedGroupingPolicies(const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
         bool RemoveFilteredNamedGroupingPolicy(const std::string& p_type, int field_index, const std::vector<std::string>& field_values);
-        void AddFunction(const std::string& name, Function function, Index nargs);
         bool UpdateGroupingPolicy(const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule);
         bool UpdateNamedGroupingPolicy(const std::string& ptype, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule);
         bool UpdatePolicy(const std::vector<std::string>& oldPolicy, const std::vector<std::string>& newPolicy);

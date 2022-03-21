@@ -64,10 +64,10 @@ TEST(TestRBACAPI, TestRoleAPI) {
     ASSERT_FALSE(e.Enforce({ "alice", "data1", "write" }));
     ASSERT_TRUE(e.Enforce({ "alice", "data2", "read" }));
     ASSERT_TRUE(e.Enforce({ "alice", "data2", "write" }));
-    // ASSERT_FALSE(e.Enforce({"bob", "data1", "read"}));
-    // ASSERT_FALSE(e.Enforce({"bob", "data1", "write"}));
-    // ASSERT_FALSE(e.Enforce({"bob", "data2", "read"}));
-    // ASSERT_TRUE(e.Enforce({"bob", "data2", "write"}));
+    ASSERT_FALSE(e.Enforce({"bob", "data1", "read"}));
+    ASSERT_FALSE(e.Enforce({"bob", "data1", "write"}));
+    ASSERT_FALSE(e.Enforce({"bob", "data2", "read"}));
+    ASSERT_TRUE(e.Enforce({"bob", "data2", "write"}));
 
     e.DeleteRole("data2_admin");
 
@@ -75,10 +75,10 @@ TEST(TestRBACAPI, TestRoleAPI) {
     ASSERT_FALSE(e.Enforce({ "alice", "data1", "write" }));
     ASSERT_FALSE(e.Enforce({ "alice", "data2", "read" }));
     ASSERT_FALSE(e.Enforce({ "alice", "data2", "write" }));
-    // ASSERT_FALSE(e.Enforce({ "bob", "data1", "read" }));
-    // ASSERT_FALSE(e.Enforce({ "bob", "data1", "write" }));
-    // ASSERT_FALSE(e.Enforce({ "bob", "data2", "read" }));
-    // ASSERT_TRUE(e.Enforce({ "bob", "data2", "write" }));
+    ASSERT_FALSE(e.Enforce({ "bob", "data1", "read" }));
+    ASSERT_FALSE(e.Enforce({ "bob", "data1", "write" }));
+    ASSERT_FALSE(e.Enforce({ "bob", "data2", "read" }));
+    ASSERT_TRUE(e.Enforce({ "bob", "data2", "write" }));
 }
 
 TEST(TestRBACAPI, TestEnforcer_AddRolesForUser) {

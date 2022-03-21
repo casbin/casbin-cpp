@@ -39,7 +39,14 @@ void Ticker::start() {
 }
 
 void Ticker::stop() { 
-    _running = false; 
+    _running = false;
+    std::lock_guard<std::mutex> lock(_tickIntervalMutex);
+    for (auto&& f: _futures1) {
+        f.wait();
+    }
+    for (auto&& f: _futures2) {
+        f.wait();
+    }
 }
 
 void Ticker::timer_loop()

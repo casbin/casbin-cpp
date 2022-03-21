@@ -43,10 +43,6 @@
 #include "persist/file_adapter/filtered_file_adapter.h"
 #include "persist/watcher_update.h"
 
-// duktape
-#include "duktape/duktape.h"
-#include "duktape/duk_config.h"
-
 // effect
 #include "effect/effector.h"
 #include "effect/default_effector.h"
@@ -92,7 +88,6 @@
 #include "model/model.h"
 #include "model/evaluator.h"
 #include "model/assertion.h"
-#include "model/scope_config.h"
 
 // util
 #include "util/ticker.h"

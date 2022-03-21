@@ -308,12 +308,6 @@ bool Enforcer :: RemoveFilteredNamedGroupingPolicy(const std::string& p_type, in
     return rule_removed;
 }
 
-// AddFunction adds a customized function.
-void Enforcer :: AddFunction(const std::string& name, Function function, Index nargs) {
-    m_user_func_list.push_back(make_tuple(name, function, nargs));
-}
-
-
 bool Enforcer :: UpdateGroupingPolicy(const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
     return UpdateNamedGroupingPolicy("g", oldRule, newRule);
 }

@@ -23,11 +23,14 @@
 #include <nlohmann/json.hpp>
 
 #include "../exprtk/exprtk.hpp"
-#include "./scope_config.h"
 #include "./model.h"
 #include "./exprtk_config.h"
 
 namespace casbin {
+
+    enum class Type{
+        Bool, Float
+    };
 
     class IEvaluator {
         public:
@@ -92,68 +95,8 @@ namespace casbin {
             void PrintSymbol();
 
             void AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func);
-    };
 
-    class DuktapeEvaluator : public IEvaluator {
-        private:
-            Scope scope;
-        public:
-            DuktapeEvaluator(Scope scope_) : scope(scope_) {};
-
-            DuktapeEvaluator() : scope(InitializeScope()) {};
-
-            ~DuktapeEvaluator() {
-                DeinitializeScope(scope);
-            };
-
-            bool Eval(const std::string& expression);
-
-            void InitialObject(const std::string& target);
-            
-            void PushObjectString(const std::string& target, const std::string& proprity, const  std::string& var);
-            
-            void PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var);
-
-            void LoadFunctions();
-
-            void LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg);
-            
-            void ProcessFunctions(const std::string& expression);
-
-            Type CheckType();
-
-            bool GetBoolen();
-
-            float GetFloat();
-
-            void Clean(AssertionMap& section, bool after_enforce = true);
-            // For duktape
-            void AddFunction(const std::string& func_name, Function f, Index nargs);
-
-            int GetRLen();
-
-            bool GetBooleanResult();
-
-            void AddFunctionPropToR(const std::string& identifier, Function func, Index nargs);
-
-            void AddBooleanPropToR(const std::string& identifier, bool val);
-
-            void AddTruePropToR(const std::string& identifier);
-
-            void AddFalsePropToR(const std::string& identifier);
-
-            void AddIntPropToR(const std::string& identifier, int val);
-
-            void AddFloatPropToR(const std::string& identifier, float val);
-
-            void AddDoublePropToR(const std::string& identifier, double val);
-
-            void AddStringPropToR(const std::string& identifier, const std::string& val);
-
-            void AddPointerPropToR(const std::string& identifier, void* val);
-
-            void AddObjectPropToR(const std::string& identifier);
-
+            void AddIdentifier(const std::string& identifier, const std::string& var);
     };
 } // namespace casbin
 

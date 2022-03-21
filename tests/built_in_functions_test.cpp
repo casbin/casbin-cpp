@@ -22,11 +22,13 @@
 namespace {
 
 void TestKeyMatchFn(std::string key1, std::string key2, bool res){
-    casbin::Scope scope = casbin::InitializeScope();
-    casbin::PushStringValue(scope, key1);
-    casbin::PushStringValue(scope, key2);
-    casbin::KeyMatch(scope);
-    bool my_res = casbin::GetBoolean(scope);
+    auto  evaluator = casbin::ExprtkEvaluator();
+    auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::KeyMatch, 2);
+    evaluator.AddFunction("keyMatch", func);
+    evaluator.AddIdentifier("key1", key1);
+    evaluator.AddIdentifier("key2", key2);
+    evaluator.Eval("keyMatch(key1, key2)");
+    bool my_res = evaluator.GetBoolen();
     EXPECT_EQ(res, my_res);
 }
 
@@ -43,12 +45,13 @@ TEST(TestBuiltInFunctions, TestKeyMatch) {
 }
 
 void TestKeyMatch2Fn(std::string key1, std::string key2, bool res) {
-    casbin::Scope scope = casbin::InitializeScope();
-    casbin::PushStringValue(scope, key1);
-    casbin::PushStringValue(scope, key2);
-
-    casbin::KeyMatch2(scope);
-    bool my_res = casbin::GetBoolean(scope);
+    auto  evaluator = casbin::ExprtkEvaluator();
+    auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::KeyMatch2, 2);
+    evaluator.AddFunction("keyMatch2", func);
+    evaluator.AddIdentifier("key1", key1);
+    evaluator.AddIdentifier("key2", key2);
+    evaluator.Eval("keyMatch2(key1, key2)");
+    bool my_res = evaluator.GetBoolen();
 
     EXPECT_EQ(res, my_res);
 }
@@ -85,11 +88,13 @@ TEST(TestBuiltInFunctions, TestKeyMatch2){
 }
 
 void TestKeyMatch3Fn(std::string key1, std::string key2, bool res) {
-    casbin::Scope scope = casbin::InitializeScope();
-    casbin::PushStringValue(scope, key1);
-    casbin::PushStringValue(scope, key2);
-    casbin::KeyMatch3(scope);
-    bool my_res = casbin::GetBoolean(scope);
+    auto  evaluator = casbin::ExprtkEvaluator();
+    auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::KeyMatch3, 2);
+    evaluator.AddFunction("keyMatch3", func);
+    evaluator.AddIdentifier("key1", key1);
+    evaluator.AddIdentifier("key2", key2);
+    evaluator.Eval("keyMatch3(key1, key2)");
+    bool my_res = evaluator.GetBoolen();
 
     EXPECT_EQ(res, my_res);
 }
@@ -122,12 +127,13 @@ TEST(TestBuiltInFunctions, TestKeyMatch3) {
 }
 
 void TestRegexMatchFn(std::string key1, std::string key2, bool res) {
-    casbin::Scope scope = casbin::InitializeScope();
-    casbin::PushStringValue(scope, key1);
-    casbin::PushStringValue(scope, key2);
-
-    casbin::RegexMatch(scope);
-    bool my_res = casbin::GetBoolean(scope);
+    auto  evaluator = casbin::ExprtkEvaluator();
+    auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::RegexMatch, 2);
+    evaluator.AddFunction("regexMatch", func);
+    evaluator.AddIdentifier("key1", key1);
+    evaluator.AddIdentifier("key2", key2);
+    evaluator.Eval("regexMatch(key1, key2)");
+    bool my_res = evaluator.GetBoolen();
 
     EXPECT_EQ(res, my_res);
 }
@@ -145,12 +151,13 @@ TEST(TestBuiltInFunctions, TestRegexMatch) {
 }
 
 void TestIPMatchFn(std::string ip1, std::string ip2, bool res) {
-    casbin::Scope scope = casbin::InitializeScope();
-    casbin::PushStringValue(scope, ip1);
-    casbin::PushStringValue(scope, ip2);
-
-    casbin::IPMatch(scope);
-    bool my_res = casbin::GetBoolean(scope);
+    auto  evaluator = casbin::ExprtkEvaluator();
+    auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::IpMatch, 2);
+    evaluator.AddFunction("ipMatch", func);
+    evaluator.AddIdentifier("key1", ip1);
+    evaluator.AddIdentifier("key2", ip2);
+    evaluator.Eval("ipMatch(key1, key2)");
+    bool my_res = evaluator.GetBoolen();
 
     EXPECT_EQ(res, my_res);
 }

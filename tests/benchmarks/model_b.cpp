@@ -37,11 +37,8 @@ static void BenchmarkRaw(benchmark::State& state) {
 
 BENCHMARK(BenchmarkRaw);
 
-template <typename T>
 static void BenchmarkBasicModel(benchmark::State& state) {
     casbin::Enforcer e(basic_model_path, basic_policy_path);
-    auto evaluator = std::make_shared<T>();
-    e.SetEvaluator(evaluator);
 
     casbin::DataList params = {"alice", "data1", "read"};
 
@@ -49,15 +46,10 @@ static void BenchmarkBasicModel(benchmark::State& state) {
         e.Enforce(params);
 }
 
-BENCHMARK_TEMPLATE(BenchmarkBasicModel, casbin::DuktapeEvaluator);
-BENCHMARK_TEMPLATE(BenchmarkBasicModel, casbin::ExprtkEvaluator);
+BENCHMARK(BenchmarkBasicModel);
 
-template <typename T>
 static void BenchmarkRBACModel(benchmark::State& state) {
     casbin::Enforcer e(rbac_model_path, rbac_policy_path);
-
-    auto evaluator = std::make_shared<T>();
-    e.SetEvaluator(evaluator);
 
     casbin::DataList params = {"alice", "data2", "read"};
 
@@ -65,14 +57,10 @@ static void BenchmarkRBACModel(benchmark::State& state) {
         e.Enforce(params);
 }
 
-BENCHMARK_TEMPLATE(BenchmarkRBACModel, casbin::DuktapeEvaluator);
-BENCHMARK_TEMPLATE(BenchmarkRBACModel, casbin::ExprtkEvaluator);
+BENCHMARK(BenchmarkRBACModel);
 
-template <typename T>
 static void BenchmarkRBACModelSmall(benchmark::State& state) {
     casbin::Enforcer e(rbac_model_path);
-    auto evaluator = std::make_shared<T>();
-    e.SetEvaluator(evaluator);
 
     // 100 roles, 10 resources.
     for(int i = 0; i < 100; ++i)
@@ -87,21 +75,17 @@ static void BenchmarkRBACModelSmall(benchmark::State& state) {
         e.Enforce(params);
 }
 
-BENCHMARK_TEMPLATE(BenchmarkRBACModelSmall, casbin::DuktapeEvaluator);
-BENCHMARK_TEMPLATE(BenchmarkRBACModelSmall, casbin::ExprtkEvaluator);
+BENCHMARK(BenchmarkRBACModelSmall);
 
-template <typename T>
 static void BenchmarkRBACModelWithResourceRoles(benchmark::State& state) {
     casbin::Enforcer e(rbac_with_resource_roles_model_path, rbac_with_resource_roles_policy_path);
-    auto evaluator = std::make_shared<T>();
-    e.SetEvaluator(evaluator);
+
     casbin::DataList params = {"alice", "data1", "read"};
     for (auto _ : state)
         e.Enforce(params);
 }
 
-BENCHMARK_TEMPLATE(BenchmarkRBACModelWithResourceRoles, casbin::DuktapeEvaluator);
-BENCHMARK_TEMPLATE(BenchmarkRBACModelWithResourceRoles, casbin::ExprtkEvaluator);
+BENCHMARK(BenchmarkRBACModelWithResourceRoles);
 
 static void BenchmarkRBACModelWithDomains(benchmark::State& state) {
     casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);
