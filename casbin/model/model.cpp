@@ -1,30 +1,29 @@
 /*
-* Copyright 2020 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2020 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include "casbin/pch.h"
 
 #ifndef MODEL_CPP
 #define MODEL_CPP
 
-
 #include <sstream>
 
-#include "casbin/model/model.h"
 #include "casbin/config/config.h"
 #include "casbin/exception/missing_required_sections.h"
+#include "casbin/model/model.h"
 #include "casbin/util/util.h"
 
 namespace casbin {
@@ -34,23 +33,22 @@ std::unordered_map<std::string, std::string> Model::section_name_map = {
     {"p", "policy_definition"},
     {"g", "role_definition"},
     {"e", "policy_effect"},
-    {"m", "matchers"}
-};
+    {"m", "matchers"}};
 
-std::vector<std::string> Model::required_sections{"r","p","e","m"};
+std::vector<std::string> Model::required_sections{"r", "p", "e", "m"};
 
 void Model::LoadModelFromConfig(std::shared_ptr<Config>& cfg) {
     for (auto [section_name, _] : section_name_map)
-        LoadSection(this ,cfg, section_name);
+        LoadSection(this, cfg, section_name);
 
     std::vector<std::string> ms;
     ms.reserve(required_sections.size());
 
-    for(const std::string& required_section : required_sections)
-        if(!this->HasSection(required_section)) 
+    for (const std::string& required_section : required_sections)
+        if (!this->HasSection(required_section))
             ms.push_back(section_name_map[required_section]);
 
-    if(ms.size() > 0)
+    if (ms.size() > 0)
         throw MissingRequiredSections("missing required sections: " + Join(ms, ","));
 }
 
@@ -60,7 +58,7 @@ bool Model::HasSection(const std::string& sec) {
 
 void Model::LoadSection(Model* raw_ptr, std::shared_ptr<ConfigInterface> cfg, const std::string& sec) {
     int i = 1;
-    while(true) {
+    while (true) {
         if (!LoadAssertion(raw_ptr, cfg, sec, sec + GetKeySuffix(i)))
             break;
         else
@@ -81,7 +79,7 @@ bool Model::LoadAssertion(Model* raw_ptr, std::shared_ptr<ConfigInterface> cfg, 
 
 // AddDef adds an assertion to the model.
 bool Model::AddDef(const std::string& sec, const std::string& key, const std::string& value) {
-    if(value == "")
+    if (value == "")
         return false;
 
     std::shared_ptr<Assertion> ast = std::make_shared<Assertion>();
@@ -91,8 +89,7 @@ bool Model::AddDef(const std::string& sec, const std::string& key, const std::st
         ast->tokens = Split(ast->value, ",");
         for (std::string& token : ast->tokens)
             token = key + "_" + Trim(token);
-    }
-    else
+    } else
         ast->value = RemoveComments(ast->value);
 
     if (m.find(sec) == m.end())
@@ -128,15 +125,15 @@ void Model::PrintModel() {
     // LogUtil::LogPrint("Model:");
     // for (unordered_map <std::string, AssertionMap>::iterator it1 = M.begin() ; it1 != M.end() ; it1++){
     // 	for(unordered_map <std::string, Assertion*>::iterator it2 = (it1->second).AMap.begin() ; it2 != (it1->second).AMap.end() ; it2++){
-            // LogUtil::LogPrintf("%s.%s: %s", it1->first, it2->first, it2->second->Value);
+    // LogUtil::LogPrintf("%s.%s: %s", it1->first, it2->first, it2->second->Value);
     // 	}
     // }
 }
 
-Model::Model(){
+Model::Model() {
 }
 
-Model::Model(const std::string& path){
+Model::Model(const std::string& path) {
     LoadModel(path);
 }
 
@@ -182,11 +179,11 @@ void Model::PrintPolicy() {
     // LogUtil::LogPrint("Policy:");
 
     // for (std::unordered_map<std::string, Assertion*>::iterator it = this->m["p"].assertion_map.begin() ; it != this->m["p"].assertion_map.end() ; it++) {
-        // LogUtil::LogPrint(it->first, ": ", (it->second)->Value, ": ", (it->second)->policy);
+    // LogUtil::LogPrint(it->first, ": ", (it->second)->Value, ": ", (it->second)->policy);
     // }
 
     // for (std::unordered_map<std::string, Assertion*>::iterator it = this->m["g"].assertion_map.begin() ; it != this->m["g"].assertion_map.end() ; it++) {
-        // LogUtil::LogPrint(it->first, ": ", (it->second)->Value, ": ", (it->second)->policy);
+    // LogUtil::LogPrint(it->first, ": ", (it->second)->Value, ": ", (it->second)->policy);
     // }
 }
 
@@ -194,13 +191,13 @@ void Model::PrintPolicy() {
 void Model::ClearPolicy() {
     // Caching "p" assertion map by reference for the scope of this function
     for (auto [_, assertion_ptr] : this->m["p"].assertion_map) {
-        if(assertion_ptr->policy.size() > 0)
+        if (assertion_ptr->policy.size() > 0)
             assertion_ptr->policy.clear();
     }
 
     // Caching "g" assertion map by reference for the scope of this function
-    for (auto [_, assertion_ptr] : this->m["g"].assertion_map){
-        if(assertion_ptr->policy.size() > 0)
+    for (auto [_, assertion_ptr] : this->m["g"].assertion_map) {
+        if (assertion_ptr->policy.size() > 0)
             assertion_ptr->policy.clear();
     }
 }
@@ -215,15 +212,15 @@ std::vector<std::vector<std::string>> Model::GetFilteredPolicy(const std::string
     std::vector<std::vector<std::string>> res;
     const std::vector<std::vector<std::string>>& policy = m[sec].assertion_map[p_type]->policy;
     res.reserve(policy.size());
-    for(int i = 0 ; i < policy.size() ; i++){
+    for (int i = 0; i < policy.size(); i++) {
         bool matched = true;
-        for(int j = 0 ; j < field_values.size() ; j++){
-            if(field_values[j] != "" && (policy[i])[field_index + j] != field_values[j] ){
+        for (int j = 0; j < field_values.size(); j++) {
+            if (field_values[j] != "" && (policy[i])[field_index + j] != field_values[j]) {
                 matched = false;
                 break;
             }
         }
-        if(matched)
+        if (matched)
             res.push_back(policy[i]);
     }
 
@@ -233,7 +230,7 @@ std::vector<std::vector<std::string>> Model::GetFilteredPolicy(const std::string
 // HasPolicy determines whether a model has the specified policy rule.
 bool Model::HasPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
     auto& policy = this->m[sec].assertion_map[p_type]->policy;
-    for(const std::vector<std::string>& policy_it : policy)
+    for (const std::vector<std::string>& policy_it : policy)
         if (ArrayEquals(rule, policy_it))
             return true;
 
@@ -242,7 +239,7 @@ bool Model::HasPolicy(const std::string& sec, const std::string& p_type, const s
 
 // AddPolicy adds a policy rule to the model.
 bool Model::AddPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
-    if(!this->HasPolicy(sec, p_type, rule)) {
+    if (!this->HasPolicy(sec, p_type, rule)) {
         m[sec].assertion_map[p_type]->policy.push_back(rule);
         return true;
     }
@@ -270,23 +267,23 @@ bool Model::UpdatePolicy(const std::string& sec, const std::string& p_type, cons
     bool is_oldRule_deleted = false, is_newRule_added = false;
 
     for (auto it = policy.begin(); it != policy.end(); ++it) {
-        if(ArrayEquals(oldRule, *it)) {
+        if (ArrayEquals(oldRule, *it)) {
             policy.erase(it);
             is_oldRule_deleted = true;
             break;
         }
     }
 
-    if(!is_oldRule_deleted)
+    if (!is_oldRule_deleted)
         return false;
 
     // Prevents duplicate policies
-    if(!this->HasPolicy(sec, p_type, newRule)) {
+    if (!this->HasPolicy(sec, p_type, newRule)) {
         policy.push_back(newRule);
         is_newRule_added = true;
     }
 
-    if(!is_newRule_added)
+    if (!is_newRule_added)
         return false;
 
     return is_oldRule_deleted && is_newRule_added;
@@ -301,25 +298,25 @@ bool Model::UpdatePolicies(const std::string& sec, const std::string& p_type, co
     for (const std::vector<std::string>& oldRule : oldRules) {
         is_oldRule_deleted = false;
         for (auto it = policy.begin(); it != policy.end(); ++it) {
-            if(ArrayEquals(oldRule, *it)) {
+            if (ArrayEquals(oldRule, *it)) {
                 policy.erase(it);
                 is_oldRule_deleted = true;
                 break;
             }
         }
-        if(!is_oldRule_deleted)
+        if (!is_oldRule_deleted)
             return false;
     }
 
     // Checking if the policy already contains newRule
-    for(const std::vector<std::string>& newRule : newRules) {
-        if(!this->HasPolicy(sec, p_type, newRule))
+    for (const std::vector<std::string>& newRule : newRules) {
+        if (!this->HasPolicy(sec, p_type, newRule))
             continue;
         else
             return false;
     }
 
-    for(const std::vector<std::string>& newRule : newRules) {
+    for (const std::vector<std::string>& newRule : newRules) {
         policy.push_back(newRule);
     }
 
@@ -331,7 +328,7 @@ bool Model::RemovePolicy(const std::string& sec, const std::string& p_type, cons
     // Caching policy by reference for the scope of this function
     auto& policy = m[sec].assertion_map[p_type]->policy;
     for (auto it = policy.begin(); it != policy.end(); ++it) {
-        if(ArrayEquals(rule, *it)) {
+        if (ArrayEquals(rule, *it)) {
             policy.erase(it);
             return true;
         }
@@ -351,7 +348,7 @@ bool Model::RemovePolicies(const std::string& sec, const std::string& p_type, co
             if (ArrayEquals(rule, policy_it))
                 is_equal = true;
         }
-        if(!is_equal)
+        if (!is_equal)
             return false;
     }
 
@@ -373,19 +370,18 @@ std::pair<bool, std::vector<std::vector<std::string>>> Model::RemoveFilteredPoli
     tmp.reserve(policy.size());
     effects.reserve(policy.size());
     bool res = false;
-    for(int i = 0 ; i < policy.size() ; i++) {
+    for (int i = 0; i < policy.size(); i++) {
         bool matched = true;
-        for (int j = 0 ; j < field_values.size() ; j++) {
-            if (field_values[j] != "" && (policy[i])[field_index+j] != field_values[j]) {
+        for (int j = 0; j < field_values.size(); j++) {
+            if (field_values[j] != "" && (policy[i])[field_index + j] != field_values[j]) {
                 matched = false;
                 break;
             }
         }
-        if (matched){
+        if (matched) {
             effects.push_back(policy[i]);
             res = true;
-        }
-        else
+        } else
             tmp.push_back(policy[i]);
     }
 
@@ -414,7 +410,7 @@ std::vector<std::string> Model::GetValuesForFieldInPolicyAllTypes(const std::str
 
     for (auto [assertion, _] : m[sec].assertion_map) {
         const std::vector<std::string>& values_for_field = this->GetValuesForFieldInPolicy(sec, assertion, field_index);
-        for(const std::string& value_for_field : values_for_field)
+        for (const std::string& value_for_field : values_for_field)
             values.push_back(value_for_field);
     }
 

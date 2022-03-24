@@ -7,9 +7,9 @@
 namespace casbin {
 
 class CIDR {
-    public:
-        IP ip;
-        IPNet net;
+public:
+    IP ip;
+    IPNet net;
 };
 
 } // namespace casbin

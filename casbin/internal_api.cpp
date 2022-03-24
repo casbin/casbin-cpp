@@ -1,38 +1,37 @@
 /*
-* Copyright 2020 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2020 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include "casbin/pch.h"
 
 #ifndef INTERNAL_API_CPP
 #define INTERNAL_API_CPP
 
-
 #include "casbin/enforcer.h"
-#include "casbin/persist/batch_adapter.h"
-#include "casbin/util/util.h"
-#include "casbin/persist/watcher_ex.h"
 #include "casbin/exception/unsupported_operation_exception.h"
+#include "casbin/persist/batch_adapter.h"
+#include "casbin/persist/watcher_ex.h"
 #include "casbin/persist/watcher_update.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 
 // addPolicy adds a rule to the current policy.
 bool Enforcer::addPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
     bool rule_added = m_model->AddPolicy(sec, p_type, rule);
-    if(!rule_added)
+    if (!rule_added)
         return rule_added;
 
     if (sec == "g") {
@@ -43,16 +42,14 @@ bool Enforcer::addPolicy(const std::string& sec, const std::string& p_type, cons
     if (m_adapter && m_auto_save) {
         try {
             m_adapter->AddPolicy(sec, p_type, rule);
-        }
-        catch(UnsupportedOperationException e) {
+        } catch (UnsupportedOperationException e) {
         }
     }
 
     if (m_watcher && m_auto_notify_watcher) {
         if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
             std::dynamic_pointer_cast<WatcherEx>(m_watcher)->UpdateForAddPolicy(rule);
-        }
-        else
+        } else
             m_watcher->Update();
     }
 
@@ -68,12 +65,10 @@ bool Enforcer::addPolicies(const std::string& sec, const std::string& p_type, co
     if (sec == "g")
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
 
-
     if (m_adapter && m_auto_save) {
         try {
             std::dynamic_pointer_cast<BatchAdapter>(m_adapter)->AddPolicies(sec, p_type, rules);
-        }
-        catch(UnsupportedOperationException e) {
+        } catch (UnsupportedOperationException e) {
         }
     }
 
@@ -86,27 +81,25 @@ bool Enforcer::addPolicies(const std::string& sec, const std::string& p_type, co
 // removePolicy removes a rule from the current policy.
 bool Enforcer::removePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
     bool rule_removed = m_model->RemovePolicy(sec, p_type, rule);
-    if(!rule_removed)
+    if (!rule_removed)
         return rule_removed;
 
     if (sec == "g") {
         std::vector<std::vector<std::string>> rules{rule};
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
     }
-    
+
     if (m_adapter && m_auto_save) {
         try {
             m_adapter->RemovePolicy(sec, p_type, rule);
-        }
-        catch (UnsupportedOperationException e) {
+        } catch (UnsupportedOperationException e) {
         }
     }
 
-    if(m_watcher && m_auto_notify_watcher){
+    if (m_watcher && m_auto_notify_watcher) {
         if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
             std::dynamic_pointer_cast<WatcherEx>(m_watcher)->UpdateForRemovePolicy(rule);
-        }
-        else
+        } else
             m_watcher->Update();
     }
 
@@ -123,10 +116,9 @@ bool Enforcer::removePolicies(const std::string& sec, const std::string& p_type,
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
 
     if (m_adapter && m_auto_save) {
-        try{
+        try {
             std::dynamic_pointer_cast<BatchAdapter>(m_adapter)->RemovePolicies(sec, p_type, rules);
-        }
-        catch(UnsupportedOperationException e){
+        } catch (UnsupportedOperationException e) {
         }
     }
 
@@ -137,12 +129,12 @@ bool Enforcer::removePolicies(const std::string& sec, const std::string& p_type,
 }
 
 // removeFilteredPolicy removes rules based on field filters from the current policy.
-bool Enforcer::removeFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values){
+bool Enforcer::removeFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
     std::pair<int, std::vector<std::vector<std::string>>> p = m_model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
     bool rule_removed = p.first;
     std::vector<std::vector<std::string>> effects = p.second;
 
-    if(!rule_removed)
+    if (!rule_removed)
         return rule_removed;
 
     if (sec == "g")
@@ -150,17 +142,15 @@ bool Enforcer::removeFilteredPolicy(const std::string& sec, const std::string& p
 
     if (m_adapter && m_auto_save) {
         try {
-            m_adapter->RemoveFilteredPolicy(sec, p_type, field_index, field_values); \
-        }
-        catch (UnsupportedOperationException e) {
+            m_adapter->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
+        } catch (UnsupportedOperationException e) {
         }
     }
 
     if (m_watcher && m_auto_notify_watcher) {
         if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
             std::dynamic_pointer_cast<WatcherEx>(m_watcher)->UpdateForRemoveFilteredPolicy(field_index, field_values);
-        }
-        else
+        } else
             m_watcher->Update();
     }
 
@@ -169,18 +159,17 @@ bool Enforcer::removeFilteredPolicy(const std::string& sec, const std::string& p
 
 bool Enforcer::updatePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
     bool is_rule_updated = m_model->UpdatePolicy(sec, p_type, oldRule, newRule);
-    if(!is_rule_updated)
+    if (!is_rule_updated)
         return false;
-    
-    if(sec == "g") {
-        this->BuildIncrementalRoleLinks(policy_remove, p_type, { oldRule });
-        this->BuildIncrementalRoleLinks(policy_add, p_type, { newRule });
+
+    if (sec == "g") {
+        this->BuildIncrementalRoleLinks(policy_remove, p_type, {oldRule});
+        this->BuildIncrementalRoleLinks(policy_add, p_type, {newRule});
     }
     if (m_watcher && m_auto_notify_watcher) {
-        if(IsInstanceOf<WatcherUpdatable>(m_watcher.get())) {
+        if (IsInstanceOf<WatcherUpdatable>(m_watcher.get())) {
             std::dynamic_pointer_cast<WatcherUpdatable>(m_watcher)->UpdateForUpdatePolicy(oldRule, newRule);
-        }
-        else {
+        } else {
             m_watcher->Update();
         }
     }
@@ -189,19 +178,18 @@ bool Enforcer::updatePolicy(const std::string& sec, const std::string& p_type, c
 
 bool Enforcer::updatePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& oldRules, const std::vector<std::vector<std::string>>& newRules) {
     bool is_rules_updated = m_model->UpdatePolicies(sec, p_type, oldRules, newRules);
-    if(!is_rules_updated)
+    if (!is_rules_updated)
         return false;
-    
-    if(sec == "g") {
+
+    if (sec == "g") {
         this->BuildIncrementalRoleLinks(policy_remove, p_type, oldRules);
         this->BuildIncrementalRoleLinks(policy_add, p_type, newRules);
     }
 
     if (m_watcher && m_auto_notify_watcher) {
-        if(IsInstanceOf<WatcherUpdatable>(m_watcher.get())) {
+        if (IsInstanceOf<WatcherUpdatable>(m_watcher.get())) {
             std::dynamic_pointer_cast<WatcherUpdatable>(m_watcher)->UpdateForUpdatePolicies(oldRules, newRules);
-        }
-        else {
+        } else {
             m_watcher->Update();
         }
     }

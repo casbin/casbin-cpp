@@ -1,60 +1,58 @@
 /*
-* Copyright 2020 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2020 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include "casbin/pch.h"
 
 #ifndef ENFORCER_CPP
 #define ENFORCER_CPP
 
-
 #include <algorithm>
 
-#include "casbin/enforcer.h"
-#include "casbin/persist/watcher_ex.h"
-#include "casbin/persist/file_adapter/file_adapter.h"
-#include "casbin/persist/file_adapter/batch_file_adapter.h"
-#include "casbin/rbac/default_role_manager.h"
 #include "casbin/effect/default_effector.h"
+#include "casbin/enforcer.h"
 #include "casbin/exception/casbin_adapter_exception.h"
 #include "casbin/exception/casbin_enforcer_exception.h"
+#include "casbin/persist/file_adapter/batch_file_adapter.h"
+#include "casbin/persist/file_adapter/file_adapter.h"
+#include "casbin/persist/watcher_ex.h"
+#include "casbin/rbac/default_role_manager.h"
 #include "casbin/util/util.h"
 
 namespace casbin {
 
-// enforce use a custom matcher to decides whether a "subject" can access a "object" 
-// with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
+// enforce use a custom matcher to decides whether a "subject" can access a "object"
+// with the operation "action", input parameters are usually: (matcher, sub, obj, act),
 // use model matcher by default when matcher is "".
 bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) {
     evalator->func_list.clear();
     evalator->LoadFunctions();
 
-    if(!m_enabled)
+    if (!m_enabled)
         return true;
 
     std::string exp_string;
-    if(matcher == "")
+    if (matcher == "")
         exp_string = m_model->m["m"].assertion_map["m"]->value;
     else
         exp_string = matcher;
 
-
     // std::unordered_map<std::string, std::shared_ptr<RoleManager>> rm_map;
     bool ok = m_model->m.find("g") != m_model->m.end();
 
-    if(ok) {
+    if (ok) {
         for (auto [assertion_name, assertion] : m_model->m["g"].assertion_map) {
             std::shared_ptr<RoleManager>& rm = assertion->rm;
 
@@ -70,7 +68,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
     //     m_func_map.AddFunction(std::get<0>(func), std::get<1>(func), std::get<2>(func));
 
     bool hasEval = HasEval(exp_string);
-    
+
     std::unordered_map<std::string, int> p_int_tokens;
     std::vector<std::string>& p_tokens = m_model->m["p"].assertion_map["p"]->tokens;
     p_int_tokens.reserve(p_tokens.size());
@@ -84,28 +82,28 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
     std::vector<Effect> policy_effects(policy_len, Effect::Indeterminate);
     std::vector<float> matcher_results(policy_len, 0.0f);
 
-    if(policy_len != 0) {
+    if (policy_len != 0) {
         // if(m_model->m["r"].assertion_map["r"]->tokens.size() != m_func_map.GetRLen())
         //     return false;
 
-        //TODO
-        for(int i = 0 ; i < policy_len ; i++) {
+        // TODO
+        for (int i = 0; i < policy_len; i++) {
             std::vector<std::string>& p_vals = m_model->m["p"].assertion_map["p"]->policy[i];
             m_log.LogPrint("Policy Rule: ", p_vals);
-            if(p_tokens.size() != p_vals.size())
+            if (p_tokens.size() != p_vals.size())
                 return false;
             evalator->Clean(m_model->m["p"], false);
             evalator->InitialObject("p");
-            for(int j = 0 ; j < p_tokens.size() ; j++) {
+            for (int j = 0; j < p_tokens.size(); j++) {
                 size_t index = p_tokens[j].find("_");
                 std::string token = p_tokens[j].substr(index + 1);
                 evalator->PushObjectString("p", token, p_vals[j]);
             }
 
-            if(hasEval) {
+            if (hasEval) {
                 auto ruleNames = GetEvalValue(exp_string);
                 std::unordered_map<std::string, std::string> replacements;
-                for(auto& ruleName: ruleNames) {
+                for (auto& ruleName : ruleNames) {
                     auto ruleNameCpy = EscapeAssertion(ruleName);
 
                     bool ok = p_int_tokens.find(ruleNameCpy) != p_int_tokens.end();
@@ -122,44 +120,41 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
                 evalator->Eval(expWithRule);
 
             } else {
-
                 evalator->Eval(exp_string);
             }
 
-            //TODO
-            // log.LogPrint("Result: ", result)
+            // TODO
+            //  log.LogPrint("Result: ", result)
             if (evalator->CheckType() == Type::Bool) {
                 bool result = evalator->GetBoolen();
                 if (!result) {
                     policy_effects[i] = Effect::Indeterminate;
                     continue;
                 }
-            } else if (evalator->CheckType() == Type::Float){
+            } else if (evalator->CheckType() == Type::Float) {
                 float result = evalator->GetFloat();
-                if(result == 0.0) {
+                if (result == 0.0) {
                     policy_effects[i] = Effect::Indeterminate;
                     continue;
                 } else
                     matcher_results[i] = result;
-            }
-            else
+            } else
                 return false;
 
             bool is_p_eft = p_int_tokens.find("p_eft") != p_int_tokens.end();
-            if(is_p_eft) {
+            if (is_p_eft) {
                 int j = p_int_tokens["p_eft"];
                 std::string eft = p_vals[j];
-                if(eft == "allow")
+                if (eft == "allow")
                     policy_effects[i] = Effect::Allow;
-                else if(eft == "deny")
+                else if (eft == "deny")
                     policy_effects[i] = Effect::Deny;
                 else
                     policy_effects[i] = Effect::Indeterminate;
-            }
-            else
+            } else
                 policy_effects[i] = Effect::Allow;
 
-            if(m_model->m["e"].assertion_map["e"]->value == "priority(p_eft) || deny")
+            if (m_model->m["e"].assertion_map["e"]->value == "priority(p_eft) || deny")
                 break;
         }
     } else {
@@ -167,7 +162,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
         // If p don't in symbol table, the evaluate result will be invalid.
         evalator->Clean(m_model->m["p"], false);
         evalator->InitialObject("p");
-        for(int j = 0 ; j < p_tokens.size() ; j++) {
+        for (int j = 0; j < p_tokens.size(); j++) {
             size_t index = p_tokens[j].find("_");
             std::string token = p_tokens[j].substr(index + 1);
             evalator->PushObjectString("p", token, "");
@@ -178,7 +173,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
             return false;
         }
         bool result = evalator->GetBoolen();
-        //TODO
+        // TODO
         m_log.LogPrint("Result: ", result);
         if (result)
             policy_effects.push_back(Effect::Allow);
@@ -186,7 +181,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
             policy_effects.push_back(Effect::Indeterminate);
     }
 
-    //TODO
+    // TODO
     m_log.LogPrint("Rule Results: ", policy_effects);
 
     bool result = m_eft->MergeEffects(m_model->m["e"].assertion_map["e"]->value, policy_effects, matcher_results);
@@ -208,7 +203,7 @@ Enforcer ::Enforcer() {
  */
 Enforcer ::Enforcer(const std::string& model_path, const std::string& policy_file)
     : Enforcer(model_path, std::make_shared<BatchFileAdapter>(policy_file)) {
-}   
+}
 
 /**
  * Enforcer initializes an enforcer with a database adapter.
@@ -242,7 +237,8 @@ Enforcer::Enforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> ada
  *
  * @param m the model.
  */
-Enforcer::Enforcer(const std::shared_ptr<Model>& m) : Enforcer(m, NULL) {
+Enforcer::Enforcer(const std::shared_ptr<Model>& m)
+    : Enforcer(m, NULL) {
 }
 
 /**
@@ -250,7 +246,8 @@ Enforcer::Enforcer(const std::shared_ptr<Model>& m) : Enforcer(m, NULL) {
  *
  * @param model_path the path of the model file.
  */
-Enforcer ::Enforcer(const std::string& model_path): Enforcer(model_path, "") {
+Enforcer ::Enforcer(const std::string& model_path)
+    : Enforcer(model_path, "") {
 }
 
 /**
@@ -264,7 +261,6 @@ Enforcer::Enforcer(const std::string& model_path, const std::string& policy_file
     : Enforcer(model_path, std::make_shared<BatchFileAdapter>(policy_file)) {
     this->EnableLog(enable_log);
 }
-
 
 // InitWithFile initializes an enforcer with a model file and a policy file.
 void Enforcer::InitWithFile(const std::string& model_path, const std::string& policy_path) {
@@ -291,7 +287,7 @@ void Enforcer::InitWithModelAndAdapter(const std::shared_ptr<Model>& m, std::sha
     this->Initialize();
 
     // Do not initialize the full policy when using a filtered adapter
-    if(m_adapter != NULL && !m_adapter->IsFiltered()) 
+    if (m_adapter != NULL && !m_adapter->IsFiltered())
         this->LoadPolicy();
 }
 
@@ -309,13 +305,13 @@ void Enforcer::Initialize() {
 
 /**
  * Destructor of Enforcer
- * 
+ *
  * @step: Release the memory of Enforcer->m_scope
-*/
+ */
 Enforcer::~Enforcer() {}
 
 // LoadModel reloads the model from the model CONF file.
-// Because the policy is attached to a model, so the policy is invalidated and needs 
+// Because the policy is attached to a model, so the policy is invalidated and needs
 // to be reloaded by calling LoadPolicy().
 void Enforcer::LoadModel() {
     m_model = Model::NewModelFromFile(m_model_path);
@@ -388,13 +384,13 @@ void Enforcer::LoadPolicy() {
     m_adapter->LoadPolicy(m_model);
     m_model->PrintPolicy();
 
-    if(m_auto_build_role_links) {
+    if (m_auto_build_role_links) {
         Enforcer::BuildRoleLinks();
     }
 }
 
-//LoadFilteredPolicy reloads a filtered policy from file/database.
-template<typename Filter>
+// LoadFilteredPolicy reloads a filtered policy from file/database.
+template <typename Filter>
 void Enforcer::LoadFilteredPolicy(Filter filter) {
     this->ClearPolicy();
 
@@ -408,7 +404,7 @@ void Enforcer::LoadFilteredPolicy(Filter filter) {
     filtered_adapter->LoadFilteredPolicy(m_model, filter);
 
     m_model->PrintPolicy();
-    if(m_auto_build_role_links)
+    if (m_auto_build_role_links)
         this->BuildRoleLinks();
 }
 
@@ -419,22 +415,21 @@ bool Enforcer::IsFiltered() {
 
 // SavePolicy saves the current policy (usually after changed with Casbin API) back to file/database.
 void Enforcer::SavePolicy() {
-    if(this->IsFiltered())
+    if (this->IsFiltered())
         throw CasbinEnforcerException("cannot save a filtered policy");
 
     m_adapter->SavePolicy(m_model);
 
-    if(m_watcher != NULL){
+    if (m_watcher != NULL) {
         if (IsInstanceOf<WatcherEx>(m_watcher.get())) {
             auto watcher = dynamic_cast<WatcherEx*>(m_watcher.get());
             watcher->UpdateForSavePolicy(m_model);
-        }
-        else
+        } else
             return m_watcher->Update();
     }
 }
 
-// EnableEnforce changes the enforcing state of Casbin, when Casbin is disabled, 
+// EnableEnforce changes the enforcing state of Casbin, when Casbin is disabled,
 // all access will be allowed by the Enforce() function.
 void Enforcer::EnableEnforce(bool enable) {
     m_enabled = enable;
@@ -472,7 +467,7 @@ void Enforcer::BuildIncrementalRoleLinks(policy_op op, const std::string& p_type
     return m_model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
 }
 
-// Enforce decides whether a "subject" can access a "object" with the operation "action", 
+// Enforce decides whether a "subject" can access a "object" with the operation "action",
 // input parameters are usually: (sub, obj, act).
 bool Enforcer::Enforce(std::shared_ptr<IEvaluator> evalator) {
     return this->EnforceWithMatcher("", evalator);
@@ -515,15 +510,13 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
 
     size_t i = 0;
 
-    for(const Data& param : params) {
-        if(const auto string_param = std::get_if<std::string>(&param)) {
+    for (const Data& param : params) {
+        if (const auto string_param = std::get_if<std::string>(&param)) {
             this->m_evalator->PushObjectString("r", r_tokens[i].substr(2, r_tokens[i].size() - 2), *string_param);
         } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param)) {
-            
             auto data_ptr = *json_param;
             std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
             this->m_evalator->PushObjectJson("r", token_name, *data_ptr);
-
         }
         ++i;
     }
@@ -551,11 +544,10 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
 
     size_t i = 0;
 
-    for(const auto& param : params) {
-        if(const auto string_param = std::get_if<std::string>(&param)) {
+    for (const auto& param : params) {
+        if (const auto string_param = std::get_if<std::string>(&param)) {
             this->m_evalator->PushObjectString("r", r_tokens[i].substr(2, r_tokens[i].size() - 2), *string_param);
         } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param)) {
-            
             auto data_ptr = *json_param;
             std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
 
@@ -570,8 +562,8 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
     return result;
 }
 
-// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" 
-// with the operation "action", input parameters are usually: (matcher, sub, obj, act), 
+// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object"
+// with the operation "action", input parameters are usually: (matcher, sub, obj, act),
 // use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& params) {
     if (this->m_evalator == nullptr) {
@@ -581,14 +573,12 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& par
     this->m_evalator->InitialObject("r");
 
     for (auto [param_name, param_data] : params) {
-        if(const auto string_param = std::get_if<std::string>(&param_data)) {
+        if (const auto string_param = std::get_if<std::string>(&param_data)) {
             this->m_evalator->PushObjectString("r", param_name, *string_param);
         } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param_data)) {
-            
             auto data_ptr = *json_param;
             this->m_evalator->PushObjectJson("r", param_name, *data_ptr);
         }
-
     }
 
     bool result = m_enforce(matcher, m_evalator);

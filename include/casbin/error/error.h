@@ -5,18 +5,14 @@
 
 namespace casbin {
 
-class Error{
-    public:
-        static Error NIL;
-        std::string err;
+class Error {
+public:
+    static Error NIL;
+    std::string err;
 
-        Error(std::string error_message){
-            err = error_message;
-        }
+    Error(std::string error_message) { err = error_message; }
 
-        std::string toString(){
-            return err;
-        }
+    std::string toString() { return err; }
 };
 
 } // namespace casbin

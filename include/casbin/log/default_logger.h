@@ -6,29 +6,24 @@
 namespace casbin {
 
 class DefaultLogger : public Logger {
-    public:
+public:
+    void EnableLog(bool enable) { m_enable = enable; }
 
-        void EnableLog(bool enable) {
-            m_enable = enable;
-        }
+    bool IsEnabled() { return m_enable; }
 
-        bool IsEnabled() {
-            return m_enable;
+    template <typename... Object>
+    void Print(Object... objects) {
+        if (m_enable) {
+            Print(objects...);
         }
+    }
 
-        template <typename... Object>
-        void Print(Object... objects){
-            if (m_enable){
-                Print(objects...);
-            }
+    template <typename... Object>
+    void Print(std::string format, Object... objects) {
+        if (m_enable) {
+            Printf(format, objects...);
         }
-
-        template <typename... Object>
-        void Print(std::string format, Object... objects){
-            if (m_enable){
-                Printf(format, objects...);
-            }
-        }
+    }
 };
 
 } // namespace casbin

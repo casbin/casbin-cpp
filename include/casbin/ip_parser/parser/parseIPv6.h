@@ -4,8 +4,8 @@
 #include <string>
 
 #include "./IP.h"
-#include "./xtoi.h"
 #include "./parseIPv4.h"
+#include "./xtoi.h"
 
 namespace casbin {
 

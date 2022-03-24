@@ -1,32 +1,31 @@
 /*
-* Copyright 2020 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2020 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include "casbin/pch.h"
 
 #ifndef ENFORCER_CACHED_CPP
 #define ENFORCER_CACHED_CPP
 
-
-#include "casbin/enforcer_cached.h"
-#include "casbin/persist/watcher_ex.h"
-#include "casbin/persist/file_adapter/file_adapter.h"
-#include "casbin/rbac/default_role_manager.h"
 #include "casbin/effect/default_effector.h"
+#include "casbin/enforcer_cached.h"
 #include "casbin/exception/casbin_adapter_exception.h"
 #include "casbin/exception/casbin_enforcer_exception.h"
+#include "casbin/persist/file_adapter/file_adapter.h"
+#include "casbin/persist/watcher_ex.h"
+#include "casbin/rbac/default_role_manager.h"
 #include "casbin/util/util.h"
 
 namespace casbin {
@@ -181,7 +180,7 @@ bool CachedEnforcer::EnforceWithMatcher(const std::string& matcher, const DataVe
 
     std::string key;
     for (const auto& r : params) {
-        if(const auto string_param = std::get_if<std::string>(&r))
+        if (const auto string_param = std::get_if<std::string>(&r))
             key += *string_param;
         key += "$$";
     }
@@ -209,7 +208,7 @@ bool CachedEnforcer::EnforceWithMatcher(const std::string& matcher, const DataLi
 
     std::string key;
     for (const auto& r : params) {
-        if(const auto string_param = std::get_if<std::string>(&r))
+        if (const auto string_param = std::get_if<std::string>(&r))
             key += *string_param;
         key += "$$";
     }
@@ -237,7 +236,7 @@ bool CachedEnforcer::EnforceWithMatcher(const std::string& matcher, const DataMa
 
     std::string key;
     for (auto [param_name, param_value] : params) {
-        if(const auto string_value = std::get_if<std::string>(&param_value))
+        if (const auto string_value = std::get_if<std::string>(&param_value))
             key += *string_value;
         key += "$$";
     }

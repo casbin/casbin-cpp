@@ -38,50 +38,50 @@ public:
     void InvalidateCache();
 
 public:
-     /**
-         * Enforcer is the default constructor.
+    /**
+     * Enforcer is the default constructor.
      */
     CachedEnforcer();
     /**
-         * Enforcer initializes an enforcer with a model file and a policy file.
-         *
-         * @param model_path the path of the model file.
-         * @param policy_file the path of the policy file.
-         */
+     * Enforcer initializes an enforcer with a model file and a policy file.
+     *
+     * @param model_path the path of the model file.
+     * @param policy_file the path of the policy file.
+     */
     CachedEnforcer(const std::string& model_path, const std::string& policy_file);
     /**
-         * Enforcer initializes an enforcer with a database adapter.
-         *
-         * @param model_path the path of the model file.
-         * @param adapter the adapter.
-         */
+     * Enforcer initializes an enforcer with a database adapter.
+     *
+     * @param model_path the path of the model file.
+     * @param adapter the adapter.
+     */
     CachedEnforcer(const std::string& model_path, std::shared_ptr<Adapter> adapter);
     /**
-         * Enforcer initializes an enforcer with a model and a database adapter.
-         *
-         * @param m the model.
-         * @param adapter the adapter.
-         */
+     * Enforcer initializes an enforcer with a model and a database adapter.
+     *
+     * @param m the model.
+     * @param adapter the adapter.
+     */
     CachedEnforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
     /**
-         * Enforcer initializes an enforcer with a model.
-         *
-         * @param m the model.
-         */
+     * Enforcer initializes an enforcer with a model.
+     *
+     * @param m the model.
+     */
     CachedEnforcer(const std::shared_ptr<Model>& m);
     /**
-         * Enforcer initializes an enforcer with a model file.
-         *
-         * @param model_path the path of the model file.
-         */
+     * Enforcer initializes an enforcer with a model file.
+     *
+     * @param model_path the path of the model file.
+     */
     CachedEnforcer(const std::string& model_path);
     /**
-         * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
-         *
-         * @param model_path the path of the model file.
-         * @param policy_file the path of the policy file.
-         * @param enable_log whether to enable Casbin's log.
-         */
+     * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
+     *
+     * @param model_path the path of the model file.
+     * @param policy_file the path of the policy file.
+     * @param enable_log whether to enable Casbin's log.
+     */
     CachedEnforcer(const std::string& model_path, const std::string& policy_file, bool enable_log);
 
     virtual ~CachedEnforcer() = default;

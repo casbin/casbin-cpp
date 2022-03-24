@@ -5,10 +5,11 @@
 
 namespace casbin {
 
-class ParserException{
+class ParserException {
     std::string error_message;
-    public:
-        ParserException(std::string error_message);
+
+public:
+    ParserException(std::string error_message);
 };
 
 } // namespace casbin

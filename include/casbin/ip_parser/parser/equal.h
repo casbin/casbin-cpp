@@ -1,8 +1,8 @@
 #ifndef IP_PARSER_PARSER_EQUAL
 #define IP_PARSER_PARSER_EQUAL
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "IPMask.h"
 

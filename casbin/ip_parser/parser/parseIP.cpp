@@ -3,18 +3,17 @@
 #ifndef PARSEIP_CPP
 #define PARSEIP_CPP
 
-
 #include "casbin/ip_parser/parser/parseIP.h"
 
 namespace casbin {
 
 IP parseIP(const std::string& s) {
-    for(int i = 0 ; i < s.length() ; i++) {
-        switch(s[i]) {
-        case '.':
-            return parseIPv4(s);
-        case ':':
-            return parseIPv6(s);
+    for (int i = 0; i < s.length(); i++) {
+        switch (s[i]) {
+            case '.':
+                return parseIPv4(s);
+            case ':':
+                return parseIPv6(s);
         }
     }
     IP p;

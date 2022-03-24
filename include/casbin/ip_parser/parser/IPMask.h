@@ -7,7 +7,7 @@
 
 namespace casbin {
 
-typedef std::vector < byte > IPMask;
+typedef std::vector<byte> IPMask;
 
 } // namespace casbin
 
