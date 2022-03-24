@@ -98,6 +98,78 @@ if(CASBIN_BUILD_TEST)
     add_subdirectory(tests)
 endif()
 
+##########################################
+# "make format"
+# "make check-format"
+# Only support clang format for unix like operating system.
+
+if(UNIX)
+    # Expected directory structure.
+    set(CASBIN_BUILD_SUPPORT_DIR "${CMAKE_SOURCE_DIR}/build_support")
+    set(CASBIN_CLANG_SEARCH_PATH "/usr/local/bin" "/usr/bin" "/usr/local/opt/llvm/bin" "/usr/local/opt/llvm@8/bin"
+            "/usr/local/Cellar/llvm/8.0.1/bin")
+
+    # clang-format
+    if (NOT DEFINED CLANG_FORMAT_BIN)
+        # attempt to find the binary if user did not specify
+        find_program(CLANG_FORMAT_BIN
+                NAMES clang-format clang-format-8
+                HINTS ${CASBIN_CLANG_SEARCH_PATH})
+    endif()
+    if ("${CLANG_FORMAT_BIN}" STREQUAL "CLANG_FORMAT_BIN-NOTFOUND")
+        message(WARNING "Casbin couldn't find clang-format.")
+    else()
+        message(STATUS "Casbin found clang-format at ${CLANG_FORMAT_BIN}")
+    endif()
+
+    # clang-tidy
+    if (NOT DEFINED CLANG_TIDY_BIN)
+        # attempt to find the binary if user did not specify
+        find_program(CLANG_TIDY_BIN
+                NAMES clang-tidy clang-tidy-8
+                HINTS ${CASBIN_CLANG_SEARCH_PATH})
+    endif()
+    if ("${CLANG_TIDY_BIN}" STREQUAL "CLANG_TIDY_BIN-NOTFOUND")
+        message(WARNING "Casbin couldn't find clang-tidy.")
+    else()
+        # Output compile_commands.json
+        set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+        message(STATUS "Casbin found clang-tidy at ${CLANG_TIDY_BIN}")
+    endif()
+
+    string(CONCAT CASBIN_FORMAT_DIRS
+            "${CASBIN_SOURCE_DIR},"
+            "${CASBIN_INCLUDE_DIR},"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests,"
+            )
+
+
+    # runs clang format and updates files in place.
+    add_custom_target(format ${CASBIN_BUILD_SUPPORT_DIR}/run_clang_format.py
+            ${CLANG_FORMAT_BIN}
+            ${CASBIN_BUILD_SUPPORT_DIR}/clang_format_exclusions.txt
+            --source_dirs
+            ${CASBIN_FORMAT_DIRS}
+            --format_style
+            "file"
+            --fix
+            --quiet
+            )
+
+    # runs clang format and exits with a non-zero exit code if any files need to be reformatted
+    add_custom_target(check-format ${CASBIN_BUILD_SUPPORT_DIR}/run_clang_format.py
+            ${CLANG_FORMAT_BIN}
+            ${CASBIN_BUILD_SUPPORT_DIR}/clang_format_exclusions.txt
+            --source_dirs
+            ${CASBIN_FORMAT_DIRS}
+            --format_style
+            "file"
+            --quiet
+            )
+endif()
+##########################################
+# Install casbin
+
 if(CASBIN_INSTALL)
     message(CHECK_START "[casbin]: Installing casbin ...")
     export(

@@ -17,9 +17,9 @@
 #ifndef CASBIN_H_ENFORCER_SYNC
 #define CASBIN_H_ENFORCER_SYNC
 
-#include <mutex>
 #include <atomic>
 #include <memory>
+#include <mutex>
 
 #include "./enforcer.h"
 #include "./persist/watcher.h"
@@ -36,55 +36,55 @@ class SyncedEnforcer : public Enforcer {
 
 public:
     /**
-        * Enforcer is the default constructor.
-    */
+     * Enforcer is the default constructor.
+     */
     SyncedEnforcer();
 
     /**
-        * Enforcer initializes an enforcer with a model file and a policy file.
-        *
-        * @param model_path the path of the model file.
-        * @param policy_file the path of the policy file.
-    */
+     * Enforcer initializes an enforcer with a model file and a policy file.
+     *
+     * @param model_path the path of the model file.
+     * @param policy_file the path of the policy file.
+     */
     SyncedEnforcer(const std::string& model_path, const std::string& policy_file);
 
     /**
-        * Enforcer initializes an enforcer with a database adapter.
-        *
-        * @param model_path the path of the model file.
-        * @param adapter the adapter.
-    */
+     * Enforcer initializes an enforcer with a database adapter.
+     *
+     * @param model_path the path of the model file.
+     * @param adapter the adapter.
+     */
     SyncedEnforcer(const std::string& model_path, std::shared_ptr<Adapter> adapter);
 
     /**
-        * Enforcer initializes an enforcer with a model and a database adapter.
-        *
-        * @param m the model.
-        * @param adapter the adapter.
-    */
+     * Enforcer initializes an enforcer with a model and a database adapter.
+     *
+     * @param m the model.
+     * @param adapter the adapter.
+     */
     SyncedEnforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> adapter);
 
     /**
-        * Enforcer initializes an enforcer with a model.
-        *
-        * @param m the model.
-    */
+     * Enforcer initializes an enforcer with a model.
+     *
+     * @param m the model.
+     */
     SyncedEnforcer(const std::shared_ptr<Model>& m);
 
     /**
-        * Enforcer initializes an enforcer with a model file.
-        *
-        * @param model_path the path of the model file.
-    */
+     * Enforcer initializes an enforcer with a model file.
+     *
+     * @param model_path the path of the model file.
+     */
     SyncedEnforcer(const std::string& model_path);
 
     /**
-        * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
-        *
-        * @param model_path the path of the model file.
-        * @param policy_file the path of the policy file.
-        * @param enable_log whether to enable Casbin's log.
-    */
+     * Enforcer initializes an enforcer with a model file, a policy file and an enable log flag.
+     *
+     * @param model_path the path of the model file.
+     * @param policy_file the path of the policy file.
+     * @param enable_log whether to enable Casbin's log.
+     */
     SyncedEnforcer(const std::string& model_path, const std::string& policy_file, bool enable_log);
 
     // StartAutoLoadPolicy starts a thread that will go through every specified duration call LoadPolicy
@@ -291,7 +291,6 @@ public:
 
     // RemoveFilteredNamedGroupingPolicy removes a role inheritance rule from the current named policy, field filters can be specified.
     bool RemoveFilteredNamedGroupingPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues);
-
 };
 
 } // namespace casbin

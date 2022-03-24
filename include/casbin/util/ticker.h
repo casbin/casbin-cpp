@@ -17,10 +17,10 @@
 #ifndef TICKER_H
 #define TICKER_H
 
-#include <functional>
-#include <mutex>
 #include <chrono>
+#include <functional>
 #include <future>
+#include <mutex>
 
 namespace casbin {
 
@@ -31,7 +31,7 @@ public:
     typedef std::vector<std::future<void>> future_vec;
 
     Ticker(std::function<void()> onTick, std::chrono::duration<int64_t, std::nano> tickInterval);
-    
+
     ~Ticker();
 
     void start();
@@ -40,14 +40,14 @@ public:
 
 private:
     void timer_loop();
-    on_tick_t           _onTick;
-    tick_interval_t     _tickInterval;
-    std::atomic_bool    _running;
-    std::mutex          _tickIntervalMutex;
-    future_vec          _futures1;
-    future_vec          _futures2;
+    on_tick_t _onTick;
+    tick_interval_t _tickInterval;
+    std::atomic_bool _running;
+    std::mutex _tickIntervalMutex;
+    future_vec _futures1;
+    future_vec _futures2;
 };
 
-};  // namespace casbin
+}; // namespace casbin
 
 #endif // TICKER_H

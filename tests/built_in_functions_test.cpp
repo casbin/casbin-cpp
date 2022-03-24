@@ -1,28 +1,28 @@
 /*
-* Copyright 2021 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-* This is a test file for testing built in functions in casbin
-*/
+ * Copyright 2021 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * This is a test file for testing built in functions in casbin
+ */
 
-#include <gtest/gtest.h>
 #include <casbin/casbin.h>
+#include <gtest/gtest.h>
 
 namespace {
 
-void TestKeyMatchFn(std::string key1, std::string key2, bool res){
-    auto  evaluator = casbin::ExprtkEvaluator();
+void TestKeyMatchFn(std::string key1, std::string key2, bool res) {
+    auto evaluator = casbin::ExprtkEvaluator();
     auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::KeyMatch, 2);
     evaluator.AddFunction("keyMatch", func);
     evaluator.AddIdentifier("key1", key1);
@@ -45,7 +45,7 @@ TEST(TestBuiltInFunctions, TestKeyMatch) {
 }
 
 void TestKeyMatch2Fn(std::string key1, std::string key2, bool res) {
-    auto  evaluator = casbin::ExprtkEvaluator();
+    auto evaluator = casbin::ExprtkEvaluator();
     auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::KeyMatch2, 2);
     evaluator.AddFunction("keyMatch2", func);
     evaluator.AddIdentifier("key1", key1);
@@ -56,7 +56,7 @@ void TestKeyMatch2Fn(std::string key1, std::string key2, bool res) {
     EXPECT_EQ(res, my_res);
 }
 
-TEST(TestBuiltInFunctions, TestKeyMatch2){
+TEST(TestBuiltInFunctions, TestKeyMatch2) {
     TestKeyMatch2Fn("/foo", "/foo", true);
     TestKeyMatch2Fn("/foo", "/foo*", true);
     TestKeyMatch2Fn("/foo", "/foo/*", false);
@@ -88,7 +88,7 @@ TEST(TestBuiltInFunctions, TestKeyMatch2){
 }
 
 void TestKeyMatch3Fn(std::string key1, std::string key2, bool res) {
-    auto  evaluator = casbin::ExprtkEvaluator();
+    auto evaluator = casbin::ExprtkEvaluator();
     auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::KeyMatch3, 2);
     evaluator.AddFunction("keyMatch3", func);
     evaluator.AddIdentifier("key1", key1);
@@ -127,7 +127,7 @@ TEST(TestBuiltInFunctions, TestKeyMatch3) {
 }
 
 void TestRegexMatchFn(std::string key1, std::string key2, bool res) {
-    auto  evaluator = casbin::ExprtkEvaluator();
+    auto evaluator = casbin::ExprtkEvaluator();
     auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::RegexMatch, 2);
     evaluator.AddFunction("regexMatch", func);
     evaluator.AddIdentifier("key1", key1);
@@ -151,7 +151,7 @@ TEST(TestBuiltInFunctions, TestRegexMatch) {
 }
 
 void TestIPMatchFn(std::string ip1, std::string ip2, bool res) {
-    auto  evaluator = casbin::ExprtkEvaluator();
+    auto evaluator = casbin::ExprtkEvaluator();
     auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::IpMatch, 2);
     evaluator.AddFunction("ipMatch", func);
     evaluator.AddIdentifier("key1", ip1);

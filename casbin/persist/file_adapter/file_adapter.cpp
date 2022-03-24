@@ -3,19 +3,18 @@
 #ifndef FILE_ADAPTER_CPP
 #define FILE_ADAPTER_CPP
 
-
 #include <fstream>
 
-#include "casbin/persist/file_adapter/file_adapter.h"
-#include "casbin/util/util.h"
+#include "casbin/exception/casbin_adapter_exception.h"
 #include "casbin/exception/io_exception.h"
 #include "casbin/exception/unsupported_operation_exception.h"
-#include "casbin/exception/casbin_adapter_exception.h"
+#include "casbin/persist/file_adapter/file_adapter.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 
 // NewAdapter is the constructor for Adapter.
-FileAdapter :: FileAdapter(std::string file_path) {
+FileAdapter ::FileAdapter(std::string file_path) {
     this->file_path = file_path;
     this->filtered = false;
 }
@@ -25,7 +24,7 @@ std::shared_ptr<casbin::FileAdapter> FileAdapter::NewFileAdapter(std::string fil
 }
 
 // LoadPolicy loads all policy rules from the storage.
-void FileAdapter :: LoadPolicy(const std::shared_ptr<Model>& model) {
+void FileAdapter ::LoadPolicy(const std::shared_ptr<Model>& model) {
     if (this->file_path == "")
         throw CasbinAdapterException("Invalid file path, file path cannot be empty");
 
@@ -33,23 +32,23 @@ void FileAdapter :: LoadPolicy(const std::shared_ptr<Model>& model) {
 }
 
 // SavePolicy saves all policy rules to the storage.
-void FileAdapter :: SavePolicy(const std::shared_ptr<Model>& model) {
+void FileAdapter ::SavePolicy(const std::shared_ptr<Model>& model) {
     if (this->file_path == "") {
         throw CasbinAdapterException("Invalid file path, file path cannot be empty");
     }
 
     std::string tmp;
 
-    for (std::unordered_map<std::string, std::shared_ptr<Assertion>> :: iterator it = model->m["p"].assertion_map.begin() ; it != model->m["p"].assertion_map.end() ; it++){
-        for (int i = 0 ; i < it->second->policy.size() ; i++){
+    for (std::unordered_map<std::string, std::shared_ptr<Assertion>>::iterator it = model->m["p"].assertion_map.begin(); it != model->m["p"].assertion_map.end(); it++) {
+        for (int i = 0; i < it->second->policy.size(); i++) {
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
             tmp += "\n";
         }
     }
 
-    for (std::unordered_map <std::string, std::shared_ptr<Assertion>> :: iterator it = model->m["g"].assertion_map.begin() ; it != model->m["g"].assertion_map.end() ; it++){
-        for (int i = 0 ; i < it->second->policy.size() ; i++){
+    for (std::unordered_map<std::string, std::shared_ptr<Assertion>>::iterator it = model->m["g"].assertion_map.begin(); it != model->m["g"].assertion_map.end(); it++) {
+        for (int i = 0; i < it->second->policy.size(); i++) {
             tmp += it->first + ", ";
             tmp += ArrayToString(it->second->policy[i]);
             tmp += "\n";
@@ -59,7 +58,7 @@ void FileAdapter :: SavePolicy(const std::shared_ptr<Model>& model) {
     return this->SavePolicyFile(RTrim(tmp, "\n"));
 }
 
-void FileAdapter :: LoadPolicyFile(const std::shared_ptr<Model>& model, std::function<void(std::string, const std::shared_ptr<Model>&)> handler) {
+void FileAdapter ::LoadPolicyFile(const std::shared_ptr<Model>& model, std::function<void(std::string, const std::shared_ptr<Model>&)> handler) {
     std::ifstream in_file;
     try {
         in_file.open(this->file_path);
@@ -68,7 +67,7 @@ void FileAdapter :: LoadPolicyFile(const std::shared_ptr<Model>& model, std::fun
     }
 
     std::string line;
-    while(getline(in_file, line, '\n')){
+    while (getline(in_file, line, '\n')) {
         line = Trim(line);
         handler(line, model);
     }
@@ -76,7 +75,7 @@ void FileAdapter :: LoadPolicyFile(const std::shared_ptr<Model>& model, std::fun
     in_file.close();
 }
 
-void FileAdapter :: SavePolicyFile(std::string text) {
+void FileAdapter ::SavePolicyFile(std::string text) {
     std::ofstream out_file;
 
     try {
@@ -95,22 +94,22 @@ void FileAdapter :: SavePolicyFile(std::string text) {
 }
 
 // AddPolicy adds a policy rule to the storage.
-void FileAdapter :: AddPolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
+void FileAdapter ::AddPolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
     throw UnsupportedOperationException("not implemented");
 }
 
 // RemovePolicy removes a policy rule from the storage.
-void FileAdapter :: RemovePolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
+void FileAdapter ::RemovePolicy(std::string sec, std::string p_type, std::vector<std::string> rule) {
     throw UnsupportedOperationException("not implemented");
 }
 
 // RemoveFilteredPolicy removes policy rules that match the filter from the storage.
-void FileAdapter :: RemoveFilteredPolicy(std::string sec, std::string p_type, int field_index, std::vector<std::string> field_values) {
+void FileAdapter ::RemoveFilteredPolicy(std::string sec, std::string p_type, int field_index, std::vector<std::string> field_values) {
     throw UnsupportedOperationException("not implemented");
 }
 
 // IsFiltered returns true if the loaded policy has been filtered.
-bool FileAdapter :: IsFiltered() {
+bool FileAdapter ::IsFiltered() {
     return this->filtered;
 }
 

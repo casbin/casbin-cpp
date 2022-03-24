@@ -3,15 +3,15 @@
 
 #include <string>
 
+#include "../exception/parser_exception.h"
 #include "./CIDR.h"
+#include "./CIDRMask.h"
 #include "./IP.h"
 #include "./IPMask.h"
-#include "./dtoi.h"
 #include "./byte.h"
+#include "./dtoi.h"
 #include "./parseIPv4.h"
 #include "./parseIPv6.h"
-#include "./CIDRMask.h"
-#include "../exception/parser_exception.h"
 
 namespace casbin {
 

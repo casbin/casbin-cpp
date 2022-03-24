@@ -1,18 +1,18 @@
 /*
-* Copyright 2020 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2020 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include "casbin/pch.h"
 
@@ -20,8 +20,8 @@
 #define CONFIG_CPP
 
 #include "casbin/config/config.h"
-#include "casbin/exception/io_exception.h"
 #include "casbin/exception/illegal_argument_exception.h"
+#include "casbin/exception/io_exception.h"
 #include "casbin/util/util.h"
 
 namespace casbin {
@@ -56,7 +56,7 @@ void Config::Parse(const std::string& f_name) {
     infile.close();
 }
 
-void Config::ParseBuffer(std::istream * buf) {
+void Config::ParseBuffer(std::istream* buf) {
     std::string section = "";
     int line_num = 0;
     std::string line;
@@ -65,13 +65,12 @@ void Config::ParseBuffer(std::istream * buf) {
         if (getline(*buf, line, '\n')) {
             if (!line.compare(""))
                 continue;
-        }
-        else
+        } else
             break;
         line = Trim(line);
-        if (line.find(DEFAULT_COMMENT)==0)
+        if (line.find(DEFAULT_COMMENT) == 0)
             continue;
-        else if (line.find(DEFAULT_COMMENT_SEM)==0)
+        else if (line.find(DEFAULT_COMMENT_SEM) == 0)
             continue;
         else if (line.find("[") == 0 && EndsWith(line, "]"))
             section = line.substr(1, line.length() - 2);
@@ -122,7 +121,7 @@ Config::Config(const std::string& conf_name) {
 }
 
 bool Config::GetBool(std::string_view key) {
-    return Get(key).compare("true")==0;
+    return Get(key).compare("true") == 0;
 }
 
 int Config::GetInt(std::string_view key) {
@@ -160,8 +159,7 @@ void Config::Set(std::string_view key, const std::string& value) {
     if (keys.size() >= 2) {
         section = keys[0];
         option = keys[1];
-    }
-    else
+    } else
         option = keys[0];
 
     AddConfig(section, option, value);

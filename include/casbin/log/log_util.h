@@ -5,33 +5,28 @@
 
 namespace casbin {
 
-
 class LogUtil {
-	private:
+private:
     static DefaultLogger s_logger;
-	public:
 
-		// SetLogger sets the current logger.
-		static void SetLogger(const DefaultLogger& l){
-			s_logger = l;
-		}
+public:
+    // SetLogger sets the current logger.
+    static void SetLogger(const DefaultLogger& l) { s_logger = l; }
 
-		// GetLogger returns the current logger.
-        static DefaultLogger GetLogger() {
-			return s_logger;
-		}
+    // GetLogger returns the current logger.
+    static DefaultLogger GetLogger() { return s_logger; }
 
-		// LogPrint prints the log.
-		template <typename... Object>
-		static void LogPrint(Object... objects) {
-			s_logger.Print(objects...);
-		}
+    // LogPrint prints the log.
+    template <typename... Object>
+    static void LogPrint(Object... objects) {
+        s_logger.Print(objects...);
+    }
 
-		// LogPrintf prints the log with the format.
-		template <typename... Object>
-		static void LogPrintf(std::string format, Object... objects) {
-			s_logger.Printf(format, objects...);
-		}
+    // LogPrintf prints the log with the format.
+    template <typename... Object>
+    static void LogPrintf(std::string format, Object... objects) {
+        s_logger.Printf(format, objects...);
+    }
 };
 
 } // namespace casbin

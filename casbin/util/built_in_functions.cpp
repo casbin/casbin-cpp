@@ -1,36 +1,35 @@
 /*
-* Copyright 2020 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2020 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include "casbin/pch.h"
 
 #ifndef BUILT_IN_FUNCTIONS_CPP
 #define BUILT_IN_FUNCTIONS_CPP
 
-
 #include <regex>
 
-#include "casbin/util/built_in_functions.h"
-#include "casbin/util/util.h"
-#include "casbin/model/function.h"
-#include "casbin/rbac/role_manager.h"
 #include "casbin/exception/illegal_argument_exception.h"
 #include "casbin/ip_parser/parser/CIDR.h"
 #include "casbin/ip_parser/parser/IP.h"
 #include "casbin/ip_parser/parser/parseCIDR.h"
 #include "casbin/ip_parser/parser/parseIP.h"
+#include "casbin/model/function.h"
+#include "casbin/rbac/role_manager.h"
+#include "casbin/util/built_in_functions.h"
+#include "casbin/util/util.h"
 
 namespace casbin {
 
@@ -39,7 +38,7 @@ namespace casbin {
 bool KeyMatch(const std::string& key1, const std::string& key2) {
     size_t pos = key2.find("*");
 
-    if (pos == std::string :: npos)
+    if (pos == std::string ::npos)
         return key1 == key2;
 
     if (key1.length() > pos)
@@ -55,40 +54,39 @@ bool KeyMatch2(const std::string& key1, const std::string& key2) {
     std::vector<std::string> key2_arr = Split(key2, "/");
 
     bool res = true;
-    for(int i=0;i<key2_arr.size();i++){
-        if(i >= key1_arr.size()){
+    for (int i = 0; i < key2_arr.size(); i++) {
+        if (i >= key1_arr.size()) {
             res = false;
             break;
         }
-        if(key1_arr[i] != key2_arr[i]){
+        if (key1_arr[i] != key2_arr[i]) {
             size_t index1 = key2_arr[i].find("*");
             size_t index2 = key2_arr[i].find(":");
-            if(index1 != std::string::npos){
-                if(index1==0){
+            if (index1 != std::string::npos) {
+                if (index1 == 0) {
                     res = true;
                     break;
-                } else if(key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
+                } else if (key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
                     res = false;
                     break;
                 } else
                     continue;
             }
-            if(index2==0){
-                if(key1_arr[i]=="" || !key2_arr[i].substr(1).compare("")){
+            if (index2 == 0) {
+                if (key1_arr[i] == "" || !key2_arr[i].substr(1).compare("")) {
                     res = false;
                     break;
-                }
-                else
+                } else
                     continue;
             }
             res = false;
             break;
-        }else
+        } else
             continue;
     }
 
-    if(key2_arr.size() < key1_arr.size())
-        if(key2_arr[key2_arr.size()-1] != "*")
+    if (key2_arr.size() < key1_arr.size())
+        if (key2_arr[key2_arr.size() - 1] != "*")
             res = false;
 
     return res;
@@ -102,41 +100,40 @@ bool KeyMatch3(const std::string& key1, const std::string& key2) {
     std::vector<std::string> key2_arr = Split(key2, "/");
 
     bool res = true;
-    for(int i=0;i<key2_arr.size();i++){
-        if(i >= key1_arr.size()){
+    for (int i = 0; i < key2_arr.size(); i++) {
+        if (i >= key1_arr.size()) {
             res = false;
             break;
         }
-        if(key1_arr[i] != key2_arr[i]){
+        if (key1_arr[i] != key2_arr[i]) {
             size_t index1 = key2_arr[i].find("*");
             size_t index2 = key2_arr[i].find("{");
             size_t index3 = key2_arr[i].find("}");
-            if(index1 != std::string::npos){
-                if(index1==0){
+            if (index1 != std::string::npos) {
+                if (index1 == 0) {
                     res = true;
                     break;
-                } else if(key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
+                } else if (key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
                     res = false;
                     break;
                 } else
                     continue;
             }
-            if(index2==0 && index3 > 0 && index3 != std::string::npos){
-                if(key1_arr[i]=="" || !key2_arr[i].substr(1, key2_arr[i].length()-2).compare("")){
+            if (index2 == 0 && index3 > 0 && index3 != std::string::npos) {
+                if (key1_arr[i] == "" || !key2_arr[i].substr(1, key2_arr[i].length() - 2).compare("")) {
                     res = false;
                     break;
-                }
-                else
+                } else
                     continue;
             }
             res = false;
             break;
-        }else
+        } else
             continue;
     }
 
-    if(key2_arr.size() < key1_arr.size())
-        if(key2_arr[key2_arr.size()-1] != "*")
+    if (key2_arr.size() < key1_arr.size())
+        if (key2_arr[key2_arr.size() - 1] != "*")
             res = false;
 
     return res;

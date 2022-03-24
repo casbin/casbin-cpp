@@ -364,3 +364,6 @@ cmake-build*/
 
 # pip
 *.egg-info
+
+# clang-format
+build_support/clang_format_exclusions.txt

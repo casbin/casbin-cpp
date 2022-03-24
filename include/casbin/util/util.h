@@ -1,24 +1,24 @@
 /*
-* Copyright 2020 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2020 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #ifndef CASBIN_CPP_UTIL_UTIL
 #define CASBIN_CPP_UTIL_UTIL
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "built_in_functions.h"
 
@@ -35,16 +35,16 @@ std::string ArrayToString(const std::vector<std::string>& arr);
 bool EndsWith(std::string_view base, std::string_view suffix);
 
 /**
-* escapeAssertion escapes the dots in the assertion, because the expression evaluation doesn't support such variable names.
-*
-* @param s the value of the matcher and effect assertions.
-* @return the escaped value.
-*/
+ * escapeAssertion escapes the dots in the assertion, because the expression evaluation doesn't support such variable names.
+ *
+ * @param s the value of the matcher and effect assertions.
+ * @return the escaped value.
+ */
 std::string EscapeAssertion(std::string s);
 
 std::vector<size_t> FindAllOccurences(std::string_view data, std::string_view toSearch);
 
-template<typename Base, typename T>
+template <typename Base, typename T>
 bool IsInstanceOf(const T*);
 
 std::vector<std::string> JoinSlice(const std::string& a, const std::vector<std::string>& slice);
@@ -60,9 +60,9 @@ std::vector<std::string> SetSubtract(const std::vector<std::string>& a, const st
 std::vector<std::string> Split(std::string str, const std::string& del, int limit = 0);
 
 std::string& LTrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
- 
+
 std::string& RTrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
- 
+
 std::string Trim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
 
 // HasEval determine whether matcher contains function eval
@@ -72,7 +72,7 @@ bool HasEval(const std::string& s);
 std::string ReplaceEvalWithMap(const std::string& src, std::unordered_map<std::string, std::string>& sets);
 
 // GetEvalValue returns the parameters of function eval
-std::vector<std::string> GetEvalValue(std::string s); 
+std::vector<std::string> GetEvalValue(std::string s);
 } // namespace casbin
 
 #endif

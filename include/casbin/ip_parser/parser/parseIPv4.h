@@ -4,9 +4,9 @@
 #include <string>
 
 #include "./IP.h"
-#include "./dtoi.h"
-#include "./byte.h"
 #include "./IPv4.h"
+#include "./byte.h"
+#include "./dtoi.h"
 
 namespace casbin {
 

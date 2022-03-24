@@ -1,30 +1,30 @@
 /*
-* Copyright 2020 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2020 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include "casbin/pch.h"
 
 #ifndef ENFORCER_SYNCED_CPP
 #define ENFORCER_SYNCED_CPP
 
-#include <mutex>
 #include <atomic>
 #include <memory>
+#include <mutex>
 
-#include "casbin/persist/watcher.h"
 #include "casbin/enforcer_synced.h"
+#include "casbin/persist/watcher.h"
 #include "casbin/util/ticker.h"
 
 namespace casbin {
@@ -211,14 +211,14 @@ bool SyncedEnforcer ::Enforce(const DataMap& params) {
 
 // BatchEnforce enforce in batches
 std::vector<bool> SyncedEnforcer ::BatchEnforce(const std::initializer_list<DataList>& requests) {
-  std::lock_guard<std::mutex> lock(policyMutex);
-  return Enforcer::BatchEnforce(requests);
+    std::lock_guard<std::mutex> lock(policyMutex);
+    return Enforcer::BatchEnforce(requests);
 }
 
 // BatchEnforceWithMatcher enforce with matcher in batches
 std::vector<bool> SyncedEnforcer::BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) {
-  std::lock_guard<std::mutex> lock(policyMutex);
-  return Enforcer::BatchEnforceWithMatcher(matcher, requests);
+    std::lock_guard<std::mutex> lock(policyMutex);
+    return Enforcer::BatchEnforceWithMatcher(matcher, requests);
 }
 
 // GetAllSubjects gets the list of subjects that show up in the current policy.
@@ -357,24 +357,24 @@ bool SyncedEnforcer ::RemovePolicy(const std::vector<std::string>& params) {
 
 // UpdatePolicy updates an authorization rule from the current policy.
 bool SyncedEnforcer ::UpdatePolicy(const std::vector<std::string>& oldPolicy, const std::vector<std::string>& newPolicy) {
-  std::lock_guard<std::mutex> lock(policyMutex);
-  return Enforcer::UpdatePolicy(oldPolicy, newPolicy);
+    std::lock_guard<std::mutex> lock(policyMutex);
+    return Enforcer::UpdatePolicy(oldPolicy, newPolicy);
 }
 
 bool SyncedEnforcer ::UpdateNamedPolicy(const std::string& ptype, const std::vector<std::string>& p1, const std::vector<std::string>& p2) {
-  std::lock_guard<std::mutex> lock(policyMutex);
-  return Enforcer::UpdateNamedPolicy(ptype, p1, p2);
+    std::lock_guard<std::mutex> lock(policyMutex);
+    return Enforcer::UpdateNamedPolicy(ptype, p1, p2);
 }
 
 // UpdatePolicies updates authorization rules from the current policies.
 bool SyncedEnforcer ::UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies) {
-  std::lock_guard<std::mutex> lock(policyMutex);
-  return Enforcer::UpdatePolicies(oldPolices, newPolicies);
+    std::lock_guard<std::mutex> lock(policyMutex);
+    return Enforcer::UpdatePolicies(oldPolices, newPolicies);
 }
 
 bool SyncedEnforcer ::UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) {
-  std::lock_guard<std::mutex> lock(policyMutex);
-  return Enforcer::UpdateNamedPolicies(ptype, p1, p2);
+    std::lock_guard<std::mutex> lock(policyMutex);
+    return Enforcer::UpdateNamedPolicies(ptype, p1, p2);
 }
 
 // RemovePolicies removes authorization rules from the current policy.
@@ -482,13 +482,13 @@ bool SyncedEnforcer ::RemoveNamedGroupingPolicies(const std::string& ptype, cons
 }
 
 bool SyncedEnforcer ::UpdateGroupingPolicy(const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
-  std::lock_guard<std::mutex> lock(policyMutex);
-  return Enforcer::UpdateGroupingPolicy(oldRule, newRule);
+    std::lock_guard<std::mutex> lock(policyMutex);
+    return Enforcer::UpdateGroupingPolicy(oldRule, newRule);
 }
 
 bool SyncedEnforcer ::UpdateNamedGroupingPolicy(const std::string& ptype, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) {
-  std::lock_guard<std::mutex> lock(policyMutex);
-  return Enforcer::UpdateNamedGroupingPolicy(ptype, oldRule, newRule);
+    std::lock_guard<std::mutex> lock(policyMutex);
+    return Enforcer::UpdateNamedGroupingPolicy(ptype, oldRule, newRule);
 }
 
 // RemoveFilteredNamedGroupingPolicy removes a role inheritance rule from the current named policy, field filters can be specified.

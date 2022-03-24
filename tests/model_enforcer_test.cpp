@@ -1,30 +1,31 @@
 /*
-* Copyright 2021 The casbin Authors. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-* This is a test file for testing built in functions in casbin
-*/
+ * Copyright 2021 The casbin Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * This is a test file for testing built in functions in casbin
+ */
 
-#include <gtest/gtest.h>
 #include <casbin/casbin.h>
+#include <gtest/gtest.h>
+
 #include "config_path.h"
 
 namespace {
-    std::string global_sub;
-    std::string global_obj;
-    std::string global_act;
-    std::string global_domain;
+std::string global_sub;
+std::string global_obj;
+std::string global_act;
+std::string global_domain;
 
 template <typename T>
 std::shared_ptr<casbin::IEvaluator> InitializeParams(const std::string& sub, const std::string& obj, const std::string& act) {
@@ -105,9 +106,7 @@ std::shared_ptr<casbin::IEvaluator> InitializeParamsWithDomains(const std::strin
 //     ASSERT_EQ(res, e.Enforce(evaluator));
 // }
 
-void TestEnforce(casbin::Enforcer& e, std::shared_ptr<casbin::IEvaluator> evaluator, bool res) {
-    ASSERT_EQ(res, e.Enforce(evaluator));
-}
+void TestEnforce(casbin::Enforcer& e, std::shared_ptr<casbin::IEvaluator> evaluator, bool res) { ASSERT_EQ(res, e.Enforce(evaluator)); }
 
 TEST(TestModelEnforcer, TestBasicModel) {
     casbin::Enforcer e(basic_model_path, basic_policy_path);
@@ -131,7 +130,7 @@ TEST(TestModelEnforcer, TestBasicModel) {
     evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
     TestEnforce(e, evaluator, true);
 }
-            
+
 TEST(TestModelEnforcer, TestBasicModelWithoutSpaces) {
     casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
 
@@ -282,7 +281,7 @@ TEST(TestModelEnforcer, TestRBACModel) {
     evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
     TestEnforce(e, evaluator, false);
     evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
-    TestEnforce(e, evaluator, false); 
+    TestEnforce(e, evaluator, false);
     evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
     TestEnforce(e, evaluator, false);
     evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
@@ -336,18 +335,18 @@ TEST(TestModelEnforcer, TestRBACModelWithDomains) {
 TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntime) {
     casbin::Enforcer e(rbac_with_domains_model_path);
 
-    std::vector<std::string> params{ "admin", "domain1", "data1", "read" };
+    std::vector<std::string> params{"admin", "domain1", "data1", "read"};
     e.AddPolicy(params);
-    params = std::vector<std::string>{ "admin", "domain1", "data1", "write" };
+    params = std::vector<std::string>{"admin", "domain1", "data1", "write"};
     e.AddPolicy(params);
-    params = std::vector<std::string>{ "admin", "domain2", "data2", "read" };
+    params = std::vector<std::string>{"admin", "domain2", "data2", "read"};
     e.AddPolicy(params);
-    params = std::vector<std::string>{ "admin", "domain2", "data2", "write" };
+    params = std::vector<std::string>{"admin", "domain2", "data2", "write"};
     e.AddPolicy(params);
 
-    params = std::vector<std::string>{ "alice", "admin", "domain1" };
+    params = std::vector<std::string>{"alice", "admin", "domain1"};
     e.AddGroupingPolicy(params);
-    params = std::vector<std::string>{ "bob", "admin", "domain2" };
+    params = std::vector<std::string>{"bob", "admin", "domain2"};
     e.AddGroupingPolicy(params);
 
     auto evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("alice", "domain1", "data1", "read");
@@ -368,7 +367,7 @@ TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntime) {
     TestEnforce(e, evaluator, true);
 
     // Remove all policy rules related to domain1 and data1.
-    params = std::vector<std::string>{ "domain1", "data1" };
+    params = std::vector<std::string>{"domain1", "data1"};
     e.RemoveFilteredPolicy(1, params);
 
     evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("alice", "domain1", "data1", "read");
@@ -389,7 +388,7 @@ TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntime) {
     TestEnforce(e, evaluator, true);
 
     // Remove the specified policy rule.
-    params = std::vector<std::string>{ "admin", "domain2", "data2", "read" };
+    params = std::vector<std::string>{"admin", "domain2", "data2", "read"};
     e.RemovePolicy(params);
 
     evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("alice", "domain1", "data1", "read");
@@ -414,9 +413,9 @@ TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntimeMockAdapter) {
     std::shared_ptr<casbin::Adapter> adapter = std::make_shared<casbin::FileAdapter>(rbac_with_domains_policy_path);
     casbin::Enforcer e(rbac_with_domains_model_path, adapter);
 
-    std::vector<std::string> params{ "admin", "domain3", "data1", "read" };
+    std::vector<std::string> params{"admin", "domain3", "data1", "read"};
     e.AddPolicy(params);
-    params = std::vector<std::string>{ "alice", "admin", "domain3" };
+    params = std::vector<std::string>{"alice", "admin", "domain3"};
     e.AddGroupingPolicy(params);
 
     auto evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("alice", "domain3", "data1", "read");
@@ -425,7 +424,7 @@ TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntimeMockAdapter) {
     evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("alice", "domain1", "data1", "read");
     TestEnforce(e, evaluator, true);
 
-    params = std::vector<std::string>{ "domain1", "data1" };
+    params = std::vector<std::string>{"domain1", "data1"};
     e.RemoveFilteredPolicy(1, params);
 
     evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("alice", "domain1", "data1", "read");
@@ -433,7 +432,7 @@ TEST(TestModelEnforcer, TestRBACModelWithDomainsAtRuntimeMockAdapter) {
 
     evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("bob", "domain2", "data2", "read");
     TestEnforce(e, evaluator, true);
-    params = std::vector<std::string>{ "admin", "domain2", "data2", "read" };
+    params = std::vector<std::string>{"admin", "domain2", "data2", "read"};
     e.RemovePolicy(params);
 
     evaluator = InitializeParamsWithDomains<casbin::ExprtkEvaluator>("bob", "domain2", "data2", "read");
@@ -476,7 +475,7 @@ TEST(TestModelEnforcer, TestRBACModelWithCustomData) {
     // You can add custom data to a grouping policy, Casbin will ignore it. It is only meaningful to the caller.
     // This feature can be used to store information like whether "bob" is an end user (so no subject will inherit "bob")
     // For Casbin, it is equivalent to: e.AddGroupingPolicy("bob", "data2_admin")
-    std::vector<std::string> params{ "bob", "data2_admin", "custom_data" };
+    std::vector<std::string> params{"bob", "data2_admin", "custom_data"};
     e.AddGroupingPolicy(params);
 
     auto evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
@@ -499,7 +498,7 @@ TEST(TestModelEnforcer, TestRBACModelWithCustomData) {
     // You should also take the custom data as a parameter when deleting a grouping policy.
     // e.RemoveGroupingPolicy("bob", "data2_admin") won't work.
     // Or you can remove it by using RemoveFilteredGroupingPolicy().
-    params = std::vector<std::string>{ "bob", "data2_admin", "custom_data" };
+    params = std::vector<std::string>{"bob", "data2_admin", "custom_data"};
     e.RemoveGroupingPolicy(params);
 
     evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
