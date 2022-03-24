@@ -18,6 +18,11 @@
 #define CASBIN_CPP_ENFORCER_INTERFACE
 
 #include "casbin/data_types.h"
+<<<<<<< HEAD
+=======
+#include "casbin/effect/effector.h"
+#include "casbin/model/evaluator.h"
+>>>>>>> 8f7edd6... fix: fix include error in IEnforce
 #include "casbin/model/model.h"
 #include "casbin/persist/adapter.h"
 #include "casbin/persist/default_watcher.h"

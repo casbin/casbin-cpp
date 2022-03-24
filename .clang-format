@@ -6,12 +6,12 @@ IndentWidth: 4
 MaxEmptyLinesToKeep: 1
 BreakBeforeBraces: Attach
 AllowShortFunctionsOnASingleLine: true
-AllowShortIfStatementsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: false
 AlignAfterOpenBracket: true
 IndentCaseLabels: true
 ObjCBlockIndentWidth: 4
 ObjCSpaceAfterProperty: true
-ColumnLimit: 0
+ColumnLimit: 200
 AlignTrailingComments: true
 SpaceAfterCStyleCast: false
 AlignOperands: true
