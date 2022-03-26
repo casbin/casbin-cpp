@@ -20,6 +20,7 @@
 #include <atomic>
 #include <memory>
 #include <mutex>
+#include <shared_mutex>
 
 #include "./enforcer.h"
 #include "./persist/watcher.h"
@@ -28,7 +29,7 @@
 namespace casbin {
 
 class SyncedEnforcer : public Enforcer {
-    std::mutex policyMutex;
+    std::shared_mutex policyMutex;
     std::atomic_bool autoLoadRunning;
     std::atomic_int n;
     std::shared_ptr<Watcher> watcher;
