@@ -88,20 +88,20 @@ def test_benchmark_rbac_model_medium(benchmark):
         e.enforce("user501", "data9", "read")
 
 
-def test_benchmark_rbac_model_large(benchmark):
-    e = get_enforcer(get_examples("rbac_model.conf"))
+# TODO: pycasbin cost too much time in large model
+# def test_benchmark_rbac_model_large(benchmark):
+#     e = get_enforcer(get_examples("rbac_model.conf"))
 
-    e.add_policies(
-        {("group" + str(i), "data" + str(int(i / 10)), "read") for i in range(10000)}
-    )
-    e.add_grouping_policies(
-        {("user" + str(i), "group" + str(int(i / 10))) for i in range(100000)}
-    )
+#     e.add_policies(
+#         {("group" + str(i), "data" + str(int(i / 10)), "read") for i in range(10000)}
+#     )
+#     e.add_grouping_policies(
+#         {("user" + str(i), "group" + str(int(i / 10))) for i in range(100000)}
+#     )
 
-    # TODO: pycasbin cost too much time in large model
-    # @benchmark
-    def benchmark_rbac_model():
-        e.enforce("user501", "data9", "read")
+#     @benchmark
+#     def benchmark_rbac_model():
+#         e.enforce("user501", "data9", "read")
 
 
 def test_benchmark_rbac_model_with_resource_roles(benchmark):

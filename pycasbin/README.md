@@ -82,6 +82,12 @@ def isAuthorized(req):
 
 Rest of the method's name is on par with `casbin-cpp`.
 
+### Benchmark
+
+Pycasbin use `pytest` for benchmark.
+
+Install `pytest` and `pycasbin` in your local machine, then run the benchmark by `python3 -m pytest --benchmark-verbose --benchmark-columns=mean,stddev,iqr,ops,rounds casbin-cpp/pycasbin/benchmarks/benchmark_model.py`.
+
 #### Summary
 
 This sums up the basic usage of `pycasbin` module:
