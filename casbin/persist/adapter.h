@@ -32,7 +32,6 @@ void LoadPolicyLine(std::string line, const std::shared_ptr<Model>& model);
  */
 class Adapter {
 public:
-    std::string file_path;
     bool filtered;
 
     /**
@@ -82,6 +81,8 @@ public:
     virtual void RemoveFilteredPolicy(std::string sec, std::string ptype, int field_index, std::vector<std::string> field_values) = 0;
 
     virtual bool IsFiltered() = 0;
+
+    virtual bool IsValid() = 0;
 };
 
 }; // namespace casbin

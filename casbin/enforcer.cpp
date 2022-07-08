@@ -228,7 +228,7 @@ Enforcer::Enforcer(const std::shared_ptr<Model>& m, std::shared_ptr<Adapter> ada
 
     this->Initialize();
 
-    if (m_adapter && m_adapter->file_path != "")
+    if (m_adapter && m_adapter->IsValid())
         this->LoadPolicy();
 }
 

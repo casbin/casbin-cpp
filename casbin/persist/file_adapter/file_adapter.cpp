@@ -113,6 +113,11 @@ bool FileAdapter ::IsFiltered() {
     return this->filtered;
 }
 
+// IsValid returns true if the loaded policy is valid.
+bool FileAdapter ::IsValid() {
+    return this->file_path != "";
+}
+
 } // namespace casbin
 
 #endif // FILE_ADAPTER_CPP

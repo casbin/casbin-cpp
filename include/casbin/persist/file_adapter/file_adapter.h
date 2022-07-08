@@ -9,6 +9,8 @@ namespace casbin {
 // It can load policy from file or save policy to file.
 class FileAdapter : virtual public Adapter {
 public:
+    std::string file_path;
+
     // NewAdapter is the constructor for Adapter.
     FileAdapter(std::string file_path);
 
@@ -35,6 +37,9 @@ public:
 
     // IsFiltered returns true if the loaded policy has been filtered.
     bool IsFiltered();
+
+    // IsValid returns true if the loaded policy is valid.
+    bool IsValid();
 };
 
 }; // namespace casbin
