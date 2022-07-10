@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include "casbin/pch.h"
-
 #ifndef DEFAULT_ROLE_MANAGER_CPP
 #define DEFAULT_ROLE_MANAGER_CPP
 
@@ -24,13 +22,13 @@
 
 namespace casbin {
 
-std::shared_ptr<Role> Role ::NewRole(std::string name) {
-    auto role = std::make_shared<Role>();
+std::unique_ptr<Role> Role :: NewRole(const std::string& name) {
+    auto role = std::make_unique<Role>();
     role->name = name;
     return role;
 }
 
-void Role ::AddRole(std::shared_ptr<Role> role) {
+void Role ::AddRole(Role* role) {
     for (int i = 0; i < this->roles.size(); i++) {
         if (this->roles[i]->name == role->name)
             return;
@@ -39,7 +37,7 @@ void Role ::AddRole(std::shared_ptr<Role> role) {
     this->roles.push_back(role);
 }
 
-void Role ::DeleteRole(std::shared_ptr<Role> role) {
+void Role ::DeleteRole(Role* role) {
     for (int i = 0; i < roles.size(); i++) {
         if (roles[i]->name == role->name)
             roles.erase(roles.begin() + i);
@@ -113,25 +111,26 @@ bool DefaultRoleManager ::HasRole(std::string name) {
     return ok;
 }
 
-std::shared_ptr<Role> DefaultRoleManager ::CreateRole(std::string name) {
-    std::shared_ptr<Role> role;
+Role* DefaultRoleManager ::CreateRole(std::string name) {
+    Role* role;
     bool ok = this->all_roles.find(name) != this->all_roles.end();
     if (!ok) {
         all_roles[name] = Role ::NewRole(name);
-        role = all_roles[name];
+        role = all_roles[name].get();
     } else
-        role = all_roles[name];
+        role = all_roles[name].get();
 
     if (this->has_pattern) {
         for (auto it = this->all_roles.begin(); it != this->all_roles.end(); it++) {
             if (this->matching_func(name, it->first) && name != it->first) {
-                std::shared_ptr<Role> role1;
+                Role* role1 = nullptr;
                 bool ok1 = this->all_roles.find(it->first) != this->all_roles.end();
                 if (!ok1) {
                     all_roles[it->first] = Role ::NewRole(it->first);
-                    role1 = all_roles[it->first];
+                    role1 = all_roles[it->first].get();
                 } else
-                    role1 = all_roles[it->first];
+                    role1 = all_roles[it->first].get();
+
                 role->AddRole(role1);
             }
         }
@@ -259,7 +258,7 @@ std::vector<std::string> DefaultRoleManager ::GetUsers(std::string name, std::ve
 
     std::vector<std::string> names;
     for (auto it = this->all_roles.begin(); it != this->all_roles.end(); it++) {
-        auto role = it->second;
+        auto role = it->second.get();
         if (role->HasDirectRole(name))
             names.push_back(role->name);
     }

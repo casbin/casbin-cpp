@@ -19,7 +19,8 @@
 
 #include <unordered_map>
 
-#include "./role_manager.h"
+#include "casbin/pch.h"
+#include "casbin/rbac/role_manager.h"
 
 namespace casbin {
 
@@ -30,16 +31,16 @@ typedef bool (*MatchingFunc)(const std::string&, const std::string&);
  */
 class Role {
 private:
-    std::vector<std::shared_ptr<Role>> roles;
+    std::vector<Role*> roles;
 
 public:
     std::string name;
 
-    static std::shared_ptr<Role> NewRole(std::string name);
+    static std::unique_ptr<Role> NewRole(std::string name);
 
-    void AddRole(std::shared_ptr<Role> role);
+    void AddRole(Role* role);
 
-    void DeleteRole(std::shared_ptr<Role> role);
+    void DeleteRole(Role* role);
 
     bool HasRole(std::string name, int hierarchy_level);
 
@@ -52,14 +53,14 @@ public:
 
 class DefaultRoleManager : public RoleManager {
 private:
-    std::unordered_map<std::string, std::shared_ptr<Role>> all_roles;
+    std::unordered_map<std::string, std::unique_ptr<Role>> all_roles;
     bool has_pattern;
     int max_hierarchy_level;
     MatchingFunc matching_func;
 
     bool HasRole(std::string name);
 
-    std::shared_ptr<Role> CreateRole(std::string name);
+    Role* CreateRole(const std::string& name);
 
 public:
     /**
