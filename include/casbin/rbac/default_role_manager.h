@@ -36,7 +36,7 @@ private:
 public:
     std::string name;
 
-    static std::unique_ptr<Role> NewRole(std::string name);
+    static std::unique_ptr<Role> NewRole(const std::string& name);
 
     void AddRole(Role* role);
 

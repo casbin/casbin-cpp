@@ -111,7 +111,7 @@ bool DefaultRoleManager ::HasRole(std::string name) {
     return ok;
 }
 
-Role* DefaultRoleManager ::CreateRole(std::string name) {
+Role* DefaultRoleManager ::CreateRole(const std::string& name) {
     Role* role;
     bool ok = this->all_roles.find(name) != this->all_roles.end();
     if (!ok) {
