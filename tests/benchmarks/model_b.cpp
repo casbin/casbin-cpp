@@ -38,7 +38,7 @@ static void BenchmarkRaw(benchmark::State& state) {
 BENCHMARK(BenchmarkRaw);
 
 static void BenchmarkBasicModel(benchmark::State& state) {
-    casbin::Enforcer e(basic_model_path, basic_policy_path);
+    casbin::Enforcer e(basic_model_path, basic_policy_path, false);
 
     casbin::DataList params = {"alice", "data1", "read"};
 
@@ -48,7 +48,7 @@ static void BenchmarkBasicModel(benchmark::State& state) {
 BENCHMARK(BenchmarkBasicModel);
 
 static void BenchmarkRBACModel(benchmark::State& state) {
-    casbin::Enforcer e(rbac_model_path, rbac_policy_path);
+    casbin::Enforcer e(rbac_model_path, rbac_policy_path, false);
 
     casbin::DataList params = {"alice", "data2", "read"};
 
@@ -56,6 +56,38 @@ static void BenchmarkRBACModel(benchmark::State& state) {
 }
 
 BENCHMARK(BenchmarkRBACModel);
+
+static void BenchmarkRBACModelSizesSmall(benchmark::State& state) {
+    // 100, 10, 1000
+    int num_roles = 100, num_resources = 10, num_users = 1000; 
+
+    casbin::Enforcer e(rbac_model_path, "", false);
+
+    for (int i = 0; i < num_roles; ++i) e.AddPolicy({"group-has-a-very-long-name-" + std::to_string(i), "data-has-a-very-long-name-" + std::to_string(i % num_resources), "read"});
+
+    for (int i = 0; i < num_users; ++i) {
+        e.AddGroupingPolicy({"user-has-a-very-long-name-" + std::to_string(i), "group-has-a-very-long-name-" + std::to_string(i % num_roles)});
+    }
+
+    int num_request = 17;
+    std::vector<casbin::DataList> requests(num_request);
+
+    for (int i = 0; i < num_request; ++i) {
+        int id_user = num_users / num_request * i,
+            id_role = id_user / num_roles,
+            id_resource = id_role % num_resources;
+        if (i&2 == 0) 
+            id_resource = (id_resource + 1) % num_resources;
+
+        requests[i] = {"user-has-a-very-long-name-" + std::to_string(id_user), "data-has-a-very-long-name-" + std::to_string(id_resource), "read"};
+    }
+
+    for (auto _ : state) 
+        for (auto& req: requests) 
+            e.Enforce(req);
+}
+
+BENCHMARK(BenchmarkRBACModelSizesSmall);
 
 static void BenchmarkRBACModelSmall(benchmark::State& state) {
     casbin::Enforcer e(rbac_model_path);
@@ -73,7 +105,7 @@ static void BenchmarkRBACModelSmall(benchmark::State& state) {
 BENCHMARK(BenchmarkRBACModelSmall);
 
 static void BenchmarkRBACModelWithResourceRoles(benchmark::State& state) {
-    casbin::Enforcer e(rbac_with_resource_roles_model_path, rbac_with_resource_roles_policy_path);
+    casbin::Enforcer e(rbac_with_resource_roles_model_path, rbac_with_resource_roles_policy_path, false);
 
     casbin::DataList params = {"alice", "data1", "read"};
     for (auto _ : state) e.Enforce(params);
@@ -82,7 +114,7 @@ static void BenchmarkRBACModelWithResourceRoles(benchmark::State& state) {
 BENCHMARK(BenchmarkRBACModelWithResourceRoles);
 
 static void BenchmarkRBACModelWithDomains(benchmark::State& state) {
-    casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);
+    casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path, false);
     casbin::DataList params = {"alice", "domain1", "data1", "read"};
 
     for (auto _ : state) e.Enforce(params);
@@ -100,8 +132,19 @@ BENCHMARK(BenchmarkRBACModelWithDomains);
 //     }
 // }
 
+// ------ TODO ------
+// static void BenchmarkABACRuleModel(benchmark::State& state) {
+//     casbin::Enforcer e("examples/abac_model.conf")
+//     data1 := newTestResource("data1", "alice")
+
+//     for(auto _ : state) {
+//         _, _ = e.Enforce("alice", data1, "read")
+//     }
+// }
+
+
 static void BenchmarkKeyMatchModel(benchmark::State& state) {
-    casbin::Enforcer e(keymatch_model_path, keymatch_policy_path);
+    casbin::Enforcer e(keymatch_model_path, keymatch_policy_path, false);
     casbin::DataList params = {"alice", "/alice_data/resource1", "GET"};
 
     for (auto _ : state) e.Enforce(params);
@@ -110,7 +153,7 @@ static void BenchmarkKeyMatchModel(benchmark::State& state) {
 BENCHMARK(BenchmarkKeyMatchModel);
 
 static void BenchmarkRBACModelWithDeny(benchmark::State& state) {
-    casbin::Enforcer e(rbac_with_deny_model_path, rbac_with_deny_policy_path);
+    casbin::Enforcer e(rbac_with_deny_model_path, rbac_with_deny_policy_path, false);
     casbin::DataList params = {"alice", "data1", "read"};
 
     for (auto _ : state) e.Enforce(params);
@@ -119,7 +162,7 @@ static void BenchmarkRBACModelWithDeny(benchmark::State& state) {
 BENCHMARK(BenchmarkRBACModelWithDeny);
 
 static void BenchmarkPriorityModel(benchmark::State& state) {
-    casbin::Enforcer e(priority_model_path, priority_policy_path);
+    casbin::Enforcer e(priority_model_path, priority_policy_path, false);
     casbin::DataList params = {"alice", "data1", "read"};
 
     for (auto _ : state) e.Enforce(params);

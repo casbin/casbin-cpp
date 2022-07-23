@@ -40,3 +40,9 @@ static const std::string keymatch_policy_path = relative_path + "/examples/keyma
 
 static const std::string priority_model_path = relative_path + "/examples/priority_model.conf";
 static const std::string priority_policy_path = relative_path + "/examples/priority_policy.csv";
+
+static const std::string globmatch_model_path = relative_path + "/examples/globmatch_model.conf";
+static const std::string globmatch_policy_path = relative_path + "/examples/globmatch_policy.csv";
+
+static const std::string rbac_with_pattern_large_scale_model_path = relative_path + "/examples/performance/rbac_with_pattern_large_scale_model.conf";
+static const std::string rbac_with_pattern_large_scale_policy_path = relative_path + "/examples/performance/rbac_with_pattern_large_scale_policy.csv";
