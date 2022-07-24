@@ -31,6 +31,13 @@ bool KeyMatch2(const std::string& key1, const std::string& key2);
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/{resource}"
 bool KeyMatch3(const std::string& key1, const std::string& key2);
 
+// KeyMatch4 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
+// Besides what KeyMatch3 does, KeyMatch4 can also match repeated patterns:
+// "/parent/123/child/123" matches "/parent/{id}/child/{id}"
+// "/parent/123/child/456" does not match "/parent/{id}/child/{id}"
+// But KeyMatch3 will match both.
+bool KeyMatch4(const std::string& key1, const std::string& key2);
+
 // RegexMatch determines whether key1 matches the pattern of key2 in regular expression.
 bool RegexMatch(const std::string& key1, const std::string& key2);
 
