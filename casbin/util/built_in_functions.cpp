@@ -19,6 +19,7 @@
 #ifndef BUILT_IN_FUNCTIONS_CPP
 #define BUILT_IN_FUNCTIONS_CPP
 
+#include <map>
 #include <regex>
 
 #include "casbin/exception/illegal_argument_exception.h"
@@ -125,6 +126,64 @@ bool KeyMatch3(const std::string& key1, const std::string& key2) {
                     break;
                 } else
                     continue;
+            }
+            res = false;
+            break;
+        } else
+            continue;
+    }
+
+    if (key2_arr.size() < key1_arr.size())
+        if (key2_arr[key2_arr.size() - 1] != "*")
+            res = false;
+
+    return res;
+}
+
+// KeyMatch4 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
+// Besides what KeyMatch3 does, KeyMatch4 can also match repeated patterns:
+// "/parent/123/child/123" matches "/parent/{id}/child/{id}"
+// "/parent/123/child/456" does not match "/parent/{id}/child/{id}"
+// But KeyMatch3 will match both.
+bool KeyMatch4(const std::string& key1, const std::string& key2) {
+    std::vector<std::string> key1_arr = Split(key1, "/");
+    std::vector<std::string> key2_arr = Split(key2, "/");
+    std::map<std::string, std::string> tokens_matches;
+
+    bool res = true;
+    for (int i = 0; i < key2_arr.size(); i++) {
+        if (i >= key1_arr.size()) {
+            res = false;
+            break;
+        }
+        if (key1_arr[i] != key2_arr[i]) {
+            size_t index1 = key2_arr[i].find("*");
+            size_t index2 = key2_arr[i].find("{");
+            size_t index3 = key2_arr[i].find("}");
+            std::string token = key2_arr[i].substr(1, key2_arr[i].length() - 2);
+            if (index1 != std::string::npos) {
+                if (index1 == 0) {
+                    res = true;
+                    break;
+                } else if (key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
+                    res = false;
+                    break;
+                } else
+                    continue;
+            }
+            if (index2 == 0 && index3 > 0 && index3 != std::string::npos) {
+                if (key1_arr[i] == "" || !token.compare("")) {
+                    res = false;
+                    break;
+                }
+				if (tokens_matches.find(token) == tokens_matches.end()) {
+					tokens_matches.insert(std::pair<std::string, std::string>(token, key1_arr[i]));
+					continue;
+				} else if (tokens_matches.at(token).compare(key1_arr[i])) {
+					res = false;
+					break;
+				} else
+					continue;
             }
             res = false;
             break;
