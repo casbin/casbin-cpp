@@ -48,96 +48,103 @@ bool KeyMatch(const std::string& key1, const std::string& key2) {
     return key1 == key2.substr(0, pos);
 }
 
+// KeyGet returns the matched part
+// For example, "/foo/bar/foo" matches "/foo/*"
+// "bar/foo" will been returned
+std::string KeyGet(const std::string& key1, const std::string& key2) {
+    size_t pos = key2.find("*");
+
+    if (pos == std::string ::npos)
+        return "";
+
+    if (key1.length() > pos)
+        if (key1.substr(0, pos) == key2.substr(0, pos))
+            return key1.substr(pos, key1.length() - pos);
+
+    return "";
+}
+
 // KeyMatch2 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/:resource"
 bool KeyMatch2(const std::string& key1, const std::string& key2) {
-    std::vector<std::string> key1_arr = Split(key1, "/");
-    std::vector<std::string> key2_arr = Split(key2, "/");
+    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
+    k2 = regex_replace(k2, std::regex("(.*?):[^/]+(.*?)"), "$1[^/]+$2");
+    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
+    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
 
-    bool res = true;
-    for (int i = 0; i < key2_arr.size(); i++) {
-        if (i >= key1_arr.size()) {
-            res = false;
-            break;
-        }
-        if (key1_arr[i] != key2_arr[i]) {
-            size_t index1 = key2_arr[i].find("*");
-            size_t index2 = key2_arr[i].find(":");
-            if (index1 != std::string::npos) {
-                if (index1 == 0) {
-                    res = true;
-                    break;
-                } else if (key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
-                    res = false;
-                    break;
-                } else
-                    continue;
-            }
-            if (index2 == 0) {
-                if (key1_arr[i] == "" || !key2_arr[i].substr(1).compare("")) {
-                    res = false;
-                    break;
-                } else
-                    continue;
-            }
-            res = false;
-            break;
-        } else
-            continue;
+    if (!k2.compare("*"))
+        k2 = "(.*)";
+
+    return RegexMatch(key1, "^" + k2 + "$");
+}
+
+// KeyGet2 returns value matched pattern
+// For example, "/resource1" matches "/:resource"
+// if the path_var == "resource", then "resource1" will be returned
+std::string KeyGet2(const std::string& key1, const std::string& key2, const std::string& path_var) {
+    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
+
+    std::vector<std::string> keys;
+    std::regex keys_regex(":[^/]+");
+    for (std::sregex_iterator it(k2.begin(), k2.end(), keys_regex), end_it; it != end_it; ++it) {
+        keys.push_back(it->str());
     }
 
-    if (key2_arr.size() < key1_arr.size())
-        if (key2_arr[key2_arr.size() - 1] != "*")
-            res = false;
+    k2 = regex_replace(k2, std::regex("(.*?):[^/]+(.*?)"), "$1([^/]+)$2");
+    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
+    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
+    if (!k2.compare("*"))
+        k2 = "(.*)";
+    k2 = "^" + k2 + "$";
 
-    return res;
+    std::smatch values;
+    std::regex_match(key1.begin(), key1.end(), values, std::regex(k2));
+
+    for (int i = 0; i < keys.size(); i++)
+        if (!path_var.compare(keys.at(i).substr(1)))
+            return values[i + 1];
+
+    return "";
 }
 
 // KeyMatch3 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/{resource}"
-
 bool KeyMatch3(const std::string& key1, const std::string& key2) {
-    std::vector<std::string> key1_arr = Split(key1, "/");
-    std::vector<std::string> key2_arr = Split(key2, "/");
+    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
+    k2 = regex_replace(k2, std::regex("(.*?)\\{[^/]+?\\}(.*?)"), "$1[^/]+$2");
+    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
+    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
 
-    bool res = true;
-    for (int i = 0; i < key2_arr.size(); i++) {
-        if (i >= key1_arr.size()) {
-            res = false;
-            break;
-        }
-        if (key1_arr[i] != key2_arr[i]) {
-            size_t index1 = key2_arr[i].find("*");
-            size_t index2 = key2_arr[i].find("{");
-            size_t index3 = key2_arr[i].find("}");
-            if (index1 != std::string::npos) {
-                if (index1 == 0) {
-                    res = true;
-                    break;
-                } else if (key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
-                    res = false;
-                    break;
-                } else
-                    continue;
-            }
-            if (index2 == 0 && index3 > 0 && index3 != std::string::npos) {
-                if (key1_arr[i] == "" || !key2_arr[i].substr(1, key2_arr[i].length() - 2).compare("")) {
-                    res = false;
-                    break;
-                } else
-                    continue;
-            }
-            res = false;
-            break;
-        } else
-            continue;
+    return RegexMatch(key1, "^" + k2 + "$");
+}
+
+// KeyGet3 returns value matched pattern
+// For example, "project/proj_project1_admin/" matches "project/proj_{project}_admin/"
+// if the pathVar == "project", then "project1" will be returned
+std::string KeyGet3(const std::string& key1, const std::string& key2, const std::string& path_var) {
+    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
+
+    std::vector<std::string> keys;
+    std::regex keys_regex("\\{[^/]+?\\}");
+    for (std::sregex_iterator it(k2.begin(), k2.end(), keys_regex), end_it; it != end_it; ++it) {
+        keys.push_back(it->str());
     }
 
-    if (key2_arr.size() < key1_arr.size())
-        if (key2_arr[key2_arr.size() - 1] != "*")
-            res = false;
+    k2 = regex_replace(k2, std::regex("(.*?)\\{[^/]+?\\}(.*?)"), "$1([^/]+?)$2");
+    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
+    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
+    if (!k2.compare("*"))
+        k2 = "(.*)";
+    k2 = "^" + k2 + "$";
 
-    return res;
+    std::smatch values;
+    std::regex_match(key1.begin(), key1.end(), values, std::regex(k2));
+
+    for (int i = 0; i < keys.size(); i++)
+        if (!path_var.compare(keys.at(i).substr(1, keys.at(i).length() - 2)))
+            return values[i + 1];
+
+    return "";
 }
 
 // KeyMatch4 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
@@ -146,56 +153,35 @@ bool KeyMatch3(const std::string& key1, const std::string& key2) {
 // "/parent/123/child/456" does not match "/parent/{id}/child/{id}"
 // But KeyMatch3 will match both.
 bool KeyMatch4(const std::string& key1, const std::string& key2) {
-    std::vector<std::string> key1_arr = Split(key1, "/");
-    std::vector<std::string> key2_arr = Split(key2, "/");
+    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
+
+    std::vector<std::string> tokens;
+    std::regex tokens_regex("\\{([^/]+)\\}");
+    for (std::sregex_iterator it(k2.begin(), k2.end(), tokens_regex), end_it; it != end_it; ++it)
+        tokens.push_back(it->str());
+
+    k2 = regex_replace(k2, std::regex("(.*?)\\{[^/]+?\\}(.*?)"), "$1([^/]+)$2");
+    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
+    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
+    k2 = "^" + k2 + "$";
+    std::smatch matches;
+    std::regex_match(key1.begin(), key1.end(), matches, std::regex(k2));
+    if (matches.empty())
+        return false;
+    if (tokens.size() != matches.size() - 1)
+        throw "KeyMatch4: number of tokens is not equal to number of values";
+
     std::map<std::string, std::string> tokens_matches;
 
-    bool res = true;
-    for (int i = 0; i < key2_arr.size(); i++) {
-        if (i >= key1_arr.size()) {
-            res = false;
-            break;
-        }
-        if (key1_arr[i] != key2_arr[i]) {
-            size_t index1 = key2_arr[i].find("*");
-            size_t index2 = key2_arr[i].find("{");
-            size_t index3 = key2_arr[i].find("}");
-            std::string token = key2_arr[i].substr(1, key2_arr[i].length() - 2);
-            if (index1 != std::string::npos) {
-                if (index1 == 0) {
-                    res = true;
-                    break;
-                } else if (key1_arr[i].compare(key2_arr[i].substr(0, index1))) {
-                    res = false;
-                    break;
-                } else
-                    continue;
-            }
-            if (index2 == 0 && index3 > 0 && index3 != std::string::npos) {
-                if (key1_arr[i] == "" || !token.compare("")) {
-                    res = false;
-                    break;
-                }
-				if (tokens_matches.find(token) == tokens_matches.end()) {
-					tokens_matches.insert(std::pair<std::string, std::string>(token, key1_arr[i]));
-					continue;
-				} else if (tokens_matches.at(token).compare(key1_arr[i])) {
-					res = false;
-					break;
-				} else
-					continue;
-            }
-            res = false;
-            break;
-        } else
+    for (int i = 0; i < tokens.size(); i++) {
+        if (tokens_matches.find(tokens[i]) == tokens_matches.end()) {
+            tokens_matches.insert(std::pair<std::string, std::string>(tokens[i], matches[i + 1]));
             continue;
+        } else if (tokens_matches.at(tokens[i]).compare(matches[i + 1])) {
+            return false;
+        }
     }
-
-    if (key2_arr.size() < key1_arr.size())
-        if (key2_arr[key2_arr.size() - 1] != "*")
-            res = false;
-
-    return res;
+    return true;
 }
 
 // RegexMatch determines whether key1 matches the pattern of key2 in regular expression.
