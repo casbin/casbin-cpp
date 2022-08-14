@@ -23,13 +23,28 @@ namespace casbin {
 // For example, "/foo/bar" matches "/foo/*"
 bool KeyMatch(const std::string& key1, const std::string& key2);
 
+// KeyGet returns the matched part
+// For example, "/foo/bar/foo" matches "/foo/*"
+// "bar/foo" will been returned
+std::string KeyGet(const std::string& key1, const std::string& key2);
+
 // KeyMatch2 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/:resource"
 bool KeyMatch2(const std::string& key1, const std::string& key2);
 
+// KeyGet2 returns value matched pattern
+// For example, "/resource1" matches "/:resource"
+// if the path_var == "resource", then "resource1" will be returned
+std::string KeyGet2(const std::string& key1, const std::string& key2, const std::string& path_var);
+
 // KeyMatch3 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/{resource}"
 bool KeyMatch3(const std::string& key1, const std::string& key2);
+
+// KeyGet3 returns value matched pattern
+// For example, "project/proj_project1_admin/" matches "project/proj_{project}_admin/"
+// if the pathVar == "project", then "project1" will be returned
+std::string KeyGet3(const std::string& key1, const std::string& key2, const std::string& path_var);
 
 // KeyMatch4 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // Besides what KeyMatch3 does, KeyMatch4 can also match repeated patterns:

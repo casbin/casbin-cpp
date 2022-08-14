@@ -149,6 +149,7 @@ enum class ExprtkFunctionType {
     KeyMatch,
     KeyMatch2,
     KeyMatch3,
+    KeyMatch4,
     RegexMatch,
     IpMatch,
 };
@@ -170,6 +171,9 @@ public:
                 break;
             case ExprtkFunctionType::KeyMatch3:
                 func.reset(new ExprtkOtherFunction(idenfier, KeyMatch3));
+                break;
+            case ExprtkFunctionType::KeyMatch4:
+                func.reset(new ExprtkOtherFunction(idenfier, KeyMatch4));
                 break;
             case ExprtkFunctionType::IpMatch:
                 func.reset(new ExprtkOtherFunction(idenfier, IPMatch));
