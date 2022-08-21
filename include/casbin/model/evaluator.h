@@ -28,7 +28,7 @@
 
 namespace casbin {
 
-enum class Type { Bool, Float };
+enum class Type { Bool, String };
 
 class IEvaluator {
 public:
@@ -51,7 +51,7 @@ public:
 
     virtual bool GetBoolen() = 0;
 
-    virtual float GetFloat() = 0;
+    virtual std::string GetString() = 0;
 
     virtual void Clean(AssertionMap& section, bool after_enforce = true) = 0;
 };
@@ -85,7 +85,7 @@ public:
 
     bool GetBoolen();
 
-    float GetFloat();
+    std::string GetString();
 
     void Clean(AssertionMap& section, bool after_enforce = true);
 

@@ -80,7 +80,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
     size_t policy_len = p_policy.size();
 
     std::vector<Effect> policy_effects(policy_len, Effect::Indeterminate);
-    std::vector<float> matcher_results(policy_len, 0.0f);
+    std::vector<std::string> matcher_results(policy_len, "");
 
     if (policy_len != 0) {
         // if(m_model->m["r"].assertion_map["r"]->tokens.size() != m_func_map.GetRLen())
@@ -131,9 +131,9 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
                     policy_effects[i] = Effect::Indeterminate;
                     continue;
                 }
-            } else if (evalator->CheckType() == Type::Float) {
-                float result = evalator->GetFloat();
-                if (result == 0.0) {
+            } else if (evalator->CheckType() == Type::String) {
+                std::string result = evalator->GetString();
+                if (result.empty()) {
                     policy_effects[i] = Effect::Indeterminate;
                     continue;
                 } else

@@ -25,6 +25,8 @@
 namespace casbin {
 
 typedef bool (*MatchingFunc)(const std::string&, const std::string&);
+typedef std::string (*GettingFunc)(const std::string&, const std::string&);
+typedef std::string (*GetWithPathFunc)(const std::string&, const std::string&, const std::string&);
 
 /**
  * Role represents the data structure for a role in RBAC.

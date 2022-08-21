@@ -57,6 +57,9 @@ void ExprtkEvaluator::LoadFunctions() {
     AddFunction("keyMatch4", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyMatch4, 2));
     AddFunction("regexMatch", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::RegexMatch, 2));
     AddFunction("ipMatch", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::IpMatch, 2));
+    AddFunction("KeyGet", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyGet, 2));
+    AddFunction("KeyGet2", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyGet2, 3));
+    AddFunction("KeyGet3", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyGet3, 3));
 }
 
 void ExprtkEvaluator::LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg) {
@@ -71,18 +74,18 @@ Type ExprtkEvaluator::CheckType() {
     if (parser.error_count() != 0) {
         throw parser.error();
     }
-    if (expression.value() == float(0) || expression.value() == float(1)) {
+    if (expression.value() == "" || expression.value() == "T") {
         return Type::Bool;
     } else {
-        return Type::Float;
+        return Type::String;
     }
 }
 
 bool ExprtkEvaluator::GetBoolen() {
-    return bool(this->expression);
+    return expression.value().size() > 0 ? true : false;
 }
 
-float ExprtkEvaluator::GetFloat() {
+std::string ExprtkEvaluator::GetString() {
     return expression.value();
 }
 

@@ -27,7 +27,7 @@ namespace casbin {
 /**
  * MergeEffects merges all matching results collected by the enforcer into a single decision.
  */
-bool DefaultEffector ::MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<float> results) {
+bool DefaultEffector ::MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<std::string> results) {
     bool result;
 
     if (!expr.compare("some(where (p.eft == allow))")) {
