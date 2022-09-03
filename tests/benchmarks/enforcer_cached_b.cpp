@@ -21,8 +21,24 @@
 
 #include "config_path.h"
 
+static const std::vector<std::vector<std::string>> s_policy = {{"alice", "data1", "read"}, {"bob", "data2", "write"}};
+
+static bool rawEnforce(const std::string& sub, const std::string& obj, const std::string& act) {
+    for (const auto& rule : s_policy) {
+        if (rule[0] == sub && rule[1] == obj && rule[2] == act)
+            return true;
+    }
+    return false;
+}
+
+static void BenchmarkCachedRaw(benchmark::State& state) {
+    for (auto _ : state) rawEnforce("alice", "data1", "read");
+}
+
+BENCHMARK(BenchmarkCachedRaw);
+
 static void BenchmarkCachedBasicModel(benchmark::State& state) {
-    casbin::CachedEnforcer e(basic_model_path, basic_policy_path);
+    casbin::CachedEnforcer e(basic_model_path, basic_policy_path, false);
     casbin::DataList request = {"alice", "data1", "read"};
     for (auto _ : state) e.Enforce(request);
 }
@@ -30,20 +46,12 @@ static void BenchmarkCachedBasicModel(benchmark::State& state) {
 BENCHMARK(BenchmarkCachedBasicModel);
 
 static void BenchmarkCachedRBACModel(benchmark::State& state) {
-    casbin::CachedEnforcer e(rbac_model_path, rbac_policy_path);
+    casbin::CachedEnforcer e(rbac_model_path, rbac_policy_path, false);
     casbin::DataList request = {"alice", "data2", "read"};
     for (auto _ : state) e.Enforce(request);
 }
 
 BENCHMARK(BenchmarkCachedRBACModel);
-
-// ---- TODO ----
-// static void BenchmarkCachedRaw(benchmark::State& state) {
-//     for (auto _ : state)
-//         rawEnforce("alice", "data1", "read")
-// }
-
-// BENCHMARK(BenchmarkCachedRaw);
 
 static void BenchmarkCachedRBACModelSmall(benchmark::State& state) {
     casbin::CachedEnforcer e(rbac_model_path, "", false);
