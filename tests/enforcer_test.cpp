@@ -49,6 +49,28 @@ TEST(TestEnforcer, TestThreeParams) {
     ASSERT_EQ(e.Enforce({"bob", "data2", "write"}), true);
 }
 
+TEST(TestEnforcer, TestVectorParamsExplain) {
+    casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
+
+    std::vector<std::vector<std::string>> explain(8);
+    ASSERT_EQ(e.EnforceEx({"alice", "data1", "read"}, explain[0]), true);
+    ASSERT_EQ(e.EnforceEx({"alice", "data1", "write"}, explain[1]), false);
+    ASSERT_EQ(e.EnforceEx({"alice", "data2", "read"}, explain[2]), false);
+    ASSERT_EQ(e.EnforceEx({"alice", "data2", "write"}, explain[3]), false);
+    ASSERT_EQ(e.EnforceEx({"bob", "data1", "read"}, explain[4]), false);
+    ASSERT_EQ(e.EnforceEx({"bob", "data1", "write"}, explain[5]), false);
+    ASSERT_EQ(e.EnforceEx({"bob", "data2", "read"}, explain[6]), false);
+    ASSERT_EQ(e.EnforceEx({"bob", "data2", "write"}, explain[7]), true);
+
+    for (int i = 0; i < 8; i++) {
+        std::cout << "EXPLAIN: ";
+        for (int j = 0; j < explain[i].size(); j++) {
+            std::cout << explain[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
 TEST(TestEnforcer, TestVectorParams) {
     casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
 

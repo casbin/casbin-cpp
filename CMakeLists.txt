@@ -12,7 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-cmake_minimum_required(VERSION 3.19)
+# todo change to 3.19
+cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}

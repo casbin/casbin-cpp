@@ -50,6 +50,8 @@ private:
     // with the operation "action", input parameters are usually: (matcher, sub, obj, act),
     // use model matcher by default when matcher is "".
     bool m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator> evalator);
+    // todo: add comment
+    bool m_enforce(const std::string& matcher, std::vector<std::string> &explain, std::shared_ptr<IEvaluator> evalator);
 
 public:
     std::shared_ptr<RoleManager> rm;
@@ -164,6 +166,10 @@ public:
     bool Enforce(const DataVector& params);
     // Enforce with a map param,decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
     bool Enforce(const DataMap& params);
+    // EnforceEx explain the result of enforce todo: add to the other enforce
+    bool EnforceEx(const DataList& params, std::vector<std::string> &explain);
+    // todo: add comment
+    bool EnforceWithMatcher(const std::string& matcher, const DataList& params, std::vector<std::string> &explain);
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model
     // matcher by default when matcher is "".
     bool EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator);

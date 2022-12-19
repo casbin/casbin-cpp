@@ -30,6 +30,7 @@ public:
      * MergeEffects merges all matching results collected by the enforcer into a single decision.
      */
     bool MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<float> results);
+    bool MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<float> results, int& explain_index);
 };
 
 } // namespace casbin

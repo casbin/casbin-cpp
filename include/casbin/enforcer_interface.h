@@ -59,7 +59,9 @@ public:
     virtual void EnableAutoBuildRoleLinks(bool auto_build_role_links) = 0;
     virtual void BuildRoleLinks() = 0;
     virtual bool m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) = 0;
+    virtual bool m_enforce(const std::string& matcher, std::vector<std::string> &explain, std::shared_ptr<IEvaluator> evalator) = 0;
     virtual bool Enforce(std::shared_ptr<IEvaluator> evalator) = 0;
+    virtual bool EnforceEx(const DataList& params, std::vector<std::string> &explain) = 0;
     virtual bool EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) = 0;
     virtual std::vector<bool> BatchEnforce(const std::initializer_list<DataList>& requests) = 0;
     virtual std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) = 0;

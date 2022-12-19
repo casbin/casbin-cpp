@@ -38,6 +38,7 @@ public:
      * @return the final effect.
      */
     virtual bool MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<float> results) = 0;
+    virtual bool MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<float> results, int& explain_index) = 0;
 };
 
 } // namespace casbin

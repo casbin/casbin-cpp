@@ -189,6 +189,167 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
     return result;
 }
 
+// enforce use a custom matcher to decides whether a "subject" can access a "object"
+// with the operation "action", input parameters are usually: (matcher, sub, obj, act),
+// use model matcher by default when matcher is "".
+// todo: change Param: explain to last 
+bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string> &explain, std::shared_ptr<IEvaluator> evalator) {
+    evalator->func_list.clear();
+    evalator->LoadFunctions();
+
+    if (!m_enabled)
+        return true;
+
+    std::string exp_string;
+    if (matcher == "")
+        exp_string = m_model->m["m"].assertion_map["m"]->value;
+    else
+        exp_string = matcher;
+
+    // std::unordered_map<std::string, std::shared_ptr<RoleManager>> rm_map;
+    bool ok = m_model->m.find("g") != m_model->m.end();
+
+    if (ok) {
+        for (auto [assertion_name, assertion] : m_model->m["g"].assertion_map) {
+            std::shared_ptr<RoleManager>& rm = assertion->rm;
+
+            int char_count = static_cast<int>(std::count(assertion->value.begin(), assertion->value.end(), '_'));
+            size_t index = exp_string.find(assertion_name + "(");
+
+            evalator->LoadGFunction(rm, assertion_name, char_count);
+        }
+    }
+
+    // apply function map to current scope.
+    // for(auto func : m_user_func_list)
+    //     m_func_map.AddFunction(std::get<0>(func), std::get<1>(func), std::get<2>(func));
+
+    bool hasEval = HasEval(exp_string);
+
+    std::unordered_map<std::string, int> p_int_tokens;
+    std::vector<std::string>& p_tokens = m_model->m["p"].assertion_map["p"]->tokens;
+    p_int_tokens.reserve(p_tokens.size());
+
+    for (int i = 0; i < p_tokens.size(); i++)
+        p_int_tokens[p_tokens[i]] = i;
+
+    std::vector<std::vector<std::string>>& p_policy = m_model->m["p"].assertion_map["p"]->policy;
+    size_t policy_len = p_policy.size();
+    int explain_index = -1;
+
+    std::vector<Effect> policy_effects(policy_len, Effect::Indeterminate);
+    std::vector<float> matcher_results(policy_len, 0.0f);
+
+    if (policy_len != 0) {
+        // if(m_model->m["r"].assertion_map["r"]->tokens.size() != m_func_map.GetRLen())
+        //     return false;
+
+        // TODO
+        for (int i = 0; i < policy_len; i++) {
+            std::vector<std::string>& p_vals = m_model->m["p"].assertion_map["p"]->policy[i];
+            m_log.LogPrint("Policy Rule: ", p_vals);
+            if (p_tokens.size() != p_vals.size())
+                return false;
+            evalator->Clean(m_model->m["p"], false);
+            evalator->InitialObject("p");
+            for (int j = 0; j < p_tokens.size(); j++) {
+                size_t index = p_tokens[j].find("_");
+                std::string token = p_tokens[j].substr(index + 1);
+                evalator->PushObjectString("p", token, p_vals[j]);
+            }
+
+            if (hasEval) {
+                auto ruleNames = GetEvalValue(exp_string);
+                std::unordered_map<std::string, std::string> replacements;
+                for (auto& ruleName : ruleNames) {
+                    auto ruleNameCpy = EscapeAssertion(ruleName);
+
+                    bool ok = p_int_tokens.find(ruleNameCpy) != p_int_tokens.end();
+                    if (ok) {
+                        int idx = p_int_tokens[ruleNameCpy];
+                        replacements[ruleName] = p_vals[idx];
+                    } else {
+                        m_log.LogPrint("please make sure rule exists in policy when using eval() in matcher");
+                        return false;
+                    }
+                }
+
+                auto expWithRule = ReplaceEvalWithMap(exp_string, replacements);
+                evalator->Eval(expWithRule);
+
+            } else {
+                evalator->Eval(exp_string);
+            }
+
+            // TODO
+            //  log.LogPrint("Result: ", result)
+            if (evalator->CheckType() == Type::Bool) {
+                bool result = evalator->GetBoolen();
+                if (!result) {
+                    policy_effects[i] = Effect::Indeterminate;
+                    continue;
+                }
+            } else if (evalator->CheckType() == Type::Float) {
+                float result = evalator->GetFloat();
+                if (result == 0.0) {
+                    policy_effects[i] = Effect::Indeterminate;
+                    continue;
+                } else
+                    matcher_results[i] = result;
+            } else
+                return false;
+
+            bool is_p_eft = p_int_tokens.find("p_eft") != p_int_tokens.end();
+            if (is_p_eft) {
+                int j = p_int_tokens["p_eft"];
+                std::string eft = p_vals[j];
+                if (eft == "allow")
+                    policy_effects[i] = Effect::Allow;
+                else if (eft == "deny")
+                    policy_effects[i] = Effect::Deny;
+                else
+                    policy_effects[i] = Effect::Indeterminate;
+            } else
+                policy_effects[i] = Effect::Allow;
+
+            if (m_model->m["e"].assertion_map["e"]->value == "priority(p_eft) || deny")
+                break;
+        }
+    } else {
+        // Push initial value for p in symbol table
+        // If p don't in symbol table, the evaluate result will be invalid.
+        evalator->Clean(m_model->m["p"], false);
+        evalator->InitialObject("p");
+        for (int j = 0; j < p_tokens.size(); j++) {
+            size_t index = p_tokens[j].find("_");
+            std::string token = p_tokens[j].substr(index + 1);
+            evalator->PushObjectString("p", token, "");
+        }
+
+        bool isvalid = evalator->Eval(exp_string);
+        if (!isvalid) {
+            return false;
+        }
+        bool result = evalator->GetBoolen();
+        // TODO
+        m_log.LogPrint("Result: ", result);
+        if (result)
+            policy_effects.push_back(Effect::Allow);
+        else
+            policy_effects.push_back(Effect::Indeterminate);
+    }
+
+    // TODO
+    m_log.LogPrint("Rule Results: ", policy_effects);
+
+    bool result = m_eft->MergeEffects(m_model->m["e"].assertion_map["e"]->value, policy_effects, matcher_results, explain_index);
+    if (explain_index != -1) {
+        explain = m_model->m["p"].assertion_map["p"]->policy[explain_index]; 
+    }
+
+    return result;
+}
+
 /**
  * Enforcer is the default constructor.
  */
@@ -487,9 +648,49 @@ bool Enforcer::Enforce(const DataMap& params) {
     return this->EnforceWithMatcher("", params);
 }
 
+// EnforceEx add a reason to Enforce
+bool Enforcer::EnforceEx(const DataList& params, std::vector<std::string> &explain) {
+    // todo: add explain to it 
+    return this->EnforceWithMatcher("", params, explain);
+}
+
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) {
     return m_enforce(matcher, evalator);
+}
+
+// todo: add explain 's comment
+bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& params, std::vector<std::string> &explain) {
+    const std::vector<std::string>& r_tokens = m_model->m["r"].assertion_map["r"]->tokens;
+
+    size_t r_cnt = r_tokens.size();
+    size_t cnt = params.size();
+
+    if (cnt != r_cnt)
+        return false;
+
+    if (this->m_evalator == nullptr) {
+        this->m_evalator = std::make_shared<ExprtkEvaluator>();
+    }
+
+    this->m_evalator->InitialObject("r");
+
+    size_t i = 0;
+
+    for (const Data& param : params) {
+        if (const auto string_param = std::get_if<std::string>(&param)) {
+            this->m_evalator->PushObjectString("r", r_tokens[i].substr(2, r_tokens[i].size() - 2), *string_param);
+        } else if (const auto json_param = std::get_if<std::shared_ptr<nlohmann::json>>(&param)) {
+            auto data_ptr = *json_param;
+            std::string token_name = r_tokens[i].substr(2, r_tokens[i].size() - 2);
+            this->m_evalator->PushObjectJson("r", token_name, *data_ptr);
+        }
+        ++i;
+    }
+
+    bool result = m_enforce(matcher, explain, m_evalator);
+
+    return result;
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
