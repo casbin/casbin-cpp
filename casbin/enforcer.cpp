@@ -192,7 +192,6 @@ bool Enforcer::m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator>
 // enforce use a custom matcher to decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act),
 // use model matcher by default when matcher is "".
-// todo: change Param: explain to last 
 bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string> &explain, std::shared_ptr<IEvaluator> evalator) {
     evalator->func_list.clear();
     evalator->LoadFunctions();
@@ -650,8 +649,7 @@ bool Enforcer::Enforce(const DataMap& params) {
 
 // EnforceEx add a reason to Enforce
 bool Enforcer::EnforceEx(const DataList& params, std::vector<std::string> &explain) {
-    // todo: add explain to it 
-    return this->EnforceWithMatcher("", params, explain);
+    return this->EnforceExWithMatcher("", params, explain);
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
@@ -659,8 +657,8 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IE
     return m_enforce(matcher, evalator);
 }
 
-// todo: add explain 's comment
-bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& params, std::vector<std::string> &explain) {
+// EnforceExWithMatcher add explain to original EnforceWithMatcher
+bool Enforcer::EnforceExWithMatcher(const std::string& matcher, const DataList& params, std::vector<std::string> &explain) {
     const std::vector<std::string>& r_tokens = m_model->m["r"].assertion_map["r"]->tokens;
 
     size_t r_cnt = r_tokens.size();

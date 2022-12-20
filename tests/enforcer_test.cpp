@@ -54,6 +54,9 @@ TEST(TestEnforcer, TestVectorParamsExplain) {
 
     std::vector<std::vector<std::string>> explain(8);
     ASSERT_EQ(e.EnforceEx({"alice", "data1", "read"}, explain[0]), true);
+    EXPECT_TRUE(explain[0][0] == "alice");
+    EXPECT_TRUE(explain[0][1] == "data1");
+    EXPECT_TRUE(explain[0][2] == "read");
     ASSERT_EQ(e.EnforceEx({"alice", "data1", "write"}, explain[1]), false);
     ASSERT_EQ(e.EnforceEx({"alice", "data2", "read"}, explain[2]), false);
     ASSERT_EQ(e.EnforceEx({"alice", "data2", "write"}, explain[3]), false);
@@ -61,14 +64,9 @@ TEST(TestEnforcer, TestVectorParamsExplain) {
     ASSERT_EQ(e.EnforceEx({"bob", "data1", "write"}, explain[5]), false);
     ASSERT_EQ(e.EnforceEx({"bob", "data2", "read"}, explain[6]), false);
     ASSERT_EQ(e.EnforceEx({"bob", "data2", "write"}, explain[7]), true);
-
-    for (int i = 0; i < 8; i++) {
-        std::cout << "EXPLAIN: ";
-        for (int j = 0; j < explain[i].size(); j++) {
-            std::cout << explain[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
+    EXPECT_TRUE(explain[7][0] == "bob");
+    EXPECT_TRUE(explain[7][1] == "data2");
+    EXPECT_TRUE(explain[7][2] == "write");
 }
 
 TEST(TestEnforcer, TestVectorParams) {
