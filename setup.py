@@ -141,10 +141,9 @@ setup(
     ext_modules=[CMakeExtension("")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     license="Apache 2.0",
     classifiers=[
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: Apache Software License",
