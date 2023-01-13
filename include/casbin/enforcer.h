@@ -49,7 +49,7 @@ private:
     // enforce use a custom matcher to decides whether a "subject" can access a "object"
     // with the operation "action", input parameters are usually: (matcher, sub, obj, act),
     // use model matcher by default when matcher is "".
-    bool m_enforce(const std::string& matcher, std::shared_ptr<IEvaluator> evalator);
+    bool m_enforce(const std::string& matcher, std::vector<std::string>& explains, std::shared_ptr<IEvaluator> evalator) override;
 
 public:
     std::shared_ptr<RoleManager> rm;

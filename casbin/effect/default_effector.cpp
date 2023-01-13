@@ -27,47 +27,81 @@ namespace casbin {
 /**
  * MergeEffects merges all matching results collected by the enforcer into a single decision.
  */
-bool DefaultEffector ::MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<float> results) {
-    bool result;
+Effect DefaultEffector::MergeEffects(const std::string& expr, const std::vector<Effect>& effects, const std::vector<float>& matches, int policyIndex, int policyLength, int& explainIndex) {
+    Effect result = Effect::Indeterminate;
+    explainIndex = -1;
 
-    if (!expr.compare("some(where (p.eft == allow))")) {
-        result = false;
-        for (unsigned int index = 0; index < effects.size(); index++) {
-            if (effects[index] == Effect::Allow) {
-                result = true;
-                break;
+    if (expr == "some(where (p.eft == allow))") { // AllowOverrideEffect
+        if (matches[policyIndex] == 0) {
+            return result;
+        }
+
+        // only check the current policyIndex
+        if (effects[policyIndex] == Effect::Allow) {
+            result = Effect::Allow;
+            explainIndex = policyIndex;
+            return result;
+        }
+    } else if (expr == "!some(where (p.eft == deny))") { // DenyOverrideEffect
+        // only check the current policyIndex
+        if (matches[policyIndex] != 0 && effects[policyIndex] == Effect::Deny) {
+            result = Effect::Deny;
+            explainIndex = policyIndex;
+            return result;
+        }
+
+        // if no deny rules are matched  at last, then allow
+        if (policyIndex == policyLength - 1) {
+            result = Effect::Allow;
+            return result;
+        }
+    } else if (expr == "some(where (p.eft == allow)) && !some(where (p.eft == deny))") { // AllowAndDenyEffect
+        // short-circuit if matched deny rule
+        if (matches[policyIndex] != 0 && effects[policyIndex] == Effect::Deny) {
+            result = Effect::Deny;
+            // set hit rule to the (first) matched deny rule
+            explainIndex = policyIndex;
+            return result;
+        }
+
+        // short-circuit some effects in the middle
+        if (policyIndex < policyLength - 1) {
+            // choose not to short-circuit
+            return result;
+        }
+
+        // merge all effects at last
+        for (int i = 0; i < effects.size(); ++i) {
+            if (matches[i] == 0) {
+                continue;
+            }
+
+            if (effects[i] == Effect::Allow) {
+                result = Effect::Allow;
+                // set hit rule to first matched allow rule
+                explainIndex = i;
+                return result;
             }
         }
-    } else if (!expr.compare("!some(where (p.eft == deny))")) {
-        result = true;
-        for (unsigned int index = 0; index < effects.size(); index++) {
-            if (effects[index] == Effect::Deny) {
-                result = false;
-                break;
+
+    } else if (expr == "priority(p.eft) || deny") { // PriorityEffect
+        // reverse merge, short-circuit may be earlier
+        for (int i = effects.size() - 1; i >= 0; --i) {
+            if (matches[i] == 0) {
+                continue;
             }
-        }
-    } else if (!expr.compare("some(where (p.eft == allow)) && !some(where (p.eft == deny))")) {
-        result = false;
-        for (unsigned int index = 0; index < effects.size(); index++) {
-            if (effects[index] == Effect::Allow) {
-                result = true;
-            } else if (effects[index] == Effect::Deny) {
-                result = false;
-                break;
-            }
-        }
-    } else if (!expr.compare("priority(p.eft) || deny")) {
-        result = false;
-        for (unsigned int index = 0; index < effects.size(); index++) {
-            if (effects[index] != Effect::Indeterminate) {
-                if (effects[index] == Effect::Allow) {
-                    result = true;
+
+            if (effects[i] != Effect::Indeterminate) {
+                if (effects[i] == Effect::Allow) {
+                    result = Effect::Allow;
                 } else {
-                    result = false;
+                    result = Effect::Deny;
                 }
-                break;
+                explainIndex = i;
+                return result;
             }
         }
+
     } else {
         throw UnsupportedOperationException("unsupported effect");
     }
