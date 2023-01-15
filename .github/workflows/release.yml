@@ -12,13 +12,14 @@ jobs:
   semantic-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Run semantic-release
         if: github.repository == 'casbin/casbin-cpp' && github.event_name == 'push'
         run: |
           export PATH="$(yarn global bin):$PATH"
-          yarn global add semantic-release
+          yarn global add semantic-release@19.0.5
           semantic-release
+          sleep 10
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
