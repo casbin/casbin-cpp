@@ -176,10 +176,21 @@ public:
     // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model
     // matcher by default when matcher is "".
     bool EnforceWithMatcher(const std::string& matcher, const DataMap& params);
+
+    bool EnforceEx(std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain) override;
+    bool EnforceEx(const DataList& params, std::vector<std::string>& explain);
+    bool EnforceEx(const DataVector& params, std::vector<std::string>& explain);
+    bool EnforceEx(const DataMap& params, std::vector<std::string>& explain);
+
+    bool EnforceExWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain) override;
+    bool EnforceExWithMatcher(const std::string& matcher, const DataList& params, std::vector<std::string>& explain);
+    bool EnforceExWithMatcher(const std::string& matcher, const DataVector& params, std::vector<std::string>& explain);
+    bool EnforceExWithMatcher(const std::string& matcher, const DataMap& params, std::vector<std::string>& explain);
+
     // BatchEnforce enforce in batches
-    std::vector<bool> BatchEnforce(const std::initializer_list<DataList>& requests);
+    std::vector<bool> BatchEnforce(const std::initializer_list<DataList>& requests) override;
     // BatchEnforceWithMatcher enforce with matcher in batches
-    std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests);
+    std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) override;
 
     /*Management API member functions.*/
     std::vector<std::string> GetAllSubjects();
