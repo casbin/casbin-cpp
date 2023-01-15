@@ -34,10 +34,16 @@ public:
      *
      * @param expr the expression of [policy_effect].
      * @param effects the effects of all matched rules.
-     * @param results the matcher results of all matched rules.
+     * @param matches the matcher results of all matched rules.
+     * @param policyIndex the index of current policy.
+     * @param policyLength the length of the policy.
+     * @param explainIndex the index of explain
      * @return the final effect.
+     *      @retval Effect::Allow
+     *      @retval Effect::Deny
+     *      @retval Effect::Indeterminate (need further judgment)
      */
-    virtual bool MergeEffects(std::string expr, std::vector<Effect> effects, std::vector<float> results) = 0;
+    virtual Effect MergeEffects(const std::string& expr, const std::vector<Effect>& effects, const std::vector<float>& matches, int policyIndex, int policyLength, int& explainIndex) = 0;
 };
 
 } // namespace casbin
