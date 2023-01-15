@@ -61,6 +61,8 @@ public:
     virtual bool m_enforce(const std::string& matcher, std::vector<std::string>& explains, std::shared_ptr<IEvaluator> evalator) = 0;
     virtual bool Enforce(std::shared_ptr<IEvaluator> evalator) = 0;
     virtual bool EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) = 0;
+    virtual bool EnforceEx(std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain) = 0;
+    virtual bool EnforceExWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain) = 0;
     virtual std::vector<bool> BatchEnforce(const std::initializer_list<DataList>& requests) = 0;
     virtual std::vector<bool> BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) = 0;
 

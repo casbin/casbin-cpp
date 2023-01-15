@@ -23,6 +23,71 @@
 
 namespace {
 
+std::string global_sub;
+std::string global_obj;
+std::string global_act;
+std::string global_domain;
+
+template <typename T>
+std::shared_ptr<casbin::IEvaluator> InitializeParams(const std::string& sub, const std::string& obj, const std::string& act) {
+    auto evaluator = std::make_shared<T>();
+    evaluator->InitialObject("r");
+
+    // Because of "Short String Optimization", these strings's data is in stack.
+    // For MSVC compiler, when this stack frame return, these memory will can't access.
+    // So we need keep this memory accessiable.
+    global_sub = sub;
+    global_obj = obj;
+    global_act = act;
+
+    evaluator->PushObjectString("r", "sub", global_sub);
+    evaluator->PushObjectString("r", "obj", global_obj);
+    evaluator->PushObjectString("r", "act", global_act);
+
+    return evaluator;
+}
+
+template <typename T>
+std::shared_ptr<casbin::IEvaluator> InitializeParamsWithoutUsers(const std::string& obj, const std::string& act) {
+    auto evaluator = std::make_shared<T>();
+    evaluator->InitialObject("r");
+
+    global_obj = obj;
+    global_act = act;
+    evaluator->PushObjectString("r", "obj", global_obj);
+    evaluator->PushObjectString("r", "act", global_act);
+    return evaluator;
+}
+
+template <typename T>
+std::shared_ptr<casbin::IEvaluator> InitializeParamsWithoutResources(const std::string& sub, const std::string& act) {
+    auto evaluator = std::make_shared<T>();
+    evaluator->InitialObject("r");
+
+    global_sub = sub;
+    global_act = act;
+    evaluator->PushObjectString("r", "sub", global_sub);
+    evaluator->PushObjectString("r", "act", global_act);
+    return evaluator;
+}
+
+template <typename T>
+std::shared_ptr<casbin::IEvaluator> InitializeParamsWithDomains(const std::string& sub, const std::string& domain, const std::string& obj, const std::string& act) {
+    auto evaluator = std::make_shared<T>();
+    evaluator->InitialObject("r");
+
+    global_sub = sub;
+    global_obj = obj;
+    global_act = act;
+    global_domain = domain;
+
+    evaluator->PushObjectString("r", "sub", global_sub);
+    evaluator->PushObjectString("r", "dom", global_domain);
+    evaluator->PushObjectString("r", "obj", global_obj);
+    evaluator->PushObjectString("r", "act", global_act);
+    return evaluator;
+}
+
 TEST(TestEnforcer, TestFourParams) {
     casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_domains_policy_path);
 
@@ -88,6 +153,210 @@ TEST(TestEnforcer, TestMapParams) {
 
     params = {{"sub", "bob"}, {"obj", "data2"}, {"act", "write"}};
     ASSERT_EQ(e.Enforce(params), true);
+}
+
+template <typename T>
+void TestEnforceEx(casbin::Enforcer& e, T&& params, const bool expect_result, const std::vector<std::string>& expect_explain) {
+    std::vector<std::string> actual_explain;
+    ASSERT_EQ(e.EnforceEx(params, actual_explain), expect_result);
+    ASSERT_EQ(actual_explain, expect_explain);
+}
+
+TEST(TestEnforcerEx, TestEvaluatorParams) {
+    // BASIC_MODEL_WITHOUT_SPACES
+    casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforceEx(e, evaluator, true, {"alice", "data1", "read"});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforceEx(e, evaluator, true, {"bob", "data2", "write"});
+
+    // RBAC_MODEL
+    e = casbin::Enforcer(rbac_model_path, rbac_policy_path);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforceEx(e, evaluator, true, {"alice", "data1", "read"});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforceEx(e, evaluator, true, {"data2_admin", "data2", "read"});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforceEx(e, evaluator, true, {"data2_admin", "data2", "write"});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforceEx(e, evaluator, true, {"bob", "data2", "write"});
+
+    // PRIORITY_MODEL
+    e = casbin::Enforcer(priority_model_path, priority_policy_path);
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "read");
+    TestEnforceEx(e, evaluator, true, {"alice", "data1", "read", "allow"});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data1", "write");
+    TestEnforceEx(e, evaluator, false, {"data1_deny_group", "data1", "write", "deny"});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "read");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("alice", "data2", "write");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "read");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data1", "write");
+    TestEnforceEx(e, evaluator, false, {});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "read");
+    TestEnforceEx(e, evaluator, true, {"data2_allow_group", "data2", "read", "allow"});
+
+    evaluator = InitializeParams<casbin::ExprtkEvaluator>("bob", "data2", "write");
+    TestEnforceEx(e, evaluator, false, {"bob", "data2", "write", "deny"});
+}
+
+TEST(TestEnforcerEx, TestVectorParams) {
+    // BASIC_MODEL_WITHOUT_SPACES
+    casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
+
+    TestEnforceEx(e, casbin::DataVector{"alice", "data1", "read"}, true, {"alice", "data1", "read"});
+    TestEnforceEx(e, casbin::DataVector{"alice", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"alice", "data2", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"alice", "data2", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data1", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data2", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data2", "write"}, true, {"bob", "data2", "write"});
+
+    // RBAC_MODEL
+    e = casbin::Enforcer(rbac_model_path, rbac_policy_path);
+
+    TestEnforceEx(e, casbin::DataVector{"alice", "data1", "read"}, true, {"alice", "data1", "read"});
+    TestEnforceEx(e, casbin::DataVector{"alice", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"alice", "data2", "read"}, true, {"data2_admin", "data2", "read"});
+    TestEnforceEx(e, casbin::DataVector{"alice", "data2", "write"}, true, {"data2_admin", "data2", "write"});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data1", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data2", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data2", "write"}, true, {"bob", "data2", "write"});
+
+    // PRIORITY_MODEL
+    e = casbin::Enforcer(priority_model_path, priority_policy_path);
+
+    TestEnforceEx(e, casbin::DataVector{"alice", "data1", "read"}, true, {"alice", "data1", "read", "allow"});
+    TestEnforceEx(e, casbin::DataVector{"alice", "data1", "write"}, false, {"data1_deny_group", "data1", "write", "deny"});
+    TestEnforceEx(e, casbin::DataVector{"alice", "data2", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"alice", "data2", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data1", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data2", "read"}, true, {"data2_allow_group", "data2", "read", "allow"});
+    TestEnforceEx(e, casbin::DataVector{"bob", "data2", "write"}, false, {"bob", "data2", "write", "deny"});
+}
+
+TEST(TestEnforcerEx, TestListParams) {
+    // BASIC_MODEL_WITHOUT_SPACES
+    casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
+
+    TestEnforceEx(e, casbin::DataList{"alice", "data1", "read"}, true, {"alice", "data1", "read"});
+    TestEnforceEx(e, casbin::DataList{"alice", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"alice", "data2", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"alice", "data2", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data1", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data2", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data2", "write"}, true, {"bob", "data2", "write"});
+
+    // RBAC_MODEL
+    e = casbin::Enforcer(rbac_model_path, rbac_policy_path);
+
+    TestEnforceEx(e, casbin::DataList{"alice", "data1", "read"}, true, {"alice", "data1", "read"});
+    TestEnforceEx(e, casbin::DataList{"alice", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"alice", "data2", "read"}, true, {"data2_admin", "data2", "read"});
+    TestEnforceEx(e, casbin::DataList{"alice", "data2", "write"}, true, {"data2_admin", "data2", "write"});
+    TestEnforceEx(e, casbin::DataList{"bob", "data1", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data2", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data2", "write"}, true, {"bob", "data2", "write"});
+
+    // PRIORITY_MODEL
+    e = casbin::Enforcer(priority_model_path, priority_policy_path);
+
+    TestEnforceEx(e, casbin::DataList{"alice", "data1", "read"}, true, {"alice", "data1", "read", "allow"});
+    TestEnforceEx(e, casbin::DataList{"alice", "data1", "write"}, false, {"data1_deny_group", "data1", "write", "deny"});
+    TestEnforceEx(e, casbin::DataList{"alice", "data2", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"alice", "data2", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data1", "read"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data1", "write"}, false, {});
+    TestEnforceEx(e, casbin::DataList{"bob", "data2", "read"}, true, {"data2_allow_group", "data2", "read", "allow"});
+    TestEnforceEx(e, casbin::DataList{"bob", "data2", "write"}, false, {"bob", "data2", "write", "deny"});
+}
+
+TEST(TestEnforcerEx, TestMapParams) {
+    // BASIC_MODEL_WITHOUT_SPACES
+    casbin::Enforcer e(basic_model_without_spaces_path, basic_policy_path);
+
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data1"}, {"act", "read"}}, true, {"alice", "data1", "read"});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data1"}, {"act", "write"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data2"}, {"act", "read"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data2"}, {"act", "write"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data1"}, {"act", "read"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data1"}, {"act", "write"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data2"}, {"act", "read"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data2"}, {"act", "write"}}, true, {"bob", "data2", "write"});
+
+    // RBAC_MODEL
+    e = casbin::Enforcer(rbac_model_path, rbac_policy_path);
+
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data1"}, {"act", "read"}}, true, {"alice", "data1", "read"});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data1"}, {"act", "write"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data2"}, {"act", "read"}}, true, {"data2_admin", "data2", "read"});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data2"}, {"act", "write"}}, true, {"data2_admin", "data2", "write"});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data1"}, {"act", "read"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data1"}, {"act", "write"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data2"}, {"act", "read"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data2"}, {"act", "write"}}, true, {"bob", "data2", "write"});
+
+    // PRIORITY_MODEL
+    e = casbin::Enforcer(priority_model_path, priority_policy_path);
+
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data1"}, {"act", "read"}}, true, {"alice", "data1", "read", "allow"});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data1"}, {"act", "write"}}, false, {"data1_deny_group", "data1", "write", "deny"});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data2"}, {"act", "read"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "alice"}, {"obj", "data2"}, {"act", "write"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data1"}, {"act", "write"}}, false, {});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data2"}, {"act", "read"}}, true, {"data2_allow_group", "data2", "read", "allow"});
+    TestEnforceEx(e, casbin::DataMap{{"sub", "bob"}, {"obj", "data2"}, {"act", "write"}}, false, {"bob", "data2", "write", "deny"});
 }
 
 // TEST(TestEnforcer, JsonData) {

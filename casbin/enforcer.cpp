@@ -37,6 +37,10 @@ namespace casbin {
 // with the operation "action", input parameters are usually: (matcher, sub, obj, act),
 // use model matcher by default when matcher is "".
 bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& explains, std::shared_ptr<IEvaluator> evalator) {
+    if (!explains.empty()) {
+        explains.clear();
+    }
+
     // when Casbin is disabled, all access will be allowed by the m_enforce()
     if (!m_enabled) {
         return true;
@@ -211,12 +215,11 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
     }
 
     std::vector<std::vector<std::string>> logExplains;
-    if (!explains.empty()) {
+
+    logExplains.push_back(explains);
+    if (explainIndex != -1 && (p_policy.size() > explainIndex)) {
+        explains = p_policy[explainIndex];
         logExplains.push_back(explains);
-        if (explainIndex != -1 && (p_policy.size() > explainIndex)) {
-            explains = p_policy[explainIndex];
-            logExplains.push_back(explains);
-        }
     }
 
     // effect --> result
@@ -531,12 +534,55 @@ bool Enforcer::Enforce(const DataMap& params) {
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) {
-    std::vector<std::string> explains;
-    return m_enforce(matcher, explains, evalator);
+    std::vector<std::string> explain;
+    bool result = EnforceExWithMatcher(matcher, evalator, explain);
+    return result;
 }
 
 // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
 bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& params) {
+    std::vector<std::string> explain;
+    bool result = EnforceExWithMatcher(matcher, params, explain);
+    return result;
+}
+
+// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
+bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& params) {
+    std::vector<std::string> explain;
+    bool result = EnforceExWithMatcher(matcher, params, explain);
+    return result;
+}
+
+// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object"
+// with the operation "action", input parameters are usually: (matcher, sub, obj, act),
+// use model matcher by default when matcher is "".
+bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& params) {
+    std::vector<std::string> explain;
+    bool result = EnforceExWithMatcher(matcher, params, explain);
+    return result;
+}
+
+bool Enforcer::EnforceEx(std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain) {
+    return this->EnforceExWithMatcher("", evalator, explain);
+}
+
+bool Enforcer::EnforceEx(const DataList& params, std::vector<std::string>& explain) {
+    return this->EnforceExWithMatcher("", params, explain);
+}
+
+bool Enforcer::EnforceEx(const DataVector& params, std::vector<std::string>& explain) {
+    return this->EnforceExWithMatcher("", params, explain);
+}
+
+bool Enforcer::EnforceEx(const DataMap& params, std::vector<std::string>& explain) {
+    return this->EnforceExWithMatcher("", params, explain);
+}
+
+bool Enforcer::EnforceExWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain) {
+    return m_enforce(matcher, explain, evalator);
+}
+
+bool Enforcer::EnforceExWithMatcher(const std::string& matcher, const DataList& params, std::vector<std::string>& explain) {
     const std::vector<std::string>& r_tokens = m_model->m["r"].assertion_map["r"]->tokens;
 
     size_t r_cnt = r_tokens.size();
@@ -564,14 +610,12 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataList& pa
         ++i;
     }
 
-    std::vector<std::string> explains;
-    bool result = m_enforce(matcher, explains, m_evalator);
+    bool result = m_enforce(matcher, explain, m_evalator);
 
     return result;
 }
 
-// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
-bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& params) {
+bool Enforcer::EnforceExWithMatcher(const std::string& matcher, const DataVector& params, std::vector<std::string>& explain) {
     const std::vector<std::string>& r_tokens = m_model->m["r"].assertion_map["r"]->tokens;
 
     size_t r_cnt = r_tokens.size();
@@ -601,16 +645,11 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataVector& 
         ++i;
     }
 
-    std::vector<std::string> explains;
-    bool result = m_enforce(matcher, explains, m_evalator);
+    bool result = m_enforce(matcher, explain, m_evalator);
 
     return result;
 }
-
-// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object"
-// with the operation "action", input parameters are usually: (matcher, sub, obj, act),
-// use model matcher by default when matcher is "".
-bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& params) {
+bool Enforcer::EnforceExWithMatcher(const std::string& matcher, const DataMap& params, std::vector<std::string>& explain) {
     if (this->m_evalator == nullptr) {
         this->m_evalator = std::make_shared<ExprtkEvaluator>();
     }
@@ -626,8 +665,7 @@ bool Enforcer::EnforceWithMatcher(const std::string& matcher, const DataMap& par
         }
     }
 
-    std::vector<std::string> explains;
-    bool result = m_enforce(matcher, explains, m_evalator);
+    bool result = m_enforce(matcher, explain, m_evalator);
 
     return result;
 }
