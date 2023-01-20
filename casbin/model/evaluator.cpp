@@ -21,6 +21,11 @@
 
 namespace casbin {
 bool ExprtkEvaluator::Eval(const std::string& expression_string) {
+    expression.register_symbol_table(symbol_table);
+    if (enable_get) {
+        expression.register_symbol_table(glbl_variable_symbol_table);
+    }
+
     if (this->expression_string_ != expression_string) {
         this->expression_string_ = expression_string;
         // replace (&& -> and), (|| -> or)
@@ -37,6 +42,15 @@ bool ExprtkEvaluator::Eval(const std::string& expression_string) {
 
 void ExprtkEvaluator::InitialObject(const std::string& identifier) {
     // symbol_table.add_stringvar("");
+}
+
+void ExprtkEvaluator::EnableGet(const std::string& identifier) {
+    enable_get = true;
+    if (identifier.empty()) {
+        glbl_variable_symbol_table.add_stringvar("key_get_result", key_get_result);
+    } else {
+        glbl_variable_symbol_table.add_stringvar(identifier, key_get_result);
+    }
 }
 
 void ExprtkEvaluator::PushObjectString(const std::string& target, const std::string& proprity, const std::string& var) {
@@ -57,6 +71,9 @@ void ExprtkEvaluator::LoadFunctions() {
     AddFunction("keyMatch4", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyMatch4, 2));
     AddFunction("regexMatch", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::RegexMatch, 2));
     AddFunction("ipMatch", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::IpMatch, 2));
+    AddFunction("keyGet", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyGet, 2));
+    AddFunction("keyGet2", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyGet2, 3));
+    AddFunction("keyGet3", ExprtkFunctionFactory::GetExprtkFunction(ExprtkFunctionType::KeyGet3, 3));
 }
 
 void ExprtkEvaluator::LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg) {
@@ -78,7 +95,7 @@ Type ExprtkEvaluator::CheckType() {
     }
 }
 
-bool ExprtkEvaluator::GetBoolen() {
+bool ExprtkEvaluator::GetBoolean() {
     return bool(this->expression);
 }
 
@@ -86,12 +103,18 @@ float ExprtkEvaluator::GetFloat() {
     return expression.value();
 }
 
+std::string ExprtkEvaluator::GetString() {
+    const numerical_type result = expression.value();
+    return key_get_result;
+}
+
 void ExprtkEvaluator::Clean(AssertionMap& section, bool after_enforce) {
-    if (after_enforce == false) {
+    if (!after_enforce) {
         return;
     }
 
     this->symbol_table.clear();
+    this->glbl_variable_symbol_table.clear();
     this->expression_string_ = "";
     this->Functions.clear();
     this->identifiers_.clear();

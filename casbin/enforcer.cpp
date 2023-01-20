@@ -140,7 +140,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
             // set to no-match at first
             matcher_results[policy_index] = 0;
             if (evalator->CheckType() == Type::Bool) {
-                bool result = evalator->GetBoolen();
+                bool result = evalator->GetBoolean();
                 if (result) {
                     matcher_results[policy_index] = 1;
                 }
@@ -200,7 +200,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
         if (!isvalid) {
             return false;
         }
-        bool result = evalator->GetBoolen();
+        bool result = evalator->GetBoolean();
 
         if (result) {
             policy_effects[0] = Effect::Allow;
