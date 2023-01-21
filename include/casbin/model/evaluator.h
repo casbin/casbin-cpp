@@ -49,9 +49,11 @@ public:
 
     virtual Type CheckType() = 0;
 
-    virtual bool GetBoolen() = 0;
+    virtual bool GetBoolean() = 0;
 
     virtual float GetFloat() = 0;
+
+    virtual std::string GetString() = 0;
 
     virtual void Clean(AssertionMap& section, bool after_enforce = true) = 0;
 };
@@ -59,35 +61,45 @@ public:
 class ExprtkEvaluator : public IEvaluator {
 private:
     std::string expression_string_;
+    std::string key_get_result;
     symbol_table_t symbol_table;
+    symbol_table_t glbl_variable_symbol_table;
+    bool enable_get{false};
     expression_t expression;
     parser_t parser;
     std::vector<std::shared_ptr<exprtk_func_t>> Functions;
     std::unordered_map<std::string, std::unique_ptr<std::string>> identifiers_;
 
 public:
-    ExprtkEvaluator() { this->expression.register_symbol_table(this->symbol_table); };
-    bool Eval(const std::string& expression);
+    ExprtkEvaluator() {
+        this->symbol_table.add_constants();
+        this->expression.register_symbol_table(this->symbol_table);
+    };
+    bool Eval(const std::string& expression) override;
 
-    void InitialObject(const std::string& target);
+    void InitialObject(const std::string& target) override;
 
-    void PushObjectString(const std::string& target, const std::string& proprity, const std::string& var);
+    void EnableGet(const std::string& identifier);
 
-    void PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var);
+    void PushObjectString(const std::string& target, const std::string& proprity, const std::string& var) override;
 
-    void LoadFunctions();
+    void PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var) override;
 
-    void LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg);
+    void LoadFunctions() override;
 
-    void ProcessFunctions(const std::string& expression);
+    void LoadGFunction(std::shared_ptr<RoleManager> rm, const std::string& name, int narg) override;
 
-    Type CheckType();
+    void ProcessFunctions(const std::string& expression) override;
 
-    bool GetBoolen();
+    Type CheckType() override;
 
-    float GetFloat();
+    bool GetBoolean() override;
 
-    void Clean(AssertionMap& section, bool after_enforce = true);
+    float GetFloat() override;
+
+    std::string GetString();
+
+    void Clean(AssertionMap& section, bool after_enforce = true) override;
 
     void PrintSymbol();
 

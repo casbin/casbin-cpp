@@ -28,7 +28,7 @@ void TestKeyMatchFn(std::string key1, std::string key2, bool res) {
     evaluator.AddIdentifier("key1", key1);
     evaluator.AddIdentifier("key2", key2);
     evaluator.Eval("keyMatch(key1, key2)");
-    bool my_res = evaluator.GetBoolen();
+    bool my_res = evaluator.GetBoolean();
     EXPECT_EQ(res, my_res);
 }
 
@@ -45,20 +45,31 @@ TEST(TestBuiltInFunctions, TestKeyMatch) {
 }
 
 void testKeyGetFn(std::string key1, std::string key2, std::string res) {
-    std::string my_res = casbin::KeyGet(key1, key2);
-    ASSERT_EQ(res, my_res);
+    //    std::string my_res = casbin::KeyGet(key1, key2);
+    //    ASSERT_EQ(res, my_res);
+
+    auto evaluator = casbin::ExprtkEvaluator();
+    auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::KeyGet, 2);
+    evaluator.AddFunction("keyGet", func);
+    evaluator.AddIdentifier("key1", key1);
+    evaluator.AddIdentifier("key2", key2);
+    evaluator.EnableGet("key_get_result");
+    bool ok = evaluator.Eval("key_get_result := keyGet(key1, key2);");
+    ASSERT_EQ(true, ok);
+    std::string actual_result = evaluator.GetString();
+    ASSERT_EQ(res, actual_result);
 }
 
 TEST(TestBuiltInFunctions, testKeyGet) {
-	testKeyGetFn("/foo", "/foo", "");
-	testKeyGetFn("/foo", "/foo*", "");
-	testKeyGetFn("/foo", "/foo/*", "");
-	testKeyGetFn("/foo/bar", "/foo", "");
-	testKeyGetFn("/foo/bar", "/foo*", "/bar");
-	testKeyGetFn("/foo/bar", "/foo/*", "bar");
-	testKeyGetFn("/foobar", "/foo", "");
-	testKeyGetFn("/foobar", "/foo*", "bar");
-	testKeyGetFn("/foobar", "/foo/*", "");
+    testKeyGetFn("/foo", "/foo", "");
+    testKeyGetFn("/foo", "/foo*", "");
+    testKeyGetFn("/foo", "/foo/*", "");
+    testKeyGetFn("/foo/bar", "/foo", "");
+    testKeyGetFn("/foo/bar", "/foo*", "/bar");
+    testKeyGetFn("/foo/bar", "/foo/*", "bar");
+    testKeyGetFn("/foobar", "/foo", "");
+    testKeyGetFn("/foobar", "/foo*", "bar");
+    testKeyGetFn("/foobar", "/foo/*", "");
 }
 
 void TestKeyMatch2Fn(std::string key1, std::string key2, bool res) {
@@ -68,7 +79,7 @@ void TestKeyMatch2Fn(std::string key1, std::string key2, bool res) {
     evaluator.AddIdentifier("key1", key1);
     evaluator.AddIdentifier("key2", key2);
     evaluator.Eval("keyMatch2(key1, key2)");
-    bool my_res = evaluator.GetBoolen();
+    bool my_res = evaluator.GetBoolean();
     EXPECT_EQ(res, my_res);
 }
 
@@ -104,41 +115,53 @@ TEST(TestBuiltInFunctions, TestKeyMatch2) {
 }
 
 void testKeyGet2Fn(std::string key1, std::string key2, std::string path_var, std::string res) {
-    std::string my_res = casbin::KeyGet2(key1, key2, path_var);
-    ASSERT_EQ(res, my_res);
+    //    std::string my_res = casbin::KeyGet2(key1, key2, path_var);
+    //    ASSERT_EQ(res, my_res);
+
+    auto evaluator = casbin::ExprtkEvaluator();
+    auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::KeyGet2, 3);
+    evaluator.AddFunction("keyGet2", func);
+    evaluator.AddIdentifier("key1", key1);
+    evaluator.AddIdentifier("key2", key2);
+    evaluator.AddIdentifier("path_var", path_var);
+    evaluator.EnableGet("key_get_result");
+    bool ok = evaluator.Eval("key_get_result := keyGet2(key1, key2, path_var);");
+    ASSERT_EQ(true, ok);
+    std::string actual_result = evaluator.GetString();
+    ASSERT_EQ(res, actual_result);
 }
 
 TEST(TestBuiltInFunctions, testKeyGet2) {
-	testKeyGet2Fn("/foo", "/foo", "id", "");
-	testKeyGet2Fn("/foo", "/foo*", "id", "");
-	testKeyGet2Fn("/foo", "/foo/*", "id", "");
-	testKeyGet2Fn("/foo/bar", "/foo", "id", "");
-	testKeyGet2Fn("/foo/bar", "/foo*", "id", "");
-	testKeyGet2Fn("/foo/bar", "/foo/*", "id", "");
-	testKeyGet2Fn("/foobar", "/foo", "id", "");
-	testKeyGet2Fn("/foobar", "/foo*", "id", "");
-	testKeyGet2Fn("/foobar", "/foo/*", "id", "");
+    testKeyGet2Fn("/foo", "/foo", "id", "");
+    testKeyGet2Fn("/foo", "/foo*", "id", "");
+    testKeyGet2Fn("/foo", "/foo/*", "id", "");
+    testKeyGet2Fn("/foo/bar", "/foo", "id", "");
+    testKeyGet2Fn("/foo/bar", "/foo*", "id", "");
+    testKeyGet2Fn("/foo/bar", "/foo/*", "id", "");
+    testKeyGet2Fn("/foobar", "/foo", "id", "");
+    testKeyGet2Fn("/foobar", "/foo*", "id", "");
+    testKeyGet2Fn("/foobar", "/foo/*", "id", "");
 
-	testKeyGet2Fn("/", "/:resource", "resource", "");
-	testKeyGet2Fn("/resource1", "/:resource", "resource", "resource1");
-	testKeyGet2Fn("/myid", "/:id/using/:resId", "id", "");
-	testKeyGet2Fn("/myid/using/myresid", "/:id/using/:resId", "id", "myid");
-	testKeyGet2Fn("/myid/using/myresid", "/:id/using/:resId", "resId", "myresid");
+    testKeyGet2Fn("/", "/:resource", "resource", "");
+    testKeyGet2Fn("/resource1", "/:resource", "resource", "resource1");
+    testKeyGet2Fn("/myid", "/:id/using/:resId", "id", "");
+    testKeyGet2Fn("/myid/using/myresid", "/:id/using/:resId", "id", "myid");
+    testKeyGet2Fn("/myid/using/myresid", "/:id/using/:resId", "resId", "myresid");
 
-	testKeyGet2Fn("/proxy/myid", "/proxy/:id/*", "id", "");
-	testKeyGet2Fn("/proxy/myid/", "/proxy/:id/*", "id", "myid");
-	testKeyGet2Fn("/proxy/myid/res", "/proxy/:id/*", "id", "myid");
-	testKeyGet2Fn("/proxy/myid/res/res2", "/proxy/:id/*", "id", "myid");
-	testKeyGet2Fn("/proxy/myid/res/res2/res3", "/proxy/:id/*", "id", "myid");
-	testKeyGet2Fn("/proxy/myid/res/res2/res3", "/proxy/:id/res/*", "id", "myid");
-	testKeyGet2Fn("/proxy/", "/proxy/:id/*", "id", "");
+    testKeyGet2Fn("/proxy/myid", "/proxy/:id/*", "id", "");
+    testKeyGet2Fn("/proxy/myid/", "/proxy/:id/*", "id", "myid");
+    testKeyGet2Fn("/proxy/myid/res", "/proxy/:id/*", "id", "myid");
+    testKeyGet2Fn("/proxy/myid/res/res2", "/proxy/:id/*", "id", "myid");
+    testKeyGet2Fn("/proxy/myid/res/res2/res3", "/proxy/:id/*", "id", "myid");
+    testKeyGet2Fn("/proxy/myid/res/res2/res3", "/proxy/:id/res/*", "id", "myid");
+    testKeyGet2Fn("/proxy/", "/proxy/:id/*", "id", "");
 
-	testKeyGet2Fn("/alice", "/:id", "id", "alice");
-	testKeyGet2Fn("/alice/all", "/:id/all", "id", "alice");
-	testKeyGet2Fn("/alice", "/:id/all", "id", "");
-	testKeyGet2Fn("/alice/all", "/:id", "id", "");
+    testKeyGet2Fn("/alice", "/:id", "id", "alice");
+    testKeyGet2Fn("/alice/all", "/:id/all", "id", "alice");
+    testKeyGet2Fn("/alice", "/:id/all", "id", "");
+    testKeyGet2Fn("/alice/all", "/:id", "id", "");
 
-	testKeyGet2Fn("/alice/all", "/:/all", "", "");
+    testKeyGet2Fn("/alice/all", "/:/all", "", "");
 }
 
 void TestKeyMatch3Fn(std::string key1, std::string key2, bool res) {
@@ -148,80 +171,88 @@ void TestKeyMatch3Fn(std::string key1, std::string key2, bool res) {
     evaluator.AddIdentifier("key1", key1);
     evaluator.AddIdentifier("key2", key2);
     evaluator.Eval("keyMatch3(key1, key2)");
-    bool my_res = evaluator.GetBoolen();
+    bool my_res = evaluator.GetBoolean();
     EXPECT_EQ(res, my_res);
 }
 
 TEST(TestBuiltInFunctions, TestKeyMatch3) {
-	// keyMatch3() is similar with KeyMatch2(), except using "/proxy/{id}" instead of "/proxy/:id".
-	TestKeyMatch3Fn("/foo", "/foo", true);
-	TestKeyMatch3Fn("/foo", "/foo*", true);
-	TestKeyMatch3Fn("/foo", "/foo/*", false);
-	TestKeyMatch3Fn("/foo/bar", "/foo", false);
-	TestKeyMatch3Fn("/foo/bar", "/foo*", false);
-	TestKeyMatch3Fn("/foo/bar", "/foo/*", true);
-	TestKeyMatch3Fn("/foobar", "/foo", false);
-	TestKeyMatch3Fn("/foobar", "/foo*", false);
-	TestKeyMatch3Fn("/foobar", "/foo/*", false);
+    // keyMatch3() is similar with KeyMatch2(), except using "/proxy/{id}" instead of "/proxy/:id".
+    TestKeyMatch3Fn("/foo", "/foo", true);
+    TestKeyMatch3Fn("/foo", "/foo*", true);
+    TestKeyMatch3Fn("/foo", "/foo/*", false);
+    TestKeyMatch3Fn("/foo/bar", "/foo", false);
+    TestKeyMatch3Fn("/foo/bar", "/foo*", false);
+    TestKeyMatch3Fn("/foo/bar", "/foo/*", true);
+    TestKeyMatch3Fn("/foobar", "/foo", false);
+    TestKeyMatch3Fn("/foobar", "/foo*", false);
+    TestKeyMatch3Fn("/foobar", "/foo/*", false);
 
-	TestKeyMatch3Fn("/", "/{resource}", false);
-	TestKeyMatch3Fn("/resource1", "/{resource}", true);
-	TestKeyMatch3Fn("/myid", "/{id}/using/{resId}", false);
-	TestKeyMatch3Fn("/myid/using/myresid", "/{id}/using/{resId}", true);
+    TestKeyMatch3Fn("/", "/{resource}", false);
+    TestKeyMatch3Fn("/resource1", "/{resource}", true);
+    TestKeyMatch3Fn("/myid", "/{id}/using/{resId}", false);
+    TestKeyMatch3Fn("/myid/using/myresid", "/{id}/using/{resId}", true);
 
-	TestKeyMatch3Fn("/proxy/myid", "/proxy/{id}/*", false);
-	TestKeyMatch3Fn("/proxy/myid/", "/proxy/{id}/*", true);
-	TestKeyMatch3Fn("/proxy/myid/res", "/proxy/{id}/*", true);
-	TestKeyMatch3Fn("/proxy/myid/res/res2", "/proxy/{id}/*", true);
-	TestKeyMatch3Fn("/proxy/myid/res/res2/res3", "/proxy/{id}/*", true);
-	TestKeyMatch3Fn("/proxy/", "/proxy/{id}/*", false);
+    TestKeyMatch3Fn("/proxy/myid", "/proxy/{id}/*", false);
+    TestKeyMatch3Fn("/proxy/myid/", "/proxy/{id}/*", true);
+    TestKeyMatch3Fn("/proxy/myid/res", "/proxy/{id}/*", true);
+    TestKeyMatch3Fn("/proxy/myid/res/res2", "/proxy/{id}/*", true);
+    TestKeyMatch3Fn("/proxy/myid/res/res2/res3", "/proxy/{id}/*", true);
+    TestKeyMatch3Fn("/proxy/", "/proxy/{id}/*", false);
 
-	TestKeyMatch3Fn("/myid/using/myresid", "/{id/using/{resId}", false);
+    TestKeyMatch3Fn("/myid/using/myresid", "/{id/using/{resId}", false);
 }
 
 void testKeyGet3Fn(std::string key1, std::string key2, std::string path_var, std::string res) {
-    std::string my_res = casbin::KeyGet3(key1, key2, path_var);
-    ASSERT_EQ(res, my_res);
+    //    std::string my_res = casbin::KeyGet3(key1, key2, path_var);
+    //    ASSERT_EQ(res, my_res);
+
+    auto evaluator = casbin::ExprtkEvaluator();
+    auto func = casbin::ExprtkFunctionFactory::GetExprtkFunction(casbin::ExprtkFunctionType::KeyGet3, 3);
+    evaluator.AddFunction("keyGet3", func);
+    evaluator.AddIdentifier("key1", key1);
+    evaluator.AddIdentifier("key2", key2);
+    evaluator.AddIdentifier("path_var", path_var);
+    evaluator.EnableGet("key_get_result");
+    bool ok = evaluator.Eval("key_get_result := keyGet3(key1, key2, path_var);");
+    ASSERT_EQ(true, ok);
+    std::string actual_result = evaluator.GetString();
+    ASSERT_EQ(res, actual_result);
 }
 
 TEST(TestBuiltInFunctions, testKeyGet3) {
-	// KeyGet3() is similar with KeyGet2(), except using "/proxy/{id}" instead of "/proxy/:id".
-	testKeyGet3Fn("/foo", "/foo", "id", "");
-	testKeyGet3Fn("/foo", "/foo*", "id", "");
-	testKeyGet3Fn("/foo", "/foo/*", "id", "");
-	testKeyGet3Fn("/foo/bar", "/foo", "id", "");
-	testKeyGet3Fn("/foo/bar", "/foo*", "id", "");
-	testKeyGet3Fn("/foo/bar", "/foo/*", "id", "");
-	testKeyGet3Fn("/foobar", "/foo", "id", "");
-	testKeyGet3Fn("/foobar", "/foo*", "id", "");
-	testKeyGet3Fn("/foobar", "/foo/*", "id", "");
+    // KeyGet3() is similar with KeyGet2(), except using "/proxy/{id}" instead of "/proxy/:id".
+    testKeyGet3Fn("/foo", "/foo", "id", "");
+    testKeyGet3Fn("/foo", "/foo*", "id", "");
+    testKeyGet3Fn("/foo", "/foo/*", "id", "");
+    testKeyGet3Fn("/foo/bar", "/foo", "id", "");
+    testKeyGet3Fn("/foo/bar", "/foo*", "id", "");
+    testKeyGet3Fn("/foo/bar", "/foo/*", "id", "");
+    testKeyGet3Fn("/foobar", "/foo", "id", "");
+    testKeyGet3Fn("/foobar", "/foo*", "id", "");
+    testKeyGet3Fn("/foobar", "/foo/*", "id", "");
 
-	testKeyGet3Fn("/", "/{resource}", "resource", "");
-	testKeyGet3Fn("/resource1", "/{resource}", "resource", "resource1");
-	testKeyGet3Fn("/myid", "/{id}/using/{resId}", "id", "");
-	testKeyGet3Fn("/myid/using/myresid", "/{id}/using/{resId}", "id", "myid");
-	testKeyGet3Fn("/myid/using/myresid", "/{id}/using/{resId}", "resId", "myresid");
+    testKeyGet3Fn("/", "/{resource}", "resource", "");
+    testKeyGet3Fn("/resource1", "/{resource}", "resource", "resource1");
+    testKeyGet3Fn("/myid", "/{id}/using/{resId}", "id", "");
+    testKeyGet3Fn("/myid/using/myresid", "/{id}/using/{resId}", "id", "myid");
+    testKeyGet3Fn("/myid/using/myresid", "/{id}/using/{resId}", "resId", "myresid");
 
-	testKeyGet3Fn("/proxy/myid", "/proxy/{id}/*", "id", "");
-	testKeyGet3Fn("/proxy/myid/", "/proxy/{id}/*", "id", "myid");
-	testKeyGet3Fn("/proxy/myid/res", "/proxy/{id}/*", "id", "myid");
-	testKeyGet3Fn("/proxy/myid/res/res2", "/proxy/{id}/*", "id", "myid");
-	testKeyGet3Fn("/proxy/myid/res/res2/res3", "/proxy/{id}/*", "id", "myid");
-	testKeyGet3Fn("/proxy/", "/proxy/{id}/*", "id", "");
+    testKeyGet3Fn("/proxy/myid", "/proxy/{id}/*", "id", "");
+    testKeyGet3Fn("/proxy/myid/", "/proxy/{id}/*", "id", "myid");
+    testKeyGet3Fn("/proxy/myid/res", "/proxy/{id}/*", "id", "myid");
+    testKeyGet3Fn("/proxy/myid/res/res2", "/proxy/{id}/*", "id", "myid");
+    testKeyGet3Fn("/proxy/myid/res/res2/res3", "/proxy/{id}/*", "id", "myid");
+    testKeyGet3Fn("/proxy/", "/proxy/{id}/*", "id", "");
 
-	testKeyGet3Fn("/api/group1_group_name/project1_admin/info", "/api/{proj}_admin/info",
-		"proj", "");
-	testKeyGet3Fn("/{id/using/myresid", "/{id/using/{resId}", "resId", "myresid");
-	testKeyGet3Fn("/{id/using/myresid/status}", "/{id/using/{resId}/status}", "resId", "myresid");
+    testKeyGet3Fn("/api/group1_group_name/project1_admin/info", "/api/{proj}_admin/info", "proj", "");
+    testKeyGet3Fn("/{id/using/myresid", "/{id/using/{resId}", "resId", "myresid");
+    testKeyGet3Fn("/{id/using/myresid/status}", "/{id/using/{resId}/status}", "resId", "myresid");
 
-	testKeyGet3Fn("/proxy/myid/res/res2/res3", "/proxy/{id}/*/{res}", "res", "res3");
-	testKeyGet3Fn("/api/project1_admin/info", "/api/{proj}_admin/info", "proj", "project1");
-	testKeyGet3Fn("/api/group1_group_name/project1_admin/info", "/api/{g}_{gn}/{proj}_admin/info",
-		"g", "group1");
-	testKeyGet3Fn("/api/group1_group_name/project1_admin/info", "/api/{g}_{gn}/{proj}_admin/info",
-		"gn", "group_name");
-	testKeyGet3Fn("/api/group1_group_name/project1_admin/info", "/api/{g}_{gn}/{proj}_admin/info",
-		"proj", "project1");
+    testKeyGet3Fn("/proxy/myid/res/res2/res3", "/proxy/{id}/*/{res}", "res", "res3");
+    testKeyGet3Fn("/api/project1_admin/info", "/api/{proj}_admin/info", "proj", "project1");
+    testKeyGet3Fn("/api/group1_group_name/project1_admin/info", "/api/{g}_{gn}/{proj}_admin/info", "g", "group1");
+    testKeyGet3Fn("/api/group1_group_name/project1_admin/info", "/api/{g}_{gn}/{proj}_admin/info", "gn", "group_name");
+    testKeyGet3Fn("/api/group1_group_name/project1_admin/info", "/api/{g}_{gn}/{proj}_admin/info", "proj", "project1");
 }
 
 void TestKeyMatch4Fn(std::string key1, std::string key2, bool res) {
@@ -231,24 +262,24 @@ void TestKeyMatch4Fn(std::string key1, std::string key2, bool res) {
     evaluator.AddIdentifier("key1", key1);
     evaluator.AddIdentifier("key2", key2);
     evaluator.Eval("keyMatch4(key1, key2)");
-    bool my_res = evaluator.GetBoolen();
+    bool my_res = evaluator.GetBoolean();
     EXPECT_EQ(res, my_res);
 }
 
 TEST(TestBuiltInFunctions, TestKeyMatch4) {
-	TestKeyMatch4Fn("/parent/123/child/123", "/parent/{id}/child/{id}", true);
-	TestKeyMatch4Fn("/parent/123/child/456", "/parent/{id}/child/{id}", false);
+    TestKeyMatch4Fn("/parent/123/child/123", "/parent/{id}/child/{id}", true);
+    TestKeyMatch4Fn("/parent/123/child/456", "/parent/{id}/child/{id}", false);
 
-	TestKeyMatch4Fn("/parent/123/child/123", "/parent/{id}/child/{another_id}", true);
-	TestKeyMatch4Fn("/parent/123/child/456", "/parent/{id}/child/{another_id}", true);
+    TestKeyMatch4Fn("/parent/123/child/123", "/parent/{id}/child/{another_id}", true);
+    TestKeyMatch4Fn("/parent/123/child/456", "/parent/{id}/child/{another_id}", true);
 
-	TestKeyMatch4Fn("/parent/123/child/123/book/123", "/parent/{id}/child/{id}/book/{id}", true);
-	TestKeyMatch4Fn("/parent/123/child/123/book/456", "/parent/{id}/child/{id}/book/{id}", false);
-	TestKeyMatch4Fn("/parent/123/child/456/book/123", "/parent/{id}/child/{id}/book/{id}", false);
-	TestKeyMatch4Fn("/parent/123/child/456/book/", "/parent/{id}/child/{id}/book/{id}", false);
-	TestKeyMatch4Fn("/parent/123/child/456", "/parent/{id}/child/{id}/book/{id}", false);
+    TestKeyMatch4Fn("/parent/123/child/123/book/123", "/parent/{id}/child/{id}/book/{id}", true);
+    TestKeyMatch4Fn("/parent/123/child/123/book/456", "/parent/{id}/child/{id}/book/{id}", false);
+    TestKeyMatch4Fn("/parent/123/child/456/book/123", "/parent/{id}/child/{id}/book/{id}", false);
+    TestKeyMatch4Fn("/parent/123/child/456/book/", "/parent/{id}/child/{id}/book/{id}", false);
+    TestKeyMatch4Fn("/parent/123/child/456", "/parent/{id}/child/{id}/book/{id}", false);
 
-	TestKeyMatch4Fn("/parent/123/child/123", "/parent/{i/d}/child/{i/d}", false);
+    TestKeyMatch4Fn("/parent/123/child/123", "/parent/{i/d}/child/{i/d}", false);
 }
 
 void TestRegexMatchFn(std::string key1, std::string key2, bool res) {
@@ -258,7 +289,7 @@ void TestRegexMatchFn(std::string key1, std::string key2, bool res) {
     evaluator.AddIdentifier("key1", key1);
     evaluator.AddIdentifier("key2", key2);
     evaluator.Eval("regexMatch(key1, key2)");
-    bool my_res = evaluator.GetBoolen();
+    bool my_res = evaluator.GetBoolean();
     EXPECT_EQ(res, my_res);
 }
 
@@ -281,7 +312,7 @@ void TestIPMatchFn(std::string ip1, std::string ip2, bool res) {
     evaluator.AddIdentifier("key1", ip1);
     evaluator.AddIdentifier("key2", ip2);
     evaluator.Eval("ipMatch(key1, key2)");
-    bool my_res = evaluator.GetBoolen();
+    bool my_res = evaluator.GetBoolean();
     EXPECT_EQ(res, my_res);
 }
 

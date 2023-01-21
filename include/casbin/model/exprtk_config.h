@@ -94,7 +94,7 @@ public:
     }
 };
 
-struct ExprtkOtherFunction : public exprtk::igeneric_function<numerical_type> {
+struct ExprtkMatchFunction : public exprtk::igeneric_function<numerical_type> {
     typedef typename exprtk::igeneric_function<numerical_type>::generic_type generic_type;
 
     typedef typename generic_type::scalar_view scalar_t;
@@ -107,9 +107,9 @@ private:
     casbin::MatchingFunc func_;
 
 public:
-    ExprtkOtherFunction(const std::string& idenfier, casbin::MatchingFunc func) : exprtk::igeneric_function<numerical_type>(idenfier), func_(func) {}
+    ExprtkMatchFunction(const std::string& idenfier, casbin::MatchingFunc func) : exprtk::igeneric_function<numerical_type>(idenfier), func_(func) {}
 
-    ExprtkOtherFunction() : exprtk::igeneric_function<numerical_type>("ss") {}
+    ExprtkMatchFunction() : exprtk::igeneric_function<numerical_type>("ss") {}
 
     inline numerical_type operator()(parameter_list_t parameters) {
         bool res = false;
@@ -143,6 +143,90 @@ public:
     }
 };
 
+// KeyGet
+struct ExprtkGetFunction : public exprtk::igeneric_function<numerical_type> {
+    typedef exprtk::igeneric_function<numerical_type> igenfunct_t;
+    typedef typename igenfunct_t::generic_type generic_t;
+    typedef typename igenfunct_t::parameter_list_t parameter_list_t;
+    typedef typename generic_t::string_view string_t;
+
+private:
+    using MatchingFunc = std::function<std::string(const std::string&, const std::string&)>;
+    MatchingFunc func_;
+
+public:
+    ExprtkGetFunction(const std::string& idenfier, MatchingFunc func) : igenfunct_t(idenfier, igenfunct_t::e_rtrn_string), func_(func) {}
+
+    ExprtkGetFunction() : igenfunct_t("SS", igenfunct_t::e_rtrn_string) {}
+
+    inline numerical_type operator()(std::string& result, parameter_list_t parameters) {
+        result.clear();
+
+        // check value cnt
+        if (parameters.size() != 2) {
+            return numerical_type(0);
+        }
+
+        // check value type
+        for (std::size_t i = 0; i < parameters.size(); ++i) {
+            generic_type& gt = parameters[i];
+            if (generic_type::e_string != gt.type) {
+                return numerical_type(0);
+            }
+        }
+        std::string key1 = exprtk::to_str(string_t(parameters[0]));
+        std::string key2 = exprtk::to_str(string_t(parameters[1]));
+
+        if (this->func_ != nullptr) {
+            result = this->func_(key1, key2);
+        }
+
+        return numerical_type(0);
+    }
+};
+
+struct ExprtkGetWithPathFunction : public exprtk::igeneric_function<numerical_type> {
+    typedef exprtk::igeneric_function<numerical_type> igenfunct_t;
+    typedef typename igenfunct_t::generic_type generic_t;
+    typedef typename igenfunct_t::parameter_list_t parameter_list_t;
+    typedef typename generic_t::string_view string_t;
+
+private:
+    using MatchingFunc = std::function<std::string(const std::string&, const std::string&, const std::string&)>;
+    MatchingFunc func_;
+
+public:
+    ExprtkGetWithPathFunction(const std::string& idenfier, MatchingFunc func) : igenfunct_t(idenfier, igenfunct_t::e_rtrn_string), func_(func) {}
+
+    ExprtkGetWithPathFunction() : igenfunct_t("SSS", igenfunct_t::e_rtrn_string) {}
+
+    inline numerical_type operator()(std::string& result, parameter_list_t parameters) {
+        result.clear();
+
+        // check value cnt
+        if (parameters.size() != 3) {
+            return numerical_type(0);
+        }
+
+        // check value type
+        for (std::size_t i = 0; i < parameters.size(); ++i) {
+            generic_type& gt = parameters[i];
+            if (generic_type::e_string != gt.type) {
+                return numerical_type(0);
+            }
+        }
+        std::string key1 = exprtk::to_str(string_t(parameters[0]));
+        std::string key2 = exprtk::to_str(string_t(parameters[1]));
+        std::string path_var = exprtk::to_str(string_t(parameters[2]));
+
+        if (this->func_ != nullptr) {
+            result = this->func_(key1, key2, path_var);
+        }
+
+        return numerical_type(0);
+    }
+};
+
 enum class ExprtkFunctionType {
     Unknown,
     Gfunction,
@@ -152,6 +236,9 @@ enum class ExprtkFunctionType {
     KeyMatch4,
     RegexMatch,
     IpMatch,
+    KeyGet,
+    KeyGet2,
+    KeyGet3,
 };
 
 class ExprtkFunctionFactory {
@@ -164,22 +251,31 @@ public:
                 func = std::make_shared<ExprtkGFunction>(idenfier, rm);
                 break;
             case ExprtkFunctionType::KeyMatch:
-                func.reset(new ExprtkOtherFunction(idenfier, KeyMatch));
+                func.reset(new ExprtkMatchFunction(idenfier, KeyMatch));
                 break;
             case ExprtkFunctionType::KeyMatch2:
-                func.reset(new ExprtkOtherFunction(idenfier, KeyMatch2));
+                func.reset(new ExprtkMatchFunction(idenfier, KeyMatch2));
                 break;
             case ExprtkFunctionType::KeyMatch3:
-                func.reset(new ExprtkOtherFunction(idenfier, KeyMatch3));
+                func.reset(new ExprtkMatchFunction(idenfier, KeyMatch3));
                 break;
             case ExprtkFunctionType::KeyMatch4:
-                func.reset(new ExprtkOtherFunction(idenfier, KeyMatch4));
+                func.reset(new ExprtkMatchFunction(idenfier, KeyMatch4));
                 break;
             case ExprtkFunctionType::IpMatch:
-                func.reset(new ExprtkOtherFunction(idenfier, IPMatch));
+                func.reset(new ExprtkMatchFunction(idenfier, IPMatch));
                 break;
             case ExprtkFunctionType::RegexMatch:
-                func.reset(new ExprtkOtherFunction(idenfier, RegexMatch));
+                func.reset(new ExprtkMatchFunction(idenfier, RegexMatch));
+                break;
+            case ExprtkFunctionType::KeyGet:
+                func.reset(new ExprtkGetFunction(idenfier, KeyGet));
+                break;
+            case ExprtkFunctionType::KeyGet2:
+                func.reset(new ExprtkGetWithPathFunction(idenfier, KeyGet2));
+                break;
+            case ExprtkFunctionType::KeyGet3:
+                func.reset(new ExprtkGetWithPathFunction(idenfier, KeyGet3));
                 break;
             default:
                 func = nullptr;
