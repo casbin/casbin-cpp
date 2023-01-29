@@ -170,19 +170,19 @@ void SyncedEnforcer ::LoadFilteredPolicy(Filter f) {
 
 // SavePolicy saves the current policy (usually after changed with Casbin API) back to file/database.
 void SyncedEnforcer ::SavePolicy() {
-    std::shared_lock<std::shared_mutex> lock(policyMutex);
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
     Enforcer::SavePolicy();
 }
 
 // BuildRoleLinks manually rebuild the role inheritance relations.
 void SyncedEnforcer ::BuildRoleLinks() {
-    std::shared_lock<std::shared_mutex> lock(policyMutex);
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
     Enforcer::BuildRoleLinks();
 }
 
 // Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
 bool SyncedEnforcer ::Enforce(std::shared_ptr<IEvaluator> evalator) {
-    std::shared_lock<std::shared_mutex> lock(policyMutex);
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::Enforce(evalator);
 }
 
@@ -190,7 +190,7 @@ bool SyncedEnforcer ::Enforce(std::shared_ptr<IEvaluator> evalator) {
 // "object" with the operation "action", input parameters are usually: (sub,
 // obj, act).
 bool SyncedEnforcer::Enforce(const DataVector& params) {
-    std::shared_lock<std::shared_mutex> lock(policyMutex);
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::Enforce(params);
 }
 
@@ -198,27 +198,43 @@ bool SyncedEnforcer::Enforce(const DataVector& params) {
 // "object" with the operation "action", input parameters are usually: (sub,
 // obj, act).
 bool SyncedEnforcer ::Enforce(const DataList& params) {
-    std::shared_lock<std::shared_mutex> lock(policyMutex);
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::Enforce(params);
 }
 
 // Enforce with a map param,decides whether a "subject" can access a "object"
 // with the operation "action", input parameters are usually: (sub, obj, act).
 bool SyncedEnforcer ::Enforce(const DataMap& params) {
-    std::shared_lock<std::shared_mutex> lock(policyMutex);
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::Enforce(params);
 }
 
 // BatchEnforce enforce in batches
 std::vector<bool> SyncedEnforcer ::BatchEnforce(const std::initializer_list<DataList>& requests) {
-    std::shared_lock<std::shared_mutex> lock(policyMutex);
-    return Enforcer::BatchEnforce(requests);
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+
+    // note: why not return Enforcer::BatchEnforce(requests) ?
+    // Inside Enforcer::BatchEnforce, this->Enforce will be executed
+    // but now 'this' is SyncedEnforcer, which means it will call SyncedEnforcer::Enforce
+    // This will cause a deadlock
+
+    std::vector<bool> results;
+    results.reserve(requests.size());
+    for (const auto& request : requests) {
+        results.push_back(Enforcer::Enforce(request));
+    }
+    return results;
 }
 
 // BatchEnforceWithMatcher enforce with matcher in batches
 std::vector<bool> SyncedEnforcer::BatchEnforceWithMatcher(const std::string& matcher, const std::initializer_list<DataList>& requests) {
-    std::shared_lock<std::shared_mutex> lock(policyMutex);
-    return Enforcer::BatchEnforceWithMatcher(matcher, requests);
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    std::vector<bool> results;
+    results.reserve(requests.size());
+    for (const auto& request : requests) {
+        results.push_back(Enforcer::EnforceWithMatcher(matcher, request));
+    }
+    return results;
 }
 
 // GetAllSubjects gets the list of subjects that show up in the current policy.
