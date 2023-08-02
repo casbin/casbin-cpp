@@ -14,11 +14,6 @@
 
 cmake_minimum_required(VERSION 3.19)
 
-set(CMAKE_MODULE_PATH
-    ${CMAKE_MODULE_PATH}
-    ${CMAKE_SOURCE_DIR}/cmake/modules
-)
-
 set(CMAKE_WARN_DEPRECATED ON)
 set(PY_CASBIN_VERSION 1.1)
 
@@ -43,6 +38,10 @@ project(
     LANGUAGES CXX C
 )
 
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${PROJECT_SOURCE_DIR}/cmake/modules
+)
 
 ###############################################################################
 # Forbid in-source build.
