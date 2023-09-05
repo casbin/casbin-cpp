@@ -108,14 +108,14 @@ CachedEnforcer::CachedEnforcer(const CachedEnforcer& ce)
     this->enableCache = ce.enableCache;
 }
 
-CachedEnforcer::CachedEnforcer(CachedEnforcer&& ce)
+CachedEnforcer::CachedEnforcer(CachedEnforcer&& ce) noexcept
     : Enforcer(ce) {
-    this->m = move(ce.m);
+    this->m = std::move(ce.m);
     this->enableCache = ce.enableCache;
 }
 
-void CachedEnforcer::EnableCache(const bool& enableCache) {
-    this->enableCache = enableCache;
+void CachedEnforcer::EnableCache(const bool& shouldEnableCache) {
+    this->enableCache = shouldEnableCache;
 }
 
 std::pair<bool, bool> CachedEnforcer::getCachedResult(const std::string& key) {

@@ -144,10 +144,7 @@ bool Enforcer ::AddNamedPolicy(const std::string& p_type, const std::vector<std:
         return this->addPolicy("p", p_type, str_slice);
     }
 
-    std::vector<std::string> policy;
-    for (int i = 0; i < params.size(); i++)
-        policy.push_back(params[i]);
-    return this->addPolicy("p", p_type, policy);
+    return this->addPolicy("p", p_type, params);
 }
 
 // AddNamedPolicies adds authorization rules to the current named policy.

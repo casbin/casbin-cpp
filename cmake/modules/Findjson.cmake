@@ -16,6 +16,11 @@ include(FetchContent)
 
 set(JSON_Install ON)
 
-FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_Declare(
+  json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.11.2
+  DOWNLOAD_EXTRACT_TIMESTAMP FALSE
+)
 
 FetchContent_MakeAvailable(json)

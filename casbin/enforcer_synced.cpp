@@ -139,7 +139,7 @@ void SyncedEnforcer ::SetWatcher(std::shared_ptr<Watcher> w) {
 
 // LoadModel reloads the model from the model CONF file.
 void SyncedEnforcer ::LoadModel() {
-    std::unique_lock<std::shared_mutex>(policyMutex);
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
     Enforcer::LoadModel();
 }
 
