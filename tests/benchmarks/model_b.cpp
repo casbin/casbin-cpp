@@ -58,33 +58,30 @@ static void BenchmarkRBACModel(benchmark::State& state) {
 BENCHMARK(BenchmarkRBACModel);
 
 static void BenchmarkRBACModelSizesSmall(benchmark::State& state) {
-    // 100, 10, 1000
-    int num_roles = 100, num_resources = 10, num_users = 1000; 
+    int num_roles = 100, num_resources = 10, num_users = 1000;
 
     casbin::Enforcer e(rbac_model_path, "", false);
 
-    for (int i = 0; i < num_roles; ++i) e.AddPolicy({"group-has-a-very-long-name-" + std::to_string(i), "data-has-a-very-long-name-" + std::to_string(i % num_resources), "read"});
+    for (int i = 0; i < num_roles; ++i)
+        e.AddPolicy({
+            "group-has-a-very-long-name-" + std::to_string(i),
+            "data-has-a-very-long-name-" + std::to_string(i % num_resources),
+            "read"
+        });
 
-    for (int i = 0; i < num_users; ++i) {
-        e.AddGroupingPolicy({"user-has-a-very-long-name-" + std::to_string(i), "group-has-a-very-long-name-" + std::to_string(i % num_roles)});
-    }
+    for (int i = 0; i < num_users; ++i)
+        e.AddGroupingPolicy({
+            "user-has-a-very-long-name-" + std::to_string(i),
+            "group-has-a-very-long-name-" + std::to_string(i % num_roles)
+        });
 
-    int num_request = 17;
-    std::vector<casbin::DataList> requests(num_request);
-
-    for (int i = 0; i < num_request; ++i) {
-        int id_user = num_users / num_request * i,
-            id_role = id_user / num_roles,
-            id_resource = id_role % num_resources;
-        if (i&2 == 0) 
-            id_resource = (id_resource + 1) % num_resources;
-
-        requests[i] = {"user-has-a-very-long-name-" + std::to_string(id_user), "data-has-a-very-long-name-" + std::to_string(id_resource), "read"};
-    }
-
-    for (auto _ : state) 
-        for (auto& req: requests) 
-            e.Enforce(req);
+    int itr = 0;
+    for (auto _ : state)
+        e.Enforce({
+            "user-has-a-very-long-name-" + std::to_string(itr % num_users),
+            "data-has-a-very-long-name-" + std::to_string(itr % num_resources),
+            "read"
+        }), ++itr;
 }
 
 BENCHMARK(BenchmarkRBACModelSizesSmall);

@@ -25,8 +25,8 @@
 namespace casbin {
 
 // LoadPolicyLine loads a text line as a policy rule to model.
-void LoadPolicyLine(std::string line, const std::shared_ptr<Model>& model) {
-    if (line == "" || line.find("#") == 0)
+void LoadPolicyLine(const std::string& line, const std::shared_ptr<Model>& model) {
+    if (line.empty() || line.find('#') == 0)
         return;
 
     std::vector<std::string> tokens = Split(line, ",", -1);

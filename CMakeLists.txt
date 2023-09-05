@@ -32,7 +32,7 @@ endif()
 
 project(
     casbin
-    VERSION 1.44.0
+    VERSION 1.53.2
     DESCRIPTION "An authorization library that supports access control models like ACL, RBAC, ABAC in C/C++"
     HOMEPAGE_URL https://github.com/casbin/casbin-cpp
     LANGUAGES CXX C

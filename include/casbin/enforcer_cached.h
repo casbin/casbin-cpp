@@ -30,9 +30,9 @@ public:
     std::mutex locker;
 
     CachedEnforcer(const CachedEnforcer& ce);
-    CachedEnforcer(CachedEnforcer&& ce);
+    CachedEnforcer(CachedEnforcer&& ce) noexcept;
 
-    void EnableCache(const bool& enableCache);
+    void EnableCache(const bool& shouldEnableCache);
     std::pair<bool, bool> getCachedResult(const std::string& key);
     void setCachedResult(const std::string& key, const bool& res);
     void InvalidateCache();

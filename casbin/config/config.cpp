@@ -77,9 +77,8 @@ void Config::ParseBuffer(std::istream* buf) {
         else {
             std::vector<std::string> option_val = Split(line, "=", 2);
             if (option_val.size() != 2) {
-                char* error = new char;
-                sprintf(error, "parse the content error : line %d , %s = ? ", line_num, option_val[0].c_str());
-                throw IllegalArgumentException(std::string(error));
+                std::string error = "parse the content error : line " + std::to_string(line_num)  + " , " + option_val[0] + " = ?";
+                throw IllegalArgumentException(error);
             }
             std::string option = Trim(option_val[0]);
             std::string value = Trim(option_val[1]);

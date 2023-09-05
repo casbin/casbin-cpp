@@ -16,7 +16,9 @@ include(FetchContent)
 
 FetchContent_Declare(
   benchmark
-  URL https://github.com/google/benchmark/archive/refs/tags/v1.5.5.zip
+  GIT_REPOSITORY https://github.com/google/benchmark.git
+  GIT_TAG v1.8.3
+  DOWNLOAD_EXTRACT_TIMESTAMP FALSE
 )
 
 set(BENCHMARK_ENABLE_TESTING OFF)

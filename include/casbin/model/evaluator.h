@@ -97,7 +97,7 @@ public:
 
     float GetFloat() override;
 
-    std::string GetString();
+    std::string GetString() override;
 
     void Clean(AssertionMap& section, bool after_enforce = true) override;
 
