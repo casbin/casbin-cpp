@@ -78,7 +78,7 @@ target_link_libraries(casbin PRIVATE nlohmann_json::nlohmann_json)
 
 set_target_properties(casbin PROPERTIES 
     PREFIX ""
-    VERSION ${CMAKE_PROJECT_VERSION}
+    VERSION ${PROJECT_VERSION}
 )
 
 if(WIN32 OR MSVC)
