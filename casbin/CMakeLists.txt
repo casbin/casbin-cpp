@@ -48,6 +48,7 @@ set(CASBIN_SOURCE_FILES
     persist/adapter.cpp
     persist/default_watcher.cpp
     persist/default_watcher_ex.cpp
+    persist/string_adapter.cpp
     rbac/default_role_manager.cpp
     util/array_equals.cpp
     util/array_remove_duplicates.cpp
