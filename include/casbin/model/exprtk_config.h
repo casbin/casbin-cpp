@@ -32,7 +32,7 @@ using expression_t = exprtk::expression<numerical_type>;
 using parser_t = exprtk::parser<numerical_type>;
 using exprtk_func_t = exprtk::igeneric_function<numerical_type>;
 
-struct ExprtkGFunction : public exprtk::igeneric_function<numerical_type> {
+struct ExprtkGFunction final : public exprtk::igeneric_function<numerical_type> {
     typedef typename exprtk::igeneric_function<numerical_type>::generic_type generic_type;
 
     typedef typename generic_type::scalar_view scalar_t;
@@ -55,7 +55,7 @@ public:
         return true;
     }
 
-    inline numerical_type operator()(parameter_list_t parameters) {
+    inline numerical_type operator()(parameter_list_t parameters) override {
         bool res = false;
 
         // check value cnt
@@ -94,7 +94,7 @@ public:
     }
 };
 
-struct ExprtkMatchFunction : public exprtk::igeneric_function<numerical_type> {
+struct ExprtkMatchFunction final : public exprtk::igeneric_function<numerical_type> {
     typedef typename exprtk::igeneric_function<numerical_type>::generic_type generic_type;
 
     typedef typename generic_type::scalar_view scalar_t;
@@ -111,7 +111,7 @@ public:
 
     ExprtkMatchFunction() : exprtk::igeneric_function<numerical_type>("ss") {}
 
-    inline numerical_type operator()(parameter_list_t parameters) {
+    inline numerical_type operator()(parameter_list_t parameters) override {
         bool res = false;
 
         // check value cnt
@@ -144,7 +144,7 @@ public:
 };
 
 // KeyGet
-struct ExprtkGetFunction : public exprtk::igeneric_function<numerical_type> {
+struct ExprtkGetFunction final : public exprtk::igeneric_function<numerical_type> {
     typedef exprtk::igeneric_function<numerical_type> igenfunct_t;
     typedef typename igenfunct_t::generic_type generic_t;
     typedef typename igenfunct_t::parameter_list_t parameter_list_t;
@@ -159,7 +159,7 @@ public:
 
     ExprtkGetFunction() : igenfunct_t("SS", igenfunct_t::e_rtrn_string) {}
 
-    inline numerical_type operator()(std::string& result, parameter_list_t parameters) {
+    inline numerical_type operator()(std::string& result, parameter_list_t parameters) override {
         result.clear();
 
         // check value cnt
@@ -185,7 +185,7 @@ public:
     }
 };
 
-struct ExprtkGetWithPathFunction : public exprtk::igeneric_function<numerical_type> {
+struct ExprtkGetWithPathFunction final : public exprtk::igeneric_function<numerical_type> {
     typedef exprtk::igeneric_function<numerical_type> igenfunct_t;
     typedef typename igenfunct_t::generic_type generic_t;
     typedef typename igenfunct_t::parameter_list_t parameter_list_t;
@@ -200,7 +200,7 @@ public:
 
     ExprtkGetWithPathFunction() : igenfunct_t("SSS", igenfunct_t::e_rtrn_string) {}
 
-    inline numerical_type operator()(std::string& result, parameter_list_t parameters) {
+    inline numerical_type operator()(std::string& result, parameter_list_t parameters) override {
         result.clear();
 
         // check value cnt
