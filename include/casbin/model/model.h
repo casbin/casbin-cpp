@@ -77,7 +77,7 @@ public:
     // NewModel creates a model from a std::string which contains model text.
     static std::shared_ptr<Model> NewModelFromString(const std::string& text);
 
-    void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager>& rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
+    void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager>& rm, policy_op op, const std::string& sec, const std::string& p_type, const PoliciesValues& rules);
 
     // BuildRoleLinks initializes the roles in RBAC.
     void BuildRoleLinks(std::shared_ptr<RoleManager>& rm);
@@ -89,10 +89,10 @@ public:
     void ClearPolicy();
 
     // GetPolicy gets all rules in a policy.
-    std::vector<std::vector<std::string>> GetPolicy(const std::string& sec, const std::string& p_type);
+    PoliciesValues GetPolicy(const std::string& sec, const std::string& p_type);
 
     // GetFilteredPolicy gets rules based on field filters from a policy.
-    std::vector<std::vector<std::string>> GetFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values);
+    PoliciesValues GetFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values);
 
     // HasPolicy determines whether a model has the specified policy rule.
     bool HasPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule);
@@ -101,22 +101,22 @@ public:
     bool AddPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule);
 
     // AddPolicies adds policy rules to the model.
-    bool AddPolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
+    bool AddPolicies(const std::string& sec, const std::string& p_type, const PoliciesValues& rules);
 
     // UpdatePolicy updates a policy rule from the model.
     bool UpdatePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule);
 
     // UpdatePolicies updates a set of policy rules from the model.
-    bool UpdatePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& oldRules, const std::vector<std::vector<std::string>>& newRules);
+    bool UpdatePolicies(const std::string& sec, const std::string& p_type, const PoliciesValues& oldRules, const PoliciesValues& newRules);
 
     // RemovePolicy removes a policy rule from the model.
     bool RemovePolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule);
 
     // RemovePolicies removes policy rules from the model.
-    bool RemovePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules);
+    bool RemovePolicies(const std::string& sec, const std::string& p_type, const PoliciesValues& rules);
 
     // RemoveFilteredPolicy removes policy rules based on field filters from the model.
-    std::pair<bool, std::vector<std::vector<std::string>>> RemoveFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values);
+    std::pair<bool, PoliciesValues> RemoveFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values);
 
     // GetValuesForFieldInPolicy gets all values for a field for all rules in a policy, duplicated values are removed.
     std::vector<std::string> GetValuesForFieldInPolicy(const std::string& sec, const std::string& p_type, int field_index);

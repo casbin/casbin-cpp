@@ -155,8 +155,8 @@ TEST(TestRBACAPIWithDomains, TestRoleAPIWithDomains) {
     ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUserInDomain("non_exist", {"domain2"})));
 }
 
-void TestGetPermissionsInDomain(casbin::Enforcer& e, const std::string& name, const std::string& domain, const std::vector<std::vector<std::string>>& res) {
-    std::vector<std::vector<std::string>> my_res = e.GetPermissionsForUserInDomain(name, {domain});
+void TestGetPermissionsInDomain(casbin::Enforcer& e, const std::string& name, const std::string& domain, const PoliciesValues& res) {
+    PoliciesValues my_res = e.GetPermissionsForUserInDomain(name, {domain});
     int count = 0;
     for (auto& my_response : my_res) {
         for (auto& response : res) {

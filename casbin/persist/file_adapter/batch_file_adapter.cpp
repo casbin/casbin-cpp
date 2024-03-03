@@ -17,11 +17,11 @@ std::shared_ptr<BatchFileAdapter> BatchFileAdapter ::NewBatchFileAdapter(std::st
     return std::make_shared<BatchFileAdapter>(file_path);
 }
 
-void BatchFileAdapter ::AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
+void BatchFileAdapter ::AddPolicies(std::string sec, std::string p_type, PoliciesValues rules) {
     throw UnsupportedOperationException("not implemented hello");
 }
 
-void BatchFileAdapter ::RemovePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules) {
+void BatchFileAdapter ::RemovePolicies(std::string sec, std::string p_type, PoliciesValues rules) {
     throw UnsupportedOperationException("not implemented");
 }
 

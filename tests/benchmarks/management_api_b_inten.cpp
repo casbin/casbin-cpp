@@ -39,7 +39,7 @@ static void BenchmarkHasPolicyMedium(benchmark::State& state) {
     casbin::Enforcer e(basic_model_path);
 
     // 1000 roles, 100 resources.
-    // std::vector<std::vector<std::string>> p_policies(1000);
+    // PoliciesValues p_policies(1000);
     for (int i = 0; i < 1000; ++i) params = {"user" + std::to_string(i), "data" + std::to_string(i / 10), "read"}, e.AddPolicy(params);
     // e.AddPolicies(p_policies);
     for (auto _ : state) params = {"user" + std::to_string(GetRandom1000()), "data" + std::to_string(GetRandom1000() / 10), "read"}, e.HasPolicy(params);

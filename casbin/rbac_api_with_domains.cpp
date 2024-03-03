@@ -38,7 +38,7 @@ std::vector<std::string> Enforcer ::GetRolesForUserInDomain(const std::string& n
 }
 
 // GetPermissionsForUserInDomain gets permissions for a user or role inside a domain.
-std::vector<std::vector<std::string>> Enforcer ::GetPermissionsForUserInDomain(const std::string& user, const std::string& domain) {
+PoliciesValues Enforcer ::GetPermissionsForUserInDomain(const std::string& user, const std::string& domain) {
     std::vector<std::string> field_values{user, domain};
     return this->GetFilteredPolicy(0, field_values);
 }

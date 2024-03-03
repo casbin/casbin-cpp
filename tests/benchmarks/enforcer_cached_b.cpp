@@ -21,7 +21,7 @@
 
 #include "config_path.h"
 
-static const std::vector<std::vector<std::string>> s_policy = {{"alice", "data1", "read"}, {"bob", "data2", "write"}};
+static const PoliciesValues s_policy = {{"alice", "data1", "read"}, {"bob", "data2", "write"}};
 
 static bool rawEnforce(const std::string& sub, const std::string& obj, const std::string& act) {
     for (const auto& rule : s_policy) {

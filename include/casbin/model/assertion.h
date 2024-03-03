@@ -18,47 +18,15 @@
 #define CASBIN_CPP_MODEL_ASSERTION
 
 #include <memory>
-#ifdef HASHED_POLICIES_VALUES
 
-#include <unordered_set>
-template<>
-struct std::hash<std::vector<std::string>> {
-       auto operator()(const std::vector<std::string>& rules) const -> size_t {
-               size_t result = 0;
-               for(const auto& rule : rules) {
-                       result ^= std::hash<std::string>{}(rule);
-               }
-               return result;
-       }
-};
-
-#endif
-
+#include "policy_collection.hpp"
 #include "../rbac/role_manager.h"
 
 namespace casbin {
 
-template<class Collection>
-void addElement(Collection&, const typename Collection::value_type&);
-
 enum policy_op { policy_add, policy_remove };
 typedef enum policy_op policy_op;
 
-using PolicyValues = std::vector<std::string>;
-
-#ifdef HASHED_POLICIES_VALUES
-using PoliciesValues = std::unordered_set<PolicyValues>;
-template<>
-void addElement(PoliciesValues& collection, const PoliciesValues::value_type& value) {
-	collection.emplace(value);
-}
-#else
-using PoliciesValues = std::vector<PolicyValues>;
-template<>
-void addElement(PoliciesValues& collection, const PoliciesValues::value_type& value) {
-	collection.push_back(value);
-}
-#endif
 
 // Assertion represents an expression in a section of the model.
 // For example: r = sub, obj, act

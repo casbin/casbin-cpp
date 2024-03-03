@@ -93,8 +93,8 @@ TEST(TestRBACAPI, TestEnforcer_AddRolesForUser) {
     ASSERT_TRUE(e.Enforce({"alice", "data2", "write"}));
 }
 
-void TestGetPermissions(casbin::Enforcer& e, const std::string& name, const std::vector<std::vector<std::string>>& res) {
-    std::vector<std::vector<std::string>> my_res = e.GetPermissionsForUser(name);
+void TestGetPermissions(casbin::Enforcer& e, const std::string& name, const PoliciesValues& res) {
+    PoliciesValues my_res = e.GetPermissionsForUser(name);
     int count = 0;
     for (auto& my_response : my_res) {
         for (auto& response : res) {
@@ -170,8 +170,8 @@ TEST(TestRBACAPI, TestImplicitRoleAPI) {
     ASSERT_TRUE(casbin::ArrayEquals(std::vector<std::string>{"/book/1/2/3/4/5", "pen_admin"}, e.GetRolesForUser("cathy")));
 }
 
-void TestGetImplicitPermissions(casbin::Enforcer& e, const std::string& name, const std::vector<std::vector<std::string>>& res) {
-    std::vector<std::vector<std::string>> my_res = e.GetImplicitPermissionsForUser(name);
+void TestGetImplicitPermissions(casbin::Enforcer& e, const std::string& name, const PoliciesValues& res) {
+    PoliciesValues my_res = e.GetImplicitPermissionsForUser(name);
     int count = 0;
     for (auto& my_response : my_res) {
         for (auto& response : res) {
@@ -184,8 +184,8 @@ void TestGetImplicitPermissions(casbin::Enforcer& e, const std::string& name, co
     ASSERT_EQ(static_cast<int>(res.size()), count);
 }
 
-void TestGetImplicitPermissionsWithDomain(casbin::Enforcer& e, const std::string& name, const std::string& domain, const std::vector<std::vector<std::string>>& res) {
-    std::vector<std::vector<std::string>> my_res = e.GetImplicitPermissionsForUser(name, {domain});
+void TestGetImplicitPermissionsWithDomain(casbin::Enforcer& e, const std::string& name, const std::string& domain, const PoliciesValues& res) {
+    PoliciesValues my_res = e.GetImplicitPermissionsForUser(name, {domain});
     int count = 0;
     for (auto& my_response : my_res) {
         for (auto& response : res) {

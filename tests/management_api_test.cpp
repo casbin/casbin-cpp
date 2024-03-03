@@ -32,8 +32,8 @@ TEST(TestManagementAPI, TestGetList) {
     ASSERT_TRUE(casbin::ArrayEquals({"data2_admin"}, e.GetAllRoles()));
 }
 
-void TestGetPolicy(casbin::Enforcer& e, const std::vector<std::vector<std::string>>& res) {
-    std::vector<std::vector<std::string>> my_res;
+void TestGetPolicy(casbin::Enforcer& e, const PoliciesValues& res) {
+    PoliciesValues my_res;
     my_res = e.GetPolicy();
 
     int count = 0;
@@ -47,23 +47,24 @@ void TestGetPolicy(casbin::Enforcer& e, const std::vector<std::vector<std::strin
     ASSERT_EQ(count, res.size());
 }
 
-void TestGetFilteredPolicy(casbin::Enforcer& e, int field_index, const std::vector<std::vector<std::string>>& res, const std::vector<std::string>& field_values) {
+void TestGetFilteredPolicy(casbin::Enforcer& e, int field_index, const PoliciesValues& res, const std::vector<std::string>& field_values) {
     auto my_res = e.GetFilteredPolicy(field_index, field_values);
-    for (int i = 0; i < res.size(); i++) ASSERT_TRUE(casbin::ArrayEquals(my_res[i], res[i]));
+    for(auto m_it = my_res.begin(), r_it = res.begin(); m_it != my_res.end(); m_it++, r_it++) 
+    	ASSERT_TRUE(casbin::ArrayEquals(*m_it, *r_it));
 }
 
-void TestGetGroupingPolicy(casbin::Enforcer& e, const std::vector<std::vector<std::string>>& res) {
+void TestGetGroupingPolicy(casbin::Enforcer& e, const PoliciesValues& res) {
     auto my_res = e.GetGroupingPolicy();
 
-    for (int i = 0; i < my_res.size(); i++) ASSERT_TRUE(casbin::ArrayEquals(my_res[i], res[i]));
+    for(auto m_it = my_res.begin(), r_it = res.begin(); m_it != my_res.end(); m_it++, r_it++) 
+    	ASSERT_TRUE(casbin::ArrayEquals(*m_it, *r_it));
 }
 
-void TestGetFilteredGroupingPolicy(casbin::Enforcer& e, int field_index, const std::vector<std::vector<std::string>>& res, const std::vector<std::string>& field_values) {
+void TestGetFilteredGroupingPolicy(casbin::Enforcer& e, int field_index, const PoliciesValues& res, const std::vector<std::string>& field_values) {
     auto my_res = e.GetFilteredGroupingPolicy(field_index, field_values);
 
-    for (int i = 0; i < my_res.size(); i++) {
-        ASSERT_TRUE(casbin::ArrayEquals(my_res[i], res[i]));
-    }
+    for(auto m_it = my_res.begin(), r_it = res.begin(); m_it != my_res.end(); m_it++, r_it++) 
+    	ASSERT_TRUE(casbin::ArrayEquals(*m_it, *r_it));
 }
 
 void TestHasPolicy(casbin::Enforcer e, const std::vector<std::string>& policy, bool res) {
@@ -99,7 +100,7 @@ TEST(TestManagementAPI, TestGetPolicyAPI) {
     TestHasPolicy(e, {"alice", "data2", "read"}, false);
     TestHasPolicy(e, {"bob", "data3", "write"}, false);
 
-    TestGetGroupingPolicy(e, std::vector<std::vector<std::string>>{{"alice", "data2_admin"}});
+    TestGetGroupingPolicy(e, PoliciesValues{{"alice", "data2_admin"}});
 
     TestGetFilteredGroupingPolicy(e, 0, {{"alice", "data2_admin"}}, {"alice"});
     TestGetFilteredGroupingPolicy(e, 0, {}, {"bob"});
@@ -124,7 +125,7 @@ TEST(TestManagementAPI, TestModifyPolicyAPI) {
     e.AddPolicy({"eve", "data3", "read"});
     e.AddPolicy({"eve", "data3", "read"});
 
-    std::vector<std::vector<std::string>> rules{
+    PoliciesValues rules{
         {"jack", "data4", "read"},
         {"katy", "data4", "write"},
         {"leyo", "data4", "read"},
@@ -177,7 +178,7 @@ TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
     e.AddGroupingPolicy({"bob", "data1_admin"});
     e.AddGroupingPolicy({"eve", "data3_admin"});
 
-    std::vector<std::vector<std::string>> grouping_rules{
+    PoliciesValues grouping_rules{
         {"ham", "data4_admin"},
         {"jack", "data5_admin"},
     };

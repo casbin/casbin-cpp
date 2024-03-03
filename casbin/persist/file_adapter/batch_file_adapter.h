@@ -13,9 +13,9 @@ public:
 
     static std::shared_ptr<BatchFileAdapter> NewBatchFileAdapter(std::string file_path);
 
-    void AddPolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
+    void AddPolicies(std::string sec, std::string p_type, PoliciesValues rules);
 
-    void RemovePolicies(std::string sec, std::string p_type, std::vector<std::vector<std::string>> rules);
+    void RemovePolicies(std::string sec, std::string p_type, PoliciesValues rules);
 };
 
 } // namespace casbin

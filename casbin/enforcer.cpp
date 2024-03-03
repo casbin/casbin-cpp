@@ -28,6 +28,7 @@
 #include "casbin/persist/file_adapter/batch_file_adapter.h"
 #include "casbin/persist/file_adapter/file_adapter.h"
 #include "casbin/persist/watcher_ex.h"
+#include "casbin/model/policy_collection.hpp"
 #include "casbin/rbac/default_role_manager.h"
 #include "casbin/util/util.h"
 
@@ -90,15 +91,14 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
     Effect effect;
     int explainIndex;
 
-    std::vector<std::vector<std::string>>& p_policy = m_model->m["p"].assertion_map["p"]->policy;
+    PoliciesValues& p_policy = m_model->m["p"].assertion_map["p"]->policy;
 
     if (auto policy_len = p_policy.size(); policy_len != 0) {
         policy_effects = std::vector<Effect>(policy_len, Effect::Indeterminate);
         matcher_results = std::vector<float>(policy_len, 0.0f);
 
-        for (int policy_index = 0; policy_index < policy_len; policy_index++) {
-            std::vector<std::string>& p_vals = m_model->m["p"].assertion_map["p"]->policy[policy_index];
-
+        int policy_index = 0;
+        for (auto& p_vals : p_policy ) {
             casbin::LogUtil::LogPrint("Policy Rule: ", p_vals);
             if (p_tokens.size() != p_vals.size()) {
                 throw CasbinEnforcerException("invalid policy size");
@@ -174,6 +174,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
             if (effect != Effect::Indeterminate) {
                 break;
             }
+            policy_index++;
         }
 
         casbin::LogUtil::LogPrint("Rule Results: ", policy_effects);
@@ -214,13 +215,13 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
         casbin::LogUtil::LogPrint("Rule Results: ", policy_effects);
     }
 
-    std::vector<std::vector<std::string>> logExplains;
+    //PoliciesValues logExplains;
 
-    logExplains.push_back(explains);
-    if (explainIndex != -1 && (p_policy.size() > explainIndex)) {
-        explains = p_policy[explainIndex];
+    //logExplains.push_back(explains);
+    /*if (explainIndex != -1 && (p_policy.size() > explainIndex)) {
+        explains = *std::next(p_policy.begin(), explainIndex);
         logExplains.push_back(explains);
-    }
+    }*/
 
     // effect --> result
     bool result = false;
@@ -508,7 +509,7 @@ void Enforcer::BuildRoleLinks() {
 }
 
 // BuildIncrementalRoleLinks provides incremental build the role inheritance relations.
-void Enforcer::BuildIncrementalRoleLinks(policy_op op, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+void Enforcer::BuildIncrementalRoleLinks(policy_op op, const std::string& p_type, const PoliciesValues& rules) {
     return m_model->BuildIncrementalRoleLinks(this->rm, op, "g", p_type, rules);
 }
 

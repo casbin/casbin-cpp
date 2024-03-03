@@ -42,7 +42,7 @@ public:
      * @param oldRules Old rules which are to be replaced
      * @param newRules New rules which will replace oldRules
      */
-    virtual void UpdateForUpdatePolicies(const std::vector<std::vector<std::string>>& oldRules, const std::vector<std::vector<std::string>>& newRules) = 0;
+    virtual void UpdateForUpdatePolicies(const PoliciesValues& oldRules, const PoliciesValues& newRules) = 0;
 };
 
 } // namespace casbin

@@ -156,7 +156,7 @@ std::shared_ptr<Model> Model::NewModelFromString(const std::string& text) {
     return m;
 }
 
-void Model::BuildIncrementalRoleLinks(std::shared_ptr<RoleManager>& rm, policy_op op, const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+void Model::BuildIncrementalRoleLinks(std::shared_ptr<RoleManager>& rm, policy_op op, const std::string& sec, const std::string& p_type, const PoliciesValues& rules) {
     if (sec == "g")
         this->m[sec].assertion_map[p_type]->BuildIncrementalRoleLinks(rm, op, rules);
 }
@@ -203,25 +203,26 @@ void Model::ClearPolicy() {
 }
 
 // GetPolicy gets all rules in a policy.
-std::vector<std::vector<std::string>> Model::GetPolicy(const std::string& sec, const std::string& p_type) {
+PoliciesValues Model::GetPolicy(const std::string& sec, const std::string& p_type) {
     return this->m[sec].assertion_map[p_type]->policy;
 }
 
 // GetFilteredPolicy gets rules based on field filters from a policy.
-std::vector<std::vector<std::string>> Model::GetFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
-    std::vector<std::vector<std::string>> res;
-    const std::vector<std::vector<std::string>>& policy = m[sec].assertion_map[p_type]->policy;
+PoliciesValues Model::GetFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
+    PoliciesValues res;
+    const PoliciesValues& policy = m[sec].assertion_map[p_type]->policy;
     res.reserve(policy.size());
-    for (int i = 0; i < policy.size(); i++) {
+
+    for (const auto& policy_value : policy) {
         bool matched = true;
         for (int j = 0; j < field_values.size(); j++) {
-            if (field_values[j] != "" && (policy[i])[field_index + j] != field_values[j]) {
+            if (field_values[j] != "" && policy_value[field_index + j] != field_values[j]) {
                 matched = false;
                 break;
             }
         }
         if (matched)
-            res.push_back(policy[i]);
+            addElement(res, policy_value);
     }
 
     return res;
@@ -240,7 +241,7 @@ bool Model::HasPolicy(const std::string& sec, const std::string& p_type, const s
 // AddPolicy adds a policy rule to the model.
 bool Model::AddPolicy(const std::string& sec, const std::string& p_type, const std::vector<std::string>& rule) {
     if (!this->HasPolicy(sec, p_type, rule)) {
-        m[sec].assertion_map[p_type]->policy.push_back(rule);
+        addElement(m[sec].assertion_map[p_type]->policy, rule);
         return true;
     }
 
@@ -248,13 +249,13 @@ bool Model::AddPolicy(const std::string& sec, const std::string& p_type, const s
 }
 
 // AddPolicies adds policy rules to the model.
-bool Model::AddPolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+bool Model::AddPolicies(const std::string& sec, const std::string& p_type, const PoliciesValues& rules) {
     for (const std::vector<std::string>& rule : rules)
         if (this->HasPolicy(sec, p_type, rule))
             return false;
 
     for (const std::vector<std::string>& rule : rules)
-        this->m[sec].assertion_map[p_type]->policy.push_back(rule);
+        addElement(this->m[sec].assertion_map[p_type]->policy, rule);
 
     return true;
 }
@@ -279,7 +280,7 @@ bool Model::UpdatePolicy(const std::string& sec, const std::string& p_type, cons
 
     // Prevents duplicate policies
     if (!this->HasPolicy(sec, p_type, newRule)) {
-        policy.push_back(newRule);
+        addElement(policy, newRule);
         is_newRule_added = true;
     }
 
@@ -289,7 +290,7 @@ bool Model::UpdatePolicy(const std::string& sec, const std::string& p_type, cons
     return is_oldRule_deleted && is_newRule_added;
 }
 
-bool Model::UpdatePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& oldRules, const std::vector<std::vector<std::string>>& newRules) {
+bool Model::UpdatePolicies(const std::string& sec, const std::string& p_type, const PoliciesValues& oldRules, const PoliciesValues& newRules) {
     // Caching policy by reference for the scope of this function
     auto& policy = this->m[sec].assertion_map[p_type]->policy;
 
@@ -317,7 +318,7 @@ bool Model::UpdatePolicies(const std::string& sec, const std::string& p_type, co
     }
 
     for (const std::vector<std::string>& newRule : newRules) {
-        policy.push_back(newRule);
+        addElement(policy, newRule);
     }
 
     return true;
@@ -337,7 +338,7 @@ bool Model::RemovePolicy(const std::string& sec, const std::string& p_type, cons
 }
 
 // RemovePolicies removes policy rules from the model.
-bool Model::RemovePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+bool Model::RemovePolicies(const std::string& sec, const std::string& p_type, const PoliciesValues& rules) {
     // Caching policy by reference for the scope of this function
     auto& policy = this->m[sec].assertion_map[p_type]->policy;
 
@@ -363,37 +364,37 @@ bool Model::RemovePolicies(const std::string& sec, const std::string& p_type, co
 }
 
 // RemoveFilteredPolicy removes policy rules based on field filters from the model.
-std::pair<bool, std::vector<std::vector<std::string>>> Model::RemoveFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
-    std::vector<std::vector<std::string>> tmp;
-    std::vector<std::vector<std::string>> effects;
-    std::vector<std::vector<std::string>>& policy = m[sec].assertion_map[p_type]->policy;
+std::pair<bool, PoliciesValues> Model::RemoveFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
+    PoliciesValues tmp;
+    PoliciesValues effects;
+    PoliciesValues& policy = m[sec].assertion_map[p_type]->policy;
     tmp.reserve(policy.size());
     effects.reserve(policy.size());
     bool res = false;
-    for (int i = 0; i < policy.size(); i++) {
+    for (auto& policy_value : policy ) {
         bool matched = true;
         for (int j = 0; j < field_values.size(); j++) {
-            if (field_values[j] != "" && (policy[i])[field_index + j] != field_values[j]) {
+            if (field_values[j] != "" && policy_value[field_index + j] != field_values[j]) {
                 matched = false;
                 break;
             }
         }
         if (matched) {
-            effects.push_back(policy[i]);
+            addElement(effects, policy_value);
             res = true;
         } else
-            tmp.push_back(policy[i]);
+            addElement(tmp, policy_value);
     }
 
     policy = tmp;
-    std::pair<bool, std::vector<std::vector<std::string>>> result(res, effects);
+    std::pair<bool, PoliciesValues> result(res, effects);
     return result;
 }
 
 // GetValuesForFieldInPolicy gets all values for a field for all rules in a policy, duplicated values are removed.
 std::vector<std::string> Model::GetValuesForFieldInPolicy(const std::string& sec, const std::string& p_type, int field_index) {
     std::vector<std::string> values;
-    std::vector<std::vector<std::string>>& policy = m[sec].assertion_map[p_type]->policy;
+    PoliciesValues& policy = m[sec].assertion_map[p_type]->policy;
     values.reserve(policy.size());
 
     for (const std::vector<std::string>& policy_it : policy)

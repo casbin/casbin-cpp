@@ -171,25 +171,25 @@ public:
     std::vector<std::string> GetAllNamedRoles(const std::string& ptype) override;
 
     // GetPolicy gets all the authorization rules in the policy.
-    std::vector<std::vector<std::string>> GetPolicy() override;
+    PoliciesValues GetPolicy() override;
 
     // GetNamedPolicy gets all the authorization rules in the named policy.
-    std::vector<std::vector<std::string>> GetNamedPolicy(const std::string& ptype) override;
+    PoliciesValues GetNamedPolicy(const std::string& ptype) override;
 
     // GetFilteredNamedPolicy gets all the authorization rules in the named policy, field filters can be specified.
-    std::vector<std::vector<std::string>> GetFilteredNamedPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) override;
+    PoliciesValues GetFilteredNamedPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) override;
 
     // GetGroupingPolicy gets all the role inheritance rules in the policy.
-    std::vector<std::vector<std::string>> GetGroupingPolicy() override;
+    PoliciesValues GetGroupingPolicy() override;
 
     // GetFilteredGroupingPolicy gets all the role inheritance rules in the policy, field filters can be specified.
-    std::vector<std::vector<std::string>> GetFilteredGroupingPolicy(int fieldIndex, const std::vector<std::string>& fieldValues) override;
+    PoliciesValues GetFilteredGroupingPolicy(int fieldIndex, const std::vector<std::string>& fieldValues) override;
 
     // GetNamedGroupingPolicy gets all the role inheritance rules in the policy.
-    std::vector<std::vector<std::string>> GetNamedGroupingPolicy(const std::string& ptype) override;
+    PoliciesValues GetNamedGroupingPolicy(const std::string& ptype) override;
 
     // GetFilteredNamedGroupingPolicy gets all the role inheritance rules in the policy, field filters can be specified.
-    std::vector<std::vector<std::string>> GetFilteredNamedGroupingPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) override;
+    PoliciesValues GetFilteredNamedGroupingPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) override;
 
     // HasPolicy determines whether an authorization rule exists.
     bool HasPolicy(const std::vector<std::string>& params) override;
@@ -205,7 +205,7 @@ public:
     // AddPolicies adds authorization rules to the current policy.
     // If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
     // Otherwise the function returns true for the corresponding rule by adding the new rule.
-    bool AddPolicies(const std::vector<std::vector<std::string>>& rules) override;
+    bool AddPolicies(const PoliciesValues& rules) override;
 
     // AddNamedPolicy adds an authorization rule to the current named policy.
     // If the rule already exists, the function returns false and the rule will not be added.
@@ -215,7 +215,7 @@ public:
     // AddNamedPolicies adds authorization rules to the current named policy.
     // If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
     // Otherwise the function returns true for the corresponding by adding the new rule.
-    bool AddNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& rules) override;
+    bool AddNamedPolicies(const std::string& ptype, const PoliciesValues& rules) override;
 
     // RemovePolicy removes an authorization rule from the current policy.
     bool RemovePolicy(const std::vector<std::string>& params) override;
@@ -226,12 +226,12 @@ public:
     bool UpdateNamedPolicy(const std::string& ptype, const std::vector<std::string>& p1, const std::vector<std::string>& p2) override;
 
     // UpdatePolicies updates authorization rules from the current policies.
-    bool UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies) override;
+    bool UpdatePolicies(const PoliciesValues& oldPolices, const PoliciesValues& newPolicies) override;
 
-    bool UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) override;
+    bool UpdateNamedPolicies(const std::string& ptype, const PoliciesValues& p1, const PoliciesValues& p2) override;
 
     // RemovePolicies removes authorization rules from the current policy.
-    bool RemovePolicies(const std::vector<std::vector<std::string>>& rules) override;
+    bool RemovePolicies(const PoliciesValues& rules) override;
 
     // RemoveFilteredPolicy removes an authorization rule from the current policy, field filters can be specified.
     bool RemoveFilteredPolicy(int fieldIndex, const std::vector<std::string>& fieldValues) override;
@@ -240,7 +240,7 @@ public:
     bool RemoveNamedPolicy(const std::string& ptype, const std::vector<std::string>& params) override;
 
     // RemoveNamedPolicies removes authorization rules from the current named policy.
-    bool RemoveNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& rules) override;
+    bool RemoveNamedPolicies(const std::string& ptype, const PoliciesValues& rules) override;
 
     // RemoveFilteredNamedPolicy removes an authorization rule from the current named policy, field filters can be specified.
     bool RemoveFilteredNamedPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) override;
@@ -259,7 +259,7 @@ public:
     // AddGroupingPolicies adds role inheritance rulea to the current policy.
     // If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
     // Otherwise the function returns true for the corresponding policy rule by adding the new rule.
-    bool AddGroupingPolicies(const std::vector<std::vector<std::string>>& rules) override;
+    bool AddGroupingPolicies(const PoliciesValues& rules) override;
 
     // AddNamedGroupingPolicy adds a named role inheritance rule to the current policy.
     // If the rule already exists, the function returns false and the rule will not be added.
@@ -269,13 +269,13 @@ public:
     // AddNamedGroupingPolicies adds named role inheritance rules to the current policy.
     // If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
     // Otherwise the function returns true for the corresponding policy rule by adding the new rule.
-    bool AddNamedGroupingPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& rules) override;
+    bool AddNamedGroupingPolicies(const std::string& ptype, const PoliciesValues& rules) override;
 
     // RemoveGroupingPolicy removes a role inheritance rule from the current policy.
     bool RemoveGroupingPolicy(const std::vector<std::string>& params) override;
 
     // RemoveGroupingPolicies removes role inheritance rules from the current policy.
-    bool RemoveGroupingPolicies(const std::vector<std::vector<std::string>>& rules) override;
+    bool RemoveGroupingPolicies(const PoliciesValues& rules) override;
 
     // RemoveFilteredGroupingPolicy removes a role inheritance rule from the current policy, field filters can be specified.
     bool RemoveFilteredGroupingPolicy(int fieldIndex, const std::vector<std::string>& fieldValues) override;
@@ -284,7 +284,7 @@ public:
     bool RemoveNamedGroupingPolicy(const std::string& ptype, const std::vector<std::string>& params) override;
 
     // RemoveNamedGroupingPolicies removes role inheritance rules from the current named policy.
-    bool RemoveNamedGroupingPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& rules) override;
+    bool RemoveNamedGroupingPolicies(const std::string& ptype, const PoliciesValues& rules) override;
 
     bool UpdateGroupingPolicy(const std::vector<std::string>& oldRule, const std::vector<std::string>& newRule) override;
 
