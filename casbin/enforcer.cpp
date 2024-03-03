@@ -215,22 +215,19 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
         casbin::LogUtil::LogPrint("Rule Results: ", policy_effects);
     }
 
-    //PoliciesValues logExplains;
+    PoliciesValues logExplains;
 
-    //logExplains.push_back(explains);
-    /*if (explainIndex != -1 && (p_policy.size() > explainIndex)) {
+    addElement(logExplains, explains);
+    if (explainIndex != -1 && (p_policy.size() > explainIndex)) {
         explains = *std::next(p_policy.begin(), explainIndex);
-        logExplains.push_back(explains);
-    }*/
+        addElement(logExplains, explains);
+    }
 
     // effect --> result
     bool result = false;
     if (effect == Effect::Allow) {
         result = true;
     }
-
-    // TODO
-    // m_log.LogPrint(exp_string, evalator, result, logExplains);
 
     return result;
 }
