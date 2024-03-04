@@ -21,6 +21,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "../exprtk/exprtk.hpp"
 #include "./exprtk_config.h"
@@ -56,6 +57,7 @@ public:
     virtual std::string GetString() = 0;
 
     virtual void Clean(AssertionMap& section, bool after_enforce = true) = 0;
+    virtual std::unordered_map<std::string, std::string> requestValues() const = 0;
 };
 
 class ExprtkEvaluator : public IEvaluator {
@@ -106,6 +108,8 @@ public:
     void AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func);
 
     void AddIdentifier(const std::string& identifier, const std::string& var);
+
+    std::unordered_map<std::string, std::string> requestValues() const override;
 };
 } // namespace casbin
 

@@ -20,9 +20,11 @@
 #define ENFORCER_CPP
 
 #include <algorithm>
+#include <regex>
 
 #include "casbin/effect/default_effector.h"
 #include "casbin/enforcer.h"
+#include "casbin/selected_policies.h"
 #include "casbin/exception/casbin_adapter_exception.h"
 #include "casbin/exception/casbin_enforcer_exception.h"
 #include "casbin/persist/file_adapter/batch_file_adapter.h"
@@ -91,7 +93,8 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
     Effect effect;
     int explainIndex;
 
-    PoliciesValues& p_policy = m_model->m["p"].assertion_map["p"]->policy;
+    SelectedPolicies selected_policies(evalator, matcher, m_model, p_tokens);
+    PoliciesValues& p_policy = *selected_policies;
 
     if (auto policy_len = p_policy.size(); policy_len != 0) {
         policy_effects = std::vector<Effect>(policy_len, Effect::Indeterminate);

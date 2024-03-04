@@ -16,6 +16,7 @@ set(CASBIN_SOURCE_FILES
     enforcer.cpp
     enforcer_cached.cpp
     enforcer_synced.cpp
+    selected_policies.cpp
     internal_api.cpp
     logger.cpp
     management_api.cpp
