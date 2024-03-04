@@ -23,7 +23,11 @@ if(APPLE AND NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment version")
 endif()
 
+option(BUILD_HASHED "Build policy stored in hases" ON)
+
+if(BUILD_HASHED)
 add_compile_options("-DHASHED_POLICIES_VALUES")
+endif()
 
 if(WIN32)
     add_compile_options("/bigobj")
