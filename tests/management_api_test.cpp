@@ -49,9 +49,9 @@ void TestGetPolicy(casbin::Enforcer& e, const PoliciesValues& res) {
 
 void TestGetFilteredPolicy(casbin::Enforcer& e, int field_index, const PoliciesValues& res, const std::vector<std::string>& field_values) {
     auto my_res = e.GetFilteredPolicy(field_index, field_values);
-    auto r_it = res.begin();
-    for(auto m_it = my_res.begin(); m_it != my_res.end(); m_it++, r_it++)
-    	ASSERT_TRUE(casbin::ArrayEquals(*m_it, *r_it));
+    ASSERT_TRUE(
+	std::multiset<PolicyValues>(res.begin(),res.end()) == std::multiset<PolicyValues>(my_res.begin(), my_res.end())
+    );
 }
 
 void TestGetGroupingPolicy(casbin::Enforcer& e, const PoliciesValues& res) {
