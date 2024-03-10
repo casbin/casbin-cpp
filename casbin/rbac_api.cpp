@@ -210,7 +210,7 @@ PoliciesValues Enforcer ::GetImplicitPermissionsForUser(const std::string& user,
             permissions = this->GetPermissionsForUser(roles[i]);
 
         for (auto& permission :  permissions)
-            addElement(res, permission);
+            res.emplace(permission);
     }
 
     return res;

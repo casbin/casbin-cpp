@@ -40,7 +40,7 @@ void LoadPolicyLine(const std::string& line, const std::shared_ptr<Model>& model
     if (model->m.find(sec) == model->m.end())
         model->m[sec] = AssertionMap();
 
-    addElement(model->m[sec].assertion_map[key]->policy, new_tokens);
+    model->m[sec].assertion_map[key]->policy.emplace(new_tokens);
 }
 
 } // namespace casbin

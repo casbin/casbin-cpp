@@ -220,10 +220,10 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
 
     PoliciesValues logExplains;
 
-    addElement(logExplains, explains);
+    logExplains.emplace(explains);
     if (explainIndex != -1 && (p_policy.size() > explainIndex)) {
         explains = *std::next(p_policy.begin(), explainIndex);
-        addElement(logExplains, explains);
+        logExplains.emplace(explains);
     }
 
     // effect --> result

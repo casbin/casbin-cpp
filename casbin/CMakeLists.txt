@@ -43,6 +43,7 @@ set(CASBIN_SOURCE_FILES
     model/function.cpp
     model/model.cpp
     model/evaluator.cpp
+    model/policy_collection.cpp
     persist/file_adapter/batch_file_adapter.cpp
     persist/file_adapter/file_adapter.cpp
     persist/file_adapter/filtered_file_adapter.cpp

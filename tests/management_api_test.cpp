@@ -57,14 +57,14 @@ void TestGetFilteredPolicy(casbin::Enforcer& e, int field_index, const PoliciesV
 void TestGetGroupingPolicy(casbin::Enforcer& e, const PoliciesValues& res) {
     auto my_res = e.GetGroupingPolicy();
     auto r_it = res.begin();
-    for(auto m_it = my_res.begin(); m_it != my_res.end(); m_it++, r_it++)
+    for(auto m_it = my_res.begin(); m_it != my_res.end(); ++m_it, ++r_it)
     	ASSERT_TRUE(casbin::ArrayEquals(*m_it, *r_it));
 }
 
 void TestGetFilteredGroupingPolicy(casbin::Enforcer& e, int field_index, const PoliciesValues& res, const std::vector<std::string>& field_values) {
     auto my_res = e.GetFilteredGroupingPolicy(field_index, field_values);
     auto r_it = res.begin();
-    for(auto m_it = my_res.begin(); m_it != my_res.end(); m_it++, r_it++)
+    for(auto m_it = my_res.begin(); m_it != my_res.end(); ++m_it, ++r_it)
     	ASSERT_TRUE(casbin::ArrayEquals(*m_it, *r_it));
 }
 

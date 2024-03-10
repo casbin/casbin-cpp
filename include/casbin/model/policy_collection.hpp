@@ -17,7 +17,7 @@
 #pragma once
 
 #include <unordered_set>
-
+#include <optional>
 
 #ifdef HASHED_POLICIES_VALUES
 
@@ -33,25 +33,77 @@ struct std::hash<std::vector<std::string>> {
 
 #endif
 
-namespace {
-
-template<class Collection>
-void addElement(Collection&, const typename Collection::value_type&);
-
 using PolicyValues = std::vector<std::string>;
+using PoliciesVector = std::vector<PolicyValues>;
+using PoliciesHashset = std::unordered_set<PolicyValues>;
 
-#ifdef HASHED_POLICIES_VALUES
-using PoliciesValues = std::unordered_set<PolicyValues>;
-template<>
-void addElement(PoliciesValues& collection, const PoliciesValues::value_type& value) {
-	collection.emplace(value);
-}
-#else
-using PoliciesValues = std::vector<PolicyValues>;
-template<>
-void addElement(PoliciesValues& collection, const PoliciesValues::value_type& value) {
-	collection.push_back(value);
-}
-#endif
+class PoliciesValues final {
+public:
+using PolicyValues = std::vector<std::string>;
+using PoliciesVector = std::vector<PolicyValues>;
+using PoliciesHashset = std::unordered_set<PolicyValues>;
+private:
+    std::optional<PoliciesVector> opt_base_vector;
+    std::optional<PoliciesHashset> opt_base_hashset;
 
-} // namespace
+    PoliciesValues(PoliciesVector&& base_collection);
+    PoliciesValues(PoliciesHashset&& base_collection);
+public:
+    PoliciesValues(const std::initializer_list<PolicyValues>& list={});
+    PoliciesValues(size_t capacity);
+    static PoliciesValues createWithVector(const std::initializer_list<PolicyValues>& list={});
+    static PoliciesValues createWithHashset(const std::initializer_list<PolicyValues>& list={});
+
+    size_t size() const;
+    bool empty() const;
+
+    void emplace(const PolicyValues& element);
+    class iterator final : std::input_iterator_tag {
+        private:
+            bool is_vector_iterator;
+            mutable PoliciesVector::iterator opt_vector_iterator;
+            mutable PoliciesHashset::iterator opt_hashset_iterator;
+            iterator(const PoliciesVector::iterator& base_iterator_);
+            iterator(const PoliciesHashset::iterator& base_iterator_);
+            friend class PoliciesValues;
+        public:
+            using iterator_category = std::input_iterator_tag;
+            using difference_type=std::ptrdiff_t;
+            using value_type=PolicyValues;
+            using pointer = value_type*;
+            using reference = value_type&;
+            PolicyValues& operator*() const;
+            iterator operator++();
+            bool operator!=(const iterator& other) const;
+    };
+
+    iterator begin();
+    iterator end();
+
+    class const_iterator final : std::input_iterator_tag {
+        private:
+            bool is_vector_iterator;
+            mutable PoliciesVector::const_iterator opt_vector_iterator;
+            mutable PoliciesHashset::const_iterator opt_hashset_iterator;
+            const_iterator(const PoliciesVector::const_iterator& base_iterator_);
+            const_iterator(const PoliciesHashset::const_iterator& base_iterator_);
+            friend class PoliciesValues;
+        public:
+            using iterator_category = std::input_iterator_tag;
+            using difference_type = std::ptrdiff_t;
+            using value_type = const PolicyValues;
+            using pointer = value_type*;
+            using reference = value_type&;
+            const PolicyValues& operator*() const;
+            const_iterator operator++();
+            bool operator!=(const const_iterator& other) const;
+    };
+
+    const_iterator begin() const;
+    const_iterator end() const;
+
+    iterator find(const PolicyValues&);
+    void clear();
+
+    void erase(const iterator&);
+};
