@@ -48,7 +48,7 @@ static void BenchmarkBasicModel(benchmark::State& state) {
 BENCHMARK(BenchmarkBasicModel);
 
 static void BenchmarkBasicModelLargeSize(benchmark::State& state) {
-    casbin::Enforcer e(rbac_model_path, "", false);
+    casbin::Enforcer e(basic_model_path, "", false);
 
     size_t actors_count = 10;
     size_t resources_count = 100;

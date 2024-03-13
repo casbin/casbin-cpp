@@ -56,7 +56,7 @@ public:
 
     size_t size() const;
     bool empty() const;
-
+    bool is_hash() const;
     void emplace(const PolicyValues& element);
     class iterator final : std::input_iterator_tag {
         private:

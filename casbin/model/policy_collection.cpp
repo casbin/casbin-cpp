@@ -50,6 +50,10 @@ bool PoliciesValues::empty() const {
     return opt_base_hashset->empty();
 }
 
+bool PoliciesValues::is_hash() const {
+    return opt_base_hashset.has_value();
+}
+
 void PoliciesValues::emplace(const PolicyValues& element) {
     if (opt_base_vector.has_value()) 
         opt_base_vector->push_back(element);

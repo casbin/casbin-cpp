@@ -20,11 +20,18 @@
 #define MODEL_CPP
 
 #include <sstream>
+#include <regex>
 
 #include "casbin/config/config.h"
 #include "casbin/exception/missing_required_sections.h"
 #include "casbin/model/model.h"
 #include "casbin/util/util.h"
+
+namespace {
+
+std::vector<std::string> sections_names_reading_order = { "m", "r", "p", "g", "e" };
+
+};
 
 namespace casbin {
 
@@ -37,8 +44,10 @@ std::unordered_map<std::string, std::string> Model::section_name_map = {
 
 std::vector<std::string> Model::required_sections{"r", "p", "e", "m"};
 
+// matcher can alter vector / hashset storage for policies
+
 void Model::LoadModelFromConfig(std::shared_ptr<Config>& cfg) {
-    for (auto [section_name, _] : section_name_map)
+    for (auto section_name : sections_names_reading_order)
         LoadSection(this, cfg, section_name);
 
     std::vector<std::string> ms;
@@ -77,6 +86,20 @@ bool Model::LoadAssertion(Model* raw_ptr, std::shared_ptr<ConfigInterface> cfg, 
     return raw_ptr->AddDef(sec, key, value);
 }
 
+static bool IsHashsetUsagePossible(const Model& model) {
+    const auto& request_tokens = model.m.at("r").assertion_map.at("r")->tokens;
+    auto matcher = model.m.at("m").assertion_map.at("m")->value;
+    for (const auto& token : request_tokens) {
+        auto effective_token = token.substr(2, token.size() - 2);
+        matcher = regex_replace(matcher, std::regex("r." + effective_token + " == p." + effective_token), "");
+    }
+    std::string expected_matcher = "";
+    for (size_t i=0; i<request_tokens.size() - 1; i++)
+        expected_matcher += " && ";
+    
+    return expected_matcher == matcher && model.m.find("g") == model.m.end();
+}
+
 // AddDef adds an assertion to the model.
 bool Model::AddDef(const std::string& sec, const std::string& key, const std::string& value) {
     if (value == "")
@@ -94,7 +117,14 @@ bool Model::AddDef(const std::string& sec, const std::string& key, const std::st
 
     if (m.find(sec) == m.end())
         m[sec] = AssertionMap();
-    ast->policy = {};
+    if (sec != "p") {
+        ast->policy = PoliciesValues::createWithVector();
+    } else {
+        // base model detection expects "m" and "r" to be set
+        if ( sec != "m" && sec != "r" && (m.find("m") == m.end() || m.find("r") == m.end()))
+            return false;
+        ast->policy = IsHashsetUsagePossible(*this) ? PoliciesValues::createWithHashset() : PoliciesValues::createWithVector();
+    }
 
     m[sec].assertion_map[key] = ast;
 
