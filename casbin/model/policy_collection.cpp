@@ -17,14 +17,17 @@
 #include "casbin/model/policy_collection.hpp"
 
 
-PoliciesValues::PoliciesValues(PoliciesVector&& base_collection) : opt_base_vector(base_collection) {}
+PoliciesValues::PoliciesValues(PoliciesVector&& base_collection)
+    : opt_base_vector(base_collection), opt_base_hashset({}) {}
 
-PoliciesValues::PoliciesValues(PoliciesHashset&& base_collection) : opt_base_hashset(base_collection) {}
+PoliciesValues::PoliciesValues(PoliciesHashset&& base_collection)
+    : opt_base_vector({}), opt_base_hashset(base_collection) {}
 
 PoliciesValues::PoliciesValues(const std::initializer_list<PolicyValues>& list) 
-	: opt_base_vector(list) {}
+	: opt_base_vector(list), opt_base_hashset({}) {}
 
-PoliciesValues::PoliciesValues(size_t capacity) : opt_base_vector(PoliciesVector()) {
+PoliciesValues::PoliciesValues(size_t capacity)
+    : opt_base_vector(PoliciesVector()), opt_base_hashset({}) {
     opt_base_vector->reserve(capacity);
 }
 

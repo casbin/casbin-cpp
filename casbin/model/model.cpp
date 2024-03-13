@@ -87,6 +87,12 @@ bool Model::LoadAssertion(Model* raw_ptr, std::shared_ptr<ConfigInterface> cfg, 
 }
 
 static bool IsHashsetUsagePossible(const Model& model) {
+    if (model.m.find("r") == model.m.end()
+        || model.m.at("r").assertion_map.find("r") == model.m.at("r").assertion_map.end()
+        || !model.m.at("r").assertion_map.at("r")) 
+    {
+         return false;
+    }
     const auto& request_tokens = model.m.at("r").assertion_map.at("r")->tokens;
     auto matcher = model.m.at("m").assertion_map.at("m")->value;
     for (const auto& token : request_tokens) {
@@ -114,15 +120,15 @@ bool Model::AddDef(const std::string& sec, const std::string& key, const std::st
             token = key + "_" + Trim(token);
     } else
         ast->value = RemoveComments(ast->value);
-
     if (m.find(sec) == m.end())
         m[sec] = AssertionMap();
     if (sec != "p") {
-        ast->policy = PoliciesValues::createWithVector();
+        ast->policy = IsHashsetUsagePossible(*this) ? PoliciesValues::createWithHashset() : PoliciesValues::createWithVector();
     } else {
         // base model detection expects "m" and "r" to be set
-        if ( sec != "m" && sec != "r" && (m.find("m") == m.end() || m.find("r") == m.end()))
+        if ( sec != "m" && sec != "r" && (m.find("m") == m.end() || m.find("r") == m.end())) {
             return false;
+        }
         ast->policy = IsHashsetUsagePossible(*this) ? PoliciesValues::createWithHashset() : PoliciesValues::createWithVector();
     }
 

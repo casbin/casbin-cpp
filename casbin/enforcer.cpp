@@ -93,7 +93,7 @@ bool Enforcer::m_enforce(const std::string& matcher, std::vector<std::string>& e
     Effect effect;
     int explainIndex;
 
-    SelectedPolicies selected_policies(evalator, matcher, m_model, p_tokens);
+    SelectedPolicies selected_policies(evalator, matcher, m_model);
     PoliciesValues& p_policy = *selected_policies;
 
     if (auto policy_len = p_policy.size(); policy_len != 0) {

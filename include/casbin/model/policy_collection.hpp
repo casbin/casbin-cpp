@@ -19,8 +19,6 @@
 #include <unordered_set>
 #include <optional>
 
-#ifdef HASHED_POLICIES_VALUES
-
 template<>
 struct std::hash<std::vector<std::string>> {
        auto operator()(const std::vector<std::string>& rules) const -> size_t {
@@ -30,8 +28,6 @@ struct std::hash<std::vector<std::string>> {
                return result;
        }
 };
-
-#endif
 
 using PolicyValues = std::vector<std::string>;
 using PoliciesVector = std::vector<PolicyValues>;

@@ -26,21 +26,14 @@
 
 class SelectedPolicies final {
 private:
-    std::unordered_map<std::string, std::string> request_tokens_values_map;
-    const bool is_hash_compliant;
-    PoliciesValues& unchanged_policies_values;
-    PoliciesValues mutated_policies_values;
-    PolicyValues policy_tokens;
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+    std::shared_ptr<casbin::Model> model;
+    PoliciesValues selected_policies;
 
-    static bool isHashCompliantMatcher(const std::string& matcher,
-        const std::unordered_map<std::string, std::string>& request_tokens_values_map,
-	std::shared_ptr<casbin::Model> model);
-
-    std::vector<std::string> policyValues();
+    std::vector<std::string> requestedPolicy();
 
 public:
     SelectedPolicies(
-        const std::shared_ptr<casbin::IEvaluator>& evaluator, const std::string& matcher_, std::shared_ptr<casbin::Model> model,
-        const PolicyValues& policy_tokens_);
+        const std::shared_ptr<casbin::IEvaluator>& evaluator, const std::string& matcher_, std::shared_ptr<casbin::Model> model);
     PoliciesValues& operator*();
 };

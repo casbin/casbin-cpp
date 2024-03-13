@@ -17,51 +17,39 @@
 #include "casbin/selected_policies.h"
 
 
-bool SelectedPolicies::isHashCompliantMatcher(const std::string& matcher,const std::unordered_map<std::string, std::string>& request_tokens_values_map,
-    std::shared_ptr<casbin::Model> model)
+std::vector<std::string> SelectedPolicies::requestedPolicy()
 {
-    auto tmp = matcher;
-    for (const auto& [token, _ ] : request_tokens_values_map)
-        tmp = regex_replace(tmp, std::regex("r." + token + " == p." + token), "");
-    std::string expected = "";
-    for (size_t i=0; i<request_tokens_values_map.size() - 1; i++)
-        expected += " && ";
-    return expected == tmp && model->m.find("g") != model->m.end();
-}
+    auto policy_tokens = model->m["r"].assertion_map["r"]->tokens;
+    std::vector<std::string> ret;
+    ret.reserve(policy_tokens.size());
 
-std::vector<std::string> SelectedPolicies::policyValues()
-{
-        std::vector<std::string> ret;
-        ret.reserve(policy_tokens.size());
-        for(const auto& p : policy_tokens)
-        {
-            auto token = p.substr(2, p.size() - 2); // "p_token" -> "token"
-            if (auto it = request_tokens_values_map.find(token); it != request_tokens_values_map.end()) {
-                ret.emplace_back(it->second);
-                continue;
-            }
-            throw std::logic_error("request and policy tokens names missmatch:" + p);
+    auto request_tokens_values_map = evaluator->requestValues();
+
+    for(const auto& p : policy_tokens)
+    {
+        auto token = p.substr(2, p.size() - 2); // "p_token" -> "token"
+        if (auto it = request_tokens_values_map.find(token); it != request_tokens_values_map.end()) {
+            ret.emplace_back(it->second);
+            continue;
         }
-        return ret;
+        throw std::logic_error("request and policy tokens names missmatch:" + p);
+    }
+    return ret;
 }
 
 SelectedPolicies::SelectedPolicies(
-    const std::shared_ptr<casbin::IEvaluator>& evaluator, const std::string& matcher_, std::shared_ptr<casbin::Model> model,
-    const PolicyValues& policy_tokens_)
-    : request_tokens_values_map(evaluator->requestValues()),
-    is_hash_compliant(isHashCompliantMatcher(matcher_, request_tokens_values_map, model)),
-    unchanged_policies_values(model->m["p"].assertion_map["p"]->policy),
-    mutated_policies_values(),
-    policy_tokens(policy_tokens_)
-{}
+    const std::shared_ptr<casbin::IEvaluator>& evaluator_, const std::string& matcher_, std::shared_ptr<casbin::Model> model_)
+    : evaluator(evaluator_), model(model_), selected_policies() {}
+
 
 PoliciesValues& SelectedPolicies::operator*() {
-#ifdef HASHED_POLICIES_VALUES
-    if (is_hash_compliant) {
-        mutated_policies_values = PoliciesValues{*unchanged_policies_values.find(policyValues())};
-        return mutated_policies_values;
-    }
-#endif
-    return unchanged_policies_values;
+    auto& policies = model->m["p"].assertion_map["p"]->policy;
+    if (policies.is_hash()) {
+        if (auto policy_it = policies.find(requestedPolicy()); policy_it != policies.end()) {
+        	selected_policies = PoliciesValues{*policy_it};
+	}
+        return selected_policies;
+    } 
+    return policies;
 }
 
