@@ -35,7 +35,7 @@ bool Enforcer::addPolicy(const std::string& sec, const std::string& p_type, cons
         return rule_added;
 
     if (sec == "g") {
-        PoliciesValues rules{rule};
+        PoliciesValues rules({rule});
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
     }
 
@@ -85,7 +85,7 @@ bool Enforcer::removePolicy(const std::string& sec, const std::string& p_type, c
         return rule_removed;
 
     if (sec == "g") {
-        PoliciesValues rules{rule};
+        PoliciesValues rules({rule});
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
     }
 
@@ -163,8 +163,8 @@ bool Enforcer::updatePolicy(const std::string& sec, const std::string& p_type, c
         return false;
 
     if (sec == "g") {
-        this->BuildIncrementalRoleLinks(policy_remove, p_type, {oldRule});
-        this->BuildIncrementalRoleLinks(policy_add, p_type, {newRule});
+        this->BuildIncrementalRoleLinks(policy_remove, p_type, PoliciesValues({oldRule}));
+        this->BuildIncrementalRoleLinks(policy_add, p_type, PoliciesValues({newRule}));
     }
     if (m_watcher && m_auto_notify_watcher) {
         if (IsInstanceOf<WatcherUpdatable>(m_watcher.get())) {

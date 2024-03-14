@@ -115,8 +115,8 @@ TEST(TestRBACAPI, TestPermissionAPI) {
     ASSERT_FALSE(e.Enforce({"bob", "read"}));
     ASSERT_TRUE(e.Enforce({"bob", "write"}));
 
-    TestGetPermissions(e, "alice", {{"alice", "read"}});
-    TestGetPermissions(e, "bob", {{"bob", "write"}});
+    TestGetPermissions(e, "alice", PoliciesValues({{"alice", "read"}}));
+    TestGetPermissions(e, "bob", PoliciesValues({{"bob", "write"}}));
 
     ASSERT_TRUE(e.HasPermissionForUser("alice", {"read"}));
     ASSERT_FALSE(e.HasPermissionForUser("alice", {"write"}));
@@ -156,8 +156,8 @@ TEST(TestRBACAPI, TestPermissionAPI) {
 TEST(TestRBACAPI, TestImplicitRoleAPI) {
     casbin::Enforcer e(rbac_model_path, rbac_with_hierarchy_policy_path);
 
-    TestGetPermissions(e, "alice", {{"alice", "data1", "read"}});
-    TestGetPermissions(e, "bob", {{"bob", "data2", "write"}});
+    TestGetPermissions(e, "alice", PoliciesValues({{"alice", "data1", "read"}}));
+    TestGetPermissions(e, "bob", PoliciesValues({{"bob", "data2", "write"}}));
 
     ASSERT_TRUE(casbin::ArrayEquals(std::vector<std::string>{"admin", "data1_admin", "data2_admin"}, e.GetImplicitRolesForUser("alice")));
     ASSERT_TRUE(casbin::ArrayEquals(std::vector<std::string>{}, e.GetImplicitRolesForUser("bob")));
@@ -201,17 +201,17 @@ void TestGetImplicitPermissionsWithDomain(casbin::Enforcer& e, const std::string
 TEST(TestRBACAPI, TestImplicitPermissionAPI) {
     casbin::Enforcer e(rbac_model_path, rbac_with_hierarchy_policy_path);
 
-    TestGetPermissions(e, "alice", {{"alice", "data1", "read"}});
-    TestGetPermissions(e, "bob", {{"bob", "data2", "write"}});
+    TestGetPermissions(e, "alice", PoliciesValues({{"alice", "data1", "read"}}));
+    TestGetPermissions(e, "bob", PoliciesValues({{"bob", "data2", "write"}}));
 
     TestGetImplicitPermissions(e, "alice",
-                               {{"alice", "data1", "read"}, {"data1_admin", "data1", "read"}, {"data1_admin", "data1", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}});
-    TestGetImplicitPermissions(e, "bob", {{"bob", "data2", "write"}});
+                               PoliciesValues({{"alice", "data1", "read"}, {"data1_admin", "data1", "read"}, {"data1_admin", "data1", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}}));
+    TestGetImplicitPermissions(e, "bob", PoliciesValues({{"bob", "data2", "write"}}));
 }
 
 TEST(TestRBACAPI, TestImplicitPermissionAPIWithDomain) {
     casbin::Enforcer e(rbac_with_domains_model_path, rbac_with_hierarchy_with_domains_policy_path);
-    TestGetImplicitPermissionsWithDomain(e, "alice", "domain1", {{"alice", "domain1", "data2", "read"}, {"role:reader", "domain1", "data1", "read"}, {"role:writer", "domain1", "data1", "write"}});
+    TestGetImplicitPermissionsWithDomain(e, "alice", "domain1", PoliciesValues({{"alice", "domain1", "data2", "read"}, {"role:reader", "domain1", "data1", "read"}, {"role:writer", "domain1", "data1", "write"}}));
 }
 
 TEST(TestRBACAPI, TestImplicitUserAPI) {
@@ -225,7 +225,7 @@ TEST(TestRBACAPI, TestImplicitUserAPI) {
     e.ClearPolicy();
     e.AddPolicy({"admin", "data1", "read"});
     e.AddPolicy({"bob", "data1", "read"});
-    e.AddPolicies({{"tom", "data1", "read"}, {"john", "data1", "read"}});
+    e.AddPolicies(PoliciesValues({{"tom", "data1", "read"}, {"john", "data1", "read"}}));
     e.AddGroupingPolicy({"alice", "admin"});
 
     ASSERT_TRUE(casbin::ArrayEquals({"alice", "bob", "tom", "john"}, e.GetImplicitUsersForPermission({"data1", "read"})));

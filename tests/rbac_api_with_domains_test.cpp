@@ -174,12 +174,12 @@ TEST(TestRBACAPIWithDomains, TestPermissionAPIInDomain) {
 
     TestGetPermissionsInDomain(e, "alice", "domain1", {});
     TestGetPermissionsInDomain(e, "bob", "domain1", {});
-    TestGetPermissionsInDomain(e, "admin", "domain1", {{"admin", "domain1", "data1", "read"}, {"admin", "domain1", "data1", "write"}});
+    TestGetPermissionsInDomain(e, "admin", "domain1", PoliciesValues({{"admin", "domain1", "data1", "read"}, {"admin", "domain1", "data1", "write"}}));
     TestGetPermissionsInDomain(e, "non_exist", "domain1", {});
 
     TestGetPermissionsInDomain(e, "alice", "domain2", {});
     TestGetPermissionsInDomain(e, "bob", "domain2", {});
-    TestGetPermissionsInDomain(e, "admin", "domain2", {{"admin", "domain2", "data2", "read"}, {"admin", "domain2", "data2", "write"}});
+    TestGetPermissionsInDomain(e, "admin", "domain2", PoliciesValues({{"admin", "domain2", "data2", "read"}, {"admin", "domain2", "data2", "write"}}));
     TestGetPermissionsInDomain(e, "non_exist", "domain2", {});
 }
 

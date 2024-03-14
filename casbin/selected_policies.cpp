@@ -46,7 +46,7 @@ PoliciesValues& SelectedPolicies::operator*() {
     auto& policies = model->m["p"].assertion_map["p"]->policy;
     if (policies.is_hash()) {
         if (auto policy_it = policies.find(requestedPolicy()); policy_it != policies.end()) {
-        	selected_policies = PoliciesValues{*policy_it};
+        	selected_policies = PoliciesValues({*policy_it});
 	}
         return selected_policies;
     } 

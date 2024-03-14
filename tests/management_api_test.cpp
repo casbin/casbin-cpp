@@ -81,34 +81,34 @@ void TestHasGroupingPolicy(casbin::Enforcer& e, const std::vector<std::string>& 
 TEST(TestManagementAPI, TestGetPolicyAPI) {
     casbin::Enforcer e(rbac_model_path, rbac_policy_path);
 
-    TestGetPolicy(e, {{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}});
+    TestGetPolicy(e, PoliciesValues({{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}}));
 
-    TestGetFilteredPolicy(e, 0, {{"alice", "data1", "read"}}, {"alice"});
-    TestGetFilteredPolicy(e, 0, {{"bob", "data2", "write"}}, {"bob"});
-    TestGetFilteredPolicy(e, 0, {{"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}}, {"data2_admin"});
-    TestGetFilteredPolicy(e, 1, {{"alice", "data1", "read"}}, {"data1"});
-    TestGetFilteredPolicy(e, 1, {{"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}}, {"data2"});
-    TestGetFilteredPolicy(e, 2, {{"alice", "data1", "read"}, {"data2_admin", "data2", "read"}}, {"read"});
-    TestGetFilteredPolicy(e, 2, {{"bob", "data2", "write"}, {"data2_admin", "data2", "write"}}, {"write"});
+    TestGetFilteredPolicy(e, 0, PoliciesValues({{"alice", "data1", "read"}}), {"alice"});
+    TestGetFilteredPolicy(e, 0, PoliciesValues({{"bob", "data2", "write"}}), {"bob"});
+    TestGetFilteredPolicy(e, 0, PoliciesValues({{"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}}), {"data2_admin"});
+    TestGetFilteredPolicy(e, 1, PoliciesValues({{"alice", "data1", "read"}}), {"data1"});
+    TestGetFilteredPolicy(e, 1, PoliciesValues({{"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}}), {"data2"});
+    TestGetFilteredPolicy(e, 2, PoliciesValues({{"alice", "data1", "read"}, {"data2_admin", "data2", "read"}}), {"read"});
+    TestGetFilteredPolicy(e, 2, PoliciesValues({{"bob", "data2", "write"}, {"data2_admin", "data2", "write"}}), {"write"});
 
-    TestGetFilteredPolicy(e, 0, {{"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}}, {"data2_admin", "data2"});
+    TestGetFilteredPolicy(e, 0, PoliciesValues({{"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}}), {"data2_admin", "data2"});
     // Note: "" (empty string) in fieldValues means matching all values.
-    TestGetFilteredPolicy(e, 0, {{"data2_admin", "data2", "read"}}, {"data2_admin", "", "read"});
-    TestGetFilteredPolicy(e, 1, {{"bob", "data2", "write"}, {"data2_admin", "data2", "write"}}, {"data2", "write"});
+    TestGetFilteredPolicy(e, 0, PoliciesValues({{"data2_admin", "data2", "read"}}), {"data2_admin", "", "read"});
+    TestGetFilteredPolicy(e, 1, PoliciesValues({{"bob", "data2", "write"}, {"data2_admin", "data2", "write"}}), {"data2", "write"});
 
     TestHasPolicy(e, {"alice", "data1", "read"}, true);
     TestHasPolicy(e, {"bob", "data2", "write"}, true);
     TestHasPolicy(e, {"alice", "data2", "read"}, false);
     TestHasPolicy(e, {"bob", "data3", "write"}, false);
 
-    TestGetGroupingPolicy(e, PoliciesValues{{"alice", "data2_admin"}});
+    TestGetGroupingPolicy(e, PoliciesValues({{"alice", "data2_admin"}}));
 
-    TestGetFilteredGroupingPolicy(e, 0, {{"alice", "data2_admin"}}, {"alice"});
-    TestGetFilteredGroupingPolicy(e, 0, {}, {"bob"});
-    TestGetFilteredGroupingPolicy(e, 1, {}, {"data1_admin"});
-    TestGetFilteredGroupingPolicy(e, 1, {{"alice", "data2_admin"}}, {"data2_admin"});
+    TestGetFilteredGroupingPolicy(e, 0, PoliciesValues({{"alice", "data2_admin"}}), {"alice"});
+    TestGetFilteredGroupingPolicy(e, 0, PoliciesValues({}), {"bob"});
+    TestGetFilteredGroupingPolicy(e, 1, PoliciesValues({}), {"data1_admin"});
+    TestGetFilteredGroupingPolicy(e, 1, PoliciesValues({{"alice", "data2_admin"}}), {"data2_admin"});
     // Note: "" (empty string) in fieldValues means matching all values.
-    TestGetFilteredGroupingPolicy(e, 0, {{"alice", "data2_admin"}}, {"", "data2_admin"});
+    TestGetFilteredGroupingPolicy(e, 0, PoliciesValues({{"alice", "data2_admin"}}), {"", "data2_admin"});
 
     TestHasGroupingPolicy(e, {"alice", "data2_admin"}, true);
     TestHasGroupingPolicy(e, {"bob", "data2_admin"}, false);
@@ -118,7 +118,7 @@ TEST(TestManagementAPI, TestModifyPolicyAPI) {
     std::shared_ptr<casbin::Adapter> adapter = std::make_shared<casbin::BatchFileAdapter>(rbac_policy_path);
     casbin::Enforcer e(rbac_model_path, adapter);
 
-    TestGetPolicy(e, {{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}});
+    TestGetPolicy(e, PoliciesValues({{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}}));
 
     e.RemovePolicy({"alice", "data1", "read"});
     e.RemovePolicy({"bob", "data2", "write"});
@@ -126,23 +126,23 @@ TEST(TestManagementAPI, TestModifyPolicyAPI) {
     e.AddPolicy({"eve", "data3", "read"});
     e.AddPolicy({"eve", "data3", "read"});
 
-    PoliciesValues rules{
+    PoliciesValues rules({
         {"jack", "data4", "read"},
         {"katy", "data4", "write"},
         {"leyo", "data4", "read"},
         {"ham", "data4", "write"},
-    };
+    });
 
     e.AddPolicies(rules);
     e.AddPolicies(rules);
 
-    TestGetPolicy(e, {{"data2_admin", "data2", "read"},
+    TestGetPolicy(e, PoliciesValues({{"data2_admin", "data2", "read"},
                       {"data2_admin", "data2", "write"},
                       {"eve", "data3", "read"},
                       {"jack", "data4", "read"},
                       {"katy", "data4", "write"},
                       {"leyo", "data4", "read"},
-                      {"ham", "data4", "write"}});
+                      {"ham", "data4", "write"}}));
 
     e.RemovePolicies(rules);
     e.RemovePolicies(rules);
@@ -151,19 +151,19 @@ TEST(TestManagementAPI, TestModifyPolicyAPI) {
     e.RemoveNamedPolicy("p", named_policy);
     e.AddNamedPolicy("p", named_policy);
 
-    TestGetPolicy(e, {{"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}, {"eve", "data3", "read"}});
+    TestGetPolicy(e, PoliciesValues({{"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}, {"eve", "data3", "read"}}));
 
     e.RemoveFilteredPolicy(1, {"data2"});
 
-    TestGetPolicy(e, {{"eve", "data3", "read"}});
+    TestGetPolicy(e, PoliciesValues({{"eve", "data3", "read"}}));
 
     e.UpdatePolicy({"eve", "data3", "read"}, {"eve", "data3", "write"});
-    TestGetPolicy(e, {{"eve", "data3", "write"}});
+    TestGetPolicy(e, PoliciesValues({{"eve", "data3", "write"}}));
 
     e.AddPolicies(rules);
-    e.UpdatePolicies({{"eve", "data3", "write"}, {"leyo", "data4", "read"}, {"katy", "data4", "write"}}, {{"eve", "data3", "read"}, {"leyo", "data4", "write"}, {"katy", "data1", "write"}});
+    e.UpdatePolicies(PoliciesValues({{"eve", "data3", "write"}, {"leyo", "data4", "read"}, {"katy", "data4", "write"}}), PoliciesValues({{"eve", "data3", "read"}, {"leyo", "data4", "write"}, {"katy", "data1", "write"}}));
 
-    TestGetPolicy(e, {{"eve", "data3", "read"}, {"leyo", "data4", "write"}, {"katy", "data1", "write"}});
+    TestGetPolicy(e, PoliciesValues({{"eve", "data3", "read"}, {"leyo", "data4", "write"}, {"katy", "data1", "write"}}));
 }
 
 TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
@@ -179,10 +179,10 @@ TEST(TestManagementAPI, TestModifyGroupingPolicyAPI) {
     e.AddGroupingPolicy({"bob", "data1_admin"});
     e.AddGroupingPolicy({"eve", "data3_admin"});
 
-    PoliciesValues grouping_rules{
+    PoliciesValues grouping_rules({
         {"ham", "data4_admin"},
         {"jack", "data5_admin"},
-    };
+    });
 
     e.AddGroupingPolicies(grouping_rules);
     ASSERT_TRUE(casbin::ArrayEquals({"data4_admin"}, e.GetRolesForUser("ham")));
