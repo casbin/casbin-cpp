@@ -109,7 +109,8 @@ PoliciesValues::iterator PoliciesValues::find(const PolicyValues& values) {
 void PoliciesValues::clear() {
     if (opt_base_vector.has_value())
         opt_base_vector->clear();
-    opt_base_hashset->clear();
+    else
+        opt_base_hashset->clear();
 }
 
 void PoliciesValues::erase(const iterator& it) {
