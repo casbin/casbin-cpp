@@ -19,12 +19,14 @@
 
 #include <memory>
 
+#include "policy_collection.hpp"
 #include "../rbac/role_manager.h"
 
 namespace casbin {
 
 enum policy_op { policy_add, policy_remove };
 typedef enum policy_op policy_op;
+
 
 // Assertion represents an expression in a section of the model.
 // For example: r = sub, obj, act
@@ -33,10 +35,10 @@ public:
     std::string key;
     std::string value;
     std::vector<std::string> tokens;
-    std::vector<std::vector<std::string>> policy;
+    PoliciesValues policy;
     std::shared_ptr<RoleManager> rm;
 
-    void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager>& rm, policy_op op, const std::vector<std::vector<std::string>>& rules);
+    void BuildIncrementalRoleLinks(std::shared_ptr<RoleManager>& rm, policy_op op, const PoliciesValues& rules);
 
     void BuildRoleLinks(std::shared_ptr<RoleManager>& rm);
 };

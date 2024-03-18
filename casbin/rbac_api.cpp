@@ -137,7 +137,7 @@ bool Enforcer ::DeletePermissionsForUser(const std::string& user) {
 }
 
 // GetPermissionsForUser gets permissions for a user or role.
-std::vector<std::vector<std::string>> Enforcer ::GetPermissionsForUser(const std::string& user) {
+PoliciesValues Enforcer ::GetPermissionsForUser(const std::string& user) {
     std::vector<std::string> field_values{user};
     return this->GetFilteredPolicy(0, field_values);
 }
@@ -190,7 +190,7 @@ std::vector<std::string> Enforcer ::GetImplicitRolesForUser(const std::string& n
 //
 // GetPermissionsForUser("alice") can only get: [["alice", "data2", "read"]].
 // But GetImplicitPermissionsForUser("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
-std::vector<std::vector<std::string>> Enforcer ::GetImplicitPermissionsForUser(const std::string& user, const std::vector<std::string>& domain) {
+PoliciesValues Enforcer ::GetImplicitPermissionsForUser(const std::string& user, const std::vector<std::string>& domain) {
     std::vector<std::string> roles = this->GetImplicitRolesForUser(user, domain);
     roles.insert(roles.begin(), user);
 
@@ -200,8 +200,8 @@ std::vector<std::vector<std::string>> Enforcer ::GetImplicitPermissionsForUser(c
     else if (domain.size() > 1)
         throw CasbinEnforcerException("Domain should be 1 parameter");
 
-    std::vector<std::vector<std::string>> res;
-    std::vector<std::vector<std::string>> permissions;
+    PoliciesValues res;
+    PoliciesValues permissions;
 
     for (int i = 0; i < roles.size(); i++) {
         if (with_domain)
@@ -209,8 +209,8 @@ std::vector<std::vector<std::string>> Enforcer ::GetImplicitPermissionsForUser(c
         else
             permissions = this->GetPermissionsForUser(roles[i]);
 
-        for (int i = 0; i < permissions.size(); i++)
-            res.push_back(permissions[i]);
+        for (auto& permission :  permissions)
+            res.emplace(permission);
     }
 
     return res;

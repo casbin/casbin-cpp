@@ -35,7 +35,7 @@ bool Enforcer::addPolicy(const std::string& sec, const std::string& p_type, cons
         return rule_added;
 
     if (sec == "g") {
-        std::vector<std::vector<std::string>> rules{rule};
+        PoliciesValues rules({rule});
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
     }
 
@@ -57,7 +57,7 @@ bool Enforcer::addPolicy(const std::string& sec, const std::string& p_type, cons
 }
 
 // addPolicies adds rules to the current policy.
-bool Enforcer::addPolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+bool Enforcer::addPolicies(const std::string& sec, const std::string& p_type, const PoliciesValues& rules) {
     bool rules_added = m_model->AddPolicies(sec, p_type, rules);
     if (!rules_added)
         return rules_added;
@@ -85,7 +85,7 @@ bool Enforcer::removePolicy(const std::string& sec, const std::string& p_type, c
         return rule_removed;
 
     if (sec == "g") {
-        std::vector<std::vector<std::string>> rules{rule};
+        PoliciesValues rules({rule});
         this->BuildIncrementalRoleLinks(policy_add, p_type, rules);
     }
 
@@ -107,7 +107,7 @@ bool Enforcer::removePolicy(const std::string& sec, const std::string& p_type, c
 }
 
 // removePolicies removes rules from the current policy.
-bool Enforcer::removePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& rules) {
+bool Enforcer::removePolicies(const std::string& sec, const std::string& p_type, const PoliciesValues& rules) {
     bool rules_removed = m_model->AddPolicies(sec, p_type, rules);
     if (!rules_removed)
         return rules_removed;
@@ -130,9 +130,9 @@ bool Enforcer::removePolicies(const std::string& sec, const std::string& p_type,
 
 // removeFilteredPolicy removes rules based on field filters from the current policy.
 bool Enforcer::removeFilteredPolicy(const std::string& sec, const std::string& p_type, int field_index, const std::vector<std::string>& field_values) {
-    std::pair<int, std::vector<std::vector<std::string>>> p = m_model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
+    std::pair<int, PoliciesValues> p = m_model->RemoveFilteredPolicy(sec, p_type, field_index, field_values);
     bool rule_removed = p.first;
-    std::vector<std::vector<std::string>> effects = p.second;
+    PoliciesValues effects = p.second;
 
     if (!rule_removed)
         return rule_removed;
@@ -163,8 +163,8 @@ bool Enforcer::updatePolicy(const std::string& sec, const std::string& p_type, c
         return false;
 
     if (sec == "g") {
-        this->BuildIncrementalRoleLinks(policy_remove, p_type, {oldRule});
-        this->BuildIncrementalRoleLinks(policy_add, p_type, {newRule});
+        this->BuildIncrementalRoleLinks(policy_remove, p_type, PoliciesValues({oldRule}));
+        this->BuildIncrementalRoleLinks(policy_add, p_type, PoliciesValues({newRule}));
     }
     if (m_watcher && m_auto_notify_watcher) {
         if (IsInstanceOf<WatcherUpdatable>(m_watcher.get())) {
@@ -176,7 +176,7 @@ bool Enforcer::updatePolicy(const std::string& sec, const std::string& p_type, c
     return is_rule_updated;
 }
 
-bool Enforcer::updatePolicies(const std::string& sec, const std::string& p_type, const std::vector<std::vector<std::string>>& oldRules, const std::vector<std::vector<std::string>>& newRules) {
+bool Enforcer::updatePolicies(const std::string& sec, const std::string& p_type, const PoliciesValues& oldRules, const PoliciesValues& newRules) {
     bool is_rules_updated = m_model->UpdatePolicies(sec, p_type, oldRules, newRules);
     if (!is_rules_updated)
         return false;

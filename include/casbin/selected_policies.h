@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-#ifndef CASBIN_CPP_PERSIST_BATCH_ADAPTER
-#define CASBIN_CPP_PERSIST_BATCH_ADAPTER
+#include "casbin/pch.h"
 
-#include "./adapter.h"
+#pragma once
 
-namespace casbin {
+#include <algorithm>
+#include <regex>
 
-class BatchAdapter : virtual public Adapter {
+#include "casbin/model/policy_collection.hpp"
+#include "casbin/model/evaluator.h"
+
+class SelectedPolicies final {
+private:
+    std::shared_ptr<casbin::IEvaluator> evaluator;
+    std::shared_ptr<casbin::Model> model;
+    PoliciesValues selected_policies;
+
+    std::vector<std::string> requestedPolicy();
+
 public:
-    // AddPolicies adds policy rules to the storage.
-    // This is part of the Auto-Save feature.
-    virtual void AddPolicies(std::string sec, std::string p_type, PoliciesValues rules) = 0;
-    // RemovePolicies removes policy rules from the storage.
-    // This is part of the Auto-Save feature.
-    virtual void RemovePolicies(std::string sec, std::string p_type, PoliciesValues rules) = 0;
+    SelectedPolicies(
+        const std::shared_ptr<casbin::IEvaluator>& evaluator, const std::string& matcher_, std::shared_ptr<casbin::Model> model);
+    PoliciesValues& operator*();
 };
-
-}; // namespace casbin
-
-#endif

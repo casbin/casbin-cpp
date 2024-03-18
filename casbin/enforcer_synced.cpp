@@ -280,43 +280,43 @@ std::vector<std::string> SyncedEnforcer ::GetAllNamedRoles(const std::string& pt
 }
 
 // GetPolicy gets all the authorization rules in the policy.
-std::vector<std::vector<std::string>> SyncedEnforcer ::GetPolicy() {
+PoliciesValues SyncedEnforcer ::GetPolicy() {
     std::shared_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::GetPolicy();
 }
 
 // GetNamedPolicy gets all the authorization rules in the name:x::d policy.
-std::vector<std::vector<std::string>> SyncedEnforcer ::GetNamedPolicy(const std::string& ptype) {
+PoliciesValues SyncedEnforcer ::GetNamedPolicy(const std::string& ptype) {
     std::shared_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::GetNamedPolicy(ptype);
 }
 
 // GetFilteredNamedPolicy gets all the authorization rules in the named policy, field filters can be specified.
-std::vector<std::vector<std::string>> SyncedEnforcer ::GetFilteredNamedPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) {
+PoliciesValues SyncedEnforcer ::GetFilteredNamedPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) {
     std::shared_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::GetFilteredNamedPolicy(ptype, fieldIndex, fieldValues);
 }
 
 // GetGroupingPolicy gets all the role inheritance rules in the policy.
-std::vector<std::vector<std::string>> SyncedEnforcer ::GetGroupingPolicy() {
+PoliciesValues SyncedEnforcer ::GetGroupingPolicy() {
     std::shared_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::GetGroupingPolicy();
 }
 
 // GetFilteredGroupingPolicy gets all the role inheritance rules in the policy, field filters can be specified.
-std::vector<std::vector<std::string>> SyncedEnforcer ::GetFilteredGroupingPolicy(int fieldIndex, const std::vector<std::string>& fieldValues) {
+PoliciesValues SyncedEnforcer ::GetFilteredGroupingPolicy(int fieldIndex, const std::vector<std::string>& fieldValues) {
     std::shared_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::GetFilteredGroupingPolicy(fieldIndex, fieldValues);
 }
 
 // GetNamedGroupingPolicy gets all the role inheritance rules in the policy.
-std::vector<std::vector<std::string>> SyncedEnforcer ::GetNamedGroupingPolicy(const std::string& ptype) {
+PoliciesValues SyncedEnforcer ::GetNamedGroupingPolicy(const std::string& ptype) {
     std::shared_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::GetNamedGroupingPolicy(ptype);
 }
 
 // GetFilteredNamedGroupingPolicy gets all the role inheritance rules in the policy, field filters can be specified.
-std::vector<std::vector<std::string>> SyncedEnforcer ::GetFilteredNamedGroupingPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) {
+PoliciesValues SyncedEnforcer ::GetFilteredNamedGroupingPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) {
     std::shared_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::GetFilteredNamedGroupingPolicy(ptype, fieldIndex, fieldValues);
 }
@@ -344,7 +344,7 @@ bool SyncedEnforcer ::AddPolicy(const std::vector<std::string>& params) {
 // AddPolicies adds authorization rules to the current policy.
 // If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
 // Otherwise the function returns true for the corresponding rule by adding the new rule.
-bool SyncedEnforcer ::AddPolicies(const std::vector<std::vector<std::string>>& rules) {
+bool SyncedEnforcer ::AddPolicies(const PoliciesValues& rules) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::AddPolicies(rules);
 }
@@ -360,7 +360,7 @@ bool SyncedEnforcer ::AddNamedPolicy(const std::string& ptype, const std::vector
 // AddNamedPolicies adds authorization rules to the current named policy.
 // If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
 // Otherwise the function returns true for the corresponding by adding the new rule.
-bool SyncedEnforcer ::AddNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& rules) {
+bool SyncedEnforcer ::AddNamedPolicies(const std::string& ptype, const PoliciesValues& rules) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::AddNamedPolicies(ptype, rules);
 }
@@ -383,18 +383,18 @@ bool SyncedEnforcer ::UpdateNamedPolicy(const std::string& ptype, const std::vec
 }
 
 // UpdatePolicies updates authorization rules from the current policies.
-bool SyncedEnforcer ::UpdatePolicies(const std::vector<std::vector<std::string>>& oldPolices, const std::vector<std::vector<std::string>>& newPolicies) {
+bool SyncedEnforcer ::UpdatePolicies(const PoliciesValues& oldPolices, const PoliciesValues& newPolicies) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::UpdatePolicies(oldPolices, newPolicies);
 }
 
-bool SyncedEnforcer ::UpdateNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& p1, const std::vector<std::vector<std::string>>& p2) {
+bool SyncedEnforcer ::UpdateNamedPolicies(const std::string& ptype, const PoliciesValues& p1, const PoliciesValues& p2) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::UpdateNamedPolicies(ptype, p1, p2);
 }
 
 // RemovePolicies removes authorization rules from the current policy.
-bool SyncedEnforcer ::RemovePolicies(const std::vector<std::vector<std::string>>& rules) {
+bool SyncedEnforcer ::RemovePolicies(const PoliciesValues& rules) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::RemovePolicies(rules);
 }
@@ -412,7 +412,7 @@ bool SyncedEnforcer ::RemoveNamedPolicy(const std::string& ptype, const std::vec
 }
 
 // RemoveNamedPolicies removes authorization rules from the current named policy.
-bool SyncedEnforcer ::RemoveNamedPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& rules) {
+bool SyncedEnforcer ::RemoveNamedPolicies(const std::string& ptype, const PoliciesValues& rules) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::RemoveNamedPolicies(ptype, rules);
 }
@@ -446,7 +446,7 @@ bool SyncedEnforcer ::AddGroupingPolicy(const std::vector<std::string>& params) 
 // AddGroupingPolicies adds role inheritance rulea to the current policy.
 // If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
 // Otherwise the function returns true for the corresponding policy rule by adding the new rule.
-bool SyncedEnforcer ::AddGroupingPolicies(const std::vector<std::vector<std::string>>& rules) {
+bool SyncedEnforcer ::AddGroupingPolicies(const PoliciesValues& rules) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::AddGroupingPolicies(rules);
 }
@@ -462,7 +462,7 @@ bool SyncedEnforcer ::AddNamedGroupingPolicy(const std::string& ptype, const std
 // AddNamedGroupingPolicies adds named role inheritance rules to the current policy.
 // If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
 // Otherwise the function returns true for the corresponding policy rule by adding the new rule.
-bool SyncedEnforcer ::AddNamedGroupingPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& rules) {
+bool SyncedEnforcer ::AddNamedGroupingPolicies(const std::string& ptype, const PoliciesValues& rules) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::AddNamedGroupingPolicies(ptype, rules);
 }
@@ -474,7 +474,7 @@ bool SyncedEnforcer ::RemoveGroupingPolicy(const std::vector<std::string>& param
 }
 
 // RemoveGroupingPolicies removes role inheritance rules from the current policy.
-bool SyncedEnforcer ::RemoveGroupingPolicies(const std::vector<std::vector<std::string>>& rules) {
+bool SyncedEnforcer ::RemoveGroupingPolicies(const PoliciesValues& rules) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::RemoveGroupingPolicies(rules);
 }
@@ -492,7 +492,7 @@ bool SyncedEnforcer ::RemoveNamedGroupingPolicy(const std::string& ptype, const 
 }
 
 // RemoveNamedGroupingPolicies removes role inheritance rules from the current named policy.
-bool SyncedEnforcer ::RemoveNamedGroupingPolicies(const std::string& ptype, const std::vector<std::vector<std::string>>& rules) {
+bool SyncedEnforcer ::RemoveNamedGroupingPolicies(const std::string& ptype, const PoliciesValues& rules) {
     std::unique_lock<std::shared_mutex> lock(policyMutex);
     return Enforcer::RemoveNamedGroupingPolicies(ptype, rules);
 }

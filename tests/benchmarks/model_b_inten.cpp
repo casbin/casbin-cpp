@@ -63,7 +63,7 @@ static void BenchmarkRBACModelSizesLarge(benchmark::State& state) {
 BENCHMARK(BenchmarkRBACModelSizesLarge);
 
 
-static const std::vector<std::vector<std::string>> s_policy = {{"alice", "data1", "read"}, {"bob", "data2", "write"}};
+static const PoliciesValues s_policy = {{"alice", "data1", "read"}, {"bob", "data2", "write"}};
 static void BenchmarkRBACModelMedium(benchmark::State& state) {
     casbin::Enforcer e(rbac_model_path);
 

@@ -140,6 +140,21 @@ void ExprtkEvaluator::PrintSymbol() {
     printf("Current value: %d\n", bool(this->expression));
 }
 
+std::unordered_map<std::string, std::string> ExprtkEvaluator::requestValues() const {
+    std::vector<std::string> var_list;
+    symbol_table.get_stringvar_list(var_list);
+    std::unordered_map<std::string, std::string> result;
+    for (const auto& e : var_list ) {
+       if (e[0] == 'r') {
+            auto token = e.substr(2, e.size() - 2);
+	    auto value = symbol_table.get_stringvar("r." + token)->ref().c_str();
+            result.emplace(token, value);
+        }
+    }
+    return result;
+}
+
+
 void ExprtkEvaluator::AddIdentifier(const std::string& identifier, const std::string& var) {
     if (!symbol_table.symbol_exists(identifier)) {
         identifiers_[identifier] = std::make_unique<std::string>("");

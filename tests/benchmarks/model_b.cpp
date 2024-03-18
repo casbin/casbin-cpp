@@ -21,7 +21,7 @@
 
 #include "config_path.h"
 
-static const std::vector<std::vector<std::string>> s_policy = {{"alice", "data1", "read"}, {"bob", "data2", "write"}};
+static const PoliciesValues s_policy({{"alice", "data1", "read"}, {"bob", "data2", "write"}});
 
 static bool rawEnforce(const std::string& sub, const std::string& obj, const std::string& act) {
     for (const auto& rule : s_policy) {
@@ -46,6 +46,32 @@ static void BenchmarkBasicModel(benchmark::State& state) {
 }
 
 BENCHMARK(BenchmarkBasicModel);
+
+static void BenchmarkBasicModelLargeSize(benchmark::State& state) {
+    casbin::Enforcer e(basic_model_path, "", false);
+
+    size_t actors_count = 10;
+    size_t resources_count = 100;
+    size_t resource_actor_rate = resources_count / actors_count;
+    size_t actions_count = 5;
+
+    for (size_t j = 0; j < resources_count; ++j)
+        for (size_t k = 0; k < actions_count; ++k)
+            e.AddPolicy({
+                "actor" + std::to_string(j % resource_actor_rate),
+                "resource" + std::to_string(j),
+                "action" + std::to_string(k)
+            });
+
+    casbin::DataList params = {
+	"actor" + std::to_string(actors_count - 1),
+	"resource" + std::to_string(resources_count - 1),
+	"action" + std::to_string(actions_count - 1)
+    };
+    for (auto _ : state) e.Enforce(params);
+}
+
+BENCHMARK(BenchmarkBasicModelLargeSize);
 
 static void BenchmarkRBACModel(benchmark::State& state) {
     casbin::Enforcer e(rbac_model_path, rbac_policy_path, false);

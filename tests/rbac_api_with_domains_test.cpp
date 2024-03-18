@@ -155,8 +155,8 @@ TEST(TestRBACAPIWithDomains, TestRoleAPIWithDomains) {
     ASSERT_TRUE(casbin::ArrayEquals({}, e.GetRolesForUserInDomain("non_exist", {"domain2"})));
 }
 
-void TestGetPermissionsInDomain(casbin::Enforcer& e, const std::string& name, const std::string& domain, const std::vector<std::vector<std::string>>& res) {
-    std::vector<std::vector<std::string>> my_res = e.GetPermissionsForUserInDomain(name, {domain});
+void TestGetPermissionsInDomain(casbin::Enforcer& e, const std::string& name, const std::string& domain, const PoliciesValues& res) {
+    PoliciesValues my_res = e.GetPermissionsForUserInDomain(name, {domain});
     int count = 0;
     for (auto& my_response : my_res) {
         for (auto& response : res) {
@@ -174,12 +174,12 @@ TEST(TestRBACAPIWithDomains, TestPermissionAPIInDomain) {
 
     TestGetPermissionsInDomain(e, "alice", "domain1", {});
     TestGetPermissionsInDomain(e, "bob", "domain1", {});
-    TestGetPermissionsInDomain(e, "admin", "domain1", {{"admin", "domain1", "data1", "read"}, {"admin", "domain1", "data1", "write"}});
+    TestGetPermissionsInDomain(e, "admin", "domain1", PoliciesValues({{"admin", "domain1", "data1", "read"}, {"admin", "domain1", "data1", "write"}}));
     TestGetPermissionsInDomain(e, "non_exist", "domain1", {});
 
     TestGetPermissionsInDomain(e, "alice", "domain2", {});
     TestGetPermissionsInDomain(e, "bob", "domain2", {});
-    TestGetPermissionsInDomain(e, "admin", "domain2", {{"admin", "domain2", "data2", "read"}, {"admin", "domain2", "data2", "write"}});
+    TestGetPermissionsInDomain(e, "admin", "domain2", PoliciesValues({{"admin", "domain2", "data2", "read"}, {"admin", "domain2", "data2", "write"}}));
     TestGetPermissionsInDomain(e, "non_exist", "domain2", {});
 }
 
