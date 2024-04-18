@@ -18,8 +18,8 @@ on: [push, pull_request]
 
 jobs:
   linux:
-    name: "Linux Ubuntu 20.04 (GNU 9.3.0)"
-    runs-on: ubuntu-20.04
+    name: "Ubuntu Latest (GNU 9.3.0)"
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         id: checkout
