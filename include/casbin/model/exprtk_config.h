@@ -245,44 +245,65 @@ class ExprtkFunctionFactory {
 public:
     static std::shared_ptr<exprtk_func_t> GetExprtkFunction(ExprtkFunctionType type, int narg, std::shared_ptr<RoleManager> rm = nullptr) {
         std::string idenfier(narg, 'S');
+
+        // Static map to act as an object pool
+        static std::unordered_map<std::string, std::shared_ptr<exprtk_func_t>> pool;
+
+        // Create a key for the object pool using the type and identifier
+        std::string key = std::to_string(static_cast<int>(type)) + idenfier;
+
+        // Check if the object already exists in the pool
+        if (pool.find(key) != pool.end()) {
+            // If it exists, return the existing object
+            return pool[key];
+        }
+
+        // If it doesn't exist, create a new object
         std::shared_ptr<exprtk_func_t> func = nullptr;
         switch (type) {
             case ExprtkFunctionType::Gfunction:
                 func = std::make_shared<ExprtkGFunction>(idenfier, rm);
                 break;
             case ExprtkFunctionType::KeyMatch:
-                func.reset(new ExprtkMatchFunction(idenfier, KeyMatch));
+                func = std::make_shared<ExprtkMatchFunction>(idenfier, KeyMatch);
                 break;
             case ExprtkFunctionType::KeyMatch2:
-                func.reset(new ExprtkMatchFunction(idenfier, KeyMatch2));
+                func = std::make_shared<ExprtkMatchFunction>(idenfier, KeyMatch2);
                 break;
             case ExprtkFunctionType::KeyMatch3:
-                func.reset(new ExprtkMatchFunction(idenfier, KeyMatch3));
+                func = std::make_shared<ExprtkMatchFunction>(idenfier, KeyMatch3);
                 break;
             case ExprtkFunctionType::KeyMatch4:
-                func.reset(new ExprtkMatchFunction(idenfier, KeyMatch4));
+                func = std::make_shared<ExprtkMatchFunction>(idenfier, KeyMatch4);
                 break;
             case ExprtkFunctionType::IpMatch:
-                func.reset(new ExprtkMatchFunction(idenfier, IPMatch));
+                func = std::make_shared<ExprtkMatchFunction>(idenfier, IPMatch);
                 break;
             case ExprtkFunctionType::RegexMatch:
-                func.reset(new ExprtkMatchFunction(idenfier, RegexMatch));
+                func = std::make_shared<ExprtkMatchFunction>(idenfier, RegexMatch);
                 break;
             case ExprtkFunctionType::KeyGet:
-                func.reset(new ExprtkGetFunction(idenfier, KeyGet));
+                func = std::make_shared<ExprtkGetFunction>(idenfier, KeyGet);
                 break;
             case ExprtkFunctionType::KeyGet2:
-                func.reset(new ExprtkGetWithPathFunction(idenfier, KeyGet2));
+                func = std::make_shared<ExprtkGetWithPathFunction>(idenfier, KeyGet2);
                 break;
             case ExprtkFunctionType::KeyGet3:
-                func.reset(new ExprtkGetWithPathFunction(idenfier, KeyGet3));
+                func = std::make_shared<ExprtkGetWithPathFunction>(idenfier, KeyGet3);
                 break;
             default:
                 func = nullptr;
         }
 
+        // If a new object was created, add it to the pool
+        if (func) {
+            pool[key] = func;
+        }
+        pool.clear();
+        // Return the newly created or existing object
         return func;
     }
+
 };
 } // namespace casbin
 
