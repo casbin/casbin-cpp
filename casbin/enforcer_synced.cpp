@@ -513,6 +513,81 @@ bool SyncedEnforcer ::RemoveFilteredNamedGroupingPolicy(const std::string& ptype
     return Enforcer::RemoveFilteredNamedGroupingPolicy(ptype, fieldIndex, fieldValues);
 }
 
+// GetAllActions gets the list of actions that show up in the current policy.
+std::vector<std::string> SyncedEnforcer::GetAllActions() {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::GetAllActions();
+}
+
+// GetFilteredPolicy gets all the authorization rules in the policy, field filters can be specified.
+PoliciesValues SyncedEnforcer::GetFilteredPolicy(int fieldIndex, std::vector<std::string> fieldValues) {
+   std::unique_lock<std::shared_mutex> lock(policyMutex);
+   return Enforcer::GetFilteredPolicy(fieldIndex, fieldValues);
+}
+
+// EnforceExWithMatcher use a custom matcher and explain enforcement by informing matched rules.
+bool SyncedEnforcer::SyncedEnforceExWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceExWithMatcher(matcher, evalator, explain);
+}
+
+bool SyncedEnforcer::SyncedEnforceExWithMatcher(const std::string& matcher, const DataList& params, std::vector<std::string>& explain) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceExWithMatcher(matcher, params, explain);
+}
+
+bool SyncedEnforcer::SyncedEnforceExWithMatcher(const std::string& matcher, const DataVector& params, std::vector<std::string>& explain) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceExWithMatcher(matcher, params, explain);
+}
+
+bool SyncedEnforcer::SyncedEnforceExWithMatcher(const std::string& matcher, const DataMap& params, std::vector<std::string>& explain) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceExWithMatcher(matcher, params, explain);
+}
+
+// EnforceEx explain enforcement by informing matched rules.
+bool SyncedEnforcer::SyncedEnforceEx(std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceEx(evalator, explain);
+}
+
+bool SyncedEnforcer::SyncedEnforceEx(const DataList& params, std::vector<std::string>& explain) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceEx(params, explain);
+}
+
+bool SyncedEnforcer::SyncedEnforceEx(const DataVector& params, std::vector<std::string>& explain) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceEx(params, explain);
+}
+
+bool SyncedEnforcer::SyncedEnforceEx(const DataMap& params, std::vector<std::string>& explain) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceEx(params, explain);
+}
+
+// EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
+bool SyncedEnforcer::SyncedEnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceWithMatcher(matcher, evalator);
+}
+
+bool SyncedEnforcer::SyncedEnforceWithMatcher(const std::string& matcher, const DataList& params) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceWithMatcher(matcher, params);
+}
+
+bool SyncedEnforcer::SyncedEnforceWithMatcher(const std::string& matcher, const DataVector& params) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceWithMatcher(matcher, params);
+}
+
+bool SyncedEnforcer::SyncedEnforceWithMatcher(const std::string& matcher, const DataMap& params) {
+    std::unique_lock<std::shared_mutex> lock(policyMutex);
+    return Enforcer::EnforceWithMatcher(matcher, params);
+}
+
 } // namespace casbin
 
 #endif // ENFORCER_SYNCED_CPP

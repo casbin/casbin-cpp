@@ -334,4 +334,28 @@ TEST(TestEnforcerSynced, TestMultiThreadBatchEnforce) {
     EXPECT_EQ(e.IsAutoLoadingRunning(), false);
 }
 
+void testSyncedEnforcerGetPolicy(casbin::SyncedEnforcer& e, PoliciesVector expected) {
+    auto myRes = e.GetPolicy();
+    PoliciesVector actual;
+    for (auto it = myRes.begin(); it != myRes.end(); ++it) {
+        actual.push_back(*it);
+    }
+    std::sort(actual.begin(), actual.end());
+    std::sort(expected.begin(), expected.end());
+    ASSERT_EQ(expected, actual);
+}
+
+TEST(TestSyncedEnforcer, GetPolicy) {
+    casbin::SyncedEnforcer e(basic_model_path, basic_policy_path);
+
+    PoliciesVector expected_policy = {
+        {"alice", "data1", "read"},
+        {"bob", "data2", "write"},
+    };
+
+    testSyncedEnforcerGetPolicy(e, expected_policy);
+}
+
+
+
 } // namespace

@@ -292,6 +292,40 @@ public:
 
     // RemoveFilteredNamedGroupingPolicy removes a role inheritance rule from the current named policy, field filters can be specified.
     bool RemoveFilteredNamedGroupingPolicy(const std::string& ptype, int fieldIndex, const std::vector<std::string>& fieldValues) override;
+
+    // GetAllActions gets the list of actions that show up in the current policy.
+
+    std::vector<std::string> GetAllActions() override;
+
+    // GetFilteredPolicy gets all the authorization rules in the policy, field filters can be specified.
+    PoliciesValues GetFilteredPolicy(int fieldIndex, std::vector<std::string> fieldValues);
+
+    // EnforceExWithMatcher use a custom matcher and explain enforcement by informing matched rules.
+    bool SyncedEnforceExWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain);
+
+    bool SyncedEnforceExWithMatcher(const std::string& matcher, const DataList& params, std::vector<std::string>& explain);
+
+    bool SyncedEnforceExWithMatcher(const std::string& matcher, const DataVector& params, std::vector<std::string>& explain);
+
+    bool SyncedEnforceExWithMatcher(const std::string& matcher, const DataMap& params, std::vector<std::string>& explain);
+
+    // EnforceEx explain enforcement by informing matched rules.
+    bool SyncedEnforceEx(std::shared_ptr<IEvaluator> evalator, std::vector<std::string>& explain);
+
+    bool SyncedEnforceEx(const DataList& params, std::vector<std::string>& explain);
+
+    bool SyncedEnforceEx(const DataVector& params, std::vector<std::string>& explain);
+
+    bool SyncedEnforceEx(const DataMap& params, std::vector<std::string>& explain);
+
+    // EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model
+    bool SyncedEnforceWithMatcher(const std::string& matcher, std::shared_ptr<IEvaluator> evalator);
+
+    bool SyncedEnforceWithMatcher(const std::string& matcher, const DataList& params);
+
+    bool SyncedEnforceWithMatcher(const std::string& matcher, const DataVector& params);
+
+    bool SyncedEnforceWithMatcher(const std::string& matcher, const DataMap& params);
 };
 
 } // namespace casbin
