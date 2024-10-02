@@ -34,6 +34,24 @@
 
 namespace casbin {
 
+namespace {
+    static const std::regex capturingColonNonSlashRegex("(.*?):[^/]+(.*?)");
+    static const std::regex enclosedPlaceHolderRegex("(.*?)\\{[^/]+?\\}(.*?)");
+
+    std::string PrepareWildCardMatching(const std::string& value) {
+        static const std::regex pattern("/\\*");    
+        return std::regex_replace(value, pattern, "/.*");
+    }
+
+    std::string EscapeCurlyBraces(const std::string& value) {
+        static const std::regex curlyBraceOpenPattern("\\{");
+        static const std::regex curlyBraceClosePattern("\\}");
+        
+        std::string intermediate = std::regex_replace(value, curlyBraceOpenPattern, "\\{");
+        return std::regex_replace(intermediate, curlyBraceClosePattern, "\\}");
+    }
+}
+
 // KeyMatch determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*"
 bool KeyMatch(const std::string& key1, const std::string& key2) {
@@ -67,10 +85,9 @@ std::string KeyGet(const std::string& key1, const std::string& key2) {
 // KeyMatch2 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/:resource"
 bool KeyMatch2(const std::string& key1, const std::string& key2) {
-    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
-    k2 = regex_replace(k2, std::regex("(.*?):[^/]+(.*?)"), "$1[^/]+$2");
-    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
-    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
+    std::string k2 = PrepareWildCardMatching(key2);
+    k2 = std::regex_replace(k2, capturingColonNonSlashRegex, "$1[^/]+$2");
+    k2 = EscapeCurlyBraces(k2);
 
     if (!k2.compare("*"))
         k2 = "(.*)";
@@ -82,17 +99,16 @@ bool KeyMatch2(const std::string& key1, const std::string& key2) {
 // For example, "/resource1" matches "/:resource"
 // if the path_var == "resource", then "resource1" will be returned
 std::string KeyGet2(const std::string& key1, const std::string& key2, const std::string& path_var) {
-    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
+    static const std::regex colonAnyButSlashPattern(":[^/]+");    
+    std::string k2 = PrepareWildCardMatching(key2);
 
     std::vector<std::string> keys;
-    std::regex keys_regex(":[^/]+");
-    for (std::sregex_iterator it(k2.begin(), k2.end(), keys_regex), end_it; it != end_it; ++it) {
+    for (std::sregex_iterator it(k2.begin(), k2.end(), colonAnyButSlashPattern), end_it; it != end_it; ++it) {
         keys.push_back(it->str());
     }
 
-    k2 = regex_replace(k2, std::regex("(.*?):[^/]+(.*?)"), "$1([^/]+)$2");
-    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
-    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
+    k2 = std::regex_replace(k2, capturingColonNonSlashRegex, "$1([^/]+)$2");
+    k2 = EscapeCurlyBraces(k2);
     if (!k2.compare("*"))
         k2 = "(.*)";
     k2 = "^" + k2 + "$";
@@ -110,10 +126,9 @@ std::string KeyGet2(const std::string& key1, const std::string& key2, const std:
 // KeyMatch3 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
 // For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/{resource}"
 bool KeyMatch3(const std::string& key1, const std::string& key2) {
-    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
-    k2 = regex_replace(k2, std::regex("(.*?)\\{[^/]+?\\}(.*?)"), "$1[^/]+$2");
-    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
-    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
+    std::string k2 = PrepareWildCardMatching(key2);
+    k2 = std::regex_replace(k2, enclosedPlaceHolderRegex, "$1[^/]+$2");
+    k2 = EscapeCurlyBraces(k2);
 
     return RegexMatch(key1, "^" + k2 + "$");
 }
@@ -122,17 +137,16 @@ bool KeyMatch3(const std::string& key1, const std::string& key2) {
 // For example, "project/proj_project1_admin/" matches "project/proj_{project}_admin/"
 // if the pathVar == "project", then "project1" will be returned
 std::string KeyGet3(const std::string& key1, const std::string& key2, const std::string& path_var) {
-    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
+    static const std::regex placeHolderPattern("\\{[^/]+?\\}");
+    std::string k2 = PrepareWildCardMatching(key2);
 
     std::vector<std::string> keys;
-    std::regex keys_regex("\\{[^/]+?\\}");
-    for (std::sregex_iterator it(k2.begin(), k2.end(), keys_regex), end_it; it != end_it; ++it) {
+    for (std::sregex_iterator it(k2.begin(), k2.end(), placeHolderPattern), end_it; it != end_it; ++it) {
         keys.push_back(it->str());
     }
 
-    k2 = regex_replace(k2, std::regex("(.*?)\\{[^/]+?\\}(.*?)"), "$1([^/]+?)$2");
-    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
-    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
+    k2 = std::regex_replace(k2, enclosedPlaceHolderRegex, "$1([^/]+?)$2");
+    k2 = EscapeCurlyBraces(k2);
     if (!k2.compare("*"))
         k2 = "(.*)";
     k2 = "^" + k2 + "$";
@@ -153,16 +167,15 @@ std::string KeyGet3(const std::string& key1, const std::string& key2, const std:
 // "/parent/123/child/456" does not match "/parent/{id}/child/{id}"
 // But KeyMatch3 will match both.
 bool KeyMatch4(const std::string& key1, const std::string& key2) {
-    std::string k2 = regex_replace(key2, std::regex("/\\*"), "/.*");
+    std::string k2 = PrepareWildCardMatching(key2);
 
     std::vector<std::string> tokens;
-    std::regex tokens_regex("\\{([^/]+)\\}");
+    static std::regex tokens_regex("\\{([^/]+)\\}");
     for (std::sregex_iterator it(k2.begin(), k2.end(), tokens_regex), end_it; it != end_it; ++it)
         tokens.push_back(it->str());
 
-    k2 = regex_replace(k2, std::regex("(.*?)\\{[^/]+?\\}(.*?)"), "$1([^/]+)$2");
-    k2 = regex_replace(k2, std::regex("\\{"), "\\{");
-    k2 = regex_replace(k2, std::regex("\\}"), "\\}");
+    k2 = std::regex_replace(k2, enclosedPlaceHolderRegex, "$1([^/]+)$2");
+    k2 = EscapeCurlyBraces(k2);
     k2 = "^" + k2 + "$";
     std::smatch matches;
     std::regex_match(key1.begin(), key1.end(), matches, std::regex(k2));
@@ -187,7 +200,7 @@ bool KeyMatch4(const std::string& key1, const std::string& key2) {
 // RegexMatch determines whether key1 matches the pattern of key2 in regular expression.
 bool RegexMatch(const std::string& key1, const std::string& key2) {
     std::regex regex_s(key2);
-    return regex_match(key1, regex_s);
+    return std::regex_match(key1, regex_s);
 }
 
 // IPMatch determines whether IP address ip1 matches the pattern of IP address ip2, ip2 can be an IP address or a CIDR pattern.
