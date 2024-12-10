@@ -38,17 +38,24 @@ namespace {
     static const std::regex capturingColonNonSlashRegex("(.*?):[^/]+(.*?)");
     static const std::regex enclosedPlaceHolderRegex("(.*?)\\{[^/]+?\\}(.*?)");
 
+    std::string ReplacePattern(std::string const& in, std::string const& pattern, std::string const& replacement) {
+        std::string result = in;
+        std::size_t pos = 0;
+        // Replace all occurrences of pattern with replacement
+        while ((pos = result.find(pattern, pos)) != std::string::npos) {
+            result.replace(pos, pattern.length(), replacement);
+            pos += replacement.length(); // Move over change
+        }
+        return result;
+    }
+
     std::string PrepareWildCardMatching(const std::string& value) {
-        static const std::regex pattern("/\\*");    
-        return std::regex_replace(value, pattern, "/.*");
+        return ReplacePattern(value, "/*", "/.*");
     }
 
     std::string EscapeCurlyBraces(const std::string& value) {
-        static const std::regex curlyBraceOpenPattern("\\{");
-        static const std::regex curlyBraceClosePattern("\\}");
-        
-        std::string intermediate = std::regex_replace(value, curlyBraceOpenPattern, "\\{");
-        return std::regex_replace(intermediate, curlyBraceClosePattern, "\\}");
+        std::string intermediate = ReplacePattern(value, "{", "\\{");
+        return ReplacePattern(intermediate, "}", "\\}");
     }
 }
 
