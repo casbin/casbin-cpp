@@ -15,7 +15,7 @@
  */
 
 #include "casbin/model/policy_collection.hpp"
-
+#include <algorithm>
 
 PoliciesValues::PoliciesValues(PoliciesVector&& base_collection)
     : opt_base_vector(base_collection), opt_base_hashset({}) {}

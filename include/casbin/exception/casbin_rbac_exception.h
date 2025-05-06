@@ -17,6 +17,8 @@
 #ifndef CASBIN_CPP_EXCEPTION_CASBIN_RBAC_EXCEPTION
 #define CASBIN_CPP_EXCEPTION_CASBIN_RBAC_EXCEPTION
 
+#include <stdexcept>
+
 namespace casbin {
 
 // Exception class for Casbin Adapter Exception.

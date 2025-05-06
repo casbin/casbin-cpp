@@ -18,6 +18,8 @@
 
 #include <unordered_set>
 #include <optional>
+#include <vector>
+#include <string>
 
 template<>
 struct std::hash<std::vector<std::string>> {
