@@ -20,7 +20,6 @@ FetchContent_Declare(
   json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
   GIT_TAG v3.11.2
-  CMAKE_ARGS -DCMAKE_POLICY_DEFAULT_CMP0000=OLD
   DOWNLOAD_EXTRACT_TIMESTAMP FALSE
 )
 
