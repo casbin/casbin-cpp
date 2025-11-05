@@ -88,7 +88,8 @@ void ExprtkEvaluator::PushObjectJson(const std::string& target, const std::strin
             // Handle null as empty string
             this->AddIdentifier(prefix, "");
         }
-        // Arrays are not supported in the original test, so we skip them
+        // Note: JSON arrays are intentionally not handled by this implementation.
+        // If an array is encountered, it is silently ignored and no identifier is added.
     };
 
     flatten(identifier, var);

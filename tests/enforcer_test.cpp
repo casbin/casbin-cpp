@@ -424,7 +424,7 @@ TEST(TestEnforcer, JsonData) {
     evaluator->InitialObject("r");
 
     // Test simple JSON with various data types
-    json myJson = {{"DoubleCase", 3.141}, {"IntegerCase", 2}, {"BoolenCase", true}, {"StringCase", "Bob"}, {"x", {{"y", {{"z", 1}}}, {"x", 2}}}};
+    json myJson = {{"DoubleCase", 3.141}, {"IntegerCase", 2}, {"BooleanCase", true}, {"StringCase", "Bob"}, {"x", {{"y", {{"z", 1}}}, {"x", 2}}}};
 
     evaluator->PushObjectJson("r", "data", myJson);
 
@@ -437,7 +437,7 @@ TEST(TestEnforcer, JsonData) {
     ASSERT_TRUE(evaluator->GetBoolean());
 
     // Test boolean value (stored as string "true")
-    ASSERT_TRUE(evaluator->Eval("r.data.BoolenCase == 'true'"));
+    ASSERT_TRUE(evaluator->Eval("r.data.BooleanCase == 'true'"));
     ASSERT_TRUE(evaluator->GetBoolean());
 
     // Test string value
@@ -459,7 +459,7 @@ TEST(TestEnforcer, JsonData) {
     ASSERT_TRUE(evaluator->Eval("r.data.IntegerCase == '1'"));
     ASSERT_FALSE(evaluator->GetBoolean());
 
-    ASSERT_TRUE(evaluator->Eval("r.data.BoolenCase == 'false'"));
+    ASSERT_TRUE(evaluator->Eval("r.data.BooleanCase == 'false'"));
     ASSERT_FALSE(evaluator->GetBoolean());
 
     ASSERT_TRUE(evaluator->Eval("r.data.StringCase == 'BoB'"));
