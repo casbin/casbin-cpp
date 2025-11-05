@@ -155,6 +155,125 @@ TEST(TestEnforcer, TestMapParams) {
     ASSERT_EQ(e.Enforce(params), true);
 }
 
+TEST(TestEnforcer, TestJsonData) {
+    using json = nlohmann::json;
+    casbin::Enforcer e(abac_rule_model_path, abac_rule_policy_path);
+
+    // Test with JSON object containing Age property
+    // Policy: p, r.sub.Age > 18, /data1, read
+    auto sub_json_adult = std::make_shared<json>(json{
+        {"Name", "alice"},
+        {"Age", 30}
+    });
+
+    casbin::DataMap params = {
+        {"sub", sub_json_adult},
+        {"obj", "/data1"},
+        {"act", "read"}
+    };
+
+    // Should be allowed: Age 30 > 18
+    ASSERT_EQ(e.Enforce(params), true);
+
+    // Test with minor (Age < 18)
+    auto sub_json_minor = std::make_shared<json>(json{
+        {"Name", "bob"},
+        {"Age", 16}
+    });
+
+    params = {
+        {"sub", sub_json_minor},
+        {"obj", "/data1"},
+        {"act", "read"}
+    };
+
+    // Should be denied: Age 16 < 18
+    ASSERT_EQ(e.Enforce(params), false);
+
+    // Test policy: p, r.sub.Age < 60, /data2, write
+    auto sub_json_young = std::make_shared<json>(json{
+        {"Name", "charlie"},
+        {"Age", 45}
+    });
+
+    params = {
+        {"sub", sub_json_young},
+        {"obj", "/data2"},
+        {"act", "write"}
+    };
+
+    // Should be allowed: Age 45 < 60
+    ASSERT_EQ(e.Enforce(params), true);
+
+    // Test with senior (Age >= 60)
+    auto sub_json_senior = std::make_shared<json>(json{
+        {"Name", "dave"},
+        {"Age", 65}
+    });
+
+    params = {
+        {"sub", sub_json_senior},
+        {"obj", "/data2"},
+        {"act", "write"}
+    };
+
+    // Should be denied: Age 65 >= 60
+    ASSERT_EQ(e.Enforce(params), false);
+}
+
+TEST(TestEnforcer, TestComplexJsonData) {
+    using json = nlohmann::json;
+    
+    // Create a custom model and policy for testing complex JSON structures
+    // similar to the issue example
+    casbin::Enforcer e(abac_rule_model_path, abac_rule_policy_path);
+
+    // Test with complex nested JSON object like in the issue
+    auto complex_request = std::make_shared<json>(json{
+        {"ID", "zk"},
+        {"proxy", "vpn"},
+        {"Department", "nlp"},
+        {"month", "Jan"},
+        {"week", "Mon"},
+        {"time", "morning"},
+        {"Longitude", 123},
+        {"Latitude", 456},
+        {"Altitude", 789},
+        {"OS", "HarmonyOS"},
+        {"CPU", "XeonPlatinum8480+"},
+        {"NetworkType", "WLan"},
+        {"ProtocolType", "Bluetooth"},
+        {"EncryptionType", "3DES"},
+        {"SecurityProtocol", "HTTPS"},
+        {"Age", 25}  // For testing with existing policy
+    });
+
+    casbin::DataMap params = {
+        {"sub", complex_request},
+        {"obj", "/data1"},
+        {"act", "read"}
+    };
+
+    // Should work with complex JSON - Age 25 > 18
+    ASSERT_EQ(e.Enforce(params), true);
+
+    // Test with object that also contains nested objects
+    auto obj_json = std::make_shared<json>(json{
+        {"SecurityLevel", 3},
+        {"Source", "ISS"},
+        {"DistributionMethod", "C"}
+    });
+
+    params = {
+        {"sub", complex_request},
+        {"obj", obj_json},
+        {"act", "read"}
+    };
+
+    // This should not crash even with JSON in multiple parameters
+    ASSERT_NO_THROW(e.Enforce(params));
+}
+
 template <typename T>
 void TestEnforceEx(casbin::Enforcer& e, T&& params, const bool expect_result, const std::vector<std::string>& expect_explain) {
     std::vector<std::string> actual_explain;

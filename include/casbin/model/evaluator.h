@@ -71,6 +71,7 @@ private:
     parser_t parser;
     std::vector<std::shared_ptr<exprtk_func_t>> Functions;
     std::unordered_map<std::string, std::unique_ptr<std::string>> identifiers_;
+    std::unordered_map<std::string, std::unique_ptr<numerical_type>> numeric_identifiers_;
 
 public:
     ExprtkEvaluator() {
@@ -108,6 +109,8 @@ public:
     void AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func);
 
     void AddIdentifier(const std::string& identifier, const std::string& var);
+
+    void AddNumericIdentifier(const std::string& identifier, numerical_type value);
 
     std::unordered_map<std::string, std::string> requestValues() const override;
 };
