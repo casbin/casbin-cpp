@@ -19,7 +19,7 @@ set(JSON_Install ON)
 FetchContent_Declare(
   json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG v3.11.2
+  GIT_TAG v3.11.3
   DOWNLOAD_EXTRACT_TIMESTAMP FALSE
 )
 
