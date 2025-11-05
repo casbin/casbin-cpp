@@ -61,7 +61,22 @@ void ExprtkEvaluator::PushObjectString(const std::string& target, const std::str
 
 void ExprtkEvaluator::PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var) {
     auto identifier = target + "." + proprity;
-    // this->symbol_table.add_stringvar(identifier, const_cast<std::string&>(var));
+    
+    // Recursively flatten JSON object into dot-notation identifiers
+    if (var.is_object()) {
+        for (auto& [key, value] : var.items()) {
+            PushObjectJson(identifier, key, value);
+        }
+    } else if (var.is_string()) {
+        this->AddIdentifier(identifier, var.get<std::string>());
+    } else if (var.is_number_integer()) {
+        this->AddNumericIdentifier(identifier, static_cast<numerical_type>(var.get<int>()));
+    } else if (var.is_number_float()) {
+        this->AddNumericIdentifier(identifier, static_cast<numerical_type>(var.get<double>()));
+    } else if (var.is_boolean()) {
+        this->AddNumericIdentifier(identifier, static_cast<numerical_type>(var.get<bool>() ? 1 : 0));
+    }
+    // For other types (arrays, null, etc.), we skip them as they're not supported in the expression evaluator
 }
 
 void ExprtkEvaluator::LoadFunctions() {
@@ -118,6 +133,7 @@ void ExprtkEvaluator::Clean(AssertionMap& section, bool after_enforce) {
     this->expression_string_ = "";
     this->Functions.clear();
     this->identifiers_.clear();
+    this->numeric_identifiers_.clear();
 }
 
 void ExprtkEvaluator::AddFunction(const std::string& func_name, std::shared_ptr<exprtk_func_t> func) {
@@ -161,6 +177,14 @@ void ExprtkEvaluator::AddIdentifier(const std::string& identifier, const std::st
         this->symbol_table.add_stringvar(identifier, *identifiers_[identifier]);
     }
     symbol_table.get_stringvar(identifier)->ref() = var;
+}
+
+void ExprtkEvaluator::AddNumericIdentifier(const std::string& identifier, numerical_type value) {
+    if (!symbol_table.symbol_exists(identifier)) {
+        numeric_identifiers_[identifier] = std::make_unique<numerical_type>(0);
+        this->symbol_table.add_variable(identifier, *numeric_identifiers_[identifier]);
+    }
+    *numeric_identifiers_[identifier] = value;
 }
 
 } // namespace casbin
