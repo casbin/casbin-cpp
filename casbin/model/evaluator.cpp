@@ -69,9 +69,8 @@ void ExprtkEvaluator::PushObjectJson(const std::string& target, const std::strin
         }
     } else if (var.is_string()) {
         this->AddIdentifier(identifier, var.get<std::string>());
-    } else if (var.is_number_integer()) {
-        this->AddNumericIdentifier(identifier, static_cast<numerical_type>(var.get<int>()));
-    } else if (var.is_number_float()) {
+    } else if (var.is_number()) {
+        // Get as double first to preserve precision, then cast to numerical_type
         this->AddNumericIdentifier(identifier, static_cast<numerical_type>(var.get<double>()));
     } else if (var.is_boolean()) {
         this->AddNumericIdentifier(identifier, static_cast<numerical_type>(var.get<bool>() ? 1 : 0));
