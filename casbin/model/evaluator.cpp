@@ -62,7 +62,7 @@ void ExprtkEvaluator::PushObjectString(const std::string& target, const std::str
 
 void ExprtkEvaluator::PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var) {
     auto identifier = target + "." + proprity;
-    
+
     // Recursively flatten JSON object into dot-notation identifiers
     std::function<void(const std::string&, const nlohmann::json&)> flatten;
     flatten = [&](const std::string& prefix, const nlohmann::json& j) {
@@ -90,7 +90,7 @@ void ExprtkEvaluator::PushObjectJson(const std::string& target, const std::strin
         }
         // Arrays are not supported in the original test, so we skip them
     };
-    
+
     flatten(identifier, var);
 }
 
@@ -174,16 +174,15 @@ std::unordered_map<std::string, std::string> ExprtkEvaluator::requestValues() co
     std::vector<std::string> var_list;
     symbol_table.get_stringvar_list(var_list);
     std::unordered_map<std::string, std::string> result;
-    for (const auto& e : var_list ) {
-       if (e[0] == 'r') {
+    for (const auto& e : var_list) {
+        if (e[0] == 'r') {
             auto token = e.substr(2, e.size() - 2);
-	    auto value = symbol_table.get_stringvar("r." + token)->ref().c_str();
+            auto value = symbol_table.get_stringvar("r." + token)->ref().c_str();
             result.emplace(token, value);
         }
     }
     return result;
 }
-
 
 void ExprtkEvaluator::AddIdentifier(const std::string& identifier, const std::string& var) {
     if (!symbol_table.symbol_exists(identifier)) {
