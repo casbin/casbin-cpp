@@ -18,12 +18,12 @@ on: [push, pull_request]
 
 jobs:
   linux:
-    name: "Ubuntu Latest (GNU 9.3.0)"
+    name: "Ubuntu Latest"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install requirement
         id: install-requirements
         run: |
