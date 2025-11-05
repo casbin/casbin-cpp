@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.21)
 
 set(CMAKE_WARN_DEPRECATED ON)
 set(PY_CASBIN_VERSION 1.1)
