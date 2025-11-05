@@ -15,6 +15,7 @@
  */
 #include "casbin/model/evaluator.h"
 
+#include <functional>
 #include <regex>
 
 #include "casbin/util/util.h"
@@ -61,7 +62,36 @@ void ExprtkEvaluator::PushObjectString(const std::string& target, const std::str
 
 void ExprtkEvaluator::PushObjectJson(const std::string& target, const std::string& proprity, const nlohmann::json& var) {
     auto identifier = target + "." + proprity;
-    // this->symbol_table.add_stringvar(identifier, const_cast<std::string&>(var));
+    
+    // Recursively flatten JSON object into dot-notation identifiers
+    std::function<void(const std::string&, const nlohmann::json&)> flatten;
+    flatten = [&](const std::string& prefix, const nlohmann::json& j) {
+        if (j.is_object()) {
+            // Recursively process nested objects
+            for (auto it = j.begin(); it != j.end(); ++it) {
+                std::string key = it.key();
+                flatten(prefix + "." + key, it.value());
+            }
+        } else if (j.is_string()) {
+            // Add string value
+            this->AddIdentifier(prefix, j.get<std::string>());
+        } else if (j.is_number_integer()) {
+            // Convert integer to string
+            this->AddIdentifier(prefix, std::to_string(j.get<int>()));
+        } else if (j.is_number_float()) {
+            // Convert float to string
+            this->AddIdentifier(prefix, std::to_string(j.get<double>()));
+        } else if (j.is_boolean()) {
+            // Convert boolean to string
+            this->AddIdentifier(prefix, j.get<bool>() ? "true" : "false");
+        } else if (j.is_null()) {
+            // Handle null as empty string
+            this->AddIdentifier(prefix, "");
+        }
+        // Arrays are not supported in the original test, so we skip them
+    };
+    
+    flatten(identifier, var);
 }
 
 void ExprtkEvaluator::LoadFunctions() {

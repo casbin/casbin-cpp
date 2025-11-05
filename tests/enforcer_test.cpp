@@ -416,4 +416,145 @@ TEST(TestEnforcerEx, TestMapParams) {
 //     ASSERT_TRUE(!EvalAndGetTop(scope, s6));
 // }
 
+TEST(TestEnforcer, JsonData) {
+    using json = nlohmann::json;
+    
+    // Create evaluator and initialize
+    auto evaluator = std::make_shared<casbin::ExprtkEvaluator>();
+    evaluator->InitialObject("r");
+    
+    // Test simple JSON with various data types
+    json myJson = {
+        {"DoubleCase", 3.141},
+        {"IntegerCase", 2},
+        {"BoolenCase", true},
+        {"StringCase", "Bob"},
+        {"x", {
+            {"y", {
+                {"z", 1}
+            }},
+            {"x", 2}
+        }}
+    };
+    
+    evaluator->PushObjectJson("r", "data", myJson);
+    
+    // Test double value (stored as string "3.141000")
+    ASSERT_TRUE(evaluator->Eval("r.data.DoubleCase == '3.141000'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    // Test integer value (stored as string "2")
+    ASSERT_TRUE(evaluator->Eval("r.data.IntegerCase == '2'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    // Test boolean value (stored as string "true")
+    ASSERT_TRUE(evaluator->Eval("r.data.BoolenCase == 'true'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    // Test string value
+    ASSERT_TRUE(evaluator->Eval("r.data.StringCase == 'Bob'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    // Test nested JSON - x.y.z (stored as string "1")
+    ASSERT_TRUE(evaluator->Eval("r.data.x.y.z == '1'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    // Test nested JSON - x.x (stored as string "2")
+    ASSERT_TRUE(evaluator->Eval("r.data.x.x == '2'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    // Test negative cases
+    ASSERT_TRUE(evaluator->Eval("r.data.DoubleCase == '3.14'"));
+    ASSERT_FALSE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.data.IntegerCase == '1'"));
+    ASSERT_FALSE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.data.BoolenCase == 'false'"));
+    ASSERT_FALSE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.data.StringCase == 'BoB'"));
+    ASSERT_FALSE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.data.x.y.z == '2'"));
+    ASSERT_FALSE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.data.x.x == '1'"));
+    ASSERT_FALSE(evaluator->GetBoolean());
+}
+
+TEST(TestEnforcer, JsonDataComplex) {
+    using json = nlohmann::json;
+    
+    // Create evaluator and initialize
+    auto evaluator = std::make_shared<casbin::ExprtkEvaluator>();
+    evaluator->InitialObject("r");
+    
+    // Test complex nested JSON similar to the issue example
+    json sub = {
+        {"ID", "zk"},
+        {"proxy", "vpn"},
+        {"Department", "nlp"},
+        {"month", "Jan"},
+        {"week", "Mon"},
+        {"time", "morning"},
+        {"Longitude", "123"},
+        {"Latitude", "456"},
+        {"Altitude", "789"},
+        {"OS", "HarmonyOS"},
+        {"CPU", "XeonPlatinum8480+"},
+        {"NetworkType", "WLan"},
+        {"ProtocolType", "Bluetooth"},
+        {"EncryptionType", "3DES"},
+        {"ESecurityProtocol", "HTTPS"}
+    };
+    
+    json obj = {
+        {"SecurityLevel", "3"},
+        {"Source", "ISS"},
+        {"DistributionMethod", "C"}
+    };
+    
+    evaluator->PushObjectJson("r", "sub", sub);
+    evaluator->PushObjectJson("r", "obj", obj);
+    evaluator->PushObjectString("r", "act", "read");
+    
+    // Test sub attributes
+    ASSERT_TRUE(evaluator->Eval("r.sub.ID == 'zk'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.sub.proxy == 'vpn'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.sub.Department == 'nlp'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.sub.OS == 'HarmonyOS'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.sub.CPU == 'XeonPlatinum8480+'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    // Test obj attributes
+    ASSERT_TRUE(evaluator->Eval("r.obj.SecurityLevel == '3'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.obj.Source == 'ISS'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.obj.DistributionMethod == 'C'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    // Test act attribute
+    ASSERT_TRUE(evaluator->Eval("r.act == 'read'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    // Test combined conditions
+    ASSERT_TRUE(evaluator->Eval("r.sub.ID == 'zk' and r.obj.SecurityLevel == '3' and r.act == 'read'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+    
+    ASSERT_TRUE(evaluator->Eval("r.sub.Department == 'nlp' and r.obj.Source == 'ISS'"));
+    ASSERT_TRUE(evaluator->GetBoolean());
+}
+
 } // namespace
