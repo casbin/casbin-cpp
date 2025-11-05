@@ -367,4 +367,4 @@ build_support/
 *.egg-info
 
 # clang-format
-build_support/clang_format_exclusions.txt_codeql_build_dir/
+build_support/clang_format_exclusions.txt
