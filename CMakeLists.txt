@@ -170,21 +170,61 @@ endif()
 # Install casbin
 
 if(CASBIN_INSTALL)
+    include(GNUInstallDirs)
+    include(CMakePackageConfigHelpers)
+    
     message(CHECK_START "[casbin]: Installing casbin ...")
-    export(
+    
+    # Install the library
+    install(
         TARGETS casbin
-        NAMESPACE casbin::
-        FILE casbinConfig.cmake
+        EXPORT casbinTargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
-
+    
     # Installing headers
     install(
         DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/casbin
-        DESTINATION include
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
-
-    set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
-    export(PACKAGE casbin)
+    
+    # Install the export set
+    install(
+        EXPORT casbinTargets
+        FILE casbinTargets.cmake
+        NAMESPACE casbin::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/casbin
+    )
+    
+    # Create and install the config file
+    configure_package_config_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/casbinConfig.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/casbinConfig.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/casbin
+    )
+    
+    # Create and install the version file
+    write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/casbinConfigVersion.cmake
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
+    
+    install(
+        FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/casbinConfig.cmake
+            ${CMAKE_CURRENT_BINARY_DIR}/casbinConfigVersion.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/casbin
+    )
+    
+    # Export for build tree (optional, for developers)
+    export(
+        EXPORT casbinTargets
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/casbinTargets.cmake
+        NAMESPACE casbin::
+    )
 
     message(CHECK_PASS " The targets can now be imported with find_package(casbin)")
     message(STATUS "[casbin]: Build the \"install\" target and add \"${CMAKE_INSTALL_PREFIX}/include\" to you PATH for casbin to work")
