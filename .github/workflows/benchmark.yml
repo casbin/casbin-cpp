@@ -34,28 +34,28 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: '3.25.x'
-      
+
       - name: Configuring CMake files
         id: building-files
         run: |
           mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE:STRING=Release
-      
+
       - name: Building library
         id: building-lib
         run: |
           cd build && cmake --build . --config Release --target all -j 10 --
-      
+
       - name: Run Benchmark
         id: run-benchmark
         run: |
           cd ./build/tests/benchmarks
           ./casbin_benchmark --benchmark_format=json --benchmark_out=benchmark_result.json
-      
+
       - name: Store benchmark result
         uses: benchmark-action/github-action-benchmark@v1
         with:
@@ -67,7 +67,7 @@ jobs:
           comment-on-alert: true
           fail-on-alert: false
           summary-always: true
-      
+
       - name: Cleanup
         id: clean-up
         run: |
