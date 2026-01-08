@@ -20,6 +20,10 @@ on:
       - master
   pull_request:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   benchmark:
     name: Benchmark
@@ -28,23 +32,43 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: '3.25.x'
+      
       - name: Configuring CMake files
         id: building-files
         run: |
           mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE:STRING=Release
+      
       - name: Building library
         id: building-lib
         run: |
           cd build && cmake --build . --config Release --target all -j 10 --
+      
       - name: Run Benchmark
         id: run-benchmark
         run: |
           cd ./build/tests/benchmarks
-          ./casbin_benchmark
+          ./casbin_benchmark --benchmark_format=json --benchmark_out=benchmark_result.json
+      
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'googlecpp'
+          output-file-path: ./build/tests/benchmarks/benchmark_result.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+          alert-threshold: '150%'
+          comment-on-alert: true
+          fail-on-alert: false
+          alert-comment-cc-users: '@casbin/casbin-cpp'
+          summary-always: true
+      
       - name: Cleanup
         id: clean-up
         run: |
