@@ -19,9 +19,11 @@
 #include <casbin/casbin.h>
 #include <gtest/gtest.h>
 
+#include "config_path.h"
+
 namespace {
 
-std::shared_ptr<casbin::Config> GetTestConfig() { return casbin::Config::NewConfig("../../casbin/config/testdata/testini.ini"); }
+std::shared_ptr<casbin::Config> GetTestConfig() { return casbin::Config::NewConfig(relative_path + "/casbin/config/testdata/testini.ini"); }
 
 TEST(TestConfig, TestDebug) {
     auto config = GetTestConfig();

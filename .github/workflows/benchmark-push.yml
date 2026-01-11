@@ -1,0 +1,94 @@
+#  Copyright 2021 The casbin Authors. All Rights Reserved.
+
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+name: Push Benchmark Data
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  benchmark:
+    name: Run Benchmark & Push Data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.25.x'
+      - name: Configuring CMake files
+        id: building-files
+        run: |
+          mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE:STRING=Release
+      - name: Building library
+        id: building-lib
+        run: |
+          cd build && cmake --build . --config Release --target all -j 10 --
+      - name: Run Benchmark
+        id: run-benchmark
+        run: |
+          cd ./build/tests/benchmarks
+          ./casbin_benchmark --benchmark_format=json > benchmark_result.json
+          mv benchmark_result.json ../../../
+
+      - name: Checkout Data Repo
+        uses: actions/checkout@v4
+        with:
+          repository: casbin/casbin-benchmark-data
+          token: ${{ secrets.CASBIN_BENCHMARK_DATA_TOKEN }}
+          path: benchmark-data
+
+      - name: Format Benchmark Data
+        env:
+          COMMIT_AUTHOR_EMAIL: ${{ github.event.head_commit.author.email }}
+          COMMIT_AUTHOR_NAME: ${{ github.event.head_commit.author.name }}
+          COMMIT_AUTHOR_USERNAME: ${{ github.event.head_commit.author.username }}
+          COMMIT_COMMITTER_EMAIL: ${{ github.event.head_commit.committer.email }}
+          COMMIT_COMMITTER_NAME: ${{ github.event.head_commit.committer.name }}
+          COMMIT_COMMITTER_USERNAME: ${{ github.event.head_commit.committer.username }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          COMMIT_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
+          COMMIT_URL: ${{ github.event.head_commit.url }}
+          COMMIT_ID: ${{ github.event.head_commit.id }}
+        run: |
+          python .github/scripts/format_google_benchmark_data.py benchmark_result.json formatted_result.json
+
+      - name: Push Benchmark Result
+        working-directory: benchmark-data
+        run: |
+          mkdir -p casbin-cpp
+          cp ../formatted_result.json casbin-cpp/benchmark-${{ github.sha }}.json
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add casbin-cpp/benchmark-${{ github.sha }}.json
+          git commit -m "Add benchmark result for casbin-cpp commit ${{ github.sha }}"
+          git push
+
+      - name: Cleanup
+        id: clean-up
+        if: always()
+        run: |
+          rm -rf build benchmark-data benchmark_result.json formatted_result.json

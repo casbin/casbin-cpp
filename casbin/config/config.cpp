@@ -68,6 +68,8 @@ void Config::ParseBuffer(std::istream* buf) {
         } else
             break;
         line = Trim(line);
+        if (line.empty())
+            continue;
         if (line.find(DEFAULT_COMMENT) == 0)
             continue;
         else if (line.find(DEFAULT_COMMENT_SEM) == 0)
