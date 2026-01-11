@@ -160,10 +160,3 @@ jobs:
             comparison.md
             pr_number.txt
 
-      - name: Comment report on PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const script = require('./.github/scripts/post_comment.js')
-            await script({github, context, core})
