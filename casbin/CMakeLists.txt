@@ -77,7 +77,7 @@ add_library(casbin STATIC ${CASBIN_SOURCE_FILES})
 
 target_precompile_headers(casbin PRIVATE ${CASBIN_INCLUDE_DIR}/casbin/pch.h)
 target_include_directories(casbin PRIVATE ${CASBIN_INCLUDE_DIR})
-target_link_libraries(casbin PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(casbin PUBLIC nlohmann_json::nlohmann_json)
 
 set_target_properties(casbin PROPERTIES 
     PREFIX ""
