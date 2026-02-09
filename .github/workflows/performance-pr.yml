@@ -1,0 +1,162 @@
+name: Performance Comparison for Pull Requests
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  benchmark-pr:
+    name: Run Benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git python3 jq wget dos2unix
+
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Pre-fetch dependencies
+        run: |
+          # json
+          wget https://github.com/nlohmann/json/archive/refs/tags/v3.11.2.tar.gz -O json.tar.gz
+          mkdir -p json-src
+          tar -xzf json.tar.gz -C json-src --strip-components=1
+          echo "JSON_SRC=$(pwd)/json-src" >> $GITHUB_ENV
+          
+          # googletest
+          wget https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz -O gtest.tar.gz
+          mkdir -p gtest-src
+          tar -xzf gtest.tar.gz -C gtest-src --strip-components=1
+          echo "GTEST_SRC=$(pwd)/gtest-src" >> $GITHUB_ENV
+          
+          # benchmark
+          wget https://github.com/google/benchmark/archive/refs/tags/v1.8.3.tar.gz -O bench.tar.gz
+          mkdir -p bench-src
+          tar -xzf bench.tar.gz -C bench-src --strip-components=1
+          echo "BENCH_SRC=$(pwd)/bench-src" >> $GITHUB_ENV
+
+      - name: Build and Run benchmark on PR branch
+        run: |
+          find . -name "*.conf" -exec dos2unix {} +
+          find . -name "*.csv" -exec dos2unix {} +
+          
+          cmake -B build-pr -S . \
+            -DCASBIN_BUILD_BENCHMARK=ON \
+            -DCASBIN_BUILD_TEST=ON \
+            -DCASBIN_BUILD_PYTHON_BINDINGS=OFF \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DFETCHCONTENT_SOURCE_DIR_JSON=$JSON_SRC \
+            -DFETCHCONTENT_SOURCE_DIR_GOOGLETEST=$GTEST_SRC \
+            -DFETCHCONTENT_SOURCE_DIR_BENCHMARK=$BENCH_SRC
+          
+          cmake --build build-pr --target casbin_benchmark -j2
+          ./build-pr/tests/benchmarks/casbin_benchmark --benchmark_format=json > pr-bench.json
+
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Build and Run benchmark on base branch
+        run: |
+          cd base
+          find . -name "*.conf" -exec dos2unix {} +
+          find . -name "*.csv" -exec dos2unix {} +
+          
+          cmake -B build-base -S . \
+            -DCASBIN_BUILD_BENCHMARK=ON \
+            -DCASBIN_BUILD_TEST=ON \
+            -DCASBIN_BUILD_PYTHON_BINDINGS=OFF \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DFETCHCONTENT_SOURCE_DIR_JSON=$JSON_SRC \
+            -DFETCHCONTENT_SOURCE_DIR_GOOGLETEST=$GTEST_SRC \
+            -DFETCHCONTENT_SOURCE_DIR_BENCHMARK=$BENCH_SRC
+            
+          cmake --build build-base --target casbin_benchmark -j2
+          ./build-base/tests/benchmarks/casbin_benchmark --benchmark_format=json > ../base-bench.json
+
+      # Move to subfolder for upload as requested
+      - name: Move results to subfolder
+        run: |
+          mkdir -p casbin-cpp
+          mv pr-bench.json casbin-cpp/
+          mv base-bench.json casbin-cpp/
+
+      - name: Upload benchmark shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-shard-main
+          path: casbin-cpp/*.json
+
+  report:
+    name: Generate Report
+    needs: benchmark-pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download all benchmark shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: benchmark-shard-*
+          merge-multiple: true
+          path: benchmark_data/casbin-cpp
+
+      - name: Merge Benchmark Results
+        run: |
+          python .github/scripts/merge_benchmarks.py base.json benchmark_data/casbin-cpp/base-*.json
+          python .github/scripts/merge_benchmarks.py pr.json benchmark_data/casbin-cpp/pr-*.json
+
+      - name: Save commit info
+        id: commits
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          echo "base_short=${BASE_SHA:0:7}" >> $GITHUB_OUTPUT
+          echo "head_short=${HEAD_SHA:0:7}" >> $GITHUB_OUTPUT
+
+      - name: Compare benchmarks
+        id: benchstat
+        run: |
+          cat > comparison.md << 'EOF'
+          ## Benchmark Comparison
+          
+          Comparing base branch (`${{ steps.commits.outputs.base_short }}`)
+          vs PR branch (`${{ steps.commits.outputs.head_short }}`)
+          
+          ```
+          EOF
+          python .github/scripts/pytest_benchstat.py base.json pr.json >> comparison.md || true
+          echo '```' >> comparison.md
+          
+          # Post-process
+          python .github/scripts/benchmark_formatter.py
+
+      - name: Save PR number
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          if [ -z "$PR_NUMBER" ]; then
+            echo "Error: Pull request number is not available in event payload." >&2
+            exit 1
+          fi
+          echo "$PR_NUMBER" > pr_number.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            comparison.md
+            pr_number.txt
+

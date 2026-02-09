@@ -28,6 +28,11 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
+      - name: Install dependencies (act workaround)
+        if: ${{ env.ACT }}
+        run: |
+          sudo apt-get update || true
+          sudo apt-get install -y python3-dev
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
