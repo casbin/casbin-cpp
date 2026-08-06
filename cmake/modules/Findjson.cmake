@@ -14,13 +14,26 @@
 #  limitations under the License.
 include(FetchContent)
 
-set(JSON_Install ON)
+# Prefer a nlohmann_json that is already available on the system (this is what
+# package managers such as vcpkg or Conan provide); only download a copy when
+# there is none, so that packaged builds don't vendor their own.
+option(CASBIN_FETCH_JSON "Always download nlohmann_json instead of using the system one" OFF)
 
-FetchContent_Declare(
-  json
-  GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG v3.11.2
-  DOWNLOAD_EXTRACT_TIMESTAMP FALSE
-)
+if(NOT CASBIN_FETCH_JSON)
+    find_package(nlohmann_json 3.10.1 CONFIG QUIET)
+endif()
 
-FetchContent_MakeAvailable(json)
+if(NOT nlohmann_json_FOUND)
+    set(JSON_Install ON)
+
+    FetchContent_Declare(
+      json
+      GIT_REPOSITORY https://github.com/nlohmann/json.git
+      GIT_TAG v3.11.2
+      DOWNLOAD_EXTRACT_TIMESTAMP FALSE
+    )
+
+    FetchContent_MakeAvailable(json)
+endif()
+
+set(json_FOUND TRUE)

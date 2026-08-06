@@ -74,21 +74,29 @@ set(CASBIN_SOURCE_FILES
 set(CMAKE_CXX_STANDARD 17)
 
 add_library(casbin STATIC ${CASBIN_SOURCE_FILES})
+# So that add_subdirectory()/FetchContent consumers can use the same name as
+# find_package() consumers.
+add_library(casbin::casbin ALIAS casbin)
 
 target_precompile_headers(casbin PRIVATE ${CASBIN_INCLUDE_DIR}/casbin/pch.h)
-target_include_directories(casbin PRIVATE ${CASBIN_INCLUDE_DIR})
+
+# Consumers must see the headers too, both from the build tree and from an
+# installed prefix, otherwise find_package(casbin) hands out a target that
+# cannot be compiled against.
+target_include_directories(casbin
+    PUBLIC
+        $<BUILD_INTERFACE:${CASBIN_INCLUDE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 target_link_libraries(casbin PUBLIC nlohmann_json::nlohmann_json)
 
-set_target_properties(casbin PROPERTIES 
-    PREFIX ""
+# Keep the platform default naming (libcasbin.a / casbin.lib) so that the
+# installed library looks like every other system library and can be picked up
+# with a plain -lcasbin.
+set_target_properties(casbin PROPERTIES
     VERSION ${PROJECT_VERSION}
 )
 
-if(WIN32 OR MSVC)
-    set_target_properties(casbin PROPERTIES SUFFIX ".lib")
-elseif(UNIX)
-    set_target_properties(casbin PROPERTIES 
-        SUFFIX ".a"
-        POSITION_INDEPENDENT_CODE ON
-    )
+if(UNIX)
+    set_target_properties(casbin PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()

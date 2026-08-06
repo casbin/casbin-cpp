@@ -23,10 +23,6 @@ if(APPLE AND NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment version")
 endif()
 
-if(WIN32)
-    add_compile_options("/bigobj")
-endif()
-
 ###############################################################################
 # Project definition.
 
@@ -42,6 +38,15 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${PROJECT_SOURCE_DIR}/cmake/modules
 )
+
+# Some translation units exceed the default COFF section limit. This has to come
+# after project(), which is what defines WIN32 and the compiler id.
+if(MSVC)
+    add_compile_options("/bigobj")
+elseif(WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    # MinGW spells the same thing differently, and rejects /bigobj outright.
+    add_compile_options("-Wa,-mbig-obj")
+endif()
 
 ###############################################################################
 # Forbid in-source build.
@@ -77,6 +82,10 @@ endif()
 
 # Setting to C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
+
+# Standard bin/lib/include/share layout, needed by the install rules below and
+# by the INSTALL_INTERFACE of the casbin target.
+include(GNUInstallDirs)
 
 ###############################################################################
 # Install external dependencies
@@ -170,22 +179,66 @@ endif()
 # Install casbin
 
 if(CASBIN_INSTALL)
-    message(CHECK_START "[casbin]: Installing casbin ...")
-    export(
-        TARGETS casbin
-        NAMESPACE casbin::
-        FILE casbinConfig.cmake
-    )
+    message(CHECK_START "[casbin]: Configuring the casbin installation ...")
+
+    include(CMakePackageConfigHelpers)
+
+    set(CASBIN_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/casbin"
+        CACHE STRING "Path to the installed casbin CMake package files")
 
     # Installing headers
     install(
         DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/casbin
-        DESTINATION include
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
-    set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
-    export(PACKAGE casbin)
+    # Installing the library itself. Without this the installed tree only ever
+    # contained headers, so downstream projects had nothing to link against.
+    install(
+        TARGETS casbin
+        EXPORT casbinTargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
 
-    message(CHECK_PASS " The targets can now be imported with find_package(casbin)")
-    message(STATUS "[casbin]: Build the \"install\" target and add \"${CMAKE_INSTALL_PREFIX}/include\" to you PATH for casbin to work")
+    # Installing the CMake package files so that find_package(casbin) works
+    # against the install prefix (and hence for package managers such as vcpkg)
+    # instead of only against the CMake User Package Registry.
+    install(
+        EXPORT casbinTargets
+        FILE casbinTargets.cmake
+        NAMESPACE casbin::
+        DESTINATION ${CASBIN_INSTALL_CMAKEDIR}
+    )
+
+    configure_package_config_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/casbinConfig.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/casbinConfig.cmake
+        INSTALL_DESTINATION ${CASBIN_INSTALL_CMAKEDIR}
+    )
+
+    write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/casbinConfigVersion.cmake
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
+
+    install(
+        FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/casbinConfig.cmake
+            ${CMAKE_CURRENT_BINARY_DIR}/casbinConfigVersion.cmake
+        DESTINATION ${CASBIN_INSTALL_CMAKEDIR}
+    )
+
+    # Also export the targets for the build tree, so that a project using
+    # FetchContent/add_subdirectory can consume casbin:: without installing.
+    export(
+        EXPORT casbinTargets
+        NAMESPACE casbin::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/casbinTargets.cmake
+    )
+
+    message(CHECK_PASS " done")
+    message(STATUS "[casbin]: Build the \"install\" target, then use find_package(casbin) and link against casbin::casbin")
 endif()

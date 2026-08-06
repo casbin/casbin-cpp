@@ -157,13 +157,11 @@ your may link your own targets against casbin's likewise:
 ```cmake
 add_executable(myexec main.cpp)
 
-target_link_libraries(myexec PRIVATE casbin)
-
-set(myexec_INCLUDE_DIR ${casbin_SOURCE_DIR}/include)
-target_include_directories(myexec PRIVATE ${myexec_INCLUDE_DIR})
+target_link_libraries(myexec PRIVATE casbin::casbin)
 ```
 
-Do remember to include `casbin_SOURCE_DIR/include` directory wherever casbin's functions are utilised.
+The `casbin::casbin` target carries its own include directories, so you don't need to
+add `casbin_SOURCE_DIR/include` yourself.
 
 ### With local installation
 
@@ -183,13 +181,8 @@ You may integrate casbin into your CMake project through `find_package`.
     cmake ..
     ```
 
-    **Note:** Look up for the logs of this step. And add the path indicated by the log into your PATH/project include directory.
-    The log message you're looking for should be something like this:
-    ```bash
-    [casbin]: Installing casbin ...
-    [casbin]: Installing casbin ... -  The targets can now be imported with find_package(casbin)
-    [casbin]: Build the "install" target and add "/usr/local/include" to you PATH for casbin to work
-    ```
+    Use `-DCMAKE_INSTALL_PREFIX=<path>` if you don't want to install into the default
+    location (`C:/Program Files/casbin` on Windows, `/usr/local` on Linux/macOS).
 
 3. After the project is configured successfully, build it:
     ```bash
@@ -209,12 +202,13 @@ You may integrate casbin into your CMake project through `find_package`.
     ```
     This will import all the targets exported by casbin to your project
 
-6. Link against casbin (Refer to Step 2's **Note** to get the value of `MY_INCLUDE_DIR` for your system):
+6. Link against casbin:
     ```cmake
-    set(MY_INCLUDE_DIR "/usr/local/include")
-    target_include_directories(MyTargetName PRIVATE ${MY_INCLUDE_DIR})
     target_link_libraries(MyTargetName PRIVATE casbin::casbin)
     ```
+    The include directories come with the target, so there is no need to set them by hand.
+    If you installed into a non-default prefix, point CMake at it with
+    `-DCMAKE_PREFIX_PATH=<path>`.
 
 ## Installation and Set-Up
 
@@ -249,13 +243,14 @@ You may integrate casbin into your CMake project through `find_package`.
     cmake --build . --target install
     ```
 
-    - For **Windows**, this will install `casbin.lib` to `<custom-path>/casbin-cpp/build/casbin`
-    and the headers to `C:/Program Files/casbin/include`.
-    - For Unix based OS i.e. **Linux and macOS**, this will install `casbin.a` to `<custom-path>/casbin-cpp/build/casbin` 
-    and the headers to `usr/local/include`.
+    This installs everything under `CMAKE_INSTALL_PREFIX` (`C:/Program Files/casbin` on Windows,
+    `/usr/local` on Linux/macOS by default):
 
-    You can add the respective include and lib paths
-    to the PATH environment variable to use casbin.
+    - the library into `lib/` (`casbin.lib` on Windows, `libcasbin.a` on Linux/macOS),
+    - the headers into `include/casbin/`,
+    - the CMake package files into `lib/cmake/casbin/`, so that `find_package(casbin)` finds it.
+
+    Pass `-DCMAKE_INSTALL_PREFIX=<path>` at configure time to install somewhere else.
 
 5. (OPTIONAL) To run the tests, issue the following command from `/build`:
 
