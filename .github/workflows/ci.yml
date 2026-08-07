@@ -61,6 +61,8 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: '3.25.x'
+      - name: Set up MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Configuring CMake files
         id: building-files
         run: |
