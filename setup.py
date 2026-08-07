@@ -46,6 +46,7 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
+            "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
         ]
         build_args = []
         # Adding CMake arguments set as environment variable
