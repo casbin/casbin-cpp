@@ -3,7 +3,6 @@ Casbin-CPP
 
 [![CI](https://github.com/casbin/casbin-cpp/actions/workflows/ci.yml/badge.svg)](https://github.com/casbin/casbin-cpp/actions/workflows/ci.yml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/casbin/casbin-cpp)](https://github.com/casbin/casbin-cpp/releases/latest)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Discord](https://img.shields.io/discord/1022748306096537660?logo=discord&label=discord&color=5865F2)](https://discord.gg/S5UjpzGZjN)
 
 **News**: Are you still worried about how to write the correct Casbin policy? ``Casbin online editor`` is coming to help! Try it at: http://casbin.org/editor/
