@@ -38,7 +38,7 @@ permissions:
 jobs:
   github-release:
     name: GitHub release
-    if: github.repository == 'casbin/casbin-cpp'
+    if: github.repository == 'apache/casbin-cpp'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.meta.outputs.version }}
