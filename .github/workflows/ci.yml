@@ -28,10 +28,12 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
-      - name: Setup CMake
-        uses: jwlawson/actions-setup-cmake@v2
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          cmake-version: '3.25.x'
+          python-version: '3.x'
+      - name: Setup CMake
+        run: pip install "cmake==3.25.*"
       - name: Configuring CMake files
         id: building-files
         run: |
@@ -57,10 +59,12 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
-      - name: Setup CMake
-        uses: jwlawson/actions-setup-cmake@v2
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          cmake-version: '3.25.x'
+          python-version: '3.x'
+      - name: Setup CMake
+        run: pip install "cmake==3.25.*"
       - name: Set up MSVC environment
         uses: ilammy/msvc-dev-cmd@v1
       - name: Configuring CMake files
@@ -87,10 +91,12 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
-      - name: Setup CMake
-        uses: jwlawson/actions-setup-cmake@v2
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          cmake-version: '3.25.x'
+          python-version: '3.x'
+      - name: Setup CMake
+        run: pip install "cmake==3.25.*"
       - name: Configuring CMake files
         id: building-files
         run: |
